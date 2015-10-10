@@ -322,7 +322,8 @@
     // درست کردن اچ تی ام ال دیت تایم پیکر
     // مقدار برگشتی تعیین میکند آیا مقدار تاریخ باید به روز شود یا نه
     function createDateTimePickerHtml($popoverDescriber, dateTimeInJsonFormat, writeDateString) {
-        var persianTodayDateTemp = getTodayCalendarInPersian(), // تاریخ شمسی امروز
+        var triggerName = $popoverDescriber.attr('data-trigger'),
+            persianTodayDateTemp = getTodayCalendarInPersian(), // تاریخ شمسی امروز
             currentYearNumber = persianTodayDateTemp[0],
             currentMonthNumber = persianTodayDateTemp[1],
             currentDayNumber = persianTodayDateTemp[2],
@@ -352,7 +353,8 @@
         if (dateTimeInJsonFormat == undefined)
             dateTimeInJsonFormat = parsePreviousDateTimeValue($.trim($target.val()));
 
-        var fixedDate = fixDate(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day);
+        var fixedDate = fixDate(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day),
+            currentDateNumber = convertToNumber(fixedDate.Year, fixedDate.Month, fixedDate.Day);
         dateTimeInJsonFormat.Year = fixedDate.Year;
         dateTimeInJsonFormat.Month = fixedDate.Month;
         dateTimeInJsonFormat.Day = fixedDate.Day;
@@ -425,6 +427,25 @@
             }
             if (toDateString != '' || fromDateString != '')
                 fromDateToDateJson = parseFromDateToDateValues(fromDateString, toDateString);
+
+            // اگر از تاریخ انتخاب شده بزرگتر از - تا تاریخ - بود
+            if (isFromDate && fromDateToDateJson.ToDateNumber != undefined && currentDateNumber > fromDateToDateJson.ToDateNumber) {
+                dateTimeInJsonFormat.Year = fromDateToDateJson.ToDateObject.Year;
+                dateTimeInJsonFormat.Month = fromDateToDateJson.ToDateObject.Month;
+                dateTimeInJsonFormat.Day = fromDateToDateJson.ToDateObject.Day;
+                $target.val(getDateTimeString(dateTimeInJsonFormat, enableTimePicker, englishNumber));
+                $popoverDescriber.trigger(triggerName);
+                return;
+            }
+
+            if (isToDate && fromDateToDateJson.FromDateNumber != undefined && currentDateNumber < fromDateToDateJson.FromDateNumber) {
+                dateTimeInJsonFormat.Year = fromDateToDateJson.FromDateObject.Year;
+                dateTimeInJsonFormat.Month = fromDateToDateJson.FromDateObject.Month;
+                dateTimeInJsonFormat.Day = fromDateToDateJson.FromDateObject.Day;
+                $target.val(getDateTimeString(dateTimeInJsonFormat, enableTimePicker, englishNumber));
+                $popoverDescriber.trigger(triggerName);
+                return;
+            }
         }
 
         var i = 0,
