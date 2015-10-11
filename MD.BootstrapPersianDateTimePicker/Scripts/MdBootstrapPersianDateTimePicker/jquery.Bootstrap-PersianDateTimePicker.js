@@ -1,6 +1,6 @@
 ﻿/*
  * bootstrap persian date time picker jQuery Plugin
- * version : 1.7
+ * version : 1.7.1
  *
  *
  *
@@ -16,8 +16,8 @@
         mdDateTimePickerFlagSelector = '[' + mdDateTimePickerFlagAttributeName + ']',
         mdDateTimeIsShowingAttributeName = 'data-MdPersianDateTimePickerShowing',
         mdSelectedDateTimeAttributeName = 'data-MdPersianDateTimePickerSelectedDateTime',
-        mdDateTimePickerWrapperAttributeName = 'data-name="Md-PersianDateTimePicker"',
-        mdDateTimePickerWrapperSelector = '[' + mdDateTimePickerWrapperAttributeName + ']',
+        mdDateTimePickerWrapperAttribute = 'data-name="Md-PersianDateTimePicker"',
+        mdDateTimePickerWrapperSelector = '[' + mdDateTimePickerWrapperAttribute + ']',
         isFirstTime = true,
         changeDateTimeEnum = {
             IncreaseMonth: 1,
@@ -321,7 +321,7 @@
 
     // درست کردن اچ تی ام ال دیت تایم پیکر
     // مقدار برگشتی تعیین میکند آیا مقدار تاریخ باید به روز شود یا نه
-    function createDateTimePickerHtml($popoverDescriber, dateTimeInJsonFormat, writeDateString) {
+    function createDateTimePickerHtml($popoverDescriber, dateTimeInJsonFormat, writeDateString, initializing) {
         var triggerName = $popoverDescriber.attr('data-trigger'),
             persianTodayDateTemp = getTodayCalendarInPersian(), // تاریخ شمسی امروز
             currentYearNumber = persianTodayDateTemp[0],
@@ -333,7 +333,7 @@
             $monthsTitlesDropDown = $calendarHeader.find('.dropdown-menu[aria-labelledby="dropdownMenuPersianMonths"]'),
             $calendarTimePicker = $('<tr><td colspan="100" style="padding: 2px;"><table class="table" data-name="Md-PersianDateTimePicker-TimePicker"><tr><td><input type="text" class="form-control" data-name="Clock-Hour" maxlength="2" /></td><td>:</td><td><input type="text" class="form-control" data-name="Clock-Minute" maxlength="2" /></td><td>:</td><td><input type="text" class="form-control" data-name="Clock-Second" maxlength="2" /></td></tr></table></td></tr>'),
             $calendarFooter = $('<tr><td colspan="100"><a class="" href="javascript:void(0);" data-name="go-today">' + todayDateTimeString + '</a></td></tr>'),
-            $calendarDivWrapper = $('<div ' + mdDateTimePickerWrapperAttributeName + ' />'),
+            $calendarDivWrapper = $('<div ' + mdDateTimePickerWrapperAttribute + ' />'),
             targetSelector = $popoverDescriber.attr('data-TargetSelector'),
             $target = targetSelector == undefined || targetSelector == '' ? $popoverDescriber : $(targetSelector),
             enableTimePicker = $popoverDescriber.attr('data-EnableTimePicker') == 'true',
@@ -429,7 +429,7 @@
                 fromDateToDateJson = parseFromDateToDateValues(fromDateString, toDateString);
 
             // اگر از تاریخ انتخاب شده بزرگتر از - تا تاریخ - بود
-            if (isFromDate && fromDateToDateJson.ToDateNumber != undefined && currentDateNumber > fromDateToDateJson.ToDateNumber) {
+            if (isFromDate && fromDateToDateJson.ToDateNumber != undefined && currentDateNumber > fromDateToDateJson.ToDateNumber && !initializing) {
                 dateTimeInJsonFormat.Year = fromDateToDateJson.ToDateObject.Year;
                 dateTimeInJsonFormat.Month = fromDateToDateJson.ToDateObject.Month;
                 dateTimeInJsonFormat.Day = fromDateToDateJson.ToDateObject.Day;
@@ -438,7 +438,7 @@
                 return;
             }
 
-            if (isToDate && fromDateToDateJson.FromDateNumber != undefined && currentDateNumber < fromDateToDateJson.FromDateNumber) {
+            if (isToDate && fromDateToDateJson.FromDateNumber != undefined && currentDateNumber < fromDateToDateJson.FromDateNumber && !initializing) {
                 dateTimeInJsonFormat.Year = fromDateToDateJson.FromDateObject.Year;
                 dateTimeInJsonFormat.Month = fromDateToDateJson.FromDateObject.Month;
                 dateTimeInJsonFormat.Day = fromDateToDateJson.FromDateObject.Day;
@@ -535,7 +535,7 @@
             }
 
             // غیر فعال کردن سال های خارج از رنج
-            $yearDropDown.find('li[data-year]').each(function() {
+            $yearDropDown.find('li[data-year]').each(function () {
                 var $thisLi = $(this),
                     year = Number($thisLi.attr('data-year'));
                 if ((isFromDate && year > fromDateToDateJson.ToDateObject.Year) ||
@@ -549,12 +549,12 @@
             $monthsTitlesDropDown.find('a[data-monthnumber]').each(function () {
                 var $thisA = $(this),
                     month = Number($thisA.attr('data-monthnumber'))
-                    $li = $thisA.parents('li:first');
+                $li = $thisA.parents('li:first');
                 if (isToDate && fromDateToDateJson.FromDateObject.Year == fromDateToDateJson.ToDateObject.Year
                     && fromDateToDateJson.FromDateObject.Month > month) {
                     $li.addClass('disabled').children('a').attr('disabled', 'disabled');
                 }
-                if (isFromDate && fromDateToDateJson.FromDateObject.Year == fromDateToDateJson.ToDateObject.Year 
+                if (isFromDate && fromDateToDateJson.FromDateObject.Year == fromDateToDateJson.ToDateObject.Year
                     && fromDateToDateJson.ToDateObject.Month < month) {
                     $li.addClass('disabled').children('a').attr('disabled', 'disabled');
                 }
@@ -699,7 +699,8 @@
             case changeDateTimeEnum.TriggerFired:
                 writeDateString = false;
                 $popoverDescriber = $senderObject;
-                $wrapper = $('#' + $popoverDescriber.attr('aria-describedby')).find(mdDateTimePickerWrapperSelector);
+                var $popover = $('#' + $popoverDescriber.attr('aria-describedby'));
+                $wrapper = $popover.find(mdDateTimePickerWrapperSelector);
                 break;
 
                 // تغییر ماه و سال
@@ -827,7 +828,7 @@
                     $this.attr('data-EnglishNumber', settings.EnglishNumber);
 
                 var initialDateTimeInJsonFormat = parsePreviousDateTimeValue($this.val()),
-                    $calendarDivWrapper = createDateTimePickerHtml($this, initialDateTimeInJsonFormat);
+                    $calendarDivWrapper = createDateTimePickerHtml($this, initialDateTimeInJsonFormat, undefined, true);
 
                 // نمایش تقویم
                 $this.popover({
@@ -837,7 +838,7 @@
                     placement: settings.Placement,
                     title: 'انتخاب تاریخ',
                     trigger: 'manual',
-                    template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title" data-name="Md-DateTimePicker-Title"></h3><div class="popover-content"  data-name="Md-DateTimePicker-PopoverContent"></div></div>'
+                    template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title" data-name="Md-DateTimePicker-Title"></h3><div class="popover-content" data-name="Md-DateTimePicker-PopoverContent"></div></div>'
                 }).on(settings.Trigger, function () {
                     hideOthers($this);
                     showPopover($this);
@@ -904,7 +905,7 @@
     //////////////////////////////////////////////////////////////
 
     this.EnableMdDateTimePickers = function () {
-        var $dateTimePickers = $('[data-MdDateTimePicker="true"],[data-mdDatetimepicker="true"]');
+        var $dateTimePickers = $('[data-MdDateTimePicker="true"],[data-mddatetimepicker="true"]');
         $dateTimePickers.each(function () {
             var $this = $(this),
                 trigger = $this.attr('data-trigger'),
