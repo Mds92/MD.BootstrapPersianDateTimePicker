@@ -56,3 +56,5 @@ Sample :
 ```html
 <button class="btn btn-default" data-MdDateTimePicker="true" data-TargetSelector="#input1" data-EnableTimePicker="true" data-Placement="left" data-Trigger="click">انتخاب تاریخ</button>
 ```
+If you are using `.Net` for programming, I recommended to use the following library to parse and use PersianDateTime as easy as DateTime.
+[MD.PersianDateTime](https://github.com/Mds92/MD.PersianDateTime)
