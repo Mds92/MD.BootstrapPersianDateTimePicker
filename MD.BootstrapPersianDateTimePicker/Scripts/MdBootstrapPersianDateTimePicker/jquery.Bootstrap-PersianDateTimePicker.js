@@ -1,10 +1,10 @@
 ﻿/*
  * bootstrap persian date time picker jQuery Plugin
- * version : 1.7.1
+ * version : 1.7.2
  *
  *
  *
- * Written By Mohammad Dayyan, دی 1393
+ * Written By Mohammad Dayyan, from دی 1393
  * mds.soft@gmail.com - 0919-7898568
  *
  * My weblog: mds-soft.persianblog.ir
