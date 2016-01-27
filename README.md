@@ -51,6 +51,7 @@ data-GroupId="group1"
 data-ToDate="true"
 data-FromDate="true"
 data-EnglishNumber="true"
+data-disabled="false"
 ```
 
 Sample :
