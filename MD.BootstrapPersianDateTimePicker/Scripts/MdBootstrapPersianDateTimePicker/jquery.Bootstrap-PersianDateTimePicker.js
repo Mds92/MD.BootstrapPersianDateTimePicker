@@ -840,10 +840,18 @@
                     trigger: 'manual',
                     template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title" data-name="Md-DateTimePicker-Title"></h3><div class="popover-content" data-name="Md-DateTimePicker-PopoverContent"></div></div>'
                 }).on(settings.Trigger, function () {
+                    var isDisabled = $this.attr('data-disabled') != undefined && $this.attr('data-disabled').toLowerCase() == 'true';
+                    if (isDisabled) return;
                     hideOthers($this);
                     showPopover($this);
                     updateDateTimePickerHtml(this, changeDateTimeEnum.TriggerFired);
                 });
+            });
+        },
+        disable: function(isDisable) {
+            return this.each(function() {
+                var $this = $(this);
+                $this.attr('data-disabled', isDisable);
             });
         }
     };
