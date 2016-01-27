@@ -1,6 +1,6 @@
 ﻿/*
  * bootstrap persian date time picker jQuery Plugin
- * version : 1.7.3
+ * version : 1.7.3.1
  *
  *
  *
@@ -810,7 +810,8 @@
                 TargetSelector: '',
                 GroupId: '',
                 ToDate: false,
-                FromDate: false
+                FromDate: false,
+                Disabled: false
             }, options);
 
             if (isFirstTime) {
@@ -835,6 +836,8 @@
                     $this.attr('data-FromDate', settings.FromDate);
                 if (settings.EnglishNumber)
                     $this.attr('data-EnglishNumber', settings.EnglishNumber);
+                if (settings.Disabled)
+                    $this.attr('data-disabled', true);
 
                 var initialDateTimeInJsonFormat = parsePreviousDateTimeValue($this.val()),
                     $calendarDivWrapper = createDateTimePickerHtml($this, initialDateTimeInJsonFormat, undefined, true);
@@ -932,6 +935,7 @@
                 groupId = $this.attr('data-GroupId'),
                 toDate = $this.attr('data-ToDate'),
                 fromDate = $this.attr('data-FromDate');
+                disable = $this.attr('data-disabled') != undefined && $this.attr('data-disabled').toLowerCase() == 'true';
             if (!$this.is(':input') && $this.css('cursor') == 'auto')
                 $this.css({ cursor: 'pointer' });
             $this.MdPersianDateTimePicker({
@@ -941,7 +945,8 @@
                 TargetSelector: targetSelector != undefined ? targetSelector : '',
                 GroupId: groupId != undefined ? groupId : '',
                 ToDate: toDate != undefined ? toDate : '',
-                FromDate: fromDate != undefined ? fromDate : ''
+                FromDate: fromDate != undefined ? fromDate : '',
+                Disabled: disable
             });
         });
     }
