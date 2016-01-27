@@ -4,7 +4,8 @@
 
 `MD.BootstrapPersianDateTimePicker` is a DateTimePicker plugin for jquery and Bootstrap.
 
-#####Note:
+#####Note:<br>
+**To see demo just open `View` folder and run the html files. Don't build the project, it's not a C# project.**
 `MD.BootstrapPersianDateTimePicker` uses bootstrap [Popovers](http://getbootstrap.com/javascript/#popovers), so it has felexibility of bootstrap's popover.
 
 There are two file in `Views` folder that you can learn how to use this plugin.
@@ -56,3 +57,5 @@ Sample :
 ```html
 <button class="btn btn-default" data-MdDateTimePicker="true" data-TargetSelector="#input1" data-EnableTimePicker="true" data-Placement="left" data-Trigger="click">انتخاب تاریخ</button>
 ```
+If you are using `.Net` for programming, I recommended to use the following library to parse and use PersianDateTime as easy as DateTime.
+[MD.PersianDateTime](https://github.com/Mds92/MD.PersianDateTime)
