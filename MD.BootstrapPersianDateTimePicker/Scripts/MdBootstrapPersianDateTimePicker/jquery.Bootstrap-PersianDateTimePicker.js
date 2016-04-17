@@ -650,7 +650,7 @@
     function updateDateTimePickerHtml(senderObject, changeEnum, newMonthNumber, newYearNumber) {
         var $senderObject = $(senderObject),
             $wrapper = $senderObject.parents(mdDateTimePickerWrapperSelector),
-            $popoverDescriber = $wrapper.length > 0 ? $('[aria-describedby="' + $wrapper.parents('.popover').attr('id') + '"]') : undefined,
+            $popoverDescriber = $wrapper.length > 0 ? $('[aria-describedby*="' + $wrapper.parents('.popover').attr('id') + '"]') : undefined,
             newDateTimeInJsonFormat = $popoverDescriber != undefined && $popoverDescriber.attr(mdSelectedDateTimeAttributeName) != undefined && $popoverDescriber.attr(mdSelectedDateTimeAttributeName) != '' ? JSON.parse($popoverDescriber.attr(mdSelectedDateTimeAttributeName)) : undefined,
             writeDateString = true;
 
