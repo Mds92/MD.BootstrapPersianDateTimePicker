@@ -22,20 +22,22 @@ EnableTimePicker boolean enables TimePicker on the html element's DateTimePicker
 TargetSelector string determines the jQuery selector of the element to write the DateTime string into it .
 GroupId string determines the group name in FromDate, ToDate filtering. you have to use this attribute if you wanna use the filter
 ToDate boolean determines the html tags as ToDate filter.
-FromDate boolean determines the html tags as FromDate filter
+FromDate boolean determines the html tags as FromDate filter.
+Disabled boolean determines whether date picker show or not.
 
 Sample :
 ```html
 <script type="text/javascript">
     $('#textBoxInputId').MdPersianDateTimePicker({
-        Placement: 'bottom', // default is 'bottom'
-        Trigger: 'focus', // default is 'focus',
-	EnableTimePicker: true, // default is true,
-	TargetSelector: '', // default is empty,
-	GroupId: '', // default is empty,
-	ToDate: false, // default is false,
-	FromDate: false, // default is false,
+        Placement: 'bottom', 
+        Trigger: 'focus', 
+	EnableTimePicker: true,
+	TargetSelector: '', 
+	GroupId: '',
+	ToDate: false, 
+	FromDate: false, 
 	EnglishNumber: false,
+	Disabled: false,
     });
 </script>
 ```
