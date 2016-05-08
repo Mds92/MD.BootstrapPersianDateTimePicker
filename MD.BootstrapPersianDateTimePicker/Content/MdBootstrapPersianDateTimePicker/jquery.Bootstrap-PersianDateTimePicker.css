@@ -106,3 +106,8 @@
     height: auto;
     display: inline-block;
 }
+
+/* by Sina-Soltani66 */
+.zIndexCorrected {
+    z-index: 100000;
+}
