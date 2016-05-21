@@ -1,6 +1,6 @@
 ﻿/*
  * bootstrap persian date time picker jQuery Plugin
- * version : 1.7.3.3
+ * version : 1.7.3.4
  *
  *
  *
@@ -31,11 +31,47 @@
             OnEvent: 9
         };
 
-    function getTodayCalendarInPersian() {
-        var today = new Date(),
-            persianDate = toJalaali(today.getFullYear(), today.getMonth() + 1, today.getDate());
-        return [persianDate.jy, persianDate.jm, persianDate.jd];
+    function getPersianWeekDayNameWithEnglishIndex(englishWeekDayIndex) {
+        switch (englishWeekDayIndex) {
+            case 0:
+                return "یک شنبه";
+            case 1:
+                return "دوشنبه";
+            case 2:
+                return "سه شنبه";
+            case 3:
+                return "چهار شنبه";
+            case 4:
+                return "پنج شنبه";
+            case 5:
+                return "جمعه";
+            case 6:
+                return "شنبه";
+            default:
+                return "";
+        }
     }
+    function getPersianWeekDayNameWithPersianIndex(persianWeekDayIndex) {
+        switch (persianWeekDayIndex) {
+            case 0:
+                return "شنبه";
+            case 1:
+                return "یکشنبه";
+            case 2:
+                return "دوشنبه";
+            case 3:
+                return "سه شنبه";
+            case 4:
+                return "چهارشنبه";
+            case 5:
+                return "پنج شنبه";
+            case 6:
+                return "جمعه";
+            default:
+                return "";
+        }
+    }
+
     function getFirstDayOfWeek(persianYear, persianMonth) {
         var gregorianDate = toGregorian(persianYear, persianMonth, 01),
             date = new Date(gregorianDate.gy, gregorianDate.gm - 1, gregorianDate.gd),
@@ -70,6 +106,11 @@
                 break;
         }
         return dayOfWeek;
+    }
+    function getTodayCalendarInPersian() {
+        var today = new Date(),
+            persianDate = toJalaali(today.getFullYear(), today.getMonth() + 1, today.getDate());
+        return [persianDate.jy, persianDate.jm, persianDate.jd, getPersianWeekDayNameWithEnglishIndex(today.getDay())];
     }
     function isLeapYear(persianYear) {
         return isLeapJalaaliYear(persianYear);
@@ -116,33 +157,6 @@
         str = str.replace(/۸/g, '8');
         str = str.replace(/۹/g, '9');
         return str;
-    }
-    function getPersianWeekDay(weekDayNumber) {
-        switch (weekDayNumber) {
-            case 0:
-                return "شنبه";
-
-            case 1:
-                return "یکشنبه";
-
-            case 2:
-                return "دوشنبه";
-
-            case 3:
-                return "سه شنبه";
-
-            case 4:
-                return "چهارشنبه";
-
-            case 5:
-                return "پنج شنبه";
-
-            case 6:
-                return "جمعه";
-
-            default:
-                return "";
-        }
     }
     function getPersianMonth(monthNumber) {
         switch (monthNumber) {
@@ -327,7 +341,7 @@
             currentYearNumber = persianTodayDateTemp[0],
             currentMonthNumber = persianTodayDateTemp[1],
             currentDayNumber = persianTodayDateTemp[2],
-            todayDateTimeString = 'امروز، ' + getPersianWeekDay(persianTodayDateTemp[2]) + ' ' + toPersianNumber(currentDayNumber) + ' ' + getPersianMonth(currentMonthNumber) + ' ' + toPersianNumber(currentYearNumber),
+            todayDateTimeString = 'امروز، ' + persianTodayDateTemp[3] + ' ' + toPersianNumber(currentDayNumber) + ' ' + getPersianMonth(currentMonthNumber) + ' ' + toPersianNumber(currentYearNumber),
             $calendarMainTable = $('<table class="table table-striped" />'),
             $calendarHeader = $('<tr><td colspan="100" style="padding:5px;"><table class="table" data-name="Md-PersianDateTimePicker-HeaderTable"><tr><td><button type="button" class="btn btn-default btn-xs" title="سال بعد" data-name="Md-PersianDateTimePicker-NextYear">&lt;&lt;</button></td><td><button type="button" class="btn btn-default btn-xs" title="ماه بعد" data-name="Md-PersianDateTimePicker-NextMonth">&lt;</button></td><td><div class="dropdown" style="min-width:50px;"><button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPersianYear" data-toggle="dropdown" aria-expanded="true" data-name="Md-PersianDateTimePicker-TitleYear">1393</button><ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPersianYear"><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="Md-PersianDateTimePicker-YearNumber">1394</a></li></ul></div></td><td ><div class="dropdown" style="min-width:73px;"><button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPersianMonths" data-toggle="dropdown" aria-expanded="true" data-name="Md-PersianDateTimePicker-TitleMonth">نام ماه</button><ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPersianMonths"><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="Md-PersianDateTimePicker-MonthName" data-MonthNumber="1">فروردین</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="Md-PersianDateTimePicker-MonthName" data-MonthNumber="2">اردیبهشت</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="Md-PersianDateTimePicker-MonthName" data-MonthNumber="3">خرداد</a></li><li role="presentation" class="divider"></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="Md-PersianDateTimePicker-MonthName" data-MonthNumber="4">تیر</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="Md-PersianDateTimePicker-MonthName" data-MonthNumber="5">مرداد</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="Md-PersianDateTimePicker-MonthName" data-MonthNumber="6">شهریور</a></li><li role="presentation" class="divider"></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="Md-PersianDateTimePicker-MonthName" data-MonthNumber="7">مهر</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="Md-PersianDateTimePicker-MonthName" data-MonthNumber="8">آبان</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="Md-PersianDateTimePicker-MonthName" data-MonthNumber="9">آذر</a></li><li role="presentation" class="divider"></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="Md-PersianDateTimePicker-MonthName" data-MonthNumber="10">دی</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="Md-PersianDateTimePicker-MonthName" data-MonthNumber="11">بهمن</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="Md-PersianDateTimePicker-MonthName" data-MonthNumber="12">اسفند</a></li></ul></div></td><td><button type="button" class="btn btn-default btn-xs" title="ماه قبل" data-name="Md-PersianDateTimePicker-PreviousMonth">&gt;</button></td><td><button type="button" class="btn btn-default btn-xs" title="سال قبل" data-name="Md-PersianDateTimePicker-PreviousYear">&gt;&gt;</button></td></tr></table></td></tr><tr data-name="Md-PersianDateTimePicker-WeekDaysNames"><td>ش</td><td>ی</td><td>د</td><td>س</td><td>چ</td><td>پ</td><td class="text-danger">ج</td></tr>'),
             $monthsTitlesDropDown = $calendarHeader.find('.dropdown-menu[aria-labelledby="dropdownMenuPersianMonths"]'),
@@ -485,13 +499,13 @@
                 // اگر نام روز هفته انخاب شده در تکس باکس قبل از تاریخ امروز باشد
                 // نباید دیگر نام روز هفته تغییر کند
                 if (dayOfWeek == '') 
-                    dayOfWeek = getPersianWeekDay(tdNumber);
+                    dayOfWeek = getPersianWeekDayNameWithPersianIndex(tdNumber);
             }
             // روز از قبل انتخاب شده
             // روزی که در تکس باکس انتخاب شده
             else if (i == dateTimeInJsonFormat.Day) {
                 $td.addClass('bg-info');
-                dayOfWeek = getPersianWeekDay(tdNumber);
+                dayOfWeek = getPersianWeekDayNameWithPersianIndex(tdNumber);
             }
             // روز جمعه
             else if (tdNumber > 0 && tdNumber % 6 == 0)
