@@ -776,33 +776,11 @@
             updateDateTimePickerHtml(this, changeDateTimeEnum.IncreaseYear);
         });
 
-        // numeric textbox
-        $(document).on('keydown', 'input[type="text"][data-name^="clock"]', function (e) {
-            // if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) return false;
-            // Allow: backspace, delete, tab, escape, enter and .
-            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
-                // Allow: Ctrl+A
-                (e.keyCode == 65 && e.ctrlKey === true) ||
-                // Allow: home, end, left, right, down, up
-                (e.keyCode >= 35 && e.keyCode <= 40)) {
-                // let it happen, don't do anything
-                return false;
-            }
-            // Ensure that it is a number and stop the keypress
-            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                e.preventDefault();
-            }
-            return true;
-        });
         // تغییر ساعت ، دقیقه و یا ثانیه
-        $(document).on('blur', 'input[type="text"][data-name^="clock"]', function () {
+        $(document).on('change', 'input[data-name^="clock"]', function () {
             updateDateTimePickerHtml(this, changeDateTimeEnum.ClockChanged);
+            $(this).focus();
             return true;
-        });
-
-        // انتخاب عدد داخل تکس باکس های تایم در هنگام فوکوس روی آنها
-        $(document).on('focus', 'input[type="text"][data-name^="clock"]', function () {
-            $(this).select();
         });
 
         // کلیک روی دکمه امروز
