@@ -356,6 +356,7 @@
             currentYearNumber = persianTodayDateTemp[0],
             currentMonthNumber = persianTodayDateTemp[1],
             currentDayNumber = persianTodayDateTemp[2],
+            todayDateNumber = convertToNumber(currentYearNumber, currentMonthNumber, currentDayNumber),
             todayDateTimeString = 'امروز، ' + persianTodayDateTemp[3] + ' ' + toPersianNumber(currentDayNumber) + ' ' + getPersianMonth(currentMonthNumber) + ' ' + toPersianNumber(currentYearNumber),
             $calendarMainTable = $('<table class="table table-striped" />'),
             $calendarMainTableBody = $('<tbody />'),
@@ -368,6 +369,7 @@
             isFromDate = $popoverDescriber.attr('data-fromdate'),
             isToDate = $popoverDescriber.attr('data-todate'),
             groupId = $popoverDescriber.attr('data-groupid'),
+            disableBeforeToday = $popoverDescriber.attr('data-disablebeforetoday') == 'true',
             fromDateString = '',
             toDateString = '',
             fromDateToDateJson = undefined,
@@ -391,7 +393,7 @@
         $yearDropDown.html('');
 
         var yearForDropDown = dateTimeInJsonFormat == undefined ? currentYearNumber : dateTimeInJsonFormat.Year;
-        for (var k = yearForDropDown - 5; k <= yearForDropDown + 5; k++) {
+        for (var k = yearForDropDown - 40; k <= yearForDropDown + 5; k++) {
             var $dropDownYear = $('<li role="presentation" data-year="' + k + '"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="md-persiandatetimepicker-yearnumber">' + toPersianNumber(k) + '</a></li>');
             if (k == currentYearNumber)
                 $dropDownYear.addClass('bg-info');
@@ -462,7 +464,7 @@
                 dateTimeInJsonFormat.Day = fromDateToDateJson.ToDateObject.Day;
                 setTargetValue($popoverDescriber, dateTimeInJsonFormat);
                 $popoverDescriber.trigger(triggerName);
-                return null;
+                return '';
             }
 
             if (isToDate && fromDateToDateJson.FromDateNumber != undefined && currentDateNumber < fromDateToDateJson.FromDateNumber && !initializing) {
@@ -471,7 +473,7 @@
                 dateTimeInJsonFormat.Day = fromDateToDateJson.FromDateObject.Day;
                 setTargetValue($popoverDescriber, dateTimeInJsonFormat);
                 $popoverDescriber.trigger(triggerName);
-                return null;
+                return '';
             }
         }
 
@@ -502,11 +504,10 @@
 
             var dayNumberInString = toPersianNumber(zeroPad(i)),
                 currentLoopDateNumber = convertToNumber(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, i),
-                isToday = i == currentDayNumber && dateTimeInJsonFormat.Month == currentMonthNumber && dateTimeInJsonFormat.Year == currentYearNumber,
                 $td = $('<td data-name="day" />').html(dayNumberInString);
 
             // امروز
-            if (isToday) {
+            if (currentLoopDateNumber == todayDateNumber) {
                 $td.addClass('bg-primary').attr('data-name', 'today');
                 // اگر نام روز هفته انخاب شده در تکس باکس قبل از تاریخ امروز باشد
                 // نباید دیگر نام روز هفته تغییر کند
@@ -524,11 +525,16 @@
                 $td.addClass('text-danger');
 
             // بررسی از تاریخ، تا تاریخ
-            if (fromDateToDateJson != undefined &&
+            if (
+                fromDateToDateJson != undefined &&
                 ((isToDate && fromDateToDateJson.FromDateNumber != undefined && currentLoopDateNumber < fromDateToDateJson.FromDateNumber) ||
-                (isFromDate && fromDateToDateJson.ToDateNumber != undefined && currentLoopDateNumber > fromDateToDateJson.ToDateNumber))) {
+                (isFromDate && fromDateToDateJson.ToDateNumber != undefined && currentLoopDateNumber > fromDateToDateJson.ToDateNumber))
+               )
                 $td.attr('data-name', 'disabled-day');
-            }
+
+            // روزهای غیر فعال شده
+            if (disableBeforeToday && currentLoopDateNumber < todayDateNumber)
+                $td.attr('data-name', 'disabled-day');
 
             $tr.append($td);
             isTrAppended = false;
@@ -542,13 +548,21 @@
         $nextMonthButton.removeClass('disabled').removeAttr('disabled');
         $nextYearButton.removeClass('disabled').removeAttr('disabled');
 
+        //بررسی دکمه های غیرفعال قبل از امروز
+        if (disableBeforeToday && currentYearNumber == dateTimeInJsonFormat.Year && currentMonthNumber >= dateTimeInJsonFormat.Month) {
+            $previousMonthButton.addClass('disabled').attr('disabled', 'disabled');
+            $previousYearButton.addClass('disabled').attr('disabled', 'disabled');
+        }
+
+        if (disableBeforeToday && currentYearNumber >= dateTimeInJsonFormat.Year) {
+            $previousYearButton.addClass('disabled').attr('disabled', 'disabled');
+        }
+
         // غیر فعال کردن دکمه های ماه بعد و سال بعد و یا ماه قبل و سال قبل
         if (fromDateToDateJson != undefined && fromDateToDateJson.FromDateObject != undefined && fromDateToDateJson.ToDateObject != undefined) {
 
             // دکمه های ماه قبل و سال قبل
-
-            if (isToDate && fromDateToDateJson.FromDateObject.Year == fromDateToDateJson.ToDateObject.Year
-                && fromDateToDateJson.FromDateObject.Month >= fromDateToDateJson.ToDateObject.Month) {
+            if (isToDate && fromDateToDateJson.FromDateObject.Year == fromDateToDateJson.ToDateObject.Year && fromDateToDateJson.FromDateObject.Month >= fromDateToDateJson.ToDateObject.Month) {
                 $previousMonthButton.addClass('disabled').attr('disabled', 'disabled');
                 $previousYearButton.addClass('disabled').attr('disabled', 'disabled');
             }
@@ -569,17 +583,6 @@
                 $nextYearButton.addClass('disabled').attr('disabled', 'disabled');
             }
 
-            // غیر فعال کردن سال های خارج از رنج
-            $yearDropDown.find('li[data-year]').each(function () {
-                var $thisLi = $(this),
-                    year = Number($thisLi.attr('data-year'));
-                if ((isFromDate && year > fromDateToDateJson.ToDateObject.Year) ||
-                    (isToDate && year < fromDateToDateJson.FromDateObject.Year))
-                    $thisLi.addClass('disabled').children('a').attr('disabled', 'disabled');
-                else
-                    $thisLi.removeClass('disabled').children('a').removeAttr('disabled');
-            });
-
             // غیر فعال کردن ماه های خارج از رنج
             $monthsTitlesDropDown.find('a[data-monthnumber]').each(function () {
                 var $thisA = $(this),
@@ -596,6 +599,18 @@
             });
         }
         // \\
+
+        // غیر فعال کردن سال های خارج از رنج
+        $yearDropDown.find('li[data-year]').each(function () {
+            var $thisLi = $(this),
+                year = Number($thisLi.attr('data-year'));
+            if ((fromDateToDateJson != undefined && fromDateToDateJson.FromDateObject != undefined && fromDateToDateJson.ToDateObject != undefined && isFromDate && year > fromDateToDateJson.ToDateObject.Year) ||
+                (fromDateToDateJson != undefined && fromDateToDateJson.FromDateObject != undefined && fromDateToDateJson.ToDateObject != undefined && isToDate && year < fromDateToDateJson.FromDateObject.Year) ||
+                (disableBeforeToday && year < currentYearNumber))
+                $thisLi.addClass('disabled').children('a').attr('disabled', 'disabled');
+            else
+                $thisLi.removeClass('disabled').children('a').removeAttr('disabled');
+        });
 
         // روزهای ماه بعد
         if (cellNumber < 42) {
@@ -812,6 +827,7 @@
                 GroupId: '',
                 ToDate: false,
                 FromDate: false,
+                DisableBeforeToday: false,
                 Disabled: false
             }, options);
 
@@ -837,6 +853,8 @@
                     $this.attr('data-fromdate', settings.FromDate);
                 if (settings.EnglishNumber)
                     $this.attr('data-englishnumber', settings.EnglishNumber);
+                if (settings.DisableBeforeToday)
+                    $this.attr('data-disablebeforetoday', true);
                 if (settings.Disabled)
                     $this.attr('data-disabled', true);
 
@@ -934,17 +952,19 @@
                 groupId = $this.attr('data-groupid'),
                 toDate = $this.attr('data-todate'),
                 fromDate = $this.attr('data-fromdate'),
+                disableBeforeToday = $this.attr('data-disablebeforetoday'),
                 disable = $this.attr('data-disabled') != undefined && $this.attr('data-disabled').toLowerCase() == 'true';
             if (!$this.is(':input') && $this.css('cursor') == 'auto')
                 $this.css({ cursor: 'pointer' });
             $this.MdPersianDateTimePicker({
                 Placement: placement,
                 Trigger: trigger,
-                EnableTimePicker: enableTimePicker != undefined ? enableTimePicker : false,
+                EnableTimePicker: enableTimePicker == 'true',
                 TargetSelector: targetSelector != undefined ? targetSelector : '',
                 GroupId: groupId != undefined ? groupId : '',
                 ToDate: toDate != undefined ? toDate : '',
                 FromDate: fromDate != undefined ? fromDate : '',
+                DisableBeforeToday: disableBeforeToday == 'true',
                 Disabled: disable
             });
         });
