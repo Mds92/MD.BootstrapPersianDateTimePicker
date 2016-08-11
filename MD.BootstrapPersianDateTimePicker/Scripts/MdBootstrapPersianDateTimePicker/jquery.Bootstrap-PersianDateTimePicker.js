@@ -222,6 +222,24 @@
             selectedDateTimeString = selectedDateTimeString + '  ' + hourString + ':' + minuteString + ':' + secondString;
         return selectedDateTimeString;
     }
+    function setTargetValue($popoverDescriber, dateTimeInJsonFormat) {
+        var targetSelector = $popoverDescriber.attr('data-targetselector'),
+            $target = $(targetSelector),
+            enableTimePicker = $popoverDescriber.attr('data-enabletimepicker') == 'true',
+            englishNumber = $popoverDescriber.attr('data-englishnumber') == 'true';
+        if ($target.is('input'))
+            $target.val(getDateTimeString(dateTimeInJsonFormat, enableTimePicker, englishNumber));
+        else
+            $target.html(getDateTimeString(dateTimeInJsonFormat, enableTimePicker, englishNumber));
+        $target.trigger('change');
+    }
+    function getTargetValue($popoverDescriber) {
+        var targetSelector = $popoverDescriber.attr('data-targetselector'),
+            $target = $(targetSelector);
+        if ($target.is('input'))
+            return $target.val().trim();
+        return $target.text().trim();
+    }
 
     function createDateTimeJson(year, month, day, hour, minute, second) {
         if (!isNumber(hour)) hour = 0;
@@ -346,13 +364,12 @@
             $calendarTimePicker = $('<tr><td colspan="100" style="padding: 2px;"><table class="table" data-name="md-persiandatetimepicker-timepicker"><tr><td><input type="number" class="form-control" data-name="clock-hour" min="0" max="23" /></td><td>:</td><td><input type="number" class="form-control" data-name="clock-minute" min="0" max="59" /></td><td>:</td><td><input type="number" class="form-control" data-name="clock-second" min="0" max="59" /></td></tr></table></td></tr>'),
             $calendarFooter = $('<tfoot><tr><td colspan="100"><a class="" href="javascript:void(0);" data-name="go-today">' + todayDateTimeString + '</a></td></tr></tfoot>'),
             $calendarDivWrapper = $('<div ' + mdDateTimePickerWrapperAttribute + ' />'),
-            targetSelector = $popoverDescriber.attr('data-targetselector'),
-            $target = targetSelector == undefined || targetSelector == '' ? $popoverDescriber : $(targetSelector),
+            //targetSelector = $popoverDescriber.attr('data-targetselector'),
+            //$target = targetSelector == undefined || targetSelector == '' ? $popoverDescriber : $(targetSelector),
             enableTimePicker = $popoverDescriber.attr('data-enabletimepicker') == 'true',
             isFromDate = $popoverDescriber.attr('data-fromdate'),
             isToDate = $popoverDescriber.attr('data-todate'),
             groupId = $popoverDescriber.attr('data-groupid'),
-            englishNumber = $popoverDescriber.attr('data-englishnumber') == 'true',
             fromDateString = '',
             toDateString = '',
             fromDateToDateJson = undefined,
@@ -363,7 +380,7 @@
 
         // اگر متغیر زیر تعریف نشده بود مقدار را از داخل تارگت گرفته و استفاده می کند
         if (dateTimeInJsonFormat == undefined)
-            dateTimeInJsonFormat = parsePreviousDateTimeValue($target.val().trim());
+            dateTimeInJsonFormat = parsePreviousDateTimeValue(getTargetValue($popoverDescriber));
 
         var fixedDate = fixDate(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day),
             currentDateNumber = convertToNumber(fixedDate.Year, fixedDate.Month, fixedDate.Day);
@@ -445,7 +462,7 @@
                 dateTimeInJsonFormat.Year = fromDateToDateJson.ToDateObject.Year;
                 dateTimeInJsonFormat.Month = fromDateToDateJson.ToDateObject.Month;
                 dateTimeInJsonFormat.Day = fromDateToDateJson.ToDateObject.Day;
-                $target.val(getDateTimeString(dateTimeInJsonFormat, enableTimePicker, englishNumber));
+                setTargetValue($popoverDescriber, dateTimeInJsonFormat);
                 $popoverDescriber.trigger(triggerName);
                 return null;
             }
@@ -454,7 +471,7 @@
                 dateTimeInJsonFormat.Year = fromDateToDateJson.FromDateObject.Year;
                 dateTimeInJsonFormat.Month = fromDateToDateJson.FromDateObject.Month;
                 dateTimeInJsonFormat.Day = fromDateToDateJson.FromDateObject.Day;
-                $target.val(getDateTimeString(dateTimeInJsonFormat, enableTimePicker, englishNumber));
+                setTargetValue($popoverDescriber, dateTimeInJsonFormat);
                 $popoverDescriber.trigger(triggerName);
                 return null;
             }
@@ -495,16 +512,16 @@
                 $td.addClass('bg-primary').attr('data-name', 'today');
                 // اگر نام روز هفته انخاب شده در تکس باکس قبل از تاریخ امروز باشد
                 // نباید دیگر نام روز هفته تغییر کند
-                if (dayOfWeek == '') 
+                if (dayOfWeek == '')
                     dayOfWeek = getPersianWeekDayNameWithPersianIndex(tdNumber);
             }
-            // روز از قبل انتخاب شده
-            // روزی که در تکس باکس انتخاب شده
+                // روز از قبل انتخاب شده
+                // روزی که در تکس باکس انتخاب شده
             else if (i == dateTimeInJsonFormat.Day) {
                 $td.addClass('bg-info');
                 dayOfWeek = getPersianWeekDayNameWithPersianIndex(tdNumber);
             }
-            // روز جمعه
+                // روز جمعه
             else if (tdNumber > 0 && tdNumber % 6 == 0)
                 $td.addClass('text-danger');
 
@@ -612,16 +629,13 @@
         // آیا محتویات تکس باکس باید تغییر کند ؟
         if (writeDateString) {
             if (fromDateToDateJson != undefined) {
-                //var previousSelectedDateNumber = convertDateStringToNumber($target.val()); // تاریخی که از قبل در تکس باکس بوده و قبلا انتخاب شده است
                 var selectedDateNumber = convertToNumber(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day); // تاریخ انتخاب شده فعلی
                 if (!((isToDate && fromDateToDateJson.FromDateNumber != undefined && selectedDateNumber < fromDateToDateJson.FromDateNumber) ||
                 (isFromDate && fromDateToDateJson.ToDateNumber != undefined && selectedDateNumber > fromDateToDateJson.ToDateNumber))) {
-                    $target.val(getDateTimeString(dateTimeInJsonFormat, enableTimePicker, englishNumber));
-                    $target.trigger('change');
+                    setTargetValue($popoverDescriber, dateTimeInJsonFormat);
                 }
             } else {
-                $target.val(getDateTimeString(dateTimeInJsonFormat, enableTimePicker, englishNumber));
-                $target.trigger('change');
+                setTargetValue($popoverDescriber, dateTimeInJsonFormat);
             }
         }
 
@@ -706,7 +720,8 @@
                     newDateTimeInJsonFormat.Minute = 0;
                 if (newDateTimeInJsonFormat.Second > 59)
                     newDateTimeInJsonFormat.Second = 0;
-                break;
+                setTargetValue($popoverDescriber, newDateTimeInJsonFormat);
+                return;
 
                 // تغییر روز
             case changeDateTimeEnum.DayChanged:
@@ -779,8 +794,6 @@
         // تغییر ساعت ، دقیقه و یا ثانیه
         $(document).on('change', 'input[data-name^="clock"]', function () {
             updateDateTimePickerHtml(this, changeDateTimeEnum.ClockChanged);
-            $(this).focus();
-            return true;
         });
 
         // کلیک روی دکمه امروز
@@ -850,8 +863,8 @@
                 });
             });
         },
-        disable: function(isDisable) {
-            return this.each(function() {
+        disable: function (isDisable) {
+            return this.each(function () {
                 var $this = $(this);
                 $this.attr('data-disabled', isDisable);
             });
