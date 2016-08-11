@@ -1,6 +1,6 @@
 ﻿/*
  * bootstrap persian date time picker jQuery Plugin
- * version : 1.7.3.4
+ * version : 2.0.0.0
  *
  *
  *
@@ -364,8 +364,6 @@
             $calendarTimePicker = $('<tr><td colspan="100" style="padding: 2px;"><table class="table" data-name="md-persiandatetimepicker-timepicker"><tr><td><input type="number" class="form-control" data-name="clock-hour" min="0" max="23" /></td><td>:</td><td><input type="number" class="form-control" data-name="clock-minute" min="0" max="59" /></td><td>:</td><td><input type="number" class="form-control" data-name="clock-second" min="0" max="59" /></td></tr></table></td></tr>'),
             $calendarFooter = $('<tfoot><tr><td colspan="100"><a class="" href="javascript:void(0);" data-name="go-today">' + todayDateTimeString + '</a></td></tr></tfoot>'),
             $calendarDivWrapper = $('<div ' + mdDateTimePickerWrapperAttribute + ' />'),
-            //targetSelector = $popoverDescriber.attr('data-targetselector'),
-            //$target = targetSelector == undefined || targetSelector == '' ? $popoverDescriber : $(targetSelector),
             enableTimePicker = $popoverDescriber.attr('data-enabletimepicker') == 'true',
             isFromDate = $popoverDescriber.attr('data-fromdate'),
             isToDate = $popoverDescriber.attr('data-todate'),
@@ -918,9 +916,7 @@
         if (!$target.hasClass('popover') && // اگر روی تقویم کلیک نشده بود
             !hasFlag && // اگر فلگ نداشت
             $target.parents('.popover.in').length == 0) // اگر روی تقویم کلیک نشده بود
-        {
             hidePopover($(mdDateTimePickerFlagSelector));
-        }
     });
 
     //////////////////////////////////////////////////////////////
