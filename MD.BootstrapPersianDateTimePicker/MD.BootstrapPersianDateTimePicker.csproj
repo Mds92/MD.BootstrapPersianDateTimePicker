@@ -69,7 +69,7 @@
     <Content Include="Scripts\jquery-3.1.0.slim.min.js" />
     <Content Include="Scripts\MdBootstrapPersianDateTimePicker\jalaali.js" />
     <Content Include="Scripts\MdBootstrapPersianDateTimePicker\jquery.Bootstrap-PersianDateTimePicker.js" />
-    <Content Include="Demo\test.html" />
+    <Content Include="Demo\Demo1.html" />
     <Content Include="Demo\PersianDateTimePickerDemo.html" />
   </ItemGroup>
   <ItemGroup>

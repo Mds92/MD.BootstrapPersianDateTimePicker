@@ -15,10 +15,15 @@
     var mdDateTimePickerFlagAttributeName = 'data-mdpersiandatetimepicker',
         mdDateTimePickerFlagSelector = '[' + mdDateTimePickerFlagAttributeName + ']',
         mdDateTimeIsShowingAttributeName = 'data-mdpersiandatetimepickershowing',
-        mdSelectedDateTimeAttributeName = 'data-mdpersiandatetimepickerSelectedDateTime',
+        mdSelectedDateTimeAttributeName = 'data-mdpersiandatetimepickerSelecteddatetime',
         mdDateTimePickerWrapperAttribute = 'data-name="md-persiandatetimepicker"',
         mdDateTimePickerWrapperSelector = '[' + mdDateTimePickerWrapperAttribute + ']',
         isFirstTime = true,
+        amPmEnumEnum = {
+            AM : 0,
+            PM : 1,
+            None : 2
+        },
         changeDateTimeEnum = {
             IncreaseMonth: 1,
             DecreaseMonth: 2,
@@ -130,32 +135,32 @@
         if (inputNumber1 == undefined) return '';
         var str1 = inputNumber1.toString().trim();
         if (str1 == '') return '';
-        str1 = str1.replace(/0/g, '۰');
-        str1 = str1.replace(/1/g, '۱');
-        str1 = str1.replace(/2/g, '۲');
-        str1 = str1.replace(/3/g, '۳');
-        str1 = str1.replace(/4/g, '۴');
-        str1 = str1.replace(/5/g, '۵');
-        str1 = str1.replace(/6/g, '۶');
-        str1 = str1.replace(/7/g, '۷');
-        str1 = str1.replace(/8/g, '۸');
-        str1 = str1.replace(/9/g, '۹');
+        str1 = str1.replace(/0/img, '۰');
+        str1 = str1.replace(/1/img, '۱');
+        str1 = str1.replace(/2/img, '۲');
+        str1 = str1.replace(/3/img, '۳');
+        str1 = str1.replace(/4/img, '۴');
+        str1 = str1.replace(/5/img, '۵');
+        str1 = str1.replace(/6/img, '۶');
+        str1 = str1.replace(/7/img, '۷');
+        str1 = str1.replace(/8/img, '۸');
+        str1 = str1.replace(/9/img, '۹');
         return str1;
     }
     function toEnglishNumber(inputNumber2) {
         if (inputNumber2 == undefined) return '';
         var str = inputNumber2.toString().trim();
         if (str == "") return "";
-        str = str.replace(/۰/g, '0');
-        str = str.replace(/۱/g, '1');
-        str = str.replace(/۲/g, '2');
-        str = str.replace(/۳/g, '3');
-        str = str.replace(/۴/g, '4');
-        str = str.replace(/۵/g, '5');
-        str = str.replace(/۶/g, '6');
-        str = str.replace(/۷/g, '7');
-        str = str.replace(/۸/g, '8');
-        str = str.replace(/۹/g, '9');
+        str = str.replace(/۰/img, '0');
+        str = str.replace(/۱/img, '1');
+        str = str.replace(/۲/img, '2');
+        str = str.replace(/۳/img, '3');
+        str = str.replace(/۴/img, '4');
+        str = str.replace(/۵/img, '5');
+        str = str.replace(/۶/img, '6');
+        str = str.replace(/۷/img, '7');
+        str = str.replace(/۸/img, '8');
+        str = str.replace(/۹/img, '9');
         return str;
     }
     function getPersianMonth(monthNumber) {
@@ -210,27 +215,123 @@
         dateObject.Year = dateObject.Year - 1;
     }
 
-    function getDateTimeString(dateTimeInJsonFormat, enableTimePicker, isEnglishNumber) {
-        var yearString = isEnglishNumber ? zeroPad(dateTimeInJsonFormat.Year) : toPersianNumber(zeroPad(dateTimeInJsonFormat.Year)),
-            monthString = isEnglishNumber ? zeroPad(dateTimeInJsonFormat.Month) : toPersianNumber(zeroPad(dateTimeInJsonFormat.Month)),
-            dayString = isEnglishNumber ? zeroPad(dateTimeInJsonFormat.Day) : toPersianNumber(zeroPad(dateTimeInJsonFormat.Day)),
-            hourString = isEnglishNumber ? zeroPad(dateTimeInJsonFormat.Hour) : toPersianNumber(zeroPad(dateTimeInJsonFormat.Hour)),
-            minuteString = isEnglishNumber ? zeroPad(dateTimeInJsonFormat.Minute) : toPersianNumber(zeroPad(dateTimeInJsonFormat.Minute)),
-            secondString = isEnglishNumber ? zeroPad(dateTimeInJsonFormat.Second) : toPersianNumber(zeroPad(dateTimeInJsonFormat.Second)),
-            selectedDateTimeString = yearString + '/' + monthString + '/' + dayString;
+    function getShortHour(hour) {
+        var shortHour;
+        if (hour > 12)
+            shortHour = hour - 12;
+        else
+            shortHour = hour;
+        return shortHour;
+    }
+    function getAmPm(hour, isMiladi) {
+        var amPm;
+        if (hour > 12) {
+            if (isMiladi)
+                amPm = 'PM';
+            else
+                amPm = 'ب.ظ';
+        }
+        else
+            if (isMiladi)
+                amPm = 'AM';
+            else
+                amPm = 'ق.ظ';
+        return amPm;
+    }
+    function getDefaultFormat(enableTimePicker) {
+        var defaultFormat = 'yyyy/MM/dd';
         if (enableTimePicker)
-            selectedDateTimeString = selectedDateTimeString + '  ' + hourString + ':' + minuteString + ':' + secondString;
+            defaultFormat += ' HH:mm:ss';
+        return defaultFormat;
+    }
+
+    function getDateTimeString(dateTimeInJsonFormat, enableTimePicker, format, isEnglishNumber) {
+        var gregorian = toGregorian(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day),
+            miladiDate = new Date(gregorian.gy, gregorian.gm, gregorian.gd, dateTimeInJsonFormat.Hour, dateTimeInJsonFormat.Minute, dateTimeInJsonFormat.Second),
+            selectedDateTimeString = format;
+
+        /// فرمت های که پشتیبانی می شوند
+        /// <para />
+        /// yyyy: سال چهار رقمی
+        /// <para />
+        /// yy: سال دو رقمی
+        /// <para />
+        /// MMMM: نام فارسی ماه
+        /// <para />
+        /// MM: عدد دو رقمی ماه
+        /// <para />
+        /// M: عدد یک رقمی ماه
+        /// <para />
+        /// dddd: نام فارسی روز هفته
+        /// <para />
+        /// dd: عدد دو رقمی روز ماه
+        /// <para />
+        /// d: عدد یک رقمی روز ماه
+        /// <para />
+        /// HH: ساعت دو رقمی با فرمت 00 تا 24
+        /// <para />
+        /// H: ساعت یک رقمی با فرمت 0 تا 24
+        /// <para />
+        /// hh: ساعت دو رقمی با فرمت 00 تا 12
+        /// <para />
+        /// h: ساعت یک رقمی با فرمت 0 تا 12
+        /// <para />
+        /// mm: عدد دو رقمی دقیقه
+        /// <para />
+        /// m: عدد یک رقمی دقیقه
+        /// <para />
+        /// ss: ثانیه دو رقمی
+        /// <para />
+        /// s: ثانیه یک رقمی
+        /// <para />
+        /// fff: میلی ثانیه 3 رقمی
+        /// <para />
+        /// ff: میلی ثانیه 2 رقمی
+        /// <para />
+        /// f: میلی ثانیه یک رقمی
+        /// <para />
+        /// tt: ب.ظ یا ق.ظ
+        /// <para />
+        /// t: حرف اول از ب.ظ یا ق.ظ
+
+        selectedDateTimeString = selectedDateTimeString.replace(/yyyy/mg, dateTimeInJsonFormat.Year);
+        selectedDateTimeString = selectedDateTimeString.replace(/yy/mg, dateTimeInJsonFormat.Year % 100);
+        selectedDateTimeString = selectedDateTimeString.replace(/MMMM/mg, getPersianMonth(dateTimeInJsonFormat.Month));
+        selectedDateTimeString = selectedDateTimeString.replace(/MM/mg, zeroPad(dateTimeInJsonFormat.Month));
+        selectedDateTimeString = selectedDateTimeString.replace(/M/mg, dateTimeInJsonFormat.Month);
+        selectedDateTimeString = selectedDateTimeString.replace(/dddd/mg, getPersianWeekDayNameWithEnglishIndex(miladiDate.getDay()));
+        selectedDateTimeString = selectedDateTimeString.replace(/dd/mg, zeroPad(dateTimeInJsonFormat.Day));
+        selectedDateTimeString = selectedDateTimeString.replace(/d/mg, dateTimeInJsonFormat.Day);
+        selectedDateTimeString = selectedDateTimeString.replace(/HH/mg, zeroPad(miladiDate.getHours()));
+        selectedDateTimeString = selectedDateTimeString.replace(/H/mg, miladiDate.getHours());
+        selectedDateTimeString = selectedDateTimeString.replace(/hh/mg, zeroPad(getShortHour(miladiDate.getHours())));
+        selectedDateTimeString = selectedDateTimeString.replace(/h/mg, zeroPad(miladiDate.getHours()));
+        selectedDateTimeString = selectedDateTimeString.replace(/mm/mg, zeroPad(miladiDate.getMinutes()));
+        selectedDateTimeString = selectedDateTimeString.replace(/m/mg, miladiDate.getMinutes());
+        selectedDateTimeString = selectedDateTimeString.replace(/ss/mg, zeroPad(miladiDate.getSeconds()));
+        selectedDateTimeString = selectedDateTimeString.replace(/s/mg, miladiDate.getSeconds());
+        selectedDateTimeString = selectedDateTimeString.replace(/fff/mg, zeroPad(miladiDate.getMilliseconds(), '000'));
+        selectedDateTimeString = selectedDateTimeString.replace(/ff/mg, zeroPad(miladiDate.getMilliseconds() / 10));
+        selectedDateTimeString = selectedDateTimeString.replace(/f/mg, miladiDate.getMilliseconds() / 100);
+        selectedDateTimeString = selectedDateTimeString.replace(/tt/mg, getAmPm(miladiDate.getHours()));
+        selectedDateTimeString = selectedDateTimeString.replace(/t/mg, getAmPm(miladiDate.getHours())[0]);
+
+        if (!isEnglishNumber)
+            selectedDateTimeString = toPersianNumber(selectedDateTimeString);
+
         return selectedDateTimeString;
     }
     function setTargetValue($popoverDescriber, dateTimeInJsonFormat) {
         var targetSelector = $popoverDescriber.attr('data-targetselector'),
             $target = $(targetSelector),
+            format = $popoverDescriber.attr('data-mdformat'),
             enableTimePicker = $popoverDescriber.attr('data-enabletimepicker') == 'true',
             englishNumber = $popoverDescriber.attr('data-englishnumber') == 'true';
         if ($target.is('input'))
-            $target.val(getDateTimeString(dateTimeInJsonFormat, enableTimePicker, englishNumber));
+            $target.val(getDateTimeString(dateTimeInJsonFormat, enableTimePicker, format, englishNumber));
         else
-            $target.html(getDateTimeString(dateTimeInJsonFormat, enableTimePicker, englishNumber));
+            $target.html(getDateTimeString(dateTimeInJsonFormat, enableTimePicker, format, englishNumber));
+        $popoverDescriber.attr(mdSelectedDateTimeAttributeName, JSON.stringify(dateTimeInJsonFormat));
         $target.trigger('change');
     }
     function getTargetValue($popoverDescriber) {
@@ -266,12 +367,135 @@
         }
     }
 
+    function parsePersianDateTime(persianDateTimeInString, dateSeperatorPattern) {
+        var persianDateTime = getTodayCalendarInPersian();
+        if (persianDateTimeInString == '') 
+            return createDateTimeJson(persianDateTime[0], persianDateTime[1], persianDateTime[2], 0, 0, 0, 0);
+
+        if (dateSeperatorPattern == undefined || dateSeperatorPattern == '')
+            dateSeperatorPattern = "\/|-";
+        dateSeperatorPattern = new RegExp(dateSeperatorPattern, 'mg');
+        //Convert persian and arabic digit to english to avoid throwing exception in Parse method
+        persianDateTimeInString = toEnglishNumber(persianDateTimeInString);
+
+        var month = '0',
+            year = '0',
+            day = '0',
+            hour = '0',
+            minute = '0',
+            second = '0',
+            miliSecond = '0';
+        var amPmEnum = amPmEnumEnum.None,
+            containMonthSeperator = dateSeperatorPattern.test(persianDateTimeInString);
+
+        // TODO: با عوض شدن سال و ماه ساعت صفر می شود
+        // TODO: با انتخاب تقویمی که ساعت ندارد ساعت صفر را برای آن نشان می دهد
+        // TODO: ریپلیس ها درست انجام نمیشن
+
+        persianDateTimeInString = persianDateTimeInString.replace(/&nbsp;/img, " ");
+        persianDateTimeInString = persianDateTimeInString.replace(/\s+/img, "-");
+        persianDateTimeInString = persianDateTimeInString.replace(/\\/img, "-");
+        persianDateTimeInString = persianDateTimeInString.replace(/ك/img, "ک");
+        persianDateTimeInString = persianDateTimeInString.replace(/ي/img, "ی");
+        persianDateTimeInString = persianDateTimeInString.replace(dateSeperatorPattern, "-");
+        persianDateTimeInString = '-' + persianDateTimeInString + '-';
+
+        // بدست آوردن ب.ظ یا ق.ظ
+        if (persianDateTimeInString.indexOf('ق.ظ') > -1)
+            amPmEnum = amPmEnum.AM;
+        else if (persianDateTimeInString.indexOf('ب.ظ') > -1)
+            amPmEnum = amPmEnum.PM;
+
+        if (persianDateTimeInString.indexOf(':') > -1) // رشته ورودی شامل ساعت نیز هست
+        {
+            persianDateTimeInString = persianDateTimeInString.replace(/-*:-*/img, ":");
+            hour = (persianDateTimeInString.match(/-\d{1,2}(?=:)/img)[0]).replace(/\D+/, '');
+            var minuteAndSecondAndMiliSecondMatch = persianDateTimeInString.match(/:\d{1,2}(?=:?)/img);
+            minute = minuteAndSecondAndMiliSecondMatch[0].replace(/\D+/, '');
+            if (minuteAndSecondAndMiliSecondMatch[1] != undefined)
+                second = minuteAndSecondAndMiliSecondMatch[1].replace(/\D+/, '');
+            if (minuteAndSecondAndMiliSecondMatch[2] != undefined)
+                miliSecond = minuteAndSecondAndMiliSecondMatch[2].replace(/\D+/, '');
+        }
+
+        if (containMonthSeperator)
+        {
+            var monthDayMath = persianDateTimeInString.match(/-\d{1,2}(?=-\d{1,2}[^:])/img);
+
+            // بدست آوردن ماه
+            month = monthDayMath[0].replace(/\D+/, '');
+
+            // بدست آوردن روز
+            day = monthDayMath[1].replace(/\D+/, '');
+
+            // بدست آوردن سال
+            year = (persianDateTimeInString.match(/-\d{2,4}(?=-\d{1,2}[^:])/img)[0]).replace(/\D+/, '');
+        }
+        else
+        {
+            for (var i = 1; i < 12; i++) {
+                var persianMonthName = getPersianMonth(i);
+                if (!persianDateTimeInString.indexOf(persianMonthName) > -1) continue;
+                month = i;
+                break;
+            }
+
+            // بدست آوردن روز
+            var dayMatch = persianDateTimeInString.match(/-\d{1,2}(?=-)/img);
+            if (dayMatch != null)
+            {
+                day = dayMatch[0].replace(/\D+/, '');
+                persianDateTimeInString = persianDateTimeInString.replace( new RegExp('-' + day + '(?=-)', 'img'), '-');
+            }
+
+            // بدست آوردن سال
+            var yearMatch = persianDateTimeInString.match(/-\d{4}(?=-)/img);
+            if (yearMatch != null)
+                year = yearMatch[0].replace(/\D+/, '');
+            else
+            {
+                yearMatch = persianDateTimeInString.match(/-\d{2,4}(?=-)/img);
+                if (yearMatch != null)
+                    year = yearMatch[0].replace(/\D+/, '');
+            }
+        }
+
+        var numericYear = Number(year);
+        var numericMonth = Number(month);
+        var numericDay = Number(day);
+        var numericHour = Number(hour);
+        var numericMinute = Number(minute);
+        var numericSecond = Number(second);
+        var numericMiliSecond = Number(miliSecond);
+
+        if (numericYear <= 0)
+            numericYear = persianDateTime[0];
+
+        if (numericMonth <= 0)
+            numericMonth = persianDateTime[1];
+
+        if (numericDay <= 0)
+            numericDay = persianDateTime[2];
+
+        switch (amPmEnum)
+        {
+            case amPmEnum.PM:
+                if (numericHour < 12)
+                    numericHour = numericHour + 12;
+                break;
+            case amPmEnum.AM:
+            case amPmEnum.None:
+                break;
+        }
+
+        return createDateTimeJson(numericYear, numericMonth, numericDay, numericHour, numericMinute, numericSecond, numericMiliSecond);
+    }
     function parsePreviousDateTimeValue(persianDateTimeString) {
         //بدست آوردن تاریخ قبلی که در تکست باکس وجود داشته
         var previousDateTime = toEnglishNumber(persianDateTimeString).replace(/\s+/, '-'),
-            year,
-            month,
-            day,
+            year = 0,
+            month = 0,
+            day = 0,
             hour = 0,
             minute = 0,
             second = 0;
@@ -281,17 +505,19 @@
             month = Number(previousDateTime.match(/\d{1,2}(?=\/\d{1,2})(?!\/\d{1,2}\/)/im));
             day = previousDateTime.match(/(\d{1,2})(-|$)/im);
             day = day != undefined && day.length >= 1 ? Number(day[1]) : 0;
-        } else {
-            var todayPersianDate = getTodayCalendarInPersian();
-            year = todayPersianDate[0];
-            month = todayPersianDate[1];
-            day = todayPersianDate[2];
         }
 
         if (previousDateTime.indexOf(':') > 0) { // بدست آوردن مقادیر ساعت و مقدار دهی آنها
             hour = Number(previousDateTime.match(/\d{1,2}(?=:\d{1,2}:)/im));
             minute = Number(previousDateTime.match(/\d{1,2}(?=:)(?!:\d{1,2}:)/im));
             second = Number(previousDateTime.match(/:(\d+$)/im)[1]);
+        }
+
+        if (year <= 0 || month <= 0 || day <= 0) {
+            var todayPersianDate = getTodayCalendarInPersian();
+            year = todayPersianDate[0];
+            month = todayPersianDate[1];
+            day = todayPersianDate[2];
         }
 
         var fixedDate = fixDate(year, month, day);
@@ -380,7 +606,7 @@
 
         // اگر متغیر زیر تعریف نشده بود مقدار را از داخل تارگت گرفته و استفاده می کند
         if (dateTimeInJsonFormat == undefined)
-            dateTimeInJsonFormat = parsePreviousDateTimeValue(getTargetValue($popoverDescriber));
+            dateTimeInJsonFormat = parsePersianDateTime(getTargetValue($popoverDescriber));
 
         var fixedDate = fixDate(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day),
             currentDateNumber = convertToNumber(fixedDate.Year, fixedDate.Month, fixedDate.Day);
@@ -392,7 +618,7 @@
         var $yearDropDown = $calendarHeader.find('[aria-labelledby="dropdownMenuPersianYear"]');
         $yearDropDown.html('');
 
-        var yearForDropDown = dateTimeInJsonFormat == undefined ? currentYearNumber : dateTimeInJsonFormat.Year;
+        var yearForDropDown = dateTimeInJsonFormat.Year;
         for (var k = yearForDropDown - 40; k <= yearForDropDown + 5; k++) {
             var $dropDownYear = $('<li role="presentation" data-year="' + k + '"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="md-persiandatetimepicker-yearnumber">' + toPersianNumber(k) + '</a></li>');
             if (k == currentYearNumber)
@@ -692,7 +918,7 @@
             $popoverDescriber = $wrapper.length > 0 ? $('[aria-describedby*="' + $wrapper.parents('.popover').attr('id') + '"]') : undefined,
             newDateTimeInJsonFormat = $popoverDescriber != undefined && $popoverDescriber.attr(mdSelectedDateTimeAttributeName) != undefined && $popoverDescriber.attr(mdSelectedDateTimeAttributeName) != '' ? JSON.parse($popoverDescriber.attr(mdSelectedDateTimeAttributeName)) : undefined,
             writeDateString = true;
-
+        
         switch (changeEnum) {
             // ماه بعدی
             case changeDateTimeEnum.IncreaseMonth:
@@ -821,14 +1047,15 @@
             {
                 EnglishNumber: false,
                 Placement: 'bottom',
-                Trigger: 'focus',
-                EnableTimePicker: true,
+                Trigger: 'click',
+                EnableTimePicker: false,
                 TargetSelector: '',
                 GroupId: '',
                 ToDate: false,
                 FromDate: false,
                 DisableBeforeToday: false,
-                Disabled: false
+                Disabled: false,
+                Format: ''
             }, options);
 
             if (isFirstTime) {
@@ -843,6 +1070,7 @@
 
                 $this.attr('data-trigger', settings.Trigger);
                 $this.attr('data-enabletimepicker', settings.EnableTimePicker);
+                $this.attr('data-mdformat', settings.Format == '' ? getDefaultFormat(settings.EnableTimePicker) : settings.Format);
                 if (settings.TargetSelector.trim() != '')
                     $this.attr('data-targetselector', settings.TargetSelector);
                 if (settings.GroupId.trim() != '')
@@ -858,7 +1086,7 @@
                 if (settings.Disabled)
                     $this.attr('data-disabled', true);
 
-                var initialDateTimeInJsonFormat = parsePreviousDateTimeValue($this.val()),
+                var initialDateTimeInJsonFormat = parsePersianDateTime($this.val()),
                     $calendarDivWrapper = createDateTimePickerHtml($this, initialDateTimeInJsonFormat, undefined, true);
 
                 // نمایش تقویم
@@ -953,19 +1181,21 @@
                 toDate = $this.attr('data-todate'),
                 fromDate = $this.attr('data-fromdate'),
                 disableBeforeToday = $this.attr('data-disablebeforetoday'),
-                disable = $this.attr('data-disabled') != undefined && $this.attr('data-disabled').toLowerCase() == 'true';
+                disable = $this.attr('data-disabled') != undefined && $this.attr('data-disabled').toLowerCase() == 'true',
+                format = $this.attr('data-mdformat');
             if (!$this.is(':input') && $this.css('cursor') == 'auto')
                 $this.css({ cursor: 'pointer' });
             $this.MdPersianDateTimePicker({
                 Placement: placement,
-                Trigger: trigger,
+                Trigger: trigger == undefined || trigger == '' ? 'click' : trigger,
                 EnableTimePicker: enableTimePicker == 'true',
                 TargetSelector: targetSelector != undefined ? targetSelector : '',
                 GroupId: groupId != undefined ? groupId : '',
                 ToDate: toDate != undefined ? toDate : '',
                 FromDate: fromDate != undefined ? fromDate : '',
                 DisableBeforeToday: disableBeforeToday == 'true',
-                Disabled: disable
+                Disabled: disable,
+                Format: format == undefined || format == '' ? getDefaultFormat(enableTimePicker) : format
             });
         });
     }
