@@ -245,7 +245,7 @@
         return defaultFormat;
     }
 
-    function getDateTimeString(dateTimeInJsonFormat, enableTimePicker, format, isEnglishNumber) {
+    function getDateTimeString(dateTimeInJsonFormat, format, isEnglishNumber) {
         var gregorian = toGregorian(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day),
             miladiDate = new Date(gregorian.gy, gregorian.gm, gregorian.gd, dateTimeInJsonFormat.Hour, dateTimeInJsonFormat.Minute, dateTimeInJsonFormat.Second),
             selectedDateTimeString = format;
@@ -328,9 +328,9 @@
             enableTimePicker = $popoverDescriber.attr('data-enabletimepicker') == 'true',
             englishNumber = $popoverDescriber.attr('data-englishnumber') == 'true';
         if ($target.is('input'))
-            $target.val(getDateTimeString(dateTimeInJsonFormat, enableTimePicker, format, englishNumber));
+            $target.val(getDateTimeString(dateTimeInJsonFormat, format, englishNumber));
         else
-            $target.html(getDateTimeString(dateTimeInJsonFormat, enableTimePicker, format, englishNumber));
+            $target.html(getDateTimeString(dateTimeInJsonFormat, format, englishNumber));
         $popoverDescriber.attr(mdSelectedDateTimeAttributeName, JSON.stringify(dateTimeInJsonFormat));
         $target.trigger('change');
     }
@@ -420,7 +420,7 @@
 
         if (containMonthSeperator)
         {
-            var monthDayMath = persianDateTimeInString.match(/-\d{1,2}(?=-\d{1,2}[^:])/img);
+            var monthDayMath = persianDateTimeInString.match(/-\d{1,2}(?=-\d{1,2}[^:]|-)/img);
 
             // بدست آوردن ماه
             month = monthDayMath[0].replace(/\D+/, '');
@@ -1070,7 +1070,7 @@
 
                 $this.attr('data-trigger', settings.Trigger);
                 $this.attr('data-enabletimepicker', settings.EnableTimePicker);
-                $this.attr('data-mdformat', settings.Format == '' ? getDefaultFormat(settings.EnableTimePicker) : settings.Format);
+                $this.attr('data-mdformat', settings.Format == '' ? getDefaultFormat(settings.EnableTimePicker == 'true') : settings.Format);
                 if (settings.TargetSelector.trim() != '')
                     $this.attr('data-targetselector', settings.TargetSelector);
                 if (settings.GroupId.trim() != '')
@@ -1195,7 +1195,7 @@
                 FromDate: fromDate != undefined ? fromDate : '',
                 DisableBeforeToday: disableBeforeToday == 'true',
                 Disabled: disable,
-                Format: format == undefined || format == '' ? getDefaultFormat(enableTimePicker) : format
+                Format: format == undefined || format == '' ? getDefaultFormat(enableTimePicker == 'true') : format
             });
         });
     }
