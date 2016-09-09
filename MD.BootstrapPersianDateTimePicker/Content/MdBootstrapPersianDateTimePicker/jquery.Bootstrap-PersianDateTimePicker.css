@@ -1,4 +1,8 @@
-﻿[data-name="md-datetimepicker-popovercontent"] {
+﻿.popover {
+    min-width: 300px;
+}
+
+[data-name="md-datetimepicker-popovercontent"] {
     padding: 5px 6px;
 }
 
@@ -15,9 +19,11 @@
     font-family: Tahoma;
     font-size: 12px;
 }
+[data-name="md-datetimepicker-title"][data-isgregorian="true"] {
+    direction: ltr;
+}
 
 [data-name="md-persiandatetimepicker"] {
-    min-width: 230px;
 }
 
     [data-name="md-persiandatetimepicker"] button {
@@ -27,6 +33,10 @@
     [data-name="md-persiandatetimepicker"] table.table-striped {
         margin-bottom: 0;
         direction: rtl;
+    }
+
+    [data-name="md-persiandatetimepicker"][data-isgregorian="true"] table.table-striped {
+        direction: ltr;
     }
 
     [data-name="md-persiandatetimepicker"] table.table td {

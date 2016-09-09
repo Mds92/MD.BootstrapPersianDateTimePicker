@@ -50,6 +50,7 @@
     <Content Include="Content\MD.PersianDateTimePicker.jpg" />
     <Content Include="Content\MD.PersianDateTimePicker.png" />
     <Content Include="Content\MdBootstrapPersianDateTimePicker\jquery.Bootstrap-PersianDateTimePicker.css" />
+    <Content Include="Demo\Demo3.html" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="packages.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
