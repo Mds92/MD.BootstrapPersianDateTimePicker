@@ -395,11 +395,11 @@
         selectedDateTimeString = selectedDateTimeString.replace(/fff/mg, zeroPad(miladiDate.getMilliseconds(), '000'));
         selectedDateTimeString = selectedDateTimeString.replace(/ff/mg, zeroPad(miladiDate.getMilliseconds() / 10));
         selectedDateTimeString = selectedDateTimeString.replace(/f/mg, miladiDate.getMilliseconds() / 100);
-        selectedDateTimeString = selectedDateTimeString.replace(/tt/mg, getAmPm(miladiDate.getHours()));
-        selectedDateTimeString = selectedDateTimeString.replace(/t/mg, getAmPm(miladiDate.getHours())[0]);
+        selectedDateTimeString = selectedDateTimeString.replace(/tt/mg, getAmPm(miladiDate.getHours(), isGregorian));
+        selectedDateTimeString = selectedDateTimeString.replace(/t/mg, getAmPm(miladiDate.getHours(), isGregorian)[0]);
 
         if (!isEnglishNumber)
-            selectedDateTimeString = isGregorian ? selectedDateTimeString : toPersianNumber(selectedDateTimeString);
+            selectedDateTimeString = toPersianNumber(selectedDateTimeString);
 
         return selectedDateTimeString;
     }
