@@ -1226,7 +1226,7 @@
             writeDateString = true;
 
         if (isGregorian == undefined && $popoverDescriber != undefined)
-            isGregorian = $popoverDescriber.attr('data-isgregorian').toLowerCase() == 'true';
+            isGregorian = $popoverDescriber.attr('data-isgregorian') == 'true';
         
         switch (changeEnum) {
             // ماه بعدی
