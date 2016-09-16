@@ -588,7 +588,14 @@
 
     function parseGregorianDateTime(gregorianDateTimeString) {
         //بدست آوردن تاریخ قبلی که در تکست باکس وجود داشته
-        if (gregorianDateTimeString.trim() == '') return new Date();
+        if (gregorianDateTimeString.trim() == '') {
+            var dateTime = new Date();
+            dateTime.setHours(0);
+            dateTime.setMinutes(0);
+            dateTime.setSeconds(0);
+            dateTime.setMilliseconds(0);
+            return dateTime;
+        }
         return new Date(gregorianDateTimeString);
     }
 
@@ -972,33 +979,37 @@
         if (groupId != undefined && groupId != '') {
             var fromDateTime = null,
                 toDateTime = null;
+            if (fromDateToDateJson == undefined)
+                fromDateToDateJson = {};
             if (isFromDate != undefined && isFromDate == 'true') { // $popoverDescriber is `from date`, so we have to find `to date`
                 var $toDatePopoverDescriber = $('[data-groupid="' + groupId + '"][data-todate]'),
-                    toDateTargetSelector = $toDatePopoverDescriber.attr('data-targetselector'),
-                    $toDateTarget = toDateTargetSelector != undefined && toDateTargetSelector != '' ? $(toDateTargetSelector) : $toDatePopoverDescriber;
-                toDateTime = parseGregorianDateTime($toDateTarget.val());
+                    toDateTargetValue = getTargetValue($toDatePopoverDescriber);
+                toDateTime = toDateTargetValue == '' ? undefined : parseGregorianDateTime(toDateTargetValue);
+                fromDateToDateJson.ToDateObject = toDateTime;
+                fromDateToDateJson.FromDateObject = gregorianDateTime;
             }
             else if (isToDate != undefined && isToDate == 'true') {  // $popoverDescriber is `to date`, so we have to find `from date`
                 var $fromDatePopoverDescriber = $('[data-groupid="' + groupId + '"][data-fromdate]'),
-                    fromDateTargetSelector = $fromDatePopoverDescriber.attr('data-targetselector'),
-                    $fromDateTarget = fromDateTargetSelector != undefined && fromDateTargetSelector != '' ? $(fromDateTargetSelector) : $fromDatePopoverDescriber;
-                fromDateTime = parseGregorianDateTime($fromDateTarget.val());
+                    fromDateTargetValue = getTargetValue($fromDatePopoverDescriber);
+                fromDateTime = fromDateTargetValue == '' ? undefined : parseGregorianDateTime(fromDateTargetValue);
+                fromDateToDateJson.FromDateObject = fromDateTime;
+                fromDateToDateJson.ToDateObject = gregorianDateTime;
             }
 
             // اگر از تاریخ انتخاب شده بزرگتر از - تا تاریخ - بود
-            if (isFromDate && toDateTime != null && gregorianDateTime > toDateTime && !initializing) { 
-                dateTimeInJsonFormat.Year = fromDateToDateJson.ToDateObject.Year;
-                dateTimeInJsonFormat.Month = fromDateToDateJson.ToDateObject.Month;
-                dateTimeInJsonFormat.Day = fromDateToDateJson.ToDateObject.Day;
+            if (isFromDate != undefined && isFromDate == 'true' && toDateTime != null && gregorianDateTime > toDateTime && !initializing) {
+                dateTimeInJsonFormat.Year = toDateTime.getFullYear();
+                dateTimeInJsonFormat.Month = toDateTime.getMonth();
+                dateTimeInJsonFormat.Day = toDateTime.getDate();
                 setTargetValue($popoverDescriber, dateTimeInJsonFormat, true);
                 $popoverDescriber.trigger(triggerName);
                 return '';
             }
 
-            if (isToDate && fromDateToDateJson.FromDateNumber != undefined && gregorianDateTime < fromDateToDateJson.FromDateNumber && !initializing) {
-                dateTimeInJsonFormat.Year = fromDateToDateJson.FromDateObject.Year;
-                dateTimeInJsonFormat.Month = fromDateToDateJson.FromDateObject.Month;
-                dateTimeInJsonFormat.Day = fromDateToDateJson.FromDateObject.Day;
+            if (isToDate != undefined && isToDate == 'true' && fromDateTime != null && gregorianDateTime < fromDateTime && !initializing) {
+                dateTimeInJsonFormat.Year = fromDateTime.getFullYear();
+                dateTimeInJsonFormat.Month = fromDateTime.getMonth();
+                dateTimeInJsonFormat.Day = fromDateTime.getDate();
                 setTargetValue($popoverDescriber, dateTimeInJsonFormat, true);
                 $popoverDescriber.trigger(triggerName);
                 return '';
@@ -1055,8 +1066,8 @@
             // بررسی از تاریخ، تا تاریخ
             if (
                 fromDateToDateJson != undefined &&
-                ((isToDate && fromDateToDateJson.FromDateNumber != undefined && currentLoopDateObject < fromDateToDateJson.FromDateNumber) ||
-                (isFromDate && fromDateToDateJson.ToDateNumber != undefined && currentLoopDateObject > fromDateToDateJson.ToDateNumber))
+                (((isToDate != undefined && isToDate == 'true') && fromDateToDateJson.FromDateObject != undefined && currentLoopDateObject < fromDateToDateJson.FromDateObject) ||
+                ((isFromDate != undefined && isFromDate == 'true') && fromDateToDateJson.ToDateObject != undefined && currentLoopDateObject > fromDateToDateJson.ToDateObject))
                )
                 $td.attr('data-name', 'disabled-day');
 
@@ -1088,26 +1099,26 @@
 
         // غیر فعال کردن دکمه های ماه بعد و سال بعد و یا ماه قبل و سال قبل
         if (fromDateToDateJson != undefined && fromDateToDateJson.FromDateObject != undefined && fromDateToDateJson.ToDateObject != undefined) {
-
             // دکمه های ماه قبل و سال قبل
-            if (isToDate && fromDateToDateJson.FromDateObject.Year == fromDateToDateJson.ToDateObject.Year && fromDateToDateJson.FromDateObject.Month >= fromDateToDateJson.ToDateObject.Month) {
+            if (isToDate != undefined && isToDate == 'true' && fromDateToDateJson.FromDateObject.getFullYear() == fromDateToDateJson.ToDateObject.getFullYear() &&
+                fromDateToDateJson.FromDateObject.getMonth() >= fromDateToDateJson.ToDateObject.getMonth()) {
                 $previousMonthButton.addClass('disabled').attr('disabled', 'disabled');
                 $previousYearButton.addClass('disabled').attr('disabled', 'disabled');
             }
 
-            if (isToDate && fromDateToDateJson.FromDateObject.Year >= fromDateToDateJson.ToDateObject.Year) {
+            if (isToDate != undefined && isToDate == 'true' && fromDateToDateJson.FromDateObject.getFullYear() >= fromDateToDateJson.ToDateObject.getFullYear()) {
                 $previousYearButton.addClass('disabled').attr('disabled', 'disabled');
             }
 
             // دکمه های سال بعد و ماه بعد
 
-            if (isFromDate && fromDateToDateJson.ToDateObject.Year == fromDateToDateJson.FromDateObject.Year
-                && fromDateToDateJson.ToDateObject.Month <= fromDateToDateJson.FromDateObject.Month) {
+            if (isFromDate != undefined && isFromDate == 'true' && fromDateToDateJson.ToDateObject.getFullYear() == fromDateToDateJson.FromDateObject.getFullYear()
+                && fromDateToDateJson.ToDateObject.getMonth() <= fromDateToDateJson.FromDateObject.getMonth()) {
                 $nextMonthButton.addClass('disabled').attr('disabled', 'disabled');
                 $nextYearButton.addClass('disabled').attr('disabled', 'disabled');
             }
 
-            if (isFromDate && fromDateToDateJson.ToDateObject.Year <= fromDateToDateJson.FromDateObject.Year) {
+            if (isFromDate != undefined && isFromDate == 'true' && fromDateToDateJson.ToDateObject.getFullYear() <= fromDateToDateJson.FromDateObject.getFullYear()) {
                 $nextYearButton.addClass('disabled').attr('disabled', 'disabled');
             }
 
@@ -1116,12 +1127,12 @@
                 var $thisA = $(this),
                     month = Number($thisA.attr('data-monthnumber')),
                     $li = $thisA.parents('li:first');
-                if (isToDate && fromDateToDateJson.FromDateObject.Year == fromDateToDateJson.ToDateObject.Year
-                    && fromDateToDateJson.FromDateObject.Month > month) {
+                if (isToDate && fromDateToDateJson.FromDateObject.getFullYear() == fromDateToDateJson.ToDateObject.getFullYear()
+                    && fromDateToDateJson.FromDateObject.getMonth() > month) {
                     $li.addClass('disabled').children('a').attr('disabled', 'disabled');
                 }
-                if (isFromDate && fromDateToDateJson.FromDateObject.Year == fromDateToDateJson.ToDateObject.Year
-                    && fromDateToDateJson.ToDateObject.Month < month) {
+                if (isFromDate && fromDateToDateJson.FromDateObject.getFullYear() == fromDateToDateJson.ToDateObject.getFullYear()
+                    && fromDateToDateJson.ToDateObject.getMonth() < month) {
                     $li.addClass('disabled').children('a').attr('disabled', 'disabled');
                 }
             });
@@ -1132,8 +1143,8 @@
         $yearDropDown.find('li[data-year]').each(function () {
             var $thisLi = $(this),
                 year = Number($thisLi.attr('data-year'));
-            if ((fromDateToDateJson != undefined && fromDateToDateJson.FromDateObject != undefined && fromDateToDateJson.ToDateObject != undefined && isFromDate && year > fromDateToDateJson.ToDateObject.Year) ||
-                (fromDateToDateJson != undefined && fromDateToDateJson.FromDateObject != undefined && fromDateToDateJson.ToDateObject != undefined && isToDate && year < fromDateToDateJson.FromDateObject.Year) ||
+            if ((fromDateToDateJson != undefined && fromDateToDateJson.FromDateObject != undefined && fromDateToDateJson.ToDateObject != undefined && isFromDate && year > fromDateToDateJson.ToDateObject.getFullYear()) ||
+                (fromDateToDateJson != undefined && fromDateToDateJson.FromDateObject != undefined && fromDateToDateJson.ToDateObject != undefined && isToDate && year < fromDateToDateJson.FromDateObject.getFullYear()) ||
                 (disableBeforeToday && year < currentYearNumber))
                 $thisLi.addClass('disabled').children('a').attr('disabled', 'disabled');
             else
