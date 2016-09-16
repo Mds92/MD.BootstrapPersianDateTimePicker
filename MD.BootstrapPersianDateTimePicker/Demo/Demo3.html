@@ -25,12 +25,31 @@
 
         <div class="form-group">
             <div class="input-group">
-                <div class="input-group-addon" data-mddatetimepicker="true" data-targetselector="#exampleInput1" data-trigger="click" data-enabletimepicker="true" data-isgregorian="true" data-englishnumber="true">
+                <div class="input-group-addon" data-name="datepicker1" data-mddatetimepicker="true" data-targetselector="#exampleInput1" data-trigger="click" data-enabletimepicker="true" data-isgregorian="true" data-englishnumber="true">
                     <span class="glyphicon glyphicon-calendar"></span>
                 </div>
-                <input type="text" class="form-control" id="exampleInput1" placeholder="تاریخ میلادی به همراه زمان" />
+                <input type="text" class="form-control" id="exampleInput1" placeholder="تاریخ میلادی به همراه زمان"/>
             </div>
         </div>
+        <div class="form-group">
+            <button data-name="getValue1" class="btn btn-sm btn-default">getValue</button>
+            <button data-name="getDate1" class="btn btn-sm btn-default">getDate</button>
+        </div>
+        <div class="text-muted text-center" data-name="result">
+            
+        </div>
+        <script type="text/javascript">
+            $('[data-name="getValue1"]').on('click', function() {
+                var getValueResult = $('[data-name="datepicker1"]').MdPersianDateTimePicker('getValue');
+                console.log(getValueResult);
+                $('[data-name="result"]').html(getValueResult);
+            });
+            $('[data-name="getDate1"]').on('click', function () {
+                var dateTime = $('[data-name="datepicker1"]').MdPersianDateTimePicker('getDate');
+                console.log(dateTime);
+                $('[data-name="result"]').html(dateTime);
+            });
+        </script>
         <hr />
         <div class="form-group">
             <div class="input-group">

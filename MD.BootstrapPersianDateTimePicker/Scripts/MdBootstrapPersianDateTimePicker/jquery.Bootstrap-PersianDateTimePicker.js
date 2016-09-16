@@ -4,7 +4,7 @@
  *
  *
  *
- * Written By Mohammad Dayyan, from دی 1393
+ * Written By Mohammad Dayyan, from Dey 1393
  * mds.soft@gmail.com - 0903-3339923
  *
  * My weblog: mds-soft.persianblog.ir
@@ -20,9 +20,9 @@
         mdDateTimePickerWrapperSelector = '[' + mdDateTimePickerWrapperAttribute + ']',
         isFirstTime = true,
         amPmEnumEnum = {
-            AM : 0,
-            PM : 1,
-            None : 2
+            AM: 0,
+            PM: 1,
+            None: 2
         },
         changeDateTimeEnum = {
             IncreaseMonth: 1,
@@ -454,7 +454,7 @@
 
     function parsePersianDateTime(persianDateTimeInString, dateSeperatorPattern) {
         var persianDateTime = getTodayCalendarInPersian();
-        if (persianDateTimeInString == '') 
+        if (persianDateTimeInString == '')
             return createDateTimeJson(persianDateTime[0], persianDateTime[1], persianDateTime[2], 0, 0, 0, 0);
 
         if (dateSeperatorPattern == undefined || dateSeperatorPattern == '')
@@ -499,8 +499,7 @@
                 miliSecond = minuteAndSecondAndMiliSecondMatch[2].replace(/\D+/, '');
         }
 
-        if (containMonthSeperator)
-        {
+        if (containMonthSeperator) {
             var monthDayMath = persianDateTimeInString.match(/-\d{1,2}(?=-\d{1,2}[^:]|-)/img);
 
             // بدست آوردن ماه
@@ -512,8 +511,7 @@
             // بدست آوردن سال
             year = (persianDateTimeInString.match(/-\d{2,4}(?=-\d{1,2}[^:])/img)[0]).replace(/\D+/, '');
         }
-        else
-        {
+        else {
             for (var i = 1; i < 12; i++) {
                 var persianMonthName = getPersianMonth(i);
                 if (!persianDateTimeInString.indexOf(persianMonthName) > -1) continue;
@@ -523,18 +521,16 @@
 
             // بدست آوردن روز
             var dayMatch = persianDateTimeInString.match(/-\d{1,2}(?=-)/img);
-            if (dayMatch != null)
-            {
+            if (dayMatch != null) {
                 day = dayMatch[0].replace(/\D+/, '');
-                persianDateTimeInString = persianDateTimeInString.replace( new RegExp('-' + day + '(?=-)', 'img'), '-');
+                persianDateTimeInString = persianDateTimeInString.replace(new RegExp('-' + day + '(?=-)', 'img'), '-');
             }
 
             // بدست آوردن سال
             var yearMatch = persianDateTimeInString.match(/-\d{4}(?=-)/img);
             if (yearMatch != null)
                 year = yearMatch[0].replace(/\D+/, '');
-            else
-            {
+            else {
                 yearMatch = persianDateTimeInString.match(/-\d{2,4}(?=-)/img);
                 if (yearMatch != null)
                     year = yearMatch[0].replace(/\D+/, '');
@@ -558,8 +554,7 @@
         if (numericDay <= 0)
             numericDay = persianDateTime[2];
 
-        switch (amPmEnum)
-        {
+        switch (amPmEnum) {
             case amPmEnum.PM:
                 if (numericHour < 12)
                     numericHour = numericHour + 12;
@@ -1238,7 +1233,7 @@
 
         if (isGregorian == undefined && $popoverDescriber != undefined)
             isGregorian = $popoverDescriber.attr('data-isgregorian') == 'true';
-        
+
         switch (changeEnum) {
             // ماه بعدی
             case changeDateTimeEnum.IncreaseMonth:
@@ -1365,7 +1360,8 @@
 
     var methods = {
         init: function (options) {
-            var settings = $.extend(
+            var $this = $(this),
+                settings = $.extend(
             {
                 EnglishNumber: false,
                 Placement: 'bottom',
@@ -1381,17 +1377,14 @@
                 IsGregorian: false,
                 GregorianStartDayIndex: 0
             }, options);
-
+            $this.data('MdPersianDateTimePicker', settings);
             if (isFirstTime) {
                 bindEvents();
                 isFirstTime = false;
             }
-
             return this.each(function () {
                 var $this = $(this);
-
                 $this.attr(mdDateTimePickerFlagAttributeName, '');
-
                 $this.attr('data-trigger', settings.Trigger);
                 $this.attr('data-enabletimepicker', settings.EnableTimePicker);
                 $this.attr('data-mdformat', settings.Format == '' ? getDefaultFormat(settings.EnableTimePicker == 'true') : settings.Format);
@@ -1413,7 +1406,6 @@
                     $this.attr('data-gregorianstartdayindex', settings.GregorianStartDayIndex);
                     $this.attr('data-isgregorian', true);
                 }
-
                 var initialDateTimeInJsonFormat;
                 if (settings.IsGregorian) {
                     var selectedDateTime = parseGregorianDateTime($this.val());
@@ -1421,11 +1413,9 @@
                 } else {
                     initialDateTimeInJsonFormat = parsePersianDateTime($this.val());
                 }
-
                 var $calendarDivWrapper = settings.IsGregorian
                         ? createGregorianDateTimePickerHtml($this, initialDateTimeInJsonFormat, undefined, true)
                         : createPersianDateTimePickerHtml($this, initialDateTimeInJsonFormat, undefined, true);
-
                 // نمایش تقویم
                 $this.popover({
                     container: 'body',
@@ -1444,6 +1434,36 @@
                     updateDateTimePickerHtml(this, changeDateTimeEnum.TriggerFired, isGregorian);
                 });
             });
+        },
+        getDate: function () {
+            var $this = $(this),
+                settings = $this.data('MdPersianDateTimePicker'),
+                isGregorian = settings.IsGregorian,
+                $target = $(settings.TargetSelector),
+                targetValue = '';
+            if ($target.length <= 0) throw 'TargetSelector is wrong, no elements found';
+            if ($target.is('input'))
+                targetValue = $target.val();
+            else
+                targetValue = $target.text();
+            targetValue = toEnglishNumber(targetValue.trim());
+            if (targetValue == '') return undefined;
+            if (isGregorian)
+                return parseGregorianDateTime(targetValue);
+            var dateTimeInJsonFormat = parsePersianDateTime(targetValue);
+            return toGregorian(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day, dateTimeInJsonFormat.Hour, dateTimeInJsonFormat.Minute, dateTimeInJsonFormat.Second);
+        },
+        getValue: function () {
+            var $this = $(this),
+                settings = $this.data('MdPersianDateTimePicker'),
+                $target = $(settings.TargetSelector),
+                targetValue = '';
+            if ($target.length <= 0) throw 'TargetSelector is wrong, no elements found';
+            if ($target.is('input'))
+                targetValue = $target.val();
+            else
+                targetValue = $target.text();
+            return targetValue.trim();
         },
         disable: function (isDisable) {
             return this.each(function () {
