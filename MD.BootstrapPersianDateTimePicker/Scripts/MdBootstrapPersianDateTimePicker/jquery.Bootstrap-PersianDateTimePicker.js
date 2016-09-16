@@ -329,7 +329,7 @@
         var gregorian = isGregorian
                 ? new Date(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day, dateTimeInJsonFormat.Hour, dateTimeInJsonFormat.Minute, dateTimeInJsonFormat.Second)
                 : toGregorian(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day),
-            miladiDate = isGregorian ? gregorian : new Date(gregorian.gy, gregorian.gm, gregorian.gd, dateTimeInJsonFormat.Hour, dateTimeInJsonFormat.Minute, dateTimeInJsonFormat.Second),
+            miladiDate = isGregorian ? gregorian : new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, dateTimeInJsonFormat.Hour, dateTimeInJsonFormat.Minute, dateTimeInJsonFormat.Second),
             selectedDateTimeString = format;
 
         /// فرمت های که پشتیبانی می شوند
@@ -1450,8 +1450,9 @@
             if (targetValue == '') return undefined;
             if (isGregorian)
                 return parseGregorianDateTime(targetValue);
-            var dateTimeInJsonFormat = parsePersianDateTime(targetValue);
-            return toGregorian(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day, dateTimeInJsonFormat.Hour, dateTimeInJsonFormat.Minute, dateTimeInJsonFormat.Second);
+            var dateTimeInJsonFormat = parsePersianDateTime(targetValue),
+                gregorianJson = toGregorian(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day);
+            return new Date(gregorianJson.gy, gregorianJson.gm - 1, gregorianJson.gd, dateTimeInJsonFormat.Hour, dateTimeInJsonFormat.Minute, dateTimeInJsonFormat.Second);
         },
         getValue: function () {
             var $this = $(this),
