@@ -34,6 +34,8 @@
         <div class="form-group">
             <button data-name="getValue1" class="btn btn-sm btn-default">getValue</button>
             <button data-name="getDate1" class="btn btn-sm btn-default">getDate</button>
+            <button data-name="hide" class="btn btn-sm btn-default">hide</button>
+            <button data-name="show" class="btn btn-sm btn-default">show</button>
         </div>
         <div class="text-muted text-center" data-name="result">
             
@@ -48,6 +50,14 @@
                 var dateTime = $('[data-name="datepicker1"]').MdPersianDateTimePicker('getDate');
                 console.log(dateTime);
                 $('[data-name="result"]').html(dateTime);
+            });
+            $('[data-name="hide"]').on('click', function () {
+                $('[data-name="datepicker1"]').MdPersianDateTimePicker('hide');
+            });
+            $('[data-name="show"]').on('click', function () {
+                setTimeout(function() {
+                    $('[data-name="datepicker1"]').MdPersianDateTimePicker('show');
+                }, 100);
             });
         </script>
         <hr />

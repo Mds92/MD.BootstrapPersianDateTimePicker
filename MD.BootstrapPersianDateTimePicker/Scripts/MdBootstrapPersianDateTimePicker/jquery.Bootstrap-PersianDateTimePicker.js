@@ -12,10 +12,11 @@
 
 (function ($) {
 
-    var mdDateTimePickerFlagAttributeName = 'data-mdpersiandatetimepicker',
+    var mdPluginName = 'MdPersianDateTimePicker',
+        mdDateTimePickerFlagAttributeName = 'data-mdpersiandatetimepicker',
         mdDateTimePickerFlagSelector = '[' + mdDateTimePickerFlagAttributeName + ']',
         mdDateTimeIsShowingAttributeName = 'data-mdpersiandatetimepickershowing',
-        mdSelectedDateTimeAttributeName = 'data-mdpersiandatetimepickerSelecteddatetime',
+        mdSelectedDateTimeAttributeName = 'data-mdpersiandatetimepickerselecteddatetime',
         mdDateTimePickerWrapperAttribute = 'data-name="md-persiandatetimepicker"',
         mdDateTimePickerWrapperSelector = '[' + mdDateTimePickerWrapperAttribute + ']',
         isFirstTime = true,
@@ -416,6 +417,12 @@
         $popoverDescriber.attr(mdSelectedDateTimeAttributeName, JSON.stringify(dateTimeInJsonFormat));
         $target.trigger('change');
     }
+    function setTargetValue1($target, value) {
+        if ($target.is('input'))
+            $target.val(value);
+        else
+            $target.html(value);
+    }
     function getTargetValue($popoverDescriber) {
         var targetSelector = $popoverDescriber.attr('data-targetselector'),
             $target = $(targetSelector),
@@ -425,6 +432,23 @@
         else
             value = $target.text().trim();
         return toEnglishNumber(value);
+    }
+    function getTargetDate($target, isGregorian) {
+        var targetValue = toEnglishNumber(getTargetValue1($target));
+        if (targetValue == '') return undefined;
+        if (isGregorian)
+            return parseGregorianDateTime(targetValue);
+        var dateTimeInJsonFormat = parsePersianDateTime(targetValue),
+            gregorianJson = toGregorian(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day);
+        return new Date(gregorianJson.gy, gregorianJson.gm - 1, gregorianJson.gd, dateTimeInJsonFormat.Hour, dateTimeInJsonFormat.Minute, dateTimeInJsonFormat.Second);
+    }
+    function getTargetValue1($target) {
+        var targetValue;
+        if ($target.is('input'))
+            targetValue = $target.val();
+        else
+            targetValue = $target.text();
+        return targetValue.trim();
     }
 
     function createDateTimeJson(year, month, day, hour, minute, second) {
@@ -1214,10 +1238,9 @@
 
     // مخفی کردن سایر تقویم ها به جز تقویم مورد نظر
     function hideOthers($exceptThis) {
-        var allMdDateTimePickers = $(mdDateTimePickerFlagSelector);
-        allMdDateTimePickers.each(function () {
+        $(mdDateTimePickerFlagSelector).each(function () {
             var $thisPopover = $(this);
-            if ($exceptThis.is($thisPopover)) return;
+            if ($exceptThis != undefined && $exceptThis.is($thisPopover)) return;
             hidePopover($thisPopover);
         });
     };
@@ -1377,7 +1400,7 @@
                 IsGregorian: false,
                 GregorianStartDayIndex: 0
             }, options);
-            $this.data('MdPersianDateTimePicker', settings);
+            $this.data(mdPluginName, settings);
             if (isFirstTime) {
                 bindEvents();
                 isFirstTime = false;
@@ -1437,34 +1460,38 @@
         },
         getDate: function () {
             var $this = $(this),
-                settings = $this.data('MdPersianDateTimePicker'),
+                settings = $this.data(mdPluginName),
                 isGregorian = settings.IsGregorian,
-                $target = $(settings.TargetSelector),
-                targetValue = '';
+                $target = $(settings.TargetSelector);
             if ($target.length <= 0) throw 'TargetSelector is wrong, no elements found';
-            if ($target.is('input'))
-                targetValue = $target.val();
-            else
-                targetValue = $target.text();
-            targetValue = toEnglishNumber(targetValue.trim());
-            if (targetValue == '') return undefined;
-            if (isGregorian)
-                return parseGregorianDateTime(targetValue);
-            var dateTimeInJsonFormat = parsePersianDateTime(targetValue),
-                gregorianJson = toGregorian(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day);
-            return new Date(gregorianJson.gy, gregorianJson.gm - 1, gregorianJson.gd, dateTimeInJsonFormat.Hour, dateTimeInJsonFormat.Minute, dateTimeInJsonFormat.Second);
+            return getTargetDate($target, isGregorian);
         },
         getValue: function () {
             var $this = $(this),
-                settings = $this.data('MdPersianDateTimePicker'),
-                $target = $(settings.TargetSelector),
-                targetValue = '';
+                settings = $this.data(mdPluginName),
+                $target = $(settings.TargetSelector);
             if ($target.length <= 0) throw 'TargetSelector is wrong, no elements found';
-            if ($target.is('input'))
-                targetValue = $target.val();
-            else
-                targetValue = $target.text();
-            return targetValue.trim();
+            return getTargetValue1($target);
+        },
+        setValue: function (value) {
+            return this.each(function () {
+                var $this = $(this),
+                    settings = $this.data(mdPluginName),
+                    $target = $(settings.TargetSelector);
+                setTargetValue1($target, value);
+            });
+        },
+        hide: function() {
+            return this.each(function () {
+                hideOthers();
+            });
+        },
+        show: function () {
+            return this.each(function () {
+                var $this = $(this),
+                    settings = $this.data(mdPluginName);
+                $this.trigger(settings.Trigger);
+            });
         },
         disable: function (isDisable) {
             return this.each(function () {
