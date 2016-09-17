@@ -52,6 +52,8 @@
     <Content Include="Content\MdBootstrapPersianDateTimePicker\jquery.Bootstrap-PersianDateTimePicker.css" />
     <Content Include="Demo\Demo3.html" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Manual\manul.css" />
+    <Content Include="Manual\Index.html" />
     <Content Include="packages.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
