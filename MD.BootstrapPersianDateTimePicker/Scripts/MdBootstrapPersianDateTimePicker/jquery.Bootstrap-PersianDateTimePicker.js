@@ -1384,8 +1384,7 @@
     var methods = {
         init: function (options) {
             var $this = $(this),
-                settings = $.extend(
-            {
+                settings = $.extend({
                 EnglishNumber: false,
                 Placement: 'bottom',
                 Trigger: 'click',
@@ -1481,7 +1480,7 @@
                 setTargetValue1($target, value);
             });
         },
-        hide: function() {
+        hide: function () {
             return this.each(function () {
                 hideOthers();
             });
