@@ -1566,6 +1566,7 @@
                 toDate = $this.attr('data-todate'),
                 fromDate = $this.attr('data-fromdate'),
                 disableBeforeToday = $this.attr('data-disablebeforetoday'),
+                englishNumber = $this.attr('data-englishnumber'),
                 disable = $this.attr('data-disabled') != undefined && $this.attr('data-disabled').toLowerCase() == 'true',
                 format = $this.attr('data-mdformat'),
                 gregorianStartDayIndex = $this.attr('data-gregorianstartdayindex') == undefined ? 0 : Number($this.attr('data-gregorianstartdayindex')),
@@ -1575,6 +1576,7 @@
                 $this.css({ cursor: 'pointer' });
             $this.MdPersianDateTimePicker({
                 Placement: placement,
+                EnglishNumber: englishNumber == 'true',
                 Trigger: trigger == undefined || trigger == '' ? 'click' : trigger,
                 EnableTimePicker: enableTimePicker == 'true',
                 TargetSelector: targetSelector != undefined ? targetSelector : '',
