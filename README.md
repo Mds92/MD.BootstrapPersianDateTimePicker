@@ -1,6 +1,7 @@
 # MD.BootstrapPersianDateTimePicker
 
-![alt text](http://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master/MD.BootstrapPersianDateTimePicker/Content/MD.PersianDateTimePicker.png "MD.BootstrapPersianDateTimePicker")
+![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master/MD.BootstrapPersianDateTimePicker/Content/MD.PersianDateTimePicker1.png "MD.BootstrapPersianDateTimePicker1")
+![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master/MD.BootstrapPersianDateTimePicker/Content/MD.PersianDateTimePicker2.png "MD.BootstrapPersianDateTimePicker2")
 
 `MD.BootstrapPersianDateTimePicker` is a DateTimePicker plugin for jquery and Bootstrap.
 
@@ -32,7 +33,7 @@ Sample :
 		Placement: 'left',		
 		Trigger: 'click',
 		EnableTimePicker: false,
-		TargetSelector: '#ELementId',
+		TargetSelector: '#ElementId',
 		GroupId: '',
 		ToDate: false,
 		FromDate: false,
