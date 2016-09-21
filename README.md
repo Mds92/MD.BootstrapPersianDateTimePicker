@@ -1,6 +1,6 @@
 # MD.BootstrapPersianDateTimePicker
 
-![alt text](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master/MD.BootstrapPersianDateTimePicker/Content/MD.PersianDateTimePicker.png "MD.BootstrapPersianDateTimePicker")
+![alt text](http://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master/MD.BootstrapPersianDateTimePicker/Content/MD.PersianDateTimePicker.png "MD.BootstrapPersianDateTimePicker")
 
 `MD.BootstrapPersianDateTimePicker` is a DateTimePicker plugin for jquery and Bootstrap.
 
@@ -29,31 +29,37 @@ Sample :
 ```html
 <script type="text/javascript">
     $('#textBoxInputId').MdPersianDateTimePicker({
-        Placement: 'bottom', 
-        Trigger: 'focus', 
-	EnableTimePicker: true,
-	TargetSelector: '', 
-	GroupId: '',
-	ToDate: false, 
-	FromDate: false, 
-	EnglishNumber: false,
-	Disabled: false,
+		Placement: 'left',		
+		Trigger: 'click',
+		EnableTimePicker: false,
+		TargetSelector: '#ELementId',
+		GroupId: '',
+		ToDate: false,
+		FromDate: false,
+		DisableBeforeToday: false,
+		Disabled: false,
+		Format: 'yyyy/MM/dd',		
+		IsGregorian: false,
+		EnglishNumber: false,
     });
 </script>
 ```
 - Use html tags attributes.
 In this approach you can determine the settings with the following attributes:
 ```html
-data-DateTimePicker="true"
-data-Placement="bottom"
-data-Trigger="focus"
-data-EnableTimePicker="true"
-data-TargetSelector="#fromDate1"
-data-GroupId="group1"
-data-ToDate="true"
-data-FromDate="true"
-data-EnglishNumber="true"
+data-mddatetimepicker="true"
+data-placement="bottom"
+data-trigger="focus"
+data-enabletimepicker="true"
+data-targetselector="#fromDate1"
+data-groupid="group1"
+data-todate="true"
+data-fromdate="true"
+data-englishnumber="true"
 data-disabled="false"
+data-isgregorian="false"
+data-format="yyyy/MM/dd"
+data-disablebeforetoday="false"
 ```
 
 Sample :
