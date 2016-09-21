@@ -33,7 +33,7 @@ Sample :
 		Placement: 'left',		
 		Trigger: 'click',
 		EnableTimePicker: false,
-		TargetSelector: '#ELementId',
+		TargetSelector: '#ElementId',
 		GroupId: '',
 		ToDate: false,
 		FromDate: false,
