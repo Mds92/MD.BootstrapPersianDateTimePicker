@@ -9,7 +9,7 @@
 **To see demo just open `Demo` folder and run the html files. Don't build the project, it's not a C# project.**
 `MD.BootstrapPersianDateTimePicker` uses bootstrap [Popovers](http://getbootstrap.com/javascript/#popovers), so it has felexibility of bootstrap's popover.
 
-There is a file in `Manul` folder that you can learn how to use this plugin.
+There is a file in `Manual` folder that you can learn how to use this plugin.
 
 ----
 Install Using nuget:
