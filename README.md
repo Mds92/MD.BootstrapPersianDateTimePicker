@@ -1,7 +1,6 @@
 # MD.BootstrapPersianDateTimePicker
 
-![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master/MD.BootstrapPersianDateTimePicker/Content/MD.PersianDateTimePicker1.png "MD.BootstrapPersianDateTimePicker1")
-![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master/MD.BootstrapPersianDateTimePicker/Content/MD.PersianDateTimePicker2.png "MD.BootstrapPersianDateTimePicker2")
+![alt text](http://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master/MD.BootstrapPersianDateTimePicker/Content/MD.PersianDateTimePicker.png "MD.BootstrapPersianDateTimePicker")
 
 `MD.BootstrapPersianDateTimePicker` is a DateTimePicker plugin for jquery and Bootstrap.
 
@@ -33,7 +32,7 @@ Sample :
 		Placement: 'left',		
 		Trigger: 'click',
 		EnableTimePicker: false,
-		TargetSelector: '#ElementId',
+		TargetSelector: '#ELementId',
 		GroupId: '',
 		ToDate: false,
 		FromDate: false,
@@ -67,6 +66,31 @@ Sample :
 ```html
 <button class="btn btn-default" data-MdDateTimePicker="true" data-TargetSelector="#input1" data-EnableTimePicker="true" data-Placement="left" data-Trigger="click">انتخاب تاریخ</button>
 ```
+```javascript
+//Supported format
+yyyy: سال چهار رقمی
+yy: سال دو رقمی
+MMMM: نام فارسی ماه
+MM: عدد دو رقمی ماه
+M: عدد یک رقمی ماه
+dddd: نام فارسی روز هفته
+dd: عدد دو رقمی روز ماه
+d: عدد یک رقمی روز ماه
+HH: ساعت دو رقمی با فرمت 00 تا 24
+H: ساعت یک رقمی با فرمت 0 تا 24
+hh: ساعت دو رقمی با فرمت 00 تا 12
+h: ساعت یک رقمی با فرمت 0 تا 12
+mm: عدد دو رقمی دقیقه
+m: عدد یک رقمی دقیقه
+ss: ثانیه دو رقمی
+s: ثانیه یک رقمی
+fff: میلی ثانیه 3 رقمی
+ff: میلی ثانیه 2 رقمی
+f: میلی ثانیه یک رقمی
+tt: ب.ظ یا ق.ظ
+t: حرف اول از ب.ظ یا ق.ظ
+```
+
 If you are using `.Net` for programming, I recommended to use the following library to parse and use PersianDateTime as easy as DateTime.
 [MD.PersianDateTime](https://github.com/Mds92/MD.PersianDateTime)
 
