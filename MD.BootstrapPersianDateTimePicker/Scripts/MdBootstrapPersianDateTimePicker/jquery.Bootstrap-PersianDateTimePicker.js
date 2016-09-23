@@ -649,8 +649,18 @@
             $previousYearButton = $calendarHeader.find('[data-name="md-persiandatetimepicker-previousyear"]');
 
         // اگر متغیر زیر تعریف نشده بود مقدار را از داخل تارگت گرفته و استفاده می کند
-        if (dateTimeInJsonFormat == undefined)
-            dateTimeInJsonFormat = parsePersianDateTime(getTargetValue($popoverDescriber));
+        if (dateTimeInJsonFormat == undefined) {
+            var selectedDateTimeValue = $popoverDescriber.attr(mdSelectedDateTimeAttributeName);
+            if (selectedDateTimeValue != undefined && selectedDateTimeValue.trim() != '') {
+                try {
+                    dateTimeInJsonFormat = JSON.parse(selectedDateTimeValue);
+                } catch (e) {
+                    dateTimeInJsonFormat = parsePersianDateTime(getTargetValue($popoverDescriber));
+                }
+            }
+            else
+                dateTimeInJsonFormat = parsePersianDateTime(getTargetValue($popoverDescriber));
+        }
 
         var fixedDate = fixPersianDate(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day),
             currentDateNumber = convertToNumber(fixedDate.Year, fixedDate.Month, fixedDate.Day);
@@ -954,10 +964,17 @@
 
         // اگر متغیر زیر تعریف نشده بود مقدار را از داخل تارگت گرفته و استفاده می کند
         if (dateTimeInJsonFormat == undefined) {
-            gregorianDateTime = parseGregorianDateTime(getTargetValue($popoverDescriber));
-            dateTimeInJsonFormat = createDateTimeJson(gregorianDateTime.getFullYear(), gregorianDateTime.getMonth(),
-                gregorianDateTime.getDate(), gregorianDateTime.getHours(), gregorianDateTime.getMinutes(),
-                gregorianDateTime.getSeconds());
+            var selectedDateTimeValue = $popoverDescriber.attr(mdSelectedDateTimeAttributeName);
+            if (selectedDateTimeValue != undefined && selectedDateTimeValue.trim() != '') {
+                try {
+                    dateTimeInJsonFormat = JSON.parse(selectedDateTimeValue);
+                } catch (e) {}
+            } else {
+                gregorianDateTime = parseGregorianDateTime(getTargetValue($popoverDescriber));
+                dateTimeInJsonFormat = createDateTimeJson(gregorianDateTime.getFullYear(), gregorianDateTime.getMonth(),
+                    gregorianDateTime.getDate(), gregorianDateTime.getHours(), gregorianDateTime.getMinutes(),
+                    gregorianDateTime.getSeconds());
+            }
         }
         else
             gregorianDateTime = new Date(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day, dateTimeInJsonFormat.Hour, dateTimeInJsonFormat.Minute, dateTimeInJsonFormat.Second);
@@ -1464,6 +1481,24 @@
                 $target = $(settings.TargetSelector);
             if ($target.length <= 0) throw 'TargetSelector is wrong, no elements found';
             return getTargetDate($target, isGregorian);
+        },
+        setDate: function (dateObject) {
+            return this.each(function () {
+                var $this = $(this),
+                settings = $this.data(mdPluginName),
+                isGregorian = settings.IsGregorian,
+                dateTimeInJsonFormat,
+                $target = $(settings.TargetSelector);
+                if ($target.length <= 0) throw 'TargetSelector is wrong, no elements found';
+                if (isGregorian)
+                    dateTimeInJsonFormat = createDateTimeJson(dateObject.getFullYear(), dateObject.getMonth(), dateObject.getDate(), dateObject.getHours(), dateObject.getMinutes(), dateObject.getSeconds());
+                else {
+                    var jalaliDate = toJalaali(dateObject.getFullYear(), dateObject.getMonth() + 1, dateObject.getDate());
+                    dateTimeInJsonFormat = createDateTimeJson(jalaliDate.jy, jalaliDate.jm, jalaliDate.jd, dateObject.getHours(), dateObject.getMinutes(), dateObject.getSeconds());
+                }
+                $this.attr(mdSelectedDateTimeAttributeName, JSON.stringify(dateTimeInJsonFormat));
+                setTargetValue($this, dateTimeInJsonFormat, isGregorian);
+            });
         },
         getValue: function () {
             var $this = $(this),
