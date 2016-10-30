@@ -1,6 +1,6 @@
 ﻿/*
  * bootstrap persian date time picker jQuery Plugin
- * version : 2.0.0.0
+ * version : 2.0.0.1
  *
  *
  *
@@ -140,7 +140,16 @@
     function getTodayCalendarInPersian() {
         var today = new Date(),
             persianDate = toJalaali(today.getFullYear(), today.getMonth() + 1, today.getDate());
-        return [persianDate.jy, persianDate.jm, persianDate.jd, getPersianWeekDayNameWithEnglishIndex(today.getDay())];
+        //return [persianDate.jy, persianDate.jm, persianDate.jd, getPersianWeekDayNameWithEnglishIndex(today.getDay())];
+        return {
+            Year: persianDate.jy,
+            Month: persianDate.jm,
+            Day: persianDate.jd,
+            Hour: today.getHours(),
+            Minute: today.getMinutes(),
+            Second: today.getSeconds(),
+            WeekDayPersianName: getPersianWeekDayNameWithEnglishIndex(today.getDay())
+        }
     }
     function isLeapYear(persianYear) {
         return isLeapJalaaliYear(persianYear);
@@ -479,7 +488,7 @@
     function parsePersianDateTime(persianDateTimeInString, dateSeperatorPattern) {
         var persianDateTime = getTodayCalendarInPersian();
         if (persianDateTimeInString == '')
-            return createDateTimeJson(persianDateTime[0], persianDateTime[1], persianDateTime[2], 0, 0, 0, 0);
+            return createDateTimeJson(persianDateTime.Year, persianDateTime.Month, persianDateTime.Day, persianDateTime.Hour, persianDateTime.Minute, persianDateTime.Second);
 
         if (dateSeperatorPattern == undefined || dateSeperatorPattern == '')
             dateSeperatorPattern = "\/|-";
@@ -623,11 +632,11 @@
     function createPersianDateTimePickerHtml($popoverDescriber, dateTimeInJsonFormat, writeDateString, initializing) {
         var triggerName = $popoverDescriber.attr('data-trigger'),
             persianTodayDateTemp = getTodayCalendarInPersian(), // تاریخ شمسی امروز
-            currentYearNumber = persianTodayDateTemp[0],
-            currentMonthNumber = persianTodayDateTemp[1],
-            currentDayNumber = persianTodayDateTemp[2],
+            currentYearNumber = persianTodayDateTemp.Year,
+            currentMonthNumber = persianTodayDateTemp.Month,
+            currentDayNumber = persianTodayDateTemp.Day,
             todayDateNumber = convertToNumber(currentYearNumber, currentMonthNumber, currentDayNumber),
-            todayDateTimeString = 'امروز، ' + persianTodayDateTemp[3] + ' ' + toPersianNumber(currentDayNumber) + ' ' + getPersianMonth(currentMonthNumber) + ' ' + toPersianNumber(currentYearNumber),
+            todayDateTimeString = 'امروز، ' + persianTodayDateTemp.WeekDayPersianName + ' ' + toPersianNumber(currentDayNumber) + ' ' + getPersianMonth(currentMonthNumber) + ' ' + toPersianNumber(currentYearNumber),
             $calendarMainTable = $('<table class="table table-striped" />'),
             $calendarMainTableBody = $('<tbody />'),
             $calendarHeader = $('<thead><tr><td colspan="100" style="padding:5px;"><table class="table" data-name="md-persiandatetimepicker-headertable"><tr><td><button type="button" class="btn btn-default btn-xs" title="سال بعد" data-name="md-persiandatetimepicker-nextyear">&lt;&lt;</button></td><td><button type="button" class="btn btn-default btn-xs" title="ماه بعد" data-name="md-persiandatetimepicker-nextmonth">&lt;</button></td><td><div class="dropdown" style="min-width:50px;"><button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPersianYear" data-toggle="dropdown" aria-expanded="true" data-name="md-persiandatetimepicker-titleyear">1393</button><ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPersianYear"><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="md-persiandatetimepicker-yearnumber">1394</a></li></ul></div></td><td ><div class="dropdown" style="min-width:73px;"><button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPersianMonths" data-toggle="dropdown" aria-expanded="true" data-name="md-persiandatetimepicker-titlemonth">نام ماه</button><ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuPersianMonths"><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="md-persiandatetimepicker-monthname" data-monthnumber="1">فروردین</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="md-persiandatetimepicker-monthname" data-monthnumber="2">اردیبهشت</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="md-persiandatetimepicker-monthname" data-monthnumber="3">خرداد</a></li><li role="presentation" class="divider"></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="md-persiandatetimepicker-monthname" data-monthnumber="4">تیر</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="md-persiandatetimepicker-monthname" data-monthnumber="5">مرداد</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="md-persiandatetimepicker-monthname" data-monthnumber="6">شهریور</a></li><li role="presentation" class="divider"></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="md-persiandatetimepicker-monthname" data-monthnumber="7">مهر</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="md-persiandatetimepicker-monthname" data-monthnumber="8">آبان</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="md-persiandatetimepicker-monthname" data-monthnumber="9">آذر</a></li><li role="presentation" class="divider"></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="md-persiandatetimepicker-monthname" data-monthnumber="10">دی</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="md-persiandatetimepicker-monthname" data-monthnumber="11">بهمن</a></li><li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-name="md-persiandatetimepicker-monthname" data-monthnumber="12">اسفند</a></li></ul></div></td><td><button type="button" class="btn btn-default btn-xs" title="ماه قبل" data-name="md-persiandatetimepicker-previousmonth">&gt;</button></td><td><button type="button" class="btn btn-default btn-xs" title="سال قبل" data-name="md-persiandatetimepicker-previousyear">&gt;&gt;</button></td></tr></table></td></tr><tr data-name="md-persiandatetimepicker-weekdaysnames"><td>ش</td><td>ی</td><td>د</td><td>س</td><td>چ</td><td>پ</td><td class="text-danger">ج</td></tr></thead>'),
