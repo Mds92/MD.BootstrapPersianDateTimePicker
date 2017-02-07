@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Persian DateTime</title>
+
+    <link href="../Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../Content/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="../Content/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.css" />
+
+    <script src="../Scripts/jquery-3.1.0.min.js" type="text/javascript"></script>
+    <script src="../Scripts/bootstrap.min.js" type="text/javascript"></script>
+
+    <style type="text/css">
+        body, table {
+            font-family: 'Segoe UI', Tahoma;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div style="margin-top: 50px; clear: both;"></div>
+
+    <div class="container" style="max-width: 500px;">
+        <div class="form-group">
+            <label class="sr-only" for="exampleInput1">تاریخ و زمان</label>
+            <div class="input-group">
+                <div class="input-group-addon" data-mddatetimepicker="true" data-targetselector="#exampleInput2" data-trigger="click" data-enabletimepicker="true" data-isgregorian="false">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </div>
+                <input type="text" class="form-control" id="exampleInput2" placeholder="نمایش تاریخ با قابلیت تغییر تقویم" />
+            </div>
+        </div>
+    </div>
+
+    <script src="../Scripts/MdBootstrapPersianDateTimePicker/jalaali.js" type="text/javascript"></script>
+    <script src="../Scripts/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.js" type="text/javascript"></script>
+</body>
+</html>
