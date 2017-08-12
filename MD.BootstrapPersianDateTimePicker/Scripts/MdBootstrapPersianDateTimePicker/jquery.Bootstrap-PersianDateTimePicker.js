@@ -1,11 +1,11 @@
 ﻿/*
  * bootstrap persian date time picker jQuery Plugin
- * version : 2.0.0.1
- *
+ * version : 2.1.0.0
+ * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
  * Written By Mohammad Dayyan, from Dey 1393
- * mds.soft@gmail.com - 0903-3339923
+ * mds.soft@gmail.com - @mdssoft
  *
  * My weblog: mds-soft.persianblog.ir
 */
@@ -1382,6 +1382,15 @@
         writeDateString = false;
         $popoverDescriber = $senderObject;
         var $popover = $('#' + $popoverDescriber.attr('aria-describedby'));
+        var $target = $($popoverDescriber.attr('data-targetselector'));
+        if ($target.is(':input')) {
+          if (isGregorianState) {
+            var selectedDateTime = parseGregorianDateTime($target.val());
+            newDateTimeInJsonFormat = createDateTimeJson(selectedDateTime.getFullYear(), selectedDateTime.getMonth(), selectedDateTime.getDate(), selectedDateTime.getHours(), selectedDateTime.getMinutes(), selectedDateTime.getSeconds());
+          } else {
+            newDateTimeInJsonFormat = parsePersianDateTime($target.val());
+          }
+        }
         $wrapper = $popover.find(mdDateTimePickerWrapperSelector);
         break;
 
