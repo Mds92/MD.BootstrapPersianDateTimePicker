@@ -12,9 +12,9 @@
 There is a file in `Manual` folder that you can learn how to use this plugin.
 
 ----
-Installing:<br>
-##Install-Package MD.BootstrapPersianDateTimePicker
-##npm install md.bootstrappersiandatetimepicker
+Installing:
+## Install-Package MD.BootstrapPersianDateTimePicker
+## npm install md.bootstrappersiandatetimepicker
 
 There are two approaches to use MdPersianDateTime
 - Use JavaScript and jQuery as another jQuery's plugins.
