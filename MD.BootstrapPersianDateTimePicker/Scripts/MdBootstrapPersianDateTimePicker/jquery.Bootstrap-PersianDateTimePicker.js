@@ -784,8 +784,17 @@
           $fromDateTarget = fromDateTargetSelector != undefined && fromDateTargetSelector != '' ? $(fromDateTargetSelector) : $fromDatePopoverDescriber;
         fromDateString = $fromDateTarget.val();
       }
-      if (toDateString != '' || fromDateString != '')
+      if (toDateString != '' || fromDateString != '') {
         fromDateToDateJson = parsePersianFromDateToDateValues(fromDateString, toDateString);
+        if (fromDateString == undefined || fromDateString.trim() == '') {
+          fromDateToDateJson.FromDateObject = undefined;
+          fromDateToDateJson.FromDateNumber = undefined;
+        }
+        if (toDateString == undefined || toDateString.trim() == '') {
+          fromDateToDateJson.ToDateObject = undefined;
+          fromDateToDateJson.ToDateNumber = undefined;
+        }
+      }
 
       // اگر از تاریخ انتخاب شده بزرگتر از - تا تاریخ - بود
       if (isFromDate && fromDateToDateJson.ToDateNumber != undefined && currentDateNumber > fromDateToDateJson.ToDateNumber && !initializing) {
