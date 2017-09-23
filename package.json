@@ -1,0 +1,20 @@
+{
+  "name": "md.bootstrappersiandatetimepicker",
+  "version": "2.2.0",
+  "description": "Persian Date Time Picker with jQuery & Bootstrap",
+  "license": "MIT",
+  "moduleResolution": "node",
+  "author": {
+    "email": "mds_soft@yahoo.com",
+    "name": "Mohammad Dayyan",
+    "social": "@mdssoft",
+    "url": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker"
+  },
+  "repository": {
+    "type": "public",
+    "url": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker"
+  },
+  "homepage": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker",
+  "dependencies": {},
+  "devDependencies": {}
+}
