@@ -457,7 +457,7 @@
     var targetSelector = $popoverDescriber.attr('data-targetselector'),
       $target = $(targetSelector),
       format = $popoverDescriber.attr('data-mdformat'),
-      englishNumber = $popoverDescriber.attr('data-englishnumber') == 'true',
+      englishNumber = isGregorian || $popoverDescriber.attr('data-englishnumber') == 'true',
       value = getDateTimeString(dateTimeInJsonFormat, format, englishNumber, isGregorian);
     if ($target.is('input'))
       $target.val(value);
@@ -657,6 +657,7 @@
 
   function parseGregorianDateTime(gregorianDateTimeString) {
     //بدست آوردن تاریخ قبلی که در تکست باکس وجود داشته
+    gregorianDateTimeString = toEnglishNumber(gregorianDateTimeString);
     if (gregorianDateTimeString.trim() == '') {
       var dateTime = new Date();
       dateTime.setHours(0);
@@ -1528,7 +1529,8 @@
         }
         var initialDateTimeInJsonFormat;
         if (settings.IsGregorian) {
-          var selectedDateTime = parseGregorianDateTime($this.val());
+          settings.EnglishNumber = true;
+          var selectedDateTime = parseGregorianDateTime(toEnglishNumber($this.val()));
           initialDateTimeInJsonFormat = createDateTimeJson(selectedDateTime.getFullYear(), selectedDateTime.getMonth(), selectedDateTime.getDate(), selectedDateTime.getHours(), selectedDateTime.getMinutes(), selectedDateTime.getSeconds());
         } else {
           initialDateTimeInJsonFormat = parsePersianDateTime($this.val());
