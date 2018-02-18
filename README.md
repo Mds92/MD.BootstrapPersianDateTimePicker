@@ -16,6 +16,18 @@ Installing:
 ## Install-Package MD.BootstrapPersianDateTimePicker
 ## npm install md.bootstrappersiandatetimepicker
 
+Now add these files to you html:
+```
+<link href="/Content/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.css" rel="stylesheet"/>
+
+<script src="/Scripts/MdBootstrapPersianDateTimePicker/jalaali.js"></script>
+<script src="/Scripts/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.js"></script>
+```
+
+I suggest add scripts at the end of `body` tag and after `jQuery` library
+
+----
+
 There are two approaches to use MdPersianDateTime
 - Use JavaScript and jQuery as another jQuery's plugins.
 You can use the folowing settings for this approach (you can omit them, so the plugin use the default values).
