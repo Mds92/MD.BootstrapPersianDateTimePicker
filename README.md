@@ -24,7 +24,7 @@ Now add these files to you html:
 <script src="/Scripts/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.js"></script>
 ```
 
-I suggest add scripts at the end of `body` tag and after `jQuery` library
+I suggest to add scripts at the end of `body` tag and after `jQuery` library.
 
 ----
 
