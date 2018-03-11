@@ -108,5 +108,3 @@ t: حرف اول از ب.ظ یا ق.ظ
 
 If you are using `.Net` for programming, I recommended to use the following library to parse and use PersianDateTime as easy as DateTime.
 [MD.PersianDateTime](https://github.com/Mds92/MD.PersianDateTime)
-
-<a href='https://pledgie.com/campaigns/31713'><img alt='Click here to lend your support to: Help me to develop MD.BootstrapPersianDateTimePicker jQuery and JavaScript-plugin on Bootstrap and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/31713.png?skin_name=chrome' border='0' ></a>
