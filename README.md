@@ -56,6 +56,7 @@ Sample :
 		Format: 'yyyy/MM/dd',		
 		IsGregorian: false,
 		EnglishNumber: false,
+		InLine: false
     });
 </script>
 ```
@@ -75,6 +76,7 @@ data-disabled="false"
 data-isgregorian="false"
 data-format="yyyy/MM/dd"
 data-disablebeforetoday="false"
+data-inline="false"
 ```
 
 Sample :

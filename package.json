@@ -1,7 +1,7 @@
 {
   "name": "md.bootstrappersiandatetimepicker",
-  "version": "2.2.1",
-  "description": "Persian Date Time Picker with jQuery & Bootstrap",
+  "version": "2.3.0",
+  "description": "Persian Date Time Picker with jQuery & Bootstrap 3.3.*",
   "license": "MIT",
   "moduleResolution": "node",
   "author": {
