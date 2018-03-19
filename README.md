@@ -108,5 +108,16 @@ tt: ب.ظ یا ق.ظ
 t: حرف اول از ب.ظ یا ق.ظ
 ```
 
+##### Functions:<br>
+Name | Description | Sample
+------------ | ------------- | -------------
+**getValue** | Get value of datetime picker | $('[data-name="datepicker1"]').MdPersianDateTimePicker('getValue');
+**setValue** | Set value of datetime picker as string | $('[data-name="datepicker1"]').MdPersianDateTimePicker('setValue', '1396-12-28');
+**getDate**  | Get Date object of datetime picker | $('[data-name="datepicker1"]').MdPersianDateTimePicker('getDate');
+**setDate**  | Set selected date of datetime picker | $('[data-name="datepicker1"]').MdPersianDateTimePicker('setDate', new Date());
+**hide** 	 | Hide datetime picker | $('[data-name="datepicker1"]').MdPersianDateTimePicker('hide');
+**show** 	 | Show datetime picker | $('[data-name="datepicker1"]').MdPersianDateTimePicker('show');
+
+
 If you are using `.Net` for programming, I recommended to use the following library to parse and use PersianDateTime as easy as DateTime.
 [MD.PersianDateTime](https://github.com/Mds92/MD.PersianDateTime)
