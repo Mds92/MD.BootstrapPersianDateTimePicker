@@ -119,5 +119,5 @@ Name | Description | Sample
 **show** 	 | Show datetime picker | $('[data-name="datepicker1"]').MdPersianDateTimePicker('show');
 
 
-If you are using `.Net` for programming, I recommended to use the following library to parse and use PersianDateTime as easy as DateTime.
+If you are using `.Net` for programming, I recommend to use the following library to parse and use PersianDateTime as easy as DateTime.
 [MD.PersianDateTime](https://github.com/Mds92/MD.PersianDateTime)
