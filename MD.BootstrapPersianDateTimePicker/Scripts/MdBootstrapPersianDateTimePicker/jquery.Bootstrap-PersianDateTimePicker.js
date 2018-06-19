@@ -356,7 +356,6 @@
 
   }
 
-
   function getShortHour(hour) {
     var shortHour;
     if (hour > 12)
@@ -481,10 +480,29 @@
     $target.trigger('change');
   }
 
-  function setTargetValue1($target, value) {
-    if ($target.is('input'))
+  function setTargetValue1($target, value, senderObject) {
+    if ($target.is('input')) {
       $target.val(value);
-    else
+      var $senderObject = $(senderObject);
+      if ($senderObject.attr('data-inline') == 'true') {
+        var isGregorian = $senderObject.attr('data-isgregorian') == 'true',
+          dateTimeInJsonFormat = {};
+        if (isGregorian) {
+          var dateTime = parseGregorianDateTime(value);
+          dateTimeInJsonFormat.Year = dateTime.getFullYear();
+          dateTimeInJsonFormat.Month = dateTime.getMonth();
+          dateTimeInJsonFormat.Day = dateTime.getDate();
+          dateTimeInJsonFormat.Hour = dateTime.getHours();
+          dateTimeInJsonFormat.Minute = dateTime.getMinutes();
+          dateTimeInJsonFormat.Second = dateTime.getSeconds();
+        } else
+          dateTimeInJsonFormat = parsePersianDateTime(value);
+        updateDateTimePickerHtml($senderObject.find('thead'), changeDateTimeEnum.OnEvent, isGregorian,
+          dateTimeInJsonFormat.Month,
+          dateTimeInJsonFormat.Year,
+          dateTimeInJsonFormat.Day);
+      }
+    } else
       $target.html(value);
   }
 
@@ -1344,7 +1362,7 @@
 
   var isGregorianState = false;
 
-  function updateDateTimePickerHtml(senderObject, changeEnum, isGregorian, newMonthNumber, newYearNumber) {
+  function updateDateTimePickerHtml(senderObject, changeEnum, isGregorian, newMonthNumber, newYearNumber, newDayNumber) {
     isGregorianState = (isGregorian == undefined || isGregorian == isGregorianState) ? isGregorianState : isGregorian;
     var $senderObject = $(senderObject),
       $mainBlock = $senderObject.parents('[data-mddatetimepicker="true"]:first'),
@@ -1360,8 +1378,7 @@
       $popoverDescriber = $mainBlock;
       newDateTimeInJsonFormat = JSON.parse($mainBlock.attr(mdSelectedDateTimeAttributeName));
       isGregorianState = $popoverDescriber.attr('data-isgregorian') == 'true';
-    }
-    else if (isGregorianState == undefined && $popoverDescriber != undefined && $popoverDescriber.length > 0)
+    } else if (isGregorianState == undefined && $popoverDescriber != undefined && $popoverDescriber.length > 0)
       isGregorianState = $popoverDescriber.attr('data-isgregorian') == 'true';
 
     switch (changeEnum) {
@@ -1432,12 +1449,14 @@
         $wrapper = $popover.find(mdDateTimePickerWrapperSelector);
         break;
 
-        // تغییر ماه و سال
+        // تغییر ماه و سال و روز
       case changeDateTimeEnum.OnEvent:
         if (newMonthNumber != undefined)
           newDateTimeInJsonFormat.Month = newMonthNumber;
         if (newYearNumber != undefined)
           newDateTimeInJsonFormat.Year = newYearNumber;
+        if (newDayNumber != undefined)
+          newDateTimeInJsonFormat.Day = newDayNumber;
         break;
         //تغییر تقویم
       case changeDateTimeEnum.Switch:
@@ -1630,7 +1649,7 @@
         var $this = $(this),
           settings = $this.data(mdPluginName),
           $target = $(settings.TargetSelector);
-        setTargetValue1($target, value);
+        setTargetValue1($target, value, this);
       });
     },
     hide: function () {
