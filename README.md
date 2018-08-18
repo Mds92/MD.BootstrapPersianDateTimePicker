@@ -6,6 +6,8 @@
 `MD.BootstrapPersianDateTimePicker` is a DateTimePicker plugin for jquery and Bootstrap 3.
 
 ##### Note:<br>
+**This plugin is not compatible with Bootstrap4+ right now.
+
 **To see demo just open `Demo` folder and run the html files. Don't build the project, it's not a C# project.**
 `MD.BootstrapPersianDateTimePicker` uses bootstrap [Popovers](http://getbootstrap.com/javascript/#popovers), so it has felexibility of bootstrap's popover.
 
