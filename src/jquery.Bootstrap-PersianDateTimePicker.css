@@ -110,3 +110,7 @@
 .mds-bootstrap-persian-datetime-picker-container .dropdown-divider {
     margin-bottom: 1px;
 }
+
+.zIndexCorrected{
+    z-index: 999999999;
+}
