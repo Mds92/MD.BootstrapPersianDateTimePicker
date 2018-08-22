@@ -1,0 +1,112 @@
+﻿.mds-bootstrap-persian-datetime-picker-container {
+    max-width: 300px;
+    font-size: 12px;
+    position: relative;
+    overflow: visible;
+    z-index: 99999999;
+}
+
+.mds-bootstrap-persian-datetime-picker-container.rtl {
+    direction: rtl;
+}
+
+.mds-bootstrap-persian-datetime-picker-container.rtl table {
+    direction: rtl;
+}
+
+.mds-bootstrap-persian-datetime-picker-container.rtl table tfoot table {
+    direction: ltr;
+}
+
+.mds-bootstrap-persian-datetime-picker-container.rtl .dropdown-toggle::after {
+    margin-left: 0;
+    margin-right: 0.255em;
+}
+
+.mds-bootstrap-persian-datetime-picker-container * {
+    font-size: 12px;
+}
+
+.mds-bootstrap-persian-datetime-picker-container table th,
+.mds-bootstrap-persian-datetime-picker-container table td {
+    padding: 1px;
+    text-align: center;
+}
+
+.mds-bootstrap-persian-datetime-picker-container table table {
+    margin-bottom: 0;
+}
+
+.mds-bootstrap-persian-datetime-picker-container table table th {
+    border: none;
+}
+
+.mds-bootstrap-persian-datetime-picker-container table table input[type="text"] {
+    width: 50px;
+    border: none;
+    text-align: center;
+}
+
+.mds-bootstrap-persian-datetime-picker-container th {
+    padding: 0;
+}
+
+.mds-bootstrap-persian-datetime-picker-container tbody.days td[data-day] {
+    cursor: pointer;
+    transition: all 200ms ease;
+}
+
+.mds-bootstrap-persian-datetime-picker-container tbody.days td[data-day]:hover {
+    background: #ccc;
+}
+
+.mds-bootstrap-persian-datetime-picker-container tbody.days td[data-pm] {
+    cursor: default;
+    opacity: 0.2;
+    transition: none;
+}
+.mds-bootstrap-persian-datetime-picker-container tbody.days td[data-pm]:hover {
+    cursor: default;
+    opacity: 0.3;
+    transition: none;
+}
+
+.mds-bootstrap-persian-datetime-picker-container>table>tbody>tr:first-child>td {
+    vertical-align: top;
+    padding-bottom: 5px;
+    font-weight: bold;
+    width: 14.2%;
+    cursor: default;
+}
+.mds-bootstrap-persian-datetime-picker-container>table>tbody>tr:first-child>td:hover {
+    background: none;
+}
+
+.mds-bootstrap-persian-datetime-picker-container .btn {
+    width: 100%;
+    margin-bottom: 1px;
+    padding: 1px;
+}
+
+.mds-bootstrap-persian-datetime-picker-container .dropdown {
+    padding: 0;
+    padding-bottom: 1px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.mds-bootstrap-persian-datetime-picker-container .dropdown-menu {
+    min-width: 100px;
+    width: 100px;
+}
+
+.mds-bootstrap-persian-datetime-picker-container .dropdown-item {
+    padding: 0;
+    padding-bottom: 1px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.mds-bootstrap-persian-datetime-picker-container .dropdown-divider {
+    margin-bottom: 1px;
+}
