@@ -463,7 +463,7 @@
         var setting = $popoverDescriber.data(mdPluginName),
             value = $popoverDescriber.val().trim(),
             html = dateTimePickerHtmlTemplate;
-        console.log(setting);
+        //console.log(setting);
         html = html.replace(/{{previousYearText}}/img, setting.isGregorian ? previousYearText : previousYearTextPersian);
         html = html.replace(/{{previousMonthText}}/img, setting.isGregorian ? previousMonthText : previousMonthTextPersian);
         html = html.replace(/{{nextMonthText}}/img, setting.isGregorian ? nextMonthText : nextMonthTextPersian);
