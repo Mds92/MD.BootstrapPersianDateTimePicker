@@ -172,8 +172,12 @@
 
     //#region variabled
 
+    var mdDatePickerFlag = 'data-mdpersiandatetimepicker',
+        mdPluginName = 'MdPersianDateTimePicker',
+        $htmlElements = [];
+
     var popverHtmlTemplate = `
-<div class="popover zIndexCorrected" role="tooltip" data-mdpersiandatetimepicker>
+<div class="popover zIndexCorrected" role="tooltip" ${mdDatePickerFlag}>
     <div class="arrow"></div>
     <h3 class="popover-header" data-name="mds-datetimepicker-title"></h3>
     <div class="popover-body" data-name="mds-datetimepicker-popoverbody"></div>
@@ -284,8 +288,12 @@
         hourText = 'Hour',
         minuteText = 'Minute',
         secondText = 'Second',
-        mdPluginName = 'MdPersianDateTimePicker',
         initLoaded = false,
+        amPm = {
+            am: 0,
+            pm: 1,
+            none: 2
+        },
         shortDayNamesPersian = [
             'ش',
             'ی',
@@ -331,67 +339,104 @@
             'October',
             'November',
             'December'
+        ],
+        weekDayNames = [
+            'Sunday',
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday'
+        ],
+        weekDayNamesPersian = [
+            'یک شنبه',
+            'دوشنبه',
+            'سه شنبه',
+            'چهارشنبه',
+            'پنج شنبه',
+            'جمعه',
+            'شنبه'
         ];
 
     //#endregion
 
     //#region Functions
 
-    function bindEvents() {
-        // کلیک روی روزها
-        $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="day"],[data-name="today"]', function () {
-            updateDateTimePickerHtml(this, changeDateTimeEnum.DayChanged);
-        });
+    //#region Events
 
-        // عوض کردن ماه با انتخاب نام ماه از روی دراپ داون
-        $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-monthname"]:not([disabled])', function () {
-            var $this = $(this),
-                selectedMonthNumber = Number($this.attr('data-monthnumber').trim());
-            updateDateTimePickerHtml(this, changeDateTimeEnum.OnEvent, undefined, selectedMonthNumber);
-        });
+    // کلیک روی روزها
+    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="day"],[data-name="today"]', function () {
+        updateDateTimePickerHtml(this, changeDateTimeEnum.DayChanged);
+    });
 
-        // کلیک روی دکمه ماه بعد
-        $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-nextmonth"]', function () {
-            updateDateTimePickerHtml(this, changeDateTimeEnum.IncreaseMonth);
-        });
+    // عوض کردن ماه با انتخاب نام ماه از روی دراپ داون
+    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-monthname"]:not([disabled])', function () {
+        var $this = $(this),
+            selectedMonthNumber = Number($this.attr('data-monthnumber').trim());
+        updateDateTimePickerHtml(this, changeDateTimeEnum.OnEvent, undefined, selectedMonthNumber);
+    });
 
-        // کلیک روی دکمه ماه قبل
-        $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-previousmonth"]', function () {
-            updateDateTimePickerHtml(this, changeDateTimeEnum.DecreaseMonth);
-        });
+    // کلیک روی دکمه ماه بعد
+    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-nextmonth"]', function () {
+        updateDateTimePickerHtml(this, changeDateTimeEnum.IncreaseMonth);
+    });
 
-        // عوض کردن سال با کلیک روی دراپ داون
-        $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-yearnumber"]:not([disabled])', function () {
-            var $this = $(this),
-                selectedYearNumber = Number(toEnglishNumber($this.text().trim()));
-            updateDateTimePickerHtml(this, changeDateTimeEnum.OnEvent, undefined, undefined, selectedYearNumber);
-        });
+    // کلیک روی دکمه ماه قبل
+    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-previousmonth"]', function () {
+        updateDateTimePickerHtml(this, changeDateTimeEnum.DecreaseMonth);
+    });
 
-        // کلیک روی دکمه سال قبل
-        $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-previousyear"]', function () {
-            updateDateTimePickerHtml(this, changeDateTimeEnum.DecreaseYear);
-        });
+    // عوض کردن سال با کلیک روی دراپ داون
+    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-yearnumber"]:not([disabled])', function () {
+        var $this = $(this),
+            selectedYearNumber = Number(toEnglishNumber($this.text().trim()));
+        updateDateTimePickerHtml(this, changeDateTimeEnum.OnEvent, undefined, undefined, selectedYearNumber);
+    });
 
-        // کلیک روی دکمه سال بعد
-        $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-nextyear"]', function () {
-            updateDateTimePickerHtml(this, changeDateTimeEnum.IncreaseYear);
-        });
+    // کلیک روی دکمه سال قبل
+    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-previousyear"]', function () {
+        updateDateTimePickerHtml(this, changeDateTimeEnum.DecreaseYear);
+    });
 
-        // تغییر تقویم
-        $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-switch"]', function () {
-            updateDateTimePickerHtml(this, changeDateTimeEnum.Switch);
-        });
+    // کلیک روی دکمه سال بعد
+    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-nextyear"]', function () {
+        updateDateTimePickerHtml(this, changeDateTimeEnum.IncreaseYear);
+    });
 
-        // تغییر ساعت ، دقیقه و یا ثانیه
-        $('.mds-bootstrap-persian-datetime-picker-container').on('change', 'input[data-name^="clock"]', function () {
-            updateDateTimePickerHtml(this, changeDateTimeEnum.ClockChanged);
-        });
+    // تغییر تقویم
+    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-switch"]', function () {
+        updateDateTimePickerHtml(this, changeDateTimeEnum.Switch);
+    });
 
-        // کلیک روی دکمه امروز
-        $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="go-today"]', function () {
-            updateDateTimePickerHtml(this, changeDateTimeEnum.GoToday);
-        });
-    }
+    // تغییر ساعت ، دقیقه و یا ثانیه
+    $('.mds-bootstrap-persian-datetime-picker-container').on('change', 'input[data-name^="clock"]', function () {
+        updateDateTimePickerHtml(this, changeDateTimeEnum.ClockChanged);
+    });
+
+    // کلیک روی دکمه امروز
+    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="go-today"]', function () {
+        updateDateTimePickerHtml(this, changeDateTimeEnum.GoToday);
+    });
+
+    // مخفی کردن تقویم با کلیک روی جایی که تقویم نیست
+    $('html').on('click', function (e) {
+        var $target = $(e.target),
+            hide = true,
+            isDatePicker = $target.parents(`[${mdDatePickerFlag}]`).length > 0;
+        if (isDatePicker) return;
+        for (var i = 0; i < $htmlElements.length; i++) {
+            var $item = $htmlElements[i];
+            if (!hide || $target.is($item)) {
+                hide = false;
+                continue;
+            }
+            hide = true;
+        }
+        if (hide) hidePopover($(`[${mdDatePickerFlag}]`));
+    });
+
+    //#endregion
 
     function isNumber(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
@@ -437,34 +482,177 @@
         return monthNames[monthIndex];
     }
 
+    function getPersianWeekDayNameWithEnglishIndex(englishWeekDayIndex, isGregorian) {
+        if (!isGregorian) return weekDayNamesPersian[englishWeekDayIndex];
+        return weekDayNames[monthIndex];
+    }
+
     function hideOthers($exceptThis) {
-        $('[data-mdpersiandatetimepicker]').each(function () {
+        $(`[${mdDatePickerFlag}]`).each(function () {
             var $thisPopover = $(this);
             if (!$exceptThis && $exceptThis.is($thisPopover)) return;
             hidePopover($thisPopover);
         });
-    };
+    }
 
     function showPopover($element) {
-        if (!$element == undefined) return;
+        if (!$element) return;
         $element.popover('show');
-    };
+    }
 
-    function hidePopover($elements) {
-        //console.log(arguments.callee.caller);
-        if (!$elements) return;
-        $elements.each(function () {
-            var $element = $(this);
-            $element.popover('hide');
-        });
-    };
+    function hidePopover($element) {
+        if (!$element) return;
+        $element.popover('hide');
+    }
+
+    function getTodayCalendarInPersian() {
+        var today = new Date(),
+            persianDate = toJalaali(today.getFullYear(), today.getMonth() + 1, today.getDate());
+        return {
+            Year: persianDate.jy,
+            Month: persianDate.jm,
+            Day: persianDate.jd,
+            Hour: today.getHours(),
+            Minute: today.getMinutes(),
+            Second: today.getSeconds(),
+            WeekDayPersianName: getPersianWeekDayNameWithEnglishIndex(today.getDay())
+        }
+    }
+
+    function createDateTimeJson(year, month, day, hour, minute, second) {
+        if (!isNumber(hour)) hour = 0;
+        if (!isNumber(minute)) minute = 0;
+        if (!isNumber(second)) second = 0;
+        return {
+            Year: year,
+            Month: month,
+            Day: day,
+            Hour: hour,
+            Minute: minute,
+            Second: second
+        };
+    }
+
+    function parsePersianDateTime(persianDateTimeInString, dateSeperatorPattern) {
+        var persianDateTime = getTodayCalendarInPersian();
+        if (persianDateTimeInString == '')
+            return createDateTimeJson(persianDateTime.Year, persianDateTime.Month, persianDateTime.Day, persianDateTime.Hour, persianDateTime.Minute, persianDateTime.Second);
+
+        if (!dateSeperatorPattern) dateSeperatorPattern = "\/|-";
+        dateSeperatorPattern = new RegExp(dateSeperatorPattern, 'img');
+        persianDateTimeInString = toEnglishNumber(persianDateTimeInString);
+
+        var month = '0',
+            year = '0',
+            day = '0',
+            hour = '0',
+            minute = '0',
+            second = '0',
+            miliSecond = '0',
+            amPmEnum = amPmEnumEnum.None,
+            containMonthSeperator = dateSeperatorPattern.test(persianDateTimeInString);
+
+        persianDateTimeInString = persianDateTimeInString.replace(/&nbsp;/img, " ");
+        persianDateTimeInString = persianDateTimeInString.replace(/\s+/img, "-");
+        persianDateTimeInString = persianDateTimeInString.replace(/\\/img, "-");
+        persianDateTimeInString = persianDateTimeInString.replace(/ك/img, "ک");
+        persianDateTimeInString = persianDateTimeInString.replace(/ي/img, "ی");
+        persianDateTimeInString = persianDateTimeInString.replace(dateSeperatorPattern, "-");
+        persianDateTimeInString = '-' + persianDateTimeInString + '-';
+
+        // بدست آوردن ب.ظ یا ق.ظ
+        if (persianDateTimeInString.indexOf('ق.ظ') > -1)
+            amPmEnum = amPmEnum.AM;
+        else if (persianDateTimeInString.indexOf('ب.ظ') > -1)
+            amPmEnum = amPmEnum.PM;
+
+        if (persianDateTimeInString.indexOf(':') > -1) // رشته ورودی شامل ساعت نیز هست
+        {
+            persianDateTimeInString = persianDateTimeInString.replace(/-*:-*/img, ":");
+            hour = (persianDateTimeInString.match(/-\d{1,2}(?=:)/img)[0]).replace(/\D+/, '');
+            var minuteAndSecondAndMiliSecondMatch = persianDateTimeInString.match(/:\d{1,2}(?=:?)/img);
+            minute = minuteAndSecondAndMiliSecondMatch[0].replace(/\D+/, '');
+            if (minuteAndSecondAndMiliSecondMatch[1] != undefined)
+                second = minuteAndSecondAndMiliSecondMatch[1].replace(/\D+/, '');
+            if (minuteAndSecondAndMiliSecondMatch[2] != undefined)
+                miliSecond = minuteAndSecondAndMiliSecondMatch[2].replace(/\D+/, '');
+        }
+
+        if (containMonthSeperator) {
+            var monthDayMath = persianDateTimeInString.match(/-\d{1,2}(?=-\d{1,2}[^:]|-)/img);
+
+            // بدست آوردن ماه
+            month = monthDayMath[0].replace(/\D+/, '');
+
+            // بدست آوردن روز
+            day = monthDayMath[1].replace(/\D+/, '');
+
+            // بدست آوردن سال
+            year = (persianDateTimeInString.match(/-\d{2,4}(?=-\d{1,2}[^:])/img)[0]).replace(/\D+/, '');
+        } else {
+            for (var i = 1; i < 12; i++) {
+                var persianMonthName = getPersianMonth(i);
+                if (!persianDateTimeInString.indexOf(persianMonthName) > -1) continue;
+                month = i;
+                break;
+            }
+
+            // بدست آوردن روز
+            var dayMatch = persianDateTimeInString.match(/-\d{1,2}(?=-)/img);
+            if (dayMatch != null) {
+                day = dayMatch[0].replace(/\D+/, '');
+                persianDateTimeInString = persianDateTimeInString.replace(new RegExp('-' + day + '(?=-)', 'img'), '-');
+            }
+
+            // بدست آوردن سال
+            var yearMatch = persianDateTimeInString.match(/-\d{4}(?=-)/img);
+            if (yearMatch != null)
+                year = yearMatch[0].replace(/\D+/, '');
+            else {
+                yearMatch = persianDateTimeInString.match(/-\d{2,4}(?=-)/img);
+                if (yearMatch != null)
+                    year = yearMatch[0].replace(/\D+/, '');
+            }
+        }
+
+        var numericYear = Number(year);
+        var numericMonth = Number(month);
+        var numericDay = Number(day);
+        var numericHour = Number(hour);
+        var numericMinute = Number(minute);
+        var numericSecond = Number(second);
+        var numericMiliSecond = Number(miliSecond);
+
+        if (numericYear <= 0)
+            numericYear = persianDateTime[0];
+
+        if (numericMonth <= 0)
+            numericMonth = persianDateTime[1];
+
+        if (numericDay <= 0)
+            numericDay = persianDateTime[2];
+
+        switch (amPmEnum) {
+            case amPmEnum.PM:
+                if (numericHour < 12)
+                    numericHour = numericHour + 12;
+                break;
+            case amPmEnum.AM:
+            case amPmEnum.None:
+                break;
+        }
+
+        return createDateTimeJson(numericYear, numericMonth, numericDay, numericHour, numericMinute, numericSecond, numericMiliSecond);
+    }
 
     function getDateTimePickerHtml($popoverDescriber) {
         var setting = $popoverDescriber.data(mdPluginName),
             value = $popoverDescriber.val().trim(),
             html = dateTimePickerHtmlTemplate;
-        //console.log(setting);
-        html = html.replace(/{{previousYearText}}/img, setting.isGregorian ? previousYearText : previousYearTextPersian);
+        if (!setting.selectedDateTime)
+
+            //console.log(setting);
+            html = html.replace(/{{previousYearText}}/img, setting.isGregorian ? previousYearText : previousYearTextPersian);
         html = html.replace(/{{previousMonthText}}/img, setting.isGregorian ? previousMonthText : previousMonthTextPersian);
         html = html.replace(/{{nextMonthText}}/img, setting.isGregorian ? nextMonthText : nextMonthTextPersian);
         html = html.replace(/{{nextYearText}}/img, setting.isGregorian ? nextYearText : nextYearTextPersian);
@@ -491,55 +679,53 @@
 
     var methods = {
         init: function (options) {
-            var $this = $(this),
-                settings = $.extend({
-                    englishNumber: false,
-                    placement: 'bottom',
-                    trigger: 'click',
-                    enableTimePicker: false,
-                    targetSelector: '',
-                    groupId: '',
-                    toDate: false,
-                    fromDate: false,
-                    disableBeforeToday: false,
-                    disabled: false,
-                    format: '',
-                    isGregorian: false,
-                    gregorianStartDayIndex: 0,
-                    inLine: false
-                }, options);
-            $this.data(mdPluginName, settings);
             if (!initLoaded) {
                 bindEvents();
                 initLoaded = false;
             }
-            if (settings.isGregorian)
-                settings.englishNumber = true;
             return this.each(function () {
                 var $this = $(this),
-                    calendarHtml = getDateTimePickerHtml($this);
+                    settings = $.extend({
+                        englishNumber: false,
+                        placement: 'bottom',
+                        trigger: 'click',
+                        enableTimePicker: false,
+                        targetSelector: '',
+                        groupId: '',
+                        toDate: false,
+                        fromDate: false,
+                        disableBeforeToday: false,
+                        disabled: false,
+                        format: '',
+                        isGregorian: false,
+                        gregorianStartDayIndex: 0,
+                        inLine: false
+                    }, options);
+                $htmlElements.push($this);
+                if (settings.isGregorian)
+                    settings.englishNumber = true;
+                $this.data(mdPluginName, settings);
                 // نمایش تقویم
                 if (settings.inLine) {
-                    $this.append(calendarHtml);
+                    $this.append(getDateTimePickerHtml($this));
                 } else {
                     $this.popover({
                         container: 'body',
-                        content: calendarHtml,
+                        content: '',
                         html: true,
                         placement: settings.placement,
                         title: 'انتخاب تاریخ',
                         trigger: 'manual',
                         template: popverHtmlTemplate,
                     }).on(settings.trigger, function () {
-                        var isDisabled = $this.data(mdPluginName).disabled == true,
-                            isGregorian = $this.data(mdPluginName).isGregorian == true;
-                        if (isDisabled) return;
+                        $this = $(this);
+                        settings = $this.data(mdPluginName);
+                        if (settings.disabled) return;
                         hideOthers($this);
                         showPopover($this);
                         //updateDateTimePickerHtml(this, changeDateTimeEnum.TriggerFired, isGregorian);
                     });
                 }
-
             });
         },
         getText: function () {
