@@ -173,21 +173,28 @@
     //#region variabled
 
     var mdDatePickerFlag = 'data-mdpersiandatetimepicker',
+        mdDatePickerFlagSelector = '[' + mdDatePickerFlag + ']',
+        mdDatePickerPopoverFlag = 'data-mdpersiandatetimepicker-popover',
+        mdDatePickerPopoverSelector = '[' + mdDatePickerPopoverFlag + ']',
+        mdDatePickerContainerFlag = 'data-mdpersiandatetimepicker-container',
+        mdDatePickerContainerSelector = '[' + mdDatePickerContainerFlag + ']',
         mdPluginName = 'MdPersianDateTimePicker',
         $htmlElements = [];
 
     var popverHtmlTemplate = `
-<div class="popover zIndexCorrected" role="tooltip" ${mdDatePickerFlag}>
+<div class="popover zIndexCorrected" role="tooltip" ${mdDatePickerPopoverFlag}>
     <div class="arrow"></div>
     <h3 class="popover-header" data-name="mds-datetimepicker-title"></h3>
     <div class="popover-body" data-name="mds-datetimepicker-popoverbody"></div>
 </div>`;
 
     var dateTimePickerHtmlTemplate = `
-<div class="mds-bootstrap-persian-datetime-picker-container rtl">
-    <div class="select-year-box">
-        <div class="row">
-            {{yearsToSelectHtml}}
+<div class="mds-bootstrap-persian-datetime-picker-container rtl" ${mdDatePickerContainerFlag}>
+    <div class="select-year-box w-0">
+        <div class="container-fluid">
+            <div class="row">
+                {{yearsToSelectHtml}}
+            </div>
         </div>
     </div>
     <table class="table table-sm table-striped text-center">
@@ -232,7 +239,7 @@
                                     </div>
                                 </th>
                                 <th>
-                                    <button class="btn btn-light btn-sm">{{selectedYear}}</button>
+                                    <button class="btn btn-light btn-sm" data-year-button>{{selectedYear}}</button>
                                 </th>
                                 <th>
                                     <button class="btn btn-light btn-sm" title="{{nextMonthText}}"> &gt; </button>
@@ -247,6 +254,15 @@
             </tr>
         </thead>
         <tbody class="days">
+            <tr>
+                <td>{{weekDayShortName1}}</td>
+                <td>{{weekDayShortName2}}</td>
+                <td>{{weekDayShortName3}}</td>
+                <td>{{weekDayShortName4}}</td>
+                <td>{{weekDayShortName5}}</td>
+                <td>{{weekDayShortName6}}</td>
+                <td class="text-danger">{{weekDayShortName7}}</td>
+            </tr>
             {{daysHtml}}
         </tbody>
         <tfoot>
@@ -368,69 +384,29 @@
 
     //#endregion
 
-    //#region Functions
-
     //#region Events
 
     // کلیک روی روزها
-    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="day"],[data-name="today"]', function () {
-        updateDateTimePickerHtml(this, changeDateTimeEnum.DayChanged);
-    });
-
-    // عوض کردن ماه با انتخاب نام ماه از روی دراپ داون
-    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-monthname"]:not([disabled])', function () {
+    $(document).on('click', mdDatePickerContainerSelector + ' [data-day]', function () {
         var $this = $(this),
-            selectedMonthNumber = Number($this.attr('data-monthnumber').trim());
-        updateDateTimePickerHtml(this, changeDateTimeEnum.OnEvent, undefined, selectedMonthNumber);
+            $element = $this.parents(mdDatePickerFlagSelector + ':first'),
+            setting = $element.data(mdPluginName),
+            day = toEnglishNumber($this.text().trim());
+        setting.selectedDate = new Date(setting.selectedDate.setDate(day));
+        $element.data(mdPluginName, setting);
+        hidePopover($(mdDatePickerPopoverSelector));
     });
 
-    // کلیک روی دکمه ماه بعد
-    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-nextmonth"]', function () {
-        updateDateTimePickerHtml(this, changeDateTimeEnum.IncreaseMonth);
-    });
-
-    // کلیک روی دکمه ماه قبل
-    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-previousmonth"]', function () {
-        updateDateTimePickerHtml(this, changeDateTimeEnum.DecreaseMonth);
-    });
-
-    // عوض کردن سال با کلیک روی دراپ داون
-    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-yearnumber"]:not([disabled])', function () {
-        var $this = $(this),
-            selectedYearNumber = Number(toEnglishNumber($this.text().trim()));
-        updateDateTimePickerHtml(this, changeDateTimeEnum.OnEvent, undefined, undefined, selectedYearNumber);
-    });
-
-    // کلیک روی دکمه سال قبل
-    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-previousyear"]', function () {
-        updateDateTimePickerHtml(this, changeDateTimeEnum.DecreaseYear);
-    });
-
-    // کلیک روی دکمه سال بعد
-    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-nextyear"]', function () {
-        updateDateTimePickerHtml(this, changeDateTimeEnum.IncreaseYear);
-    });
-
-    // تغییر تقویم
-    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="md-persiandatetimepicker-switch"]', function () {
-        updateDateTimePickerHtml(this, changeDateTimeEnum.Switch);
-    });
-
-    // تغییر ساعت ، دقیقه و یا ثانیه
-    $('.mds-bootstrap-persian-datetime-picker-container').on('change', 'input[data-name^="clock"]', function () {
-        updateDateTimePickerHtml(this, changeDateTimeEnum.ClockChanged);
-    });
-
-    // کلیک روی دکمه امروز
-    $('.mds-bootstrap-persian-datetime-picker-container').on('click', '[data-name="go-today"]', function () {
-        updateDateTimePickerHtml(this, changeDateTimeEnum.GoToday);
+    // کلیک روی سال انتخابی برای عوض کردن سال
+    $(document).on('click', mdDatePickerContainerSelector + ' [data-year-button]', function () {
+        $(mdDatePickerContainerSelector).find('.select-year-box').removeClass('w-0');
     });
 
     // مخفی کردن تقویم با کلیک روی جایی که تقویم نیست
     $('html').on('click', function (e) {
         var $target = $(e.target),
             hide = true,
-            isDatePicker = $target.parents(`[${mdDatePickerFlag}]`).length > 0;
+            isDatePicker = $target.parents(mdDatePickerPopoverSelector).length > 0;
         if (isDatePicker) return;
         for (var i = 0; i < $htmlElements.length; i++) {
             var $item = $htmlElements[i];
@@ -440,10 +416,12 @@
             }
             hide = true;
         }
-        if (hide) hidePopover($(`[${mdDatePickerFlag}]`));
+        if (hide) hidePopover($(mdDatePickerPopoverSelector));
     });
 
     //#endregion
+
+    //#region Functions
 
     function isNumber(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
@@ -519,7 +497,7 @@
     }
 
     function hideOthers($exceptThis) {
-        $(`[${mdDatePickerFlag}]`).each(function () {
+        $(mdDatePickerPopoverSelector).each(function () {
             var $thisPopover = $(this);
             if (!$exceptThis && $exceptThis.is($thisPopover)) return;
             hidePopover($thisPopover);
@@ -798,7 +776,7 @@
 
     function getDateTimePickerHtml($popoverDescriber) {
         var setting = $popoverDescriber.data(mdPluginName),
-            selectedDateObject = !setting.selectedDate ? new Date() : setting.selectedDate,
+            selectedDateObject = setting.selectedDate,
             html = dateTimePickerHtmlTemplate;
 
         if (!selectedDateObject) throw new Error('مقدار تاریخ معتبر نمی باشد');
@@ -827,6 +805,13 @@
         html = html.replace(/{{hour}}/img, setting.englishNumber ? selectedDateObject.getHours() : toPersianNumber(selectedDateObject.getHours()));
         html = html.replace(/{{minute}}/img, setting.englishNumber ? selectedDateObject.getMinutes() : toPersianNumber(selectedDateObject.getMinutes()));
         html = html.replace(/{{second}}/img, setting.englishNumber ? selectedDateObject.getSeconds() : toPersianNumber(selectedDateObject.getSeconds()));
+        html = html.replace(/{{weekDayShortName1}}/img, setting.isGregorian ? shortDayNames[0] : shortDayNamesPersian[0]);
+        html = html.replace(/{{weekDayShortName2}}/img, setting.isGregorian ? shortDayNames[1] : shortDayNamesPersian[1]);
+        html = html.replace(/{{weekDayShortName3}}/img, setting.isGregorian ? shortDayNames[2] : shortDayNamesPersian[2]);
+        html = html.replace(/{{weekDayShortName4}}/img, setting.isGregorian ? shortDayNames[3] : shortDayNamesPersian[3]);
+        html = html.replace(/{{weekDayShortName5}}/img, setting.isGregorian ? shortDayNames[4] : shortDayNamesPersian[4]);
+        html = html.replace(/{{weekDayShortName6}}/img, setting.isGregorian ? shortDayNames[5] : shortDayNamesPersian[5]);
+        html = html.replace(/{{weekDayShortName7}}/img, setting.isGregorian ? shortDayNames[6] : shortDayNamesPersian[6]);
 
         var i = 0,
             firstWeekDayNumber = selectedDateObject.getDay(),
@@ -836,6 +821,7 @@
             selectedYear = 0,
             selectedMonthName = '',
             selectedDateString = '',
+            todayDateString = '',
             numberOfDaysInCurrentMonth,
             numberOfDaysInPreviousMonth,
             $tr = $('<tr />'),
@@ -854,18 +840,21 @@
 
 
             } else {
-                var currentDateTimePersian = getDateTimePersian(),
+                var todayDateTimePersian = getDateTimePersian(),
                     selectedDateTimePersian = getDateTimePersian(selectedDateObject);
-                todayDateNumber = convertToNumber(currentDateTimePersian.year, currentDateTimePersian.month, currentDateTimePersian.day);
+                todayDateNumber = convertToNumber(todayDateTimePersian.year, todayDateTimePersian.month, todayDateTimePersian.day);
                 selectedYear = setting.englishNumber ? selectedDateTimePersian.year : toPersianNumber(selectedDateTimePersian.year);
-                selectedDateString = getDateTimeString(currentDateTimePersian, setting);
+                selectedDateString = `${getWeekDayName(selectedDateObject.getDay(), false)}، ${selectedDateTimePersian.day} ${getMonthName(selectedDateTimePersian.month - 1, false)} ${selectedDateTimePersian.year}`;
+                if (!setting.englishNumber) selectedDateString = toPersianNumber(selectedDateString);
                 selectedMonthName = monthNamesPersian[selectedDateTimePersian.month - 1];
+                todayDateString = `امروز، ${todayDateTimePersian.day} ${getMonthName(todayDateTimePersian.month - 1, false)} ${todayDateTimePersian.year}`;
+                if (!setting.englishNumber) todayDateString = toPersianNumber(todayDateString);
 
-                for (i = currentDateTimePersian.year - 20; i < currentDateTimePersian.year + 20; i++) {
+                for (i = todayDateTimePersian.year - setting.yearOffset; i < todayDateTimePersian.year + setting.yearOffset; i++) {
                     if (setting.englishNumber)
-                        yearsToSelectHtml += `<div class="col" data-year>${i}</div>`;
+                        yearsToSelectHtml += `<div class="col-2 ${selectedDateTimePersian.year == i ? 'selected-year' : ''}" data-year>${i}</div>`;
                     else
-                        yearsToSelectHtml += `<div class="col" data-year>${toPersianNumber(i)}</div>`;
+                        yearsToSelectHtml += `<div class="col-2 ${selectedDateTimePersian.year == i ? 'selected-year' : ''}" data-year>${toPersianNumber(i)}</div>`;
                 }
 
                 // اطلاعات ماه جاری
@@ -905,7 +894,7 @@
 
                     // امروز
                     if (currentDateNumber == todayDateNumber) {
-                        $td.addClass('bg-primary').attr('data-today', '');
+                        $td.attr('data-today', '');
                         // اگر نام روز هفته انتخاب شده در تکس باکس قبل از تاریخ امروز باشد
                         // نباید دیگر نام روز هفته تغییر کند
                         if (!dayOfWeek)
@@ -932,20 +921,23 @@
                     cellNumber++;
                 }
 
-                if (cellNumber < 42)
-                    for (i = 1; i <= 42 - cellNumber; i++) {
-                        if (tdNumber >= 7) {
-                            tdNumber = 0;
-                            daysHtml += $tr[0].outerHTML;
-                            isTrAppended = true;
-                            $tr = $('<tr />');
-                        } else if (!isTrAppended) {
-                            daysHtml += $tr[0].outerHTML;
-                            isTrAppended = true;
-                        }
-                        $tr.append($('<td data-nm />').html(toPersianNumber(zeroPad(i))));
-                        tdNumber++;
-                    }
+                if (tdNumber >= 7) {
+                    tdNumber = 0;
+                    daysHtml += $tr[0].outerHTML;
+                    isTrAppended = true;
+                    $tr = $('<tr />');
+                }
+
+                // روزهای ماه بعد
+                for (i = 1; i <= 42 - cellNumber; i++) {
+                    $tr.append($('<td data-nm />').html(setting.englishNumber ? zeroPad(i) : toPersianNumber(zeroPad(i))));
+                    tdNumber++;
+                }
+
+                if (!isTrAppended) {
+                    daysHtml += $tr[0].outerHTML;
+                    isTrAppended = true;
+                }
             }
         }
         html = html.replace(/{{yearsToSelectHtml}}/img, yearsToSelectHtml);
@@ -953,6 +945,7 @@
         html = html.replace(/{{selectedMonthName}}/img, selectedMonthName);
         html = html.replace(/{{selectedDateString}}/img, selectedDateString);
         html = html.replace(/{{daysHtml}}/img, daysHtml);
+        html = html.replace(/{{todayDateString}}/img, todayDateString);
         return html;
     }
 
@@ -977,15 +970,17 @@
                         isGregorian: false,
                         gregorianStartDayIndex: 0,
                         inLine: false,
-                        selectedDate: '',
+                        selectedDate: new Date(),
+                        yearOffset: 30
                     }, options);
+                $this.attr(mdDatePickerFlag, '');
                 $htmlElements.push($this);
                 if (setting.isGregorian)
                     setting.englishNumber = true;
                 if (setting.enableTimePicker && !setting.format)
                     setting.format = 'yyyy/MM/dd   HH:mm:ss';
                 else if (!setting.enableTimePicker && !setting.format)
-                    setting.format = 'yyyy/MM/dd   HH:mm:ss';
+                    setting.format = 'yyyy/MM/dd';
 
                 $this.data(mdPluginName, setting);
                 // نمایش تقویم

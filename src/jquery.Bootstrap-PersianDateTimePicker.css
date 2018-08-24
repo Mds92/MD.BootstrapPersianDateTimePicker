@@ -19,14 +19,25 @@
     background: #fff;
     text-align: center;
     transition: all 200ms ease;
-    display: none;
+    overflow-y: auto;
+    overflow-x: hidden;
     z-index: 9999999;
 }
 
-.mds-bootstrap-persian-datetime-picker-container .select-year-box [data-year]{
-    cursor: pointer;
+.mds-bootstrap-persian-datetime-picker-container .select-year-box.w-0 {
+    height: 0;
 }
-.mds-bootstrap-persian-datetime-picker-container .select-year-box [data-year]:hover{
+
+.mds-bootstrap-persian-datetime-picker-container .select-year-box [data-year] {
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.mds-bootstrap-persian-datetime-picker-container .select-year-box .selected-year[data-year] {
+    background-color: aquamarine;
+}
+
+.mds-bootstrap-persian-datetime-picker-container .select-year-box [data-year]:hover {
     background-color: #ccc;
 }
 
@@ -50,6 +61,7 @@
 .mds-bootstrap-persian-datetime-picker-container table th,
 .mds-bootstrap-persian-datetime-picker-container table td {
     padding: 1px;
+    font-size: 14px;
     text-align: center;
 }
 
@@ -75,6 +87,9 @@
     cursor: pointer;
     transition: all 200ms ease;
 }
+.mds-bootstrap-persian-datetime-picker-container tbody.days td[data-day][data-today] {
+    background-color: aquamarine;
+}
 
 .mds-bootstrap-persian-datetime-picker-container tbody.days td[data-day]:hover {
     background: #ccc;
@@ -87,6 +102,7 @@
     opacity: 0.2;
     transition: none;
 }
+
 .mds-bootstrap-persian-datetime-picker-container tbody.days td[data-pm]:hover,
 .mds-bootstrap-persian-datetime-picker-container tbody.days td[data-nm]:hover,
 .mds-bootstrap-persian-datetime-picker-container tbody.days td[disabled] {
@@ -102,6 +118,7 @@
     width: 14.2%;
     cursor: default;
 }
+
 .mds-bootstrap-persian-datetime-picker-container>table>tbody>tr:first-child>td:hover {
     background: none;
 }
@@ -110,6 +127,7 @@
     width: 100%;
     margin-bottom: 1px;
     padding: 1px;
+    font-size: 14px;
 }
 
 .mds-bootstrap-persian-datetime-picker-container .dropdown {
@@ -135,6 +153,6 @@
     margin-bottom: 1px;
 }
 
-.zIndexCorrected{
+.zIndexCorrected {
     z-index: 999999999;
 }
