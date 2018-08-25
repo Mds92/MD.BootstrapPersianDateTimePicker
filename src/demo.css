@@ -1,5 +1,8 @@
-body,
-table {
+body, table {
     font-family: 'Segoe UI', Tahoma;
     font-size: 14px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
 }
