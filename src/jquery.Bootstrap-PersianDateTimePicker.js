@@ -189,7 +189,7 @@
 </div>`;
 
     var dateTimePickerHtmlTemplate = `
-<div class="mds-bootstrap-persian-datetime-picker-container rtl" ${mdDatePickerContainerFlag}>
+<div class="mds-bootstrap-persian-datetime-picker-container {{rtlCssClass}}" ${mdDatePickerContainerFlag}>
     <div class="select-year-box w-0">
         <div class="container-fluid">
             <div class="row">
@@ -255,13 +255,13 @@
         </thead>
         <tbody class="days">
             <tr>
-                <td>{{weekDayShortName1}}</td>
+                <td class="{{weekDayShortName1CssClass}}">{{weekDayShortName1}}</td>
                 <td>{{weekDayShortName2}}</td>
                 <td>{{weekDayShortName3}}</td>
                 <td>{{weekDayShortName4}}</td>
                 <td>{{weekDayShortName5}}</td>
                 <td>{{weekDayShortName6}}</td>
-                <td class="text-danger">{{weekDayShortName7}}</td>
+                <td class="{{weekDayShortName7CssClass}}">{{weekDayShortName7}}</td>
             </tr>
             {{daysHtml}}
         </tbody>
@@ -327,13 +327,13 @@
             'ج',
         ],
         shortDayNames = [
-            'Su',
-            'Mo',
-            'Tu',
-            'We',
-            'Th',
-            'Fr',
-            'Sa',
+            'SU',
+            'MO',
+            'TU',
+            'WE',
+            'TH',
+            'FR',
+            'SA',
         ],
         monthNamesPersian = [
             'فروردین',
@@ -469,7 +469,12 @@
 
     function getWeekDayName(englishWeekDayIndex, isGregorian) {
         if (!isGregorian) return weekDayNamesPersian[englishWeekDayIndex];
-        return weekDayNames[monthIndex];
+        return weekDayNames[englishWeekDayIndex];
+    }
+
+    function getWeekDayShortName(englishWeekDayIndex, isGregorian) {
+        if (!isGregorian) return shortDayNamesPersian[englishWeekDayIndex];
+        return shortDayNames[englishWeekDayIndex];
     }
 
     function getShortHour(hour) {
@@ -489,10 +494,10 @@
             else
                 amPm = 'ب.ظ';
         } else
-        if (isGregorian)
-            amPm = 'AM';
-        else
-            amPm = 'ق.ظ';
+            if (isGregorian)
+                amPm = 'AM';
+            else
+                amPm = 'ق.ظ';
         return amPm;
     }
 
@@ -518,8 +523,19 @@
         return Number(zeroPad(year) + zeroPad(month) + zeroPad(day));
     }
 
-    function getDateTimePersian(dateTime) {
-        if (!dateTime) dateTime = new Date();
+    function getDateTimeJson1(dateTime) {
+        return {
+            year: dateTime.getFullYear(),
+            month: dateTime.getMonth() + 1,
+            day: dateTime.getDate(),
+            hour: dateTime.getHours(),
+            minute: dateTime.getMinutes(),
+            second: dateTime.getSeconds(),
+            dayOfWeek: dateTime.getDay()
+        }
+    }
+
+    function getDateTimeJsonPersian1(dateTime) {
         var persianDate = toJalaali(dateTime.getFullYear(), dateTime.getMonth() + 1, dateTime.getDate());
         return {
             year: persianDate.jy,
@@ -528,12 +544,33 @@
             hour: dateTime.getHours(),
             minute: dateTime.getMinutes(),
             second: dateTime.getSeconds(),
-            weekDayPersianName: getWeekDayName(dateTime.getDay())
+            dayOfWeek: dateTime.getDay(),
         }
+    }
+
+    function getDateTimeJsonPersian2(yearPersian, monthPersian, dayPersian, hour, minute, second) {
+        if (!isNumber(hour)) hour = 0;
+        if (!isNumber(minute)) minute = 0;
+        if (!isNumber(second)) second = 0;
+        var gregorian = toGregorian(yearPersian, monthPersian, dayPersian);
+        return getDateTimeJsonPersian1(new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, hour, minute, second));
     }
 
     function isLeapYear(persianYear) {
         return isLeapJalaaliYear(persianYear);
+    }
+
+    function getDaysInMonthPersian(year, month) {
+        var numberOfDaysInMonth = 31;
+        if (month > 6 && month < 12)
+            numberOfDaysInMonth = 30;
+        else if (month == 12)
+            numberOfDaysInMonth = isLeapYear(year) ? 30 : 29;
+        return numberOfDaysInMonth;
+    }
+
+    function getDaysInMonth(year, month) {
+        return new Date(year, month, 0).getDate();
     }
 
     function zeroPad(nr, base) {
@@ -541,20 +578,6 @@
         if (base == undefined || base == '') base = '00';
         var len = (String(base).length - String(nr).length) + 1;
         return len > 0 ? new Array(len).join('0') + nr : nr;
-    }
-
-    function getDateTimeJson(year, month, day, hour, minute, second) {
-        if (!isNumber(hour)) hour = 0;
-        if (!isNumber(minute)) minute = 0;
-        if (!isNumber(second)) second = 0;
-        return {
-            year: year,
-            month: month,
-            day: day,
-            hour: hour,
-            minute: minute,
-            second: second
-        };
     }
 
     function getDateTimeString(dateTimeJson, setting) {
@@ -637,10 +660,6 @@
     }
 
     function parsePersianDateTime(persianDateTimeInString, dateSeperatorPattern) {
-        var persianDateTime = getDateTimePersian();
-        if (persianDateTimeInString == '')
-            return getDateTimeJson(persianDateTime.year, persianDateTime.month, persianDateTime.day, persianDateTime.hour, persianDateTime.minute, persianDateTime.second);
-
         if (!dateSeperatorPattern) dateSeperatorPattern = "\/|-";
         dateSeperatorPattern = new RegExp(dateSeperatorPattern, 'img');
         persianDateTimeInString = toEnglishNumber(persianDateTimeInString);
@@ -745,7 +764,7 @@
                 break;
         }
 
-        return getDateTimeJson(numericYear, numericMonth, numericDay, numericHour, numericMinute, numericSecond, numericMiliSecond);
+        return getDateTimeJsonPersian2(numericYear, numericMonth, numericDay, numericHour, numericMinute, numericSecond, numericMiliSecond);
     }
 
     function parseGregorianDateTime(gregorianDateTimeString) {
@@ -781,6 +800,9 @@
 
         if (!selectedDateObject) throw new Error('مقدار تاریخ معتبر نمی باشد');
 
+        html = html.replace(/{{rtlCssClass}}/img, setting.isGregorian ? '' : 'rtl');
+        html = html.replace(/{{weekDayShortName1CssClass}}/img, setting.isGregorian ? 'text-danger' : '');
+        html = html.replace(/{{weekDayShortName7CssClass}}/img, !setting.isGregorian ? 'text-danger' : '');
         html = html.replace(/{{previousYearText}}/img, setting.isGregorian ? previousYearText : previousYearTextPersian);
         html = html.replace(/{{previousMonthText}}/img, setting.isGregorian ? previousMonthText : previousMonthTextPersian);
         html = html.replace(/{{nextMonthText}}/img, setting.isGregorian ? nextMonthText : nextMonthTextPersian);
@@ -802,16 +824,13 @@
         html = html.replace(/{{monthName11}}/img, getMonthName(10, setting.isGregorian));
         html = html.replace(/{{monthName12}}/img, getMonthName(11, setting.isGregorian));
         html = html.replace(/{{datePickerDisplayClass}}/img, setting.enableTimePicker ? '' : 'd-none');
-        html = html.replace(/{{hour}}/img, setting.englishNumber ? selectedDateObject.getHours() : toPersianNumber(selectedDateObject.getHours()));
-        html = html.replace(/{{minute}}/img, setting.englishNumber ? selectedDateObject.getMinutes() : toPersianNumber(selectedDateObject.getMinutes()));
-        html = html.replace(/{{second}}/img, setting.englishNumber ? selectedDateObject.getSeconds() : toPersianNumber(selectedDateObject.getSeconds()));
-        html = html.replace(/{{weekDayShortName1}}/img, setting.isGregorian ? shortDayNames[0] : shortDayNamesPersian[0]);
-        html = html.replace(/{{weekDayShortName2}}/img, setting.isGregorian ? shortDayNames[1] : shortDayNamesPersian[1]);
-        html = html.replace(/{{weekDayShortName3}}/img, setting.isGregorian ? shortDayNames[2] : shortDayNamesPersian[2]);
-        html = html.replace(/{{weekDayShortName4}}/img, setting.isGregorian ? shortDayNames[3] : shortDayNamesPersian[3]);
-        html = html.replace(/{{weekDayShortName5}}/img, setting.isGregorian ? shortDayNames[4] : shortDayNamesPersian[4]);
-        html = html.replace(/{{weekDayShortName6}}/img, setting.isGregorian ? shortDayNames[5] : shortDayNamesPersian[5]);
-        html = html.replace(/{{weekDayShortName7}}/img, setting.isGregorian ? shortDayNames[6] : shortDayNamesPersian[6]);
+        html = html.replace(/{{weekDayShortName1}}/img, getWeekDayShortName(0, setting.isGregorian));
+        html = html.replace(/{{weekDayShortName2}}/img, getWeekDayShortName(1, setting.isGregorian));
+        html = html.replace(/{{weekDayShortName3}}/img, getWeekDayShortName(2, setting.isGregorian));
+        html = html.replace(/{{weekDayShortName4}}/img, getWeekDayShortName(3, setting.isGregorian));
+        html = html.replace(/{{weekDayShortName5}}/img, getWeekDayShortName(4, setting.isGregorian));
+        html = html.replace(/{{weekDayShortName6}}/img, getWeekDayShortName(5, setting.isGregorian));
+        html = html.replace(/{{weekDayShortName7}}/img, getWeekDayShortName(6, setting.isGregorian));
 
         var i = 0,
             firstWeekDayNumber = selectedDateObject.getDay(),
@@ -822,8 +841,9 @@
             selectedMonthName = '',
             selectedDateString = '',
             todayDateString = '',
+            todayDateTimeJson = {}, // year, month, day, hour, minute, second
+            selectedDateTimeJson = {}, // year, month, day, hour, minute, second
             numberOfDaysInCurrentMonth,
-            numberOfDaysInPreviousMonth,
             $tr = $('<tr />'),
             $td = $('<td />'),
             daysHtml = '',
@@ -833,119 +853,145 @@
 
         //firstWeekDayNumber = getFirstDayOfPersianWeek(dateTimeJson.year, dateTimeJson.month),
 
-        if (setting.groupId && (setting.fromDate || setting.toDate)) {
-
+        if (setting.isGregorian) {
+            selectedDateTimeJson = getDateTimeJson1(selectedDateObject);
+            todayDateTimeJson = getDateTimeJson1(new Date());
+            firstWeekDayNumber = new Date(selectedDateTimeJson.year, selectedDateTimeJson.month - 1, 1).getDay();
+            numberOfDaysInCurrentMonth = getDaysInMonth(selectedDateTimeJson.year, selectedDateTimeJson.month);
+            numberOfDaysInPreviousMonth = getDaysInMonth(selectedDateTimeJson.year, selectedDateTimeJson.month - 1);
         } else {
-            if (setting.isGregorian) {
+            selectedDateTimeJson = getDateTimeJsonPersian1(selectedDateObject);
+            todayDateTimeJson = getDateTimeJsonPersian1(new Date());
+            firstWeekDayNumber = getDateTimeJsonPersian2(selectedDateTimeJson.year, selectedDateTimeJson.month, 1, 0, 0, 0).dayOfWeek + 1;
+            numberOfDaysInCurrentMonth = getDaysInMonthPersian(selectedDateTimeJson.year, selectedDateTimeJson.month);
+            numberOfDaysInPreviousMonth = getDaysInMonthPersian(selectedDateTimeJson.year - 1, selectedDateTimeJson.month - 1);
+        }
 
+        selectedYear = setting.englishNumber ? selectedDateTimeJson.year : toPersianNumber(selectedDateTimeJson.year);
+        todayDateNumber = convertToNumber(todayDateTimeJson.year, todayDateTimeJson.month, todayDateTimeJson.day);
+        selectedDateString = `${getWeekDayName(selectedDateTimeJson.dayOfWeek, setting.isGregorian)}، ${selectedDateTimeJson.day} ${getMonthName(selectedDateTimeJson.month - 1, setting.isGregorian)} ${selectedDateTimeJson.year}`;
+        if (!setting.englishNumber) selectedDateString = toPersianNumber(selectedDateString);
+        selectedMonthName = getMonthName(selectedDateTimeJson.month - 1, setting.isGregorian);
+        todayDateString = `${setting.isGregorian ? 'Today,' : 'امروز،'} ${todayDateTimeJson.day} ${selectedMonthName} ${todayDateTimeJson.year}`;
+        if (!setting.englishNumber) todayDateString = toPersianNumber(todayDateString);
 
-            } else {
-                var todayDateTimePersian = getDateTimePersian(),
-                    selectedDateTimePersian = getDateTimePersian(selectedDateObject);
-                todayDateNumber = convertToNumber(todayDateTimePersian.year, todayDateTimePersian.month, todayDateTimePersian.day);
-                selectedYear = setting.englishNumber ? selectedDateTimePersian.year : toPersianNumber(selectedDateTimePersian.year);
-                selectedDateString = `${getWeekDayName(selectedDateObject.getDay(), false)}، ${selectedDateTimePersian.day} ${getMonthName(selectedDateTimePersian.month - 1, false)} ${selectedDateTimePersian.year}`;
-                if (!setting.englishNumber) selectedDateString = toPersianNumber(selectedDateString);
-                selectedMonthName = monthNamesPersian[selectedDateTimePersian.month - 1];
-                todayDateString = `امروز، ${todayDateTimePersian.day} ${getMonthName(todayDateTimePersian.month - 1, false)} ${todayDateTimePersian.year}`;
-                if (!setting.englishNumber) todayDateString = toPersianNumber(todayDateString);
+        for (i = todayDateTimeJson.year - setting.yearOffset; i < todayDateTimeJson.year + setting.yearOffset; i++) {
+            if (setting.englishNumber)
+                yearsToSelectHtml += `<div class="col-3 text-center ${selectedDateTimeJson.year == i ? 'selected-year' : ''}" data-year>${i}</div>`;
+            else
+                yearsToSelectHtml += `<div class="col-3 text-center ${selectedDateTimeJson.year == i ? 'selected-year' : ''}" data-year>${toPersianNumber(i)}</div>`;
+        }
 
-                for (i = todayDateTimePersian.year - setting.yearOffset; i < todayDateTimePersian.year + setting.yearOffset; i++) {
-                    if (setting.englishNumber)
-                        yearsToSelectHtml += `<div class="col-2 ${selectedDateTimePersian.year == i ? 'selected-year' : ''}" data-year>${i}</div>`;
-                    else
-                        yearsToSelectHtml += `<div class="col-2 ${selectedDateTimePersian.year == i ? 'selected-year' : ''}" data-year>${toPersianNumber(i)}</div>`;
-                }
-
-                // اطلاعات ماه جاری
-                numberOfDaysInCurrentMonth = 31;
-                if (selectedDateTimePersian.month > 6 && selectedDateTimePersian.month < 12)
-                    numberOfDaysInCurrentMonth = 30;
-                else if (selectedDateTimePersian.month == 12)
-                    numberOfDaysInCurrentMonth = isLeapYear(selectedDateTimePersian.year) ? 30 : 29;
-
-                // اطلاعات ماه قبلی
-                numberOfDaysInPreviousMonth = 31;
-                if (selectedDateTimePersian.month - 1 > 6 && selectedDateTimePersian.month - 1 < 12)
-                    numberOfDaysInPreviousMonth = 30;
-                else if (selectedDateTimePersian.month - 1 == 12)
-                    numberOfDaysInPreviousMonth = isLeapYear(numberOfDaysInPreviousMonth.year - 1) ? 30 : 29;
-
-                // روز های ماه قبل
-                if (firstWeekDayNumber != 0)
-                    for (i = firstWeekDayNumber; i >= 0; i--) {
-                        $tr.append($('<td data-pm />').html(!setting.englishNumber ? toPersianNumber(zeroPad(numberOfDaysInPreviousMonth - i)) : zeroPad(numberOfDaysInPreviousMonth - i)));
-                        cellNumber++;
-                        tdNumber++;
-                    }
-
-                for (i = 1; i <= numberOfDaysInCurrentMonth; i++) {
-
-                    if (tdNumber >= 7) {
-                        tdNumber = 0;
-                        daysHtml += $tr[0].outerHTML;
-                        isTrAppended = true;
-                        $tr = $('<tr />');
-                    }
-
-                    currentDateNumber = convertToNumber(selectedDateTimePersian.year, selectedDateTimePersian.month, i);
-                    dayNumberInString = setting.englishNumber ? zeroPad(i) : toPersianNumber(zeroPad(i));
-                    $td = $('<td data-day />').html(dayNumberInString);
-
-                    // امروز
-                    if (currentDateNumber == todayDateNumber) {
-                        $td.attr('data-today', '');
-                        // اگر نام روز هفته انتخاب شده در تکس باکس قبل از تاریخ امروز باشد
-                        // نباید دیگر نام روز هفته تغییر کند
-                        if (!dayOfWeek)
-                            dayOfWeek = weekDayNamesPersian[tdNumber - 1 < 0 ? 0 : tdNumber - 1];
-                    }
-                    // روز از قبل انتخاب شده
-                    // روزی که در تکس باکس انتخاب شده
-                    else if (i == selectedDateTimePersian.day) {
-                        $td.addClass('bg-info');
-                        dayOfWeek = weekDayNamesPersian[tdNumber - 1 < 0 ? 0 : tdNumber - 1];
-                    }
-                    // روز جمعه
-                    else if (tdNumber > 0 && tdNumber % 6 == 0)
-                        $td.addClass('text-danger');
-
-                    // روزهای غیر فعال شده
-                    if (setting.disableBeforeToday && currentDateNumber < todayDateNumber)
-                        $td.attr('disabled', '');
-
-                    $tr.append($td);
-                    isTrAppended = false;
-
-                    tdNumber++;
-                    cellNumber++;
-                }
-
+        // روز های ماه قبل
+        if (firstWeekDayNumber != 6) {
+            for (i = numberOfDaysInPreviousMonth - firstWeekDayNumber; i < numberOfDaysInPreviousMonth; i++) {
+                dayNumberInString = setting.englishNumber ? zeroPad(i) : toPersianNumber(zeroPad(i));
+                $td = $('<td data-nm />').html(dayNumberInString);
+                // روز جمعه
+                if (!setting.isGregorian && tdNumber > 0 && tdNumber % 6 == 0)
+                    $td.addClass('text-danger');
+                // روز یکشنبه
+                else if (setting.isGregorian && tdNumber == 0)
+                    $td.addClass('text-danger');
+                $tr.append($td);
+                cellNumber++;
+                tdNumber++;
                 if (tdNumber >= 7) {
                     tdNumber = 0;
                     daysHtml += $tr[0].outerHTML;
                     isTrAppended = true;
                     $tr = $('<tr />');
                 }
-
-                // روزهای ماه بعد
-                for (i = 1; i <= 42 - cellNumber; i++) {
-                    $tr.append($('<td data-nm />').html(setting.englishNumber ? zeroPad(i) : toPersianNumber(zeroPad(i))));
-                    tdNumber++;
-                }
-
-                if (!isTrAppended) {
-                    daysHtml += $tr[0].outerHTML;
-                    isTrAppended = true;
-                }
             }
         }
+
+        for (i = 1; i <= numberOfDaysInCurrentMonth; i++) {
+
+            if (tdNumber >= 7) {
+                tdNumber = 0;
+                daysHtml += $tr[0].outerHTML;
+                isTrAppended = true;
+                $tr = $('<tr />');
+            }
+
+            currentDateNumber = convertToNumber(selectedDateTimeJson.year, selectedDateTimeJson.month, i);
+            dayNumberInString = setting.englishNumber ? zeroPad(i) : toPersianNumber(zeroPad(i));
+            $td = $('<td data-day />').html(dayNumberInString);
+
+            // امروز
+            if (currentDateNumber == todayDateNumber) {
+                $td.attr('data-today', '');
+                // اگر نام روز هفته انتخاب شده در تکس باکس قبل از تاریخ امروز باشد
+                // نباید دیگر نام روز هفته تغییر کند
+                if (!dayOfWeek)
+                    dayOfWeek = getWeekDayName(tdNumber - 1 < 0 ? 0 : tdNumber - 1, setting.isGregorian)
+            }
+            // روز از قبل انتخاب شده
+            // روزی که در تکس باکس انتخاب شده
+            else if (i == selectedDateTimeJson.day) {
+                $td.addClass('bg-info');
+                dayOfWeek = getWeekDayName(tdNumber - 1 < 0 ? 0 : tdNumber - 1, setting.isGregorian);
+            }
+
+            // روز جمعه
+            if (!setting.isGregorian && tdNumber == 6)
+                $td.addClass('text-danger');
+            // روز یکشنبه
+            else if (setting.isGregorian && tdNumber == 0)
+                $td.addClass('text-danger');
+
+            // روزهای غیر فعال شده
+            if (setting.disableBeforeToday && currentDateNumber < todayDateNumber)
+                $td.attr('disabled', '');
+
+            $tr.append($td);
+            isTrAppended = false;
+
+            tdNumber++;
+            cellNumber++;
+        }
+
+        if (tdNumber >= 7) {
+            tdNumber = 0;
+            daysHtml += $tr[0].outerHTML;
+            isTrAppended = true;
+            $tr = $('<tr />');
+        }
+
+        // روزهای ماه بعد
+        for (i = 1; i <= 42 - cellNumber; i++) {
+            dayNumberInString = setting.englishNumber ? zeroPad(i) : toPersianNumber(zeroPad(i));
+            $td = $('<td data-nm />').html(dayNumberInString);
+            // روز جمعه
+            if (!setting.isGregorian && tdNumber > 0 && tdNumber % 6 == 0)
+                $td.addClass('text-danger');
+            // روز یکشنبه
+            else if (setting.isGregorian && tdNumber == 0)
+                $td.addClass('text-danger');
+            $tr.append($td);
+            tdNumber++;
+            if (tdNumber >= 7) {
+                tdNumber = 0;
+                daysHtml += $tr[0].outerHTML;
+                isTrAppended = true;
+                $tr = $('<tr />');
+            }
+        }
+
+        if (!isTrAppended) {
+            daysHtml += $tr[0].outerHTML;
+            isTrAppended = true;
+        }
+
         html = html.replace(/{{yearsToSelectHtml}}/img, yearsToSelectHtml);
         html = html.replace(/{{selectedYear}}/img, selectedYear);
         html = html.replace(/{{selectedMonthName}}/img, selectedMonthName);
         html = html.replace(/{{selectedDateString}}/img, selectedDateString);
         html = html.replace(/{{daysHtml}}/img, daysHtml);
         html = html.replace(/{{todayDateString}}/img, todayDateString);
+        html = html.replace(/{{hour}}/img, setting.englishNumber ? selectedDateTimeJson.hour : toPersianNumber(selectedDateTimeJson.hour));
+        html = html.replace(/{{minute}}/img, setting.englishNumber ? selectedDateTimeJson.minute : toPersianNumber(selectedDateTimeJson.minute));
+        html = html.replace(/{{second}}/img, setting.englishNumber ? selectedDateTimeJson.second : toPersianNumber(selectedDateTimeJson.second));
         return html;
     }
 

@@ -20,18 +20,15 @@
     <div class="container">
         <div class="row mb-3">
             <div class="col-sm-6">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="date2">|||</span>
-                    </div>
-                    <input type="text" class="form-control" id="inputDate2" placeholder="Date2" aria-label="Date2" aria-describedby="date2">
-                </div>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-sm-6">
                 <div id="date1"> </div>
                 <input type="text" class="form-control" id="inputDate1" placeholder="Date1" aria-label="Date1" aria-describedby="date1">
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-sm-6">
+                <div id="date2"> </div>
+                <input type="text" class="form-control" id="inputDate2" placeholder="Date2" aria-label="Date2" aria-describedby="date2">
             </div>
         </div>
     </div>
@@ -40,11 +37,14 @@
     <script type="text/javascript">
         $('#date1').MdPersianDateTimePicker({
             targetSelector: 'inputDate1',
-            inLine: true
+            inLine: true,
+            isGregorian: true
+
         });
         $('#date2').MdPersianDateTimePicker({
             targetSelector: 'inputDate2',
-            isGregorian: true
+            inLine: true,
+            isGregorian: false
         });
     </script>
 </body>

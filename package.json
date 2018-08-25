@@ -23,7 +23,7 @@
   "devDependencies": {
     "@types/jquery": "^3.3.6",
     "typescript": "^3.0.1",
-    "webpack": "^4.16.5",
+    "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0"
   },
   "scripts": {
