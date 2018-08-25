@@ -1022,10 +1022,10 @@
         }
         else
             setting.selectedDate = new Date(setting.selectedDate.setDate(day));
-
         setSetting($this, setting);
         setSelectedText(setting);
-        hidePopover($(mdDatePickerPopoverSelector));
+        if (!setting.inLine) hidePopover($(mdDatePickerPopoverSelector));
+        else updateCalendarHtml1($this, setting);
     });
 
     // کلیک روی ماه های دراپ داون
