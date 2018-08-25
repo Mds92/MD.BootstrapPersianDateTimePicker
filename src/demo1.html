@@ -23,6 +23,14 @@
                 <div id="date1"> </div>
                 <input type="text" class="form-control" id="inputDate1" placeholder="Date1" aria-label="Date1" aria-describedby="date1">
             </div>
+            <div class="col-sm-6">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="date3">Icon</span>
+                    </div>
+                    <input type="text" id="inputDate3" class="form-control" placeholder="date3" aria-label="date3" aria-describedby="date3">
+                </div>
+            </div>
         </div>
         <hr>
         <div class="row">
@@ -36,14 +44,18 @@
     <script src="jquery.Bootstrap-PersianDateTimePicker.js" type="text/javascript"></script>
     <script type="text/javascript">
         $('#date1').MdPersianDateTimePicker({
-            targetSelector: 'inputDate1',
+            targetSelector: '#inputDate1',
             inLine: true,
             isGregorian: true
-
         });
         $('#date2').MdPersianDateTimePicker({
-            targetSelector: 'inputDate2',
+            targetSelector: '#inputDate2',
             inLine: true,
+            isGregorian: false
+        });
+        $('#date3').MdPersianDateTimePicker({
+            targetSelector: '#inputDate3',
+            enableTimePicker: true,
             isGregorian: false
         });
     </script>

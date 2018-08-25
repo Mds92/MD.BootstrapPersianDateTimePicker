@@ -179,13 +179,13 @@
         mdDatePickerContainerFlag = 'data-mdpersiandatetimepicker-container',
         mdDatePickerContainerSelector = '[' + mdDatePickerContainerFlag + ']',
         mdPluginName = 'MdPersianDateTimePicker',
-        $htmlElements = [];
+        triggerStart = false;
 
     var popverHtmlTemplate = `
-<div class="popover zIndexCorrected" role="tooltip" ${mdDatePickerPopoverFlag}>
+<div class="popover mds-bootstrap-persian-datetime-picker-popover" role="tooltip" ${mdDatePickerPopoverFlag}>
     <div class="arrow"></div>
-    <h3 class="popover-header" data-name="mds-datetimepicker-title"></h3>
-    <div class="popover-body" data-name="mds-datetimepicker-popoverbody"></div>
+    <h3 class="popover-header text-center" data-name="mds-datetimepicker-title"></h3>
+    <div class="popover-body p-0" data-name="mds-datetimepicker-popoverbody"></div>
 </div>`;
 
     var dateTimePickerHtmlTemplate = `
@@ -197,10 +197,10 @@
             </div>
         </div>
     </div>
-    <table class="table table-sm table-striped text-center">
+    <table class="table table-sm table-striped text-center p-0 m-0">
         <thead>
-            <tr>
-                <th colspan="100">{{selectedDateString}}</th>
+            <tr class="{{selectedDateStringCssClass}}">
+                <th colspan="100" data-selecteddatestring>{{selectedDateString}}</th>
             </tr>
             <tr>
                 <th colspan="100">
@@ -208,44 +208,44 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <button class="btn btn-light btn-sm" title="{{previousYearText}}"> &lt;&lt; </button>
+                                    <button class="btn btn-light btn-sm" title="{{previousYearText}}" data-change-year="-1"> &lt;&lt; </button>
                                 </th>
                                 <th>
-                                    <button class="btn btn-light btn-sm" title="{{previousMonthText}}"> &lt; </button>
+                                    <button class="btn btn-light btn-sm" title="{{previousMonthText}}" data-change-month="-1"> &lt; </button>
                                 </th>
-                                <th>
+                                <th style="width: 120px;">
                                     <div class="dropdown">
                                         <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="mdsBootstrapPersianDatetimePickerMonthSelectorButon"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             {{selectedMonthName}}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="mdsBootstrapPersianDatetimePickerMonthSelectorButon">
-                                            <a class="dropdown-item">{{monthName1}}</a>
-                                            <a class="dropdown-item">{{monthName2}}</a>
-                                            <a class="dropdown-item">{{monthName3}}</a>
+                                            <a class="dropdown-item" data-dropdown-month="1">{{monthName1}}</a>
+                                            <a class="dropdown-item" data-dropdown-month="2">{{monthName2}}</a>
+                                            <a class="dropdown-item" data-dropdown-month="3">{{monthName3}}</a>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item">{{monthName4}}</a>
-                                            <a class="dropdown-item">{{monthName5}}</a>
-                                            <a class="dropdown-item">{{monthName6}}</a>
+                                            <a class="dropdown-item" data-dropdown-month="4">{{monthName4}}</a>
+                                            <a class="dropdown-item" data-dropdown-month="5">{{monthName5}}</a>
+                                            <a class="dropdown-item" data-dropdown-month="6">{{monthName6}}</a>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item">{{monthName7}}</a>
-                                            <a class="dropdown-item">{{monthName8}}</a>
-                                            <a class="dropdown-item">{{monthName9}}</a>
+                                            <a class="dropdown-item" data-dropdown-month="7">{{monthName7}}</a>
+                                            <a class="dropdown-item" data-dropdown-month="8">{{monthName8}}</a>
+                                            <a class="dropdown-item" data-dropdown-month="9">{{monthName9}}</a>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item">{{monthName10}}</a>
-                                            <a class="dropdown-item">{{monthName11}}</a>
-                                            <a class="dropdown-item">{{monthName12}}</a>
+                                            <a class="dropdown-item" data-dropdown-month="10">{{monthName10}}</a>
+                                            <a class="dropdown-item" data-dropdown-month="11">{{monthName11}}</a>
+                                            <a class="dropdown-item" data-dropdown-month="12">{{monthName12}}</a>
                                         </div>
                                     </div>
                                 </th>
-                                <th>
-                                    <button class="btn btn-light btn-sm" data-year-button>{{selectedYear}}</button>
+                                <th style="width: 50px;">
+                                    <button class="btn btn-light btn-sm" select-year-button>{{selectedYear}}</button>
                                 </th>
                                 <th>
-                                    <button class="btn btn-light btn-sm" title="{{nextMonthText}}"> &gt; </button>
+                                    <button class="btn btn-light btn-sm" title="{{nextMonthText}}" data-change-month="1"> &gt; </button>
                                 </th>
                                 <th>
-                                    <button class="btn btn-light btn-sm" title="{{nextYearText}}"> &gt;&gt; </button>
+                                    <button class="btn btn-light btn-sm" title="{{nextYearText}}" data-change-year="1"> &gt;&gt; </button>
                                 </th>
                             </tr>
                         </thead>
@@ -272,15 +272,15 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <input type="text" value="00" title="{{hourText}}" value="{{hour}}" />
+                                    <input type="text" title="{{hourText}}" value="{{hour}}" maxlength="2" data-clock="hour" />
                                 </td>
                                 <td>:</td>
                                 <td>
-                                    <input type="text" value="00" title="{{minuteText}}" value="{{minute}}" />
+                                    <input type="text" title="{{minuteText}}" value="{{minute}}" maxlength="2" data-clock="minute" />
                                 </td>
                                 <td>:</td>
                                 <td>
-                                    <input type="text" value="00" title="{{secondText}}" value="{{second}}" />
+                                    <input type="text" title="{{secondText}}" value="{{second}}" maxlength="2" data-clock="second" />
                                 </td>
                             </tr>
                         </tbody>
@@ -289,7 +289,7 @@
             </tr>
             <tr>
                 <td colspan="100">
-                    <button class="btn btn-light" title="{{goTodayText}}">{{todayDateString}}</button>
+                    <button class="btn btn-light" title="{{goTodayText}}" data-go-today>{{todayDateString}}</button>
                 </td>
             </tr>
         </tfoot>
@@ -384,44 +384,44 @@
 
     //#endregion
 
-    //#region Events
-
-    // کلیک روی روزها
-    $(document).on('click', mdDatePickerContainerSelector + ' [data-day]', function () {
-        var $this = $(this),
-            $element = $this.parents(mdDatePickerFlagSelector + ':first'),
-            setting = $element.data(mdPluginName),
-            day = toEnglishNumber($this.text().trim());
-        setting.selectedDate = new Date(setting.selectedDate.setDate(day));
-        $element.data(mdPluginName, setting);
-        hidePopover($(mdDatePickerPopoverSelector));
-    });
-
-    // کلیک روی سال انتخابی برای عوض کردن سال
-    $(document).on('click', mdDatePickerContainerSelector + ' [data-year-button]', function () {
-        $(mdDatePickerContainerSelector).find('.select-year-box').removeClass('w-0');
-    });
-
-    // مخفی کردن تقویم با کلیک روی جایی که تقویم نیست
-    $('html').on('click', function (e) {
-        var $target = $(e.target),
-            hide = true,
-            isDatePicker = $target.parents(mdDatePickerPopoverSelector).length > 0;
-        if (isDatePicker) return;
-        for (var i = 0; i < $htmlElements.length; i++) {
-            var $item = $htmlElements[i];
-            if (!hide || $target.is($item)) {
-                hide = false;
-                continue;
-            }
-            hide = true;
-        }
-        if (hide) hidePopover($(mdDatePickerPopoverSelector));
-    });
-
-    //#endregion
-
     //#region Functions
+
+    function getPopoverDescriber($element) {
+        // المانی را بر میگرداند که کاربر پلاگین را روی آن فعال کرده است
+        var $popoverDescriber = $element.parents(mdDatePickerFlagSelector + ':first'); // inline
+        // not inline
+        if ($popoverDescriber.length <= 0) {
+            $popoverDescriber = $element.parents(mdDatePickerPopoverSelector + ':first');
+            $popoverDescriber = $('[aria-describedby="' + $popoverDescriber.attr('id') + '"]');
+        }
+        return $popoverDescriber;
+    }
+    function getSetting($element) {
+        return getPopoverDescriber($element).data(mdPluginName);
+    }
+    function setSetting($element, setting) {
+        return getPopoverDescriber($element).data(mdPluginName, setting);
+    }
+    function updateCalendarHtml1($element, setting) {
+        var calendarHtml = getDateTimePickerHtml(setting),
+            $container = setting.inLine ? $element.parents(mdDatePickerFlagSelector + ':first') : $element.parents('[data-name="mds-datetimepicker-popoverbody"]:first');
+        selectedDateString = $(calendarHtml).find('[data-selecteddatestring]').text().trim();
+        //$('#' + $this.attr('aria-describedby')).find('[data-name="mds-datetimepicker-title"]').html(selectedDateString);
+        $container.html(getDateTimePickerHtml(setting));
+    }
+    function setSelectedText(setting) {
+        var $target = $(setting.targetSelector),
+            dateTimeJson = !setting.isGregorian ? getDateTimeJsonPersian1(setting.selectedDate) : getDateTimeJson1(setting.selectedDate);
+        if ($target.length <= 0) return;
+        switch ($target[0].tagName.toLowerCase()) {
+            case 'input':
+                $target.val(getDateTimeString(dateTimeJson, setting));
+                break;
+            default:
+                $target.text(getDateTimeString(dateTimeJson, setting));
+                break;
+        }
+    }
 
     function isNumber(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
@@ -521,6 +521,16 @@
 
     function convertToNumber(year, month, day) {
         return Number(zeroPad(year) + zeroPad(month) + zeroPad(day));
+    }
+
+    function getDateTime1(yearPersian, monthPersian, dayPersian, hour, minute, second) {
+        var gregorian = toGregorian(yearPersian, monthPersian, dayPersian);
+        return new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, hour, minute, second);
+    }
+
+    function getDateTime2(dateTimeJsonPersian) {
+        var gregorian = toGregorian(dateTimeJsonPersian.year, dateTimeJsonPersian.month, dateTimeJsonPersian.day);
+        return new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, dateTimeJsonPersian.hour, dateTimeJsonPersian.minute, dateTimeJsonPersian.second);
     }
 
     function getDateTimeJson1(dateTime) {
@@ -793,13 +803,13 @@
         };
     }
 
-    function getDateTimePickerHtml($popoverDescriber) {
-        var setting = $popoverDescriber.data(mdPluginName),
-            selectedDateObject = setting.selectedDate,
+    function getDateTimePickerHtml(setting) {
+        var selectedDateObject = setting.selectedDate,
             html = dateTimePickerHtmlTemplate;
 
         if (!selectedDateObject) throw new Error('مقدار تاریخ معتبر نمی باشد');
 
+        html = html.replace(/{{selectedDateStringCssClass}}/img, setting.inLine ? '' : 'd-none');
         html = html.replace(/{{rtlCssClass}}/img, setting.isGregorian ? '' : 'rtl');
         html = html.replace(/{{weekDayShortName1CssClass}}/img, setting.isGregorian ? 'text-danger' : '');
         html = html.replace(/{{weekDayShortName7CssClass}}/img, !setting.isGregorian ? 'text-danger' : '');
@@ -862,7 +872,7 @@
         } else {
             selectedDateTimeJson = getDateTimeJsonPersian1(selectedDateObject);
             todayDateTimeJson = getDateTimeJsonPersian1(new Date());
-            firstWeekDayNumber = getDateTimeJsonPersian2(selectedDateTimeJson.year, selectedDateTimeJson.month, 1, 0, 0, 0).dayOfWeek + 1;
+            firstWeekDayNumber = getDateTimeJsonPersian2(selectedDateTimeJson.year, selectedDateTimeJson.month, 1, 0, 0, 0).dayOfWeek;
             numberOfDaysInCurrentMonth = getDaysInMonthPersian(selectedDateTimeJson.year, selectedDateTimeJson.month);
             numberOfDaysInPreviousMonth = getDaysInMonthPersian(selectedDateTimeJson.year - 1, selectedDateTimeJson.month - 1);
         }
@@ -872,23 +882,24 @@
         selectedDateString = `${getWeekDayName(selectedDateTimeJson.dayOfWeek, setting.isGregorian)}، ${selectedDateTimeJson.day} ${getMonthName(selectedDateTimeJson.month - 1, setting.isGregorian)} ${selectedDateTimeJson.year}`;
         if (!setting.englishNumber) selectedDateString = toPersianNumber(selectedDateString);
         selectedMonthName = getMonthName(selectedDateTimeJson.month - 1, setting.isGregorian);
-        todayDateString = `${setting.isGregorian ? 'Today,' : 'امروز،'} ${todayDateTimeJson.day} ${selectedMonthName} ${todayDateTimeJson.year}`;
+        todayDateString = `${setting.isGregorian ? 'Today,' : 'امروز،'} ${todayDateTimeJson.day} ${getMonthName(todayDateTimeJson.month - 1, setting.isGregorian)} ${todayDateTimeJson.year}`;
         if (!setting.englishNumber) todayDateString = toPersianNumber(todayDateString);
 
         for (i = todayDateTimeJson.year - setting.yearOffset; i < todayDateTimeJson.year + setting.yearOffset; i++) {
             if (setting.englishNumber)
-                yearsToSelectHtml += `<div class="col-3 text-center ${selectedDateTimeJson.year == i ? 'selected-year' : ''}" data-year>${i}</div>`;
+                yearsToSelectHtml += `<div class="col-3 text-center" ${selectedDateTimeJson.year == i ? 'selected-year' : ''} data-year>${i}</div>`;
             else
-                yearsToSelectHtml += `<div class="col-3 text-center ${selectedDateTimeJson.year == i ? 'selected-year' : ''}" data-year>${toPersianNumber(i)}</div>`;
+                yearsToSelectHtml += `<div class="col-3 text-center" ${selectedDateTimeJson.year == i ? 'selected-year' : ''} data-year>${toPersianNumber(i)}</div>`;
         }
 
         // روز های ماه قبل
         if (firstWeekDayNumber != 6) {
-            for (i = numberOfDaysInPreviousMonth - firstWeekDayNumber; i < numberOfDaysInPreviousMonth; i++) {
+            if (setting.isGregorian) firstWeekDayNumber--;
+            for (i = numberOfDaysInPreviousMonth - firstWeekDayNumber; i <= numberOfDaysInPreviousMonth; i++) {
                 dayNumberInString = setting.englishNumber ? zeroPad(i) : toPersianNumber(zeroPad(i));
                 $td = $('<td data-nm />').html(dayNumberInString);
                 // روز جمعه
-                if (!setting.isGregorian && tdNumber > 0 && tdNumber % 6 == 0)
+                if (!setting.isGregorian && tdNumber == 6)
                     $td.addClass('text-danger');
                 // روز یکشنبه
                 else if (setting.isGregorian && tdNumber == 0)
@@ -928,8 +939,8 @@
             }
             // روز از قبل انتخاب شده
             // روزی که در تکس باکس انتخاب شده
-            else if (i == selectedDateTimeJson.day) {
-                $td.addClass('bg-info');
+            if (i == selectedDateTimeJson.day) {
+                $td.attr('data-selectedday', '');
                 dayOfWeek = getWeekDayName(tdNumber - 1 < 0 ? 0 : tdNumber - 1, setting.isGregorian);
             }
 
@@ -963,7 +974,7 @@
             dayNumberInString = setting.englishNumber ? zeroPad(i) : toPersianNumber(zeroPad(i));
             $td = $('<td data-nm />').html(dayNumberInString);
             // روز جمعه
-            if (!setting.isGregorian && tdNumber > 0 && tdNumber % 6 == 0)
+            if (!setting.isGregorian && tdNumber == 6)
                 $td.addClass('text-danger');
             // روز یکشنبه
             else if (setting.isGregorian && tdNumber == 0)
@@ -989,11 +1000,153 @@
         html = html.replace(/{{selectedDateString}}/img, selectedDateString);
         html = html.replace(/{{daysHtml}}/img, daysHtml);
         html = html.replace(/{{todayDateString}}/img, todayDateString);
-        html = html.replace(/{{hour}}/img, setting.englishNumber ? selectedDateTimeJson.hour : toPersianNumber(selectedDateTimeJson.hour));
-        html = html.replace(/{{minute}}/img, setting.englishNumber ? selectedDateTimeJson.minute : toPersianNumber(selectedDateTimeJson.minute));
-        html = html.replace(/{{second}}/img, setting.englishNumber ? selectedDateTimeJson.second : toPersianNumber(selectedDateTimeJson.second));
+        html = html.replace(/{{hour}}/img, selectedDateTimeJson.hour);
+        html = html.replace(/{{minute}}/img, selectedDateTimeJson.minute);
+        html = html.replace(/{{second}}/img, selectedDateTimeJson.second);
         return html;
     }
+
+    //#endregion
+
+    //#region Events
+
+    // کلیک روی روزها
+    $(document).on('click', mdDatePickerContainerSelector + ' [data-day]', function () {
+        var $this = $(this),
+            setting = getSetting($this),
+            day = Number(toEnglishNumber($this.text().trim()));
+        if (!setting.isGregorian) {
+            var dateTimeJsonPersian = getDateTimeJsonPersian1(setting.selectedDate);
+            dateTimeJsonPersian.day = day;
+            setting.selectedDate = getDateTime2(dateTimeJsonPersian);
+        }
+        else
+            setting.selectedDate = new Date(setting.selectedDate.setDate(day));
+
+        setSetting($this, setting);
+        setSelectedText(setting);
+        hidePopover($(mdDatePickerPopoverSelector));
+    });
+
+    // کلیک روی ماه های دراپ داون
+    $(document).on('click', mdDatePickerContainerSelector + ' [data-dropdown-month]', function () {
+        var $this = $(this),
+            setting = getSetting($this),
+            month = Number(toEnglishNumber($this.attr('data-dropdown-month').trim()));
+        if (!setting.isGregorian) {
+            var dateTimeJsonPersian = getDateTimeJsonPersian1(setting.selectedDate);
+            dateTimeJsonPersian.month = month;
+            setting.selectedDate = getDateTime2(dateTimeJsonPersian);
+        }
+        else
+            setting.selectedDate = new Date(setting.selectedDate.setMonth(month));
+        setSetting($this, setting);
+        updateCalendarHtml1($this, setting);
+    });
+
+    // کلیک روی ماه بعد یا قبل
+    $(document).on('click', mdDatePickerContainerSelector + ' [data-change-month]', function () {
+        var $this = $(this),
+            setting = getSetting($this),
+            monthAdd = Number(toEnglishNumber($this.attr('data-change-month').trim()));
+        if (!setting.isGregorian) {
+            var dateTimeJsonPersian = getDateTimeJsonPersian1(setting.selectedDate);
+            dateTimeJsonPersian.month += monthAdd;
+            if (dateTimeJsonPersian.month <= 0) {
+                dateTimeJsonPersian.month = 12;
+                dateTimeJsonPersian.year--;
+            }
+            if (dateTimeJsonPersian.month > 12) {
+                dateTimeJsonPersian.year++;
+                dateTimeJsonPersian.month = 1;
+            }
+            setting.selectedDate = getDateTime2(dateTimeJsonPersian);
+        }
+        else
+            setting.selectedDate = new Date(setting.selectedDate.setMonth(setting.selectedDate.getMonth() + monthAdd));
+        setSetting($this, setting);
+        updateCalendarHtml1($this, setting);
+    });
+
+    // کلیک روی سال بعد یا قبل
+    $(document).on('click', mdDatePickerContainerSelector + ' [data-change-year]', function () {
+        var $this = $(this),
+            setting = getSetting($this),
+            yearAdd = Number(toEnglishNumber($this.attr('data-change-year').trim()));
+        if (!setting.isGregorian) {
+            var dateTimeJsonPersian = getDateTimeJsonPersian1(setting.selectedDate);
+            dateTimeJsonPersian.year += yearAdd;
+            setting.selectedDate = getDateTime2(dateTimeJsonPersian);
+        }
+        else
+            setting.selectedDate = new Date(setting.selectedDate.setFullYear(setting.selectedDate.getFullYear() + yearAdd));
+        setSetting($this, setting);
+        updateCalendarHtml1($this, setting);
+    });
+
+    // کلیک روی سال
+    $(document).on('click', mdDatePickerContainerSelector + ' [data-year]', function () {
+        var $this = $(this),
+            setting = getSetting($this),
+            year = Number(toEnglishNumber($this.text().trim()));
+        $this.parents(mdDatePickerContainerSelector + ':first').find('.select-year-box').addClass('w-0');
+        if (!setting.isGregorian) {
+            var dateTimeJsonPersian = getDateTimeJsonPersian1(setting.selectedDate);
+            dateTimeJsonPersian.year = year;
+            setting.selectedDate = getDateTime2(dateTimeJsonPersian);
+        }
+        else
+            setting.selectedDate = new Date(setting.selectedDate.setFullYear(year));
+        setSetting($this, setting);
+        updateCalendarHtml1($this, setting);
+    });
+
+    // عوض کردن ساعت
+    $(document).on('blur', mdDatePickerContainerSelector + ' input[data-clock]', function () {
+        var $this = $(this),
+            $thisContainer = $this.parents(mdDatePickerContainerSelector + ':first'),
+            $hour = $thisContainer.find('input[type="text"][data-clock="hour"]'),
+            $minute = $thisContainer.find('input[type="text"][data-clock="minute"]'),
+            $second = $thisContainer.find('input[type="text"][data-clock="second"]'),
+            hour = Number($hour.val()),
+            minute = Number($minute.val()),
+            second = Number($second.val()),
+            setting = getSetting($this);
+
+        hour = !isNumber(hour) ? setting.selectedDate.getHours() : hour;
+        minute = !isNumber(minute) ? setting.selectedDate.getMinutes() : minute;
+        second = !isNumber(second) ? setting.selectedDate.getSeconds() : second;
+
+        setting.selectedDate = new Date(setting.selectedDate.setHours(hour));
+        setting.selectedDate = new Date(setting.selectedDate.setMinutes(minute));
+        setting.selectedDate = new Date(setting.selectedDate.setSeconds(second));
+
+        setSetting($this, setting);
+        setSelectedText(setting);
+    });
+
+    // کلیک روی سال انتخابی برای عوض کردن سال
+    $(document).on('click', mdDatePickerContainerSelector + ' [select-year-button]', function () {
+        $(this).parents(mdDatePickerContainerSelector + ':first').find('.select-year-box').removeClass('w-0');
+    });
+
+    // برو به امروز
+    $(document).on('click', mdDatePickerContainerSelector + ' [data-go-today]', function () {
+        var $this = $(this),
+            setting = getSetting($this);
+        setting.selectedDate = new Date();
+        setSetting($this, setting);
+        updateCalendarHtml1($this, setting);
+    });
+
+    // مخفی کردن تقویم با کلیک روی جایی که تقویم نیست
+    $('html').on('click', function (e) {
+        if (triggerStart) return;
+        var $target = $(e.target),
+            $popoverDescriber = getPopoverDescriber($target);
+        if ($popoverDescriber.length >= 1) return;
+        hidePopover($(mdDatePickerPopoverSelector));
+    });
 
     //#endregion
 
@@ -1020,7 +1173,6 @@
                         yearOffset: 30
                     }, options);
                 $this.attr(mdDatePickerFlag, '');
-                $htmlElements.push($this);
                 if (setting.isGregorian)
                     setting.englishNumber = true;
                 if (setting.enableTimePicker && !setting.format)
@@ -1031,7 +1183,7 @@
                 $this.data(mdPluginName, setting);
                 // نمایش تقویم
                 if (setting.inLine) {
-                    $this.append(getDateTimePickerHtml($this));
+                    $this.append(getDateTimePickerHtml(setting));
                 } else {
                     $this.popover({
                         container: 'body',
@@ -1042,12 +1194,19 @@
                         trigger: 'manual',
                         template: popverHtmlTemplate,
                     }).on(setting.trigger, function () {
+                        triggerStart = true;
                         $this = $(this);
                         setting = $this.data(mdPluginName);
                         if (setting.disabled) return;
                         hideOthers($this);
                         showPopover($this);
-                        //updateDateTimePickerHtml(this, changeDateTimeEnum.TriggerFired, isGregorian);
+                        setTimeout(function () {
+                            var calendarHtml = getDateTimePickerHtml(setting),
+                                selectedDateString = $(calendarHtml).find('[data-selecteddatestring]').text().trim();
+                            $('#' + $this.attr('aria-describedby')).find('[data-name="mds-datetimepicker-title"]').html(selectedDateString);
+                            $('#' + $this.attr('aria-describedby')).find('[data-name="mds-datetimepicker-popoverbody"]').html(calendarHtml);
+                            triggerStart = false;
+                        }, 10);
                     });
                 }
             });
