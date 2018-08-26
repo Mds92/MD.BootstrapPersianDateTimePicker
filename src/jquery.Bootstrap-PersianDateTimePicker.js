@@ -208,15 +208,15 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <button class="btn btn-light btn-sm" title="{{previousYearText}}" data-change-year="-1"> &lt;&lt; </button>
+                                    <button class="btn btn-light btn-sm" title="{{previousYearText}}" data-change-year="-1" {{previousYearButtonAttribute}}> &lt;&lt; </button>
                                 </th>
                                 <th>
-                                    <button class="btn btn-light btn-sm" title="{{previousMonthText}}" data-change-month="-1"> &lt; </button>
+                                    <button class="btn btn-light btn-sm" title="{{previousMonthText}}" data-change-month="-1" {{previousMonthButtonAttribute}}> &lt; </button>
                                 </th>
                                 <th style="width: 120px;">
                                     <div class="dropdown">
                                         <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="mdsBootstrapPersianDatetimePickerMonthSelectorButon"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" {{selectMonthButtonAttribute}}>
                                             {{selectedMonthName}}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="mdsBootstrapPersianDatetimePickerMonthSelectorButon">
@@ -239,13 +239,13 @@
                                     </div>
                                 </th>
                                 <th style="width: 50px;">
-                                    <button class="btn btn-light btn-sm" select-year-button>{{selectedYear}}</button>
+                                    <button class="btn btn-light btn-sm" select-year-button {{selectYearButtonAttribute}}>{{selectedYear}}</button>
                                 </th>
                                 <th>
-                                    <button class="btn btn-light btn-sm" title="{{nextMonthText}}" data-change-month="1"> &gt; </button>
+                                    <button class="btn btn-light btn-sm" title="{{nextMonthText}}" data-change-month="1" {{nextMonthButtonAttribute}}> &gt; </button>
                                 </th>
                                 <th>
-                                    <button class="btn btn-light btn-sm" title="{{nextYearText}}" data-change-year="1"> &gt;&gt; </button>
+                                    <button class="btn btn-light btn-sm" title="{{nextYearText}}" data-change-year="1" {{nextYearButtonAttribute}}> &gt;&gt; </button>
                                 </th>
                             </tr>
                         </thead>
@@ -519,11 +519,18 @@
         $element.popover('hide');
     }
 
-    function convertToNumber(year, month, day) {
+    function convertToNumber1(dateTimeJson) {
+        return Number(zeroPad(dateTimeJson.year) + zeroPad(dateTimeJson.month) + zeroPad(dateTimeJson.day));
+    }
+
+    function convertToNumber2(year, month, day) {
         return Number(zeroPad(year) + zeroPad(month) + zeroPad(day));
     }
 
     function getDateTime1(yearPersian, monthPersian, dayPersian, hour, minute, second) {
+        hour = !hour ? 0 : hour;
+        minute = !minute ? 0 : minute;
+        second = !second ? 0 : second;
         var gregorian = toGregorian(yearPersian, monthPersian, dayPersian);
         return new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, hour, minute, second);
     }
@@ -669,6 +676,45 @@
         return selectedDateTimeString;
     }
 
+    function getLastDayDateOfPreviousMonth(dateTime, isGregorian) {
+        var dateTimeLocal = dateTime;
+        if (isGregorian) {
+            var previousMonth = new Date(dateTimeLocal.setMonth(dateTimeLocal.getMonth() - 1)),
+                daysInMonth = getDaysInMonth(previousMonth.getFullYear(), previousMonth.getMonth());
+            return new Date(previousMonth.getFullYear(), previousMonth.getMonth(), daysInMonth);
+        }
+        var dateTimeJsonPersian = getDateTimeJsonPersian1(dateTimeLocal);
+        dateTimeJsonPersian.month += -1;
+        if (dateTimeJsonPersian.month <= 0) {
+            dateTimeJsonPersian.month = 12;
+            dateTimeJsonPersian.year--;
+        }
+        if (dateTimeJsonPersian.month > 12) {
+            dateTimeJsonPersian.year++;
+            dateTimeJsonPersian.month = 1;
+        }
+        return getDateTime1(dateTimeJsonPersian.year, dateTimeJsonPersian.month, getDaysInMonthPersian(dateTimeJsonPersian.year, dateTimeJsonPersian.month));
+    }
+
+    function getFirstDayDateOfNextMonth(dateTime, isGregorian) {
+        var dateTimeLocal = dateTime;
+        if (isGregorian) {
+            var nextMonth = new Date(dateTimeLocal.setMonth(dateTimeLocal.getMonth() + 1));
+            return new Date(nextMonth.getFullYear(), nextMonth.getMonth(), 1);
+        }
+        var dateTimeJsonPersian = getDateTimeJsonPersian1(dateTimeLocal);
+        dateTimeJsonPersian.month += 1;
+        if (dateTimeJsonPersian.month <= 0) {
+            dateTimeJsonPersian.month = 12;
+            dateTimeJsonPersian.year--;
+        }
+        if (dateTimeJsonPersian.month > 12) {
+            dateTimeJsonPersian.year++;
+            dateTimeJsonPersian.month = 1;
+        }
+        return getDateTime1(dateTimeJsonPersian.year, dateTimeJsonPersian.month, getDaysInMonthPersian(dateTimeJsonPersian.year, dateTimeJsonPersian.month));
+    }
+
     function parsePersianDateTime(persianDateTimeInString, dateSeperatorPattern) {
         if (!dateSeperatorPattern) dateSeperatorPattern = "\/|-";
         dateSeperatorPattern = new RegExp(dateSeperatorPattern, 'img');
@@ -796,15 +842,16 @@
         var fromDate = !isGregorian ? parsePersianDateTime(fromDateString) : parseGregorianDateTime(fromDateString),
             toDate = !isGregorian ? parsePersianDateTime(toDateString) : parseGregorianDateTime(toDateString);
         return {
-            fromDateNumber: convertToNumber(fromDate.year, fromDate.month, fromDate.day),
+            fromDateNumber: convertToNumber1(fromDate),
             fromDateObject: fromDate,
-            toDateNumber: convertToNumber(toDate.year, toDate.month, toDate.day),
+            toDateNumber: convertToNumber1(toDate),
             toDateObject: toDate
         };
     }
 
-    function getDateTimePickerHtml(setting) {
-        var selectedDateObject = setting.selectedDate,
+    function getDateTimePickerHtml(setting, selectedDate) {
+        var selectedDateObject = !selectedDate ? setting.selectedDate : selectedDate,
+            selectedDateObjectTemp = selectedDateObject,
             html = dateTimePickerHtmlTemplate;
 
         if (!selectedDateObject) throw new Error('مقدار تاریخ معتبر نمی باشد');
@@ -858,34 +905,66 @@
             $td = $('<td />'),
             daysHtml = '',
             currentDateNumber = 0,
-            dayNumberInString = 0,
-            dayOfWeek = ''; // نام روز هفته
+            previousMonthDateNumber = 0,
+            nextMonthDateNumber = 0,
+            previousYearDateNumber = 0,
+            nextYearDateNumber = 0,
+            dayNumberInString = '0',
+            dayOfWeek = '', // نام روز هفته
+            previousYearButtonAttribute = '',
+            previousMonthButtonAttribute = '',
+            selectMonthButtonAttribute = '',
+            selectYearButtonAttribute = '',
+            nextMonthButtonAttribute = '',
+            nextYearButtonAttribute = '';
 
         //firstWeekDayNumber = getFirstDayOfPersianWeek(dateTimeJson.year, dateTimeJson.month),
 
         if (setting.isGregorian) {
             selectedDateTimeJson = getDateTimeJson1(selectedDateObject);
             todayDateTimeJson = getDateTimeJson1(new Date());
+            disableBeforeDateTimeJson = !setting.disableBeforeDate ? undefined : getDateTimeJson1(setting.disableBeforeDate);
+            disableAfterDateTimeJson = !setting.disableAfterDate ? undefined : getDateTimeJson1(setting.disableAfterDate);
             firstWeekDayNumber = new Date(selectedDateTimeJson.year, selectedDateTimeJson.month - 1, 1).getDay();
             numberOfDaysInCurrentMonth = getDaysInMonth(selectedDateTimeJson.year, selectedDateTimeJson.month);
             numberOfDaysInPreviousMonth = getDaysInMonth(selectedDateTimeJson.year, selectedDateTimeJson.month - 1);
+            previousMonthDateNumber = convertToNumber1(getDateTimeJson1(getLastDayDateOfPreviousMonth(selectedDateObject, true)));
+            nextMonthDateNumber = convertToNumber1(getDateTimeJson1(getFirstDayDateOfNextMonth(selectedDateObject, true)));
+            previousYearDateNumber = convertToNumber1(getDateTimeJson1(new Date(selectedDateObjectTemp.setFullYear(selectedDateObjectTemp.getFullYear() - 1))));
+            nextYearDateNumber = convertToNumber1(getDateTimeJson1(new Date(selectedDateObjectTemp.setFullYear(selectedDateObjectTemp.getFullYear() + 1))));
         } else {
             selectedDateTimeJson = getDateTimeJsonPersian1(selectedDateObject);
             todayDateTimeJson = getDateTimeJsonPersian1(new Date());
+            disableBeforeDateTimeJson = !setting.disableBeforeDate ? undefined : getDateTimeJsonPersian1(setting.disableBeforeDate);
+            disableAfterDateTimeJson = !setting.disableAfterDate ? undefined : getDateTimeJsonPersian1(setting.disableAfterDate);
             firstWeekDayNumber = getDateTimeJsonPersian2(selectedDateTimeJson.year, selectedDateTimeJson.month, 1, 0, 0, 0).dayOfWeek;
             numberOfDaysInCurrentMonth = getDaysInMonthPersian(selectedDateTimeJson.year, selectedDateTimeJson.month);
             numberOfDaysInPreviousMonth = getDaysInMonthPersian(selectedDateTimeJson.year - 1, selectedDateTimeJson.month - 1);
+            previousMonthDateNumber = convertToNumber1(getDateTimeJsonPersian1(getLastDayDateOfPreviousMonth(selectedDateObject, false)));
+            nextMonthDateNumber = convertToNumber1(getDateTimeJsonPersian1(getFirstDayDateOfNextMonth(selectedDateObject, false)));
+            previousYearDateNumber = convertToNumber1(getDateTimeJsonPersian1(new Date(selectedDateObjectTemp.setFullYear(selectedDateObjectTemp.getFullYear() - 1))));
+            nextYearDateNumber = convertToNumber1(getDateTimeJsonPersian1(new Date(selectedDateObjectTemp.setFullYear(selectedDateObjectTemp.getFullYear() + 1))));
         }
 
         selectedYear = setting.englishNumber ? selectedDateTimeJson.year : toPersianNumber(selectedDateTimeJson.year);
-        todayDateNumber = convertToNumber(todayDateTimeJson.year, todayDateTimeJson.month, todayDateTimeJson.day);
+        todayDateNumber = convertToNumber1(todayDateTimeJson);
+        disableBeforeDateTimeNumber = !disableBeforeDateTimeJson ? undefined : convertToNumber1(disableBeforeDateTimeJson);
+        disableAfterDateTimeNumber = !disableAfterDateTimeJson ? undefined : convertToNumber1(disableAfterDateTimeJson);
         selectedDateString = `${getWeekDayName(selectedDateTimeJson.dayOfWeek, setting.isGregorian)}، ${selectedDateTimeJson.day} ${getMonthName(selectedDateTimeJson.month - 1, setting.isGregorian)} ${selectedDateTimeJson.year}`;
         if (!setting.englishNumber) selectedDateString = toPersianNumber(selectedDateString);
         selectedMonthName = getMonthName(selectedDateTimeJson.month - 1, setting.isGregorian);
         todayDateString = `${setting.isGregorian ? 'Today,' : 'امروز،'} ${todayDateTimeJson.day} ${getMonthName(todayDateTimeJson.month - 1, setting.isGregorian)} ${todayDateTimeJson.year}`;
         if (!setting.englishNumber) todayDateString = toPersianNumber(todayDateString);
 
+        if (setting.yearOffset <= 0) {
+            previousYearButtonAttribute += 'disabled ';
+            nextYearButtonAttribute += 'disabled ';
+            selectYearButtonAttribute += 'disabled ';
+        }
         for (i = todayDateTimeJson.year - setting.yearOffset; i < todayDateTimeJson.year + setting.yearOffset; i++) {
+            if (setting.disableBeforeToday && i < todayDateTimeJson.year) continue;
+            if (disableBeforeDateTimeJson && disableBeforeDateTimeJson.year && i < disableBeforeDateTimeJson.year) continue;
+            if (disableAfterDateTimeJson && disableAfterDateTimeJson.year && i > disableAfterDateTimeJson.year) continue;
             if (setting.englishNumber)
                 yearsToSelectHtml += `<div class="col-3 text-center" ${selectedDateTimeJson.year == i ? 'selected-year' : ''} data-year>${i}</div>`;
             else
@@ -925,9 +1004,11 @@
                 $tr = $('<tr />');
             }
 
-            currentDateNumber = convertToNumber(selectedDateTimeJson.year, selectedDateTimeJson.month, i);
+            currentDateNumber = convertToNumber2(selectedDateTimeJson.year, selectedDateTimeJson.month, i);
             dayNumberInString = setting.englishNumber ? zeroPad(i) : toPersianNumber(zeroPad(i));
+
             $td = $('<td data-day />').html(dayNumberInString);
+
 
             // امروز
             if (currentDateNumber == todayDateNumber) {
@@ -951,9 +1032,36 @@
             else if (setting.isGregorian && tdNumber == 0)
                 $td.addClass('text-danger');
 
+
             // روزهای غیر فعال شده
-            if (setting.disableBeforeToday && currentDateNumber < todayDateNumber)
-                $td.attr('disabled', '');
+            if (setting.disableBeforeToday) {
+                if (currentDateNumber < todayDateNumber) $td.attr('disabled', '');
+                if (previousMonthDateNumber < todayDateNumber)
+                    previousMonthButtonAttribute = 'disabled';
+                if (previousYearDateNumber < todayDateNumber)
+                    previousYearButtonAttribute = 'disabled';
+            }
+            if (setting.disableAfterToday) {
+                if (currentDateNumber > todayDateNumber) $td.attr('disabled', '');
+                if (nextMonthDateNumber > todayDateNumber)
+                    nextMonthButtonAttribute = 'disabled';
+                if (nextYearDateNumber > todayDateNumber)
+                    nextYearButtonAttribute = 'disabled';
+            }
+            if (disableAfterDateTimeNumber) {
+                if (currentDateNumber > disableAfterDateTimeNumber) $td.attr('disabled', '');
+                if (nextMonthDateNumber > disableAfterDateTimeNumber)
+                    nextMonthButtonAttribute = 'disabled';
+                if (nextYearDateNumber > disableAfterDateTimeNumber)
+                    nextYearButtonAttribute = 'disabled';
+            }
+            else if (disableBeforeDateTimeNumber) {
+                if (currentDateNumber < disableBeforeDateTimeNumber) $td.attr('disabled', '');
+                if (previousMonthDateNumber < disableBeforeDateTimeNumber)
+                    previousMonthButtonAttribute = 'disabled';
+                if (previousYearDateNumber < disableBeforeDateTimeNumber)
+                    previousYearButtonAttribute = 'disabled';
+            }
 
             $tr.append($td);
             isTrAppended = false;
@@ -1003,6 +1111,13 @@
         html = html.replace(/{{hour}}/img, selectedDateTimeJson.hour);
         html = html.replace(/{{minute}}/img, selectedDateTimeJson.minute);
         html = html.replace(/{{second}}/img, selectedDateTimeJson.second);
+        html = html.replace(/{{previousYearButtonAttribute}}/img, previousYearButtonAttribute);
+        html = html.replace(/{{previousMonthButtonAttribute}}/img, previousMonthButtonAttribute);
+        html = html.replace(/{{selectMonthButtonAttribute}}/img, selectMonthButtonAttribute);
+        html = html.replace(/{{selectYearButtonAttribute}}/img, selectYearButtonAttribute);
+        html = html.replace(/{{nextMonthButtonAttribute}}/img, nextMonthButtonAttribute);
+        html = html.replace(/{{nextYearButtonAttribute}}/img, nextYearButtonAttribute);
+
         return html;
     }
 
@@ -1013,8 +1128,10 @@
     // کلیک روی روزها
     $(document).on('click', mdDatePickerContainerSelector + ' [data-day]', function () {
         var $this = $(this),
+            disabled = $this.attr('disabled'),
             setting = getSetting($this),
             day = Number(toEnglishNumber($this.text().trim()));
+        if (disabled) return;
         if (!setting.isGregorian) {
             var dateTimeJsonPersian = getDateTimeJsonPersian1(setting.selectedDate);
             dateTimeJsonPersian.day = day;
@@ -1163,14 +1280,18 @@
                         groupId: '',
                         toDate: false,
                         fromDate: false,
-                        disableBeforeToday: false,
                         disabled: false,
                         format: '',
                         isGregorian: false,
                         gregorianStartDayIndex: 0,
                         inLine: false,
                         selectedDate: new Date(),
-                        yearOffset: 30
+                        yearOffset: 30,
+                        holiDays: [],
+                        disableBeforeToday: false,
+                        disableAfterToday: false,
+                        disableBeforeDate: undefined,
+                        disableAfterDate: undefined
                     }, options);
                 $this.attr(mdDatePickerFlag, '');
                 if (setting.isGregorian)

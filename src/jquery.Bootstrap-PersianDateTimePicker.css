@@ -132,6 +132,9 @@
     padding: 1px;
     font-size: 14px;
 }
+.mds-bootstrap-persian-datetime-picker-container .btn[disabled] {
+    opacity: 0.2;
+}
 
 .mds-bootstrap-persian-datetime-picker-container .dropdown {
     padding: 0;
