@@ -28,7 +28,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text cursor-pointer" id="date3">Icon</span>
                     </div>
-                    <input type="text" id="inputDate3" class="form-control" placeholder="date3" aria-label="date3" aria-describedby="date3">
+                    <input type="text" id="inputDate3" class="form-control" placeholder="date3" aria-label="date3" aria-describedby="date3" readonly>
                 </div>
             </div>
         </div>
@@ -57,8 +57,8 @@
         $('#date3').MdPersianDateTimePicker({
             targetSelector: '#inputDate3',
             enableTimePicker: true,
-            //disableBeforeToday: true,
-            disableBeforeDate: new Date(new Date().setDate(26)),
+            disableBeforeToday: true,
+            //disableBeforeDate: new Date(new Date().setDate(26)),
             isGregorian: false
         });
     </script>
