@@ -877,16 +877,16 @@
         return html;
     }
     function getDateTimePickerHtml2(setting, dateTimeToShow) {
-        var selectedDateObject = !dateTimeToShow ? setting.selectedDate : dateTimeToShow,
-            isSettingDateObjectEqualsWithDateTimeToShow = setting.dateTimeToShow == dateTimeToShow,
+        var selectedDateObject = !dateTimeToShow ? setting.selectedDate : dateTimeToShow, // آیا ماه در حال نمایش، ماه قبل یا بعد هست؟
+            isNextOrPrevMonth = setting.dateTimeToShow != dateTimeToShow, 
             selectedDateObjectTemp = getClonedDate(selectedDateObject),
             html = dateTimePickerHtmlTemplate;
 
         if (!selectedDateObject) throw new Error('مقدار تاریخ معتبر نمی باشد');
 
         html = html.replace(/{{selectedDateStringAttribute}}/img, setting.inLine ? '' : 'hidden');
-        html = html.replace(/{{theadSelectDateBarAttribute}}/img, setting.inLine || isSettingDateObjectEqualsWithDateTimeToShow ? '' : 'hidden');        
-        html = html.replace(/{{theadCurrentMonthInfoBarAttribute}}/img, isSettingDateObjectEqualsWithDateTimeToShow ? 'hidden' : '');
+        html = html.replace(/{{theadSelectDateBarAttribute}}/img, setting.inLine || !isNextOrPrevMonth ? '' : 'hidden');        
+        html = html.replace(/{{theadCurrentMonthInfoBarAttribute}}/img, !isNextOrPrevMonth ? 'hidden' : '');
         html = html.replace(/{{rtlCssClass}}/img, setting.isGregorian ? '' : 'rtl');
         html = html.replace(/{{weekDayShortName1CssClass}}/img, setting.isGregorian ? 'text-danger' : '');
         html = html.replace(/{{weekDayShortName7CssClass}}/img, !setting.isGregorian ? 'text-danger' : '');
@@ -1020,15 +1020,13 @@
             for (i = 0; i < setting.holiDays.length; i++) {
                 holiDaysDateNumbers.push(convertToNumber1(getDateTimeJsonPersian1(setting.holiDays[i])));
             }
-        }
-
-        console.log(holiDaysDateNumbers);
+        }        
 
         selectedYear = setting.englishNumber ? selectedDateTimeJson.year : toPersianNumber(selectedDateTimeJson.year);
         todayDateNumber = convertToNumber1(todayDateTimeJson);
         disableBeforeDateTimeNumber = !disableBeforeDateTimeJson ? undefined : convertToNumber1(disableBeforeDateTimeJson);
         disableAfterDateTimeNumber = !disableAfterDateTimeJson ? undefined : convertToNumber1(disableAfterDateTimeJson);
-        selectedDateString = `${getWeekDayName(selectedDateTimeJson.dayOfWeek, setting.isGregorian)}، ${selectedDateTimeJson.day} ${getMonthName(selectedDateTimeJson.month - 1, setting.isGregorian)} ${selectedDateTimeJson.year}`;
+        selectedDateString = isNextOrPrevMonth ? '' : `${getWeekDayName(selectedDateTimeJson.dayOfWeek, setting.isGregorian)}، ${selectedDateTimeJson.day} ${getMonthName(selectedDateTimeJson.month - 1, setting.isGregorian)} ${selectedDateTimeJson.year}`;
         currentMonthInfo = `${getMonthName(selectedDateTimeJson.month - 1, setting.isGregorian)} ${selectedDateTimeJson.year}`;
         if (!setting.englishNumber) selectedDateString = toPersianNumber(selectedDateString);
         selectedMonthName = getMonthName(selectedDateTimeJson.month - 1, setting.isGregorian);
