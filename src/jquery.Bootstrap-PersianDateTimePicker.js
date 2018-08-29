@@ -869,11 +869,11 @@
             var selectedDate = getClonedDate(setting.selectedDate)
             html += getDateTimePickerHtml2(setting, new Date(selectedDate.setMonth(selectedDate.getMonth() + i)));
         }
+        html += getDateTimePickerHtml2(setting);
         for (var i = 1; i <= numberOfNextMonths; i++) {
             var selectedDate = getClonedDate(setting.selectedDate)
             html += getDateTimePickerHtml2(setting, new Date(selectedDate.setMonth(selectedDate.getMonth() + i)));
         }
-        html += getDateTimePickerHtml2(setting);
         return html;
     }
     function getDateTimePickerHtml2(setting, dateTimeToShow) {
@@ -884,7 +884,7 @@
 
         if (!selectedDateObject) throw new Error('مقدار تاریخ معتبر نمی باشد');
 
-        html = html.replace(/{{selectedDateStringAttribute}}/img, setting.inLine || !isSettingDateObjectEqualsWithDateTimeToShow ? '' : 'hidden');
+        html = html.replace(/{{selectedDateStringAttribute}}/img, setting.inLine ? '' : 'hidden');
         html = html.replace(/{{theadSelectDateBarAttribute}}/img, setting.inLine || isSettingDateObjectEqualsWithDateTimeToShow ? '' : 'hidden');        
         html = html.replace(/{{theadCurrentMonthInfoBarAttribute}}/img, isSettingDateObjectEqualsWithDateTimeToShow ? 'hidden' : '');
         html = html.replace(/{{rtlCssClass}}/img, setting.isGregorian ? '' : 'rtl');
