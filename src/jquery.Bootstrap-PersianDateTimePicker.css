@@ -70,9 +70,11 @@
     text-align: center;
 }
 
-.mds-bootstrap-persian-datetime-picker-container table tbody td[data-next-month],
-.mds-bootstrap-persian-datetime-picker-container table tbody td[data-prev-month] {
-    
+.mds-bootstrap-persian-datetime-picker-container table tbody td[data-next-month] .btn,
+.mds-bootstrap-persian-datetime-picker-container table tbody td[data-prev-month] .btn{
+    background: #fff;
+    border: none;
+    cursor: default;
 }
 
 .mds-bootstrap-persian-datetime-picker-container table table {

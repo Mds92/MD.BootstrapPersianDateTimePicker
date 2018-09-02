@@ -197,7 +197,7 @@
             </div>
         </div>
     </div>
-    <table class="table table-sm table-striped text-center p-0 m-0">
+    <table class="table table-sm text-center p-0 m-0 bg-light">
         <thead>
             <tr {{selectedDateStringAttribute}}>
                 <th colspan="100" data-selecteddatestring>{{selectedDateString}}</th>
@@ -915,12 +915,12 @@
 
     // Get Html of calendar
 
-    function getDateTimePickerHtml(setting, dateTimeToShow) {
-        var selectedDateObject = !dateTimeToShow ? setting.selectedDate : dateTimeToShow, // آیا ماه در حال نمایش، ماه قبل یا بعد هست؟
-            selectedDateObjectTemp = getClonedDate(selectedDateObject),
+    function getDateTimePickerHtml(setting) {
+        var selectedDateToShowObject = setting.selectedDateToShow, // آیا ماه در حال نمایش، ماه قبل یا بعد هست؟
+            selectedDateToShowObjectTemp = getClonedDate(selectedDateToShowObject),
             html = dateTimePickerHtmlTemplate;
 
-        if (!selectedDateObject) throw new Error('مقدار تاریخ معتبر نمی باشد');
+        if (!selectedDateToShowObject) throw new Error('مقدار تاریخ معتبر نمی باشد');
 
         html = html.replace(/{{rtlCssClass}}/img, setting.isGregorian ? '' : 'rtl');
         html = html.replace(/{{selectedDateStringAttribute}}/img, setting.inLine ? '' : 'hidden');
@@ -938,12 +938,12 @@
             disableAfterDateTimeJson;
 
         if (setting.isGregorian) {
-            selectedDateTimeJson = getDateTimeJson1(selectedDateObjectTemp);
+            selectedDateTimeJson = getDateTimeJson1(selectedDateToShowObjectTemp);
             todayDateTimeJson = getDateTimeJson1(new Date());
             disableBeforeDateTimeJson = !setting.disableBeforeDate ? undefined : getDateTimeJson1(setting.disableBeforeDate);
             disableAfterDateTimeJson = !setting.disableAfterDate ? undefined : getDateTimeJson1(setting.disableAfterDate);
         } else {
-            selectedDateTimeJson = getDateTimeJsonPersian1(selectedDateObjectTemp);
+            selectedDateTimeJson = getDateTimeJsonPersian1(selectedDateToShowObjectTemp);
             todayDateTimeJson = getDateTimeJsonPersian1(new Date());
             disableBeforeDateTimeJson = !setting.disableBeforeDate ? undefined : getDateTimeJsonPersian1(setting.disableBeforeDate);
             disableAfterDateTimeJson = !setting.disableAfterDate ? undefined : getDateTimeJsonPersian1(setting.disableAfterDate);
@@ -975,17 +975,20 @@
             numberOfPrevMonths = setting.monthsToShow[0] <= 0 ? 0 : setting.monthsToShow[0];
         numberOfPrevMonths *= -1;
         for (var i = numberOfPrevMonths; i < 0; i++) {
-            monthsTdHtml += getDateTimePickerMonthHtml1(setting, new Date(selectedDateObjectTemp.setMonth(selectedDateObjectTemp.getMonth() + i)));
-            selectedDateObjectTemp = getClonedDate(selectedDateObjectTemp)
+            setting.selectedDateToShow = new Date(selectedDateToShowObjectTemp.setMonth(selectedDateToShowObjectTemp.getMonth() + i));
+            monthsTdHtml += getDateTimePickerMonthHtml1(setting);
+            selectedDateToShowObjectTemp = getClonedDate(selectedDateToShowObjectTemp)
         }
+        setting.selectedDateToShow = setting.selectedDate == undefined ? new Date() : getClonedDate(setting.selectedDate);
         monthsTdHtml += getDateTimePickerMonthHtml1(setting);
         for (var i = 1; i <= numberOfNextMonths; i++) {
-            monthsTdHtml += getDateTimePickerMonthHtml1(setting, new Date(selectedDateObjectTemp.setMonth(selectedDateObjectTemp.getMonth() + i)));
-            selectedDateObjectTemp = getClonedDate(selectedDateObjectTemp)
+            setting.selectedDateToShow = new Date(selectedDateToShowObjectTemp.setMonth(selectedDateToShowObjectTemp.getMonth() + i));
+            monthsTdHtml += getDateTimePickerMonthHtml1(setting);
+            selectedDateToShowObjectTemp = getClonedDate(selectedDateToShowObjectTemp)
         }
 
         var totalMonthNumberToShow = numberOfPrevMonths + 1 + numberOfNextMonths,
-            monthTdStyle =  totalMonthNumberToShow > 1 ? 'width: ' + (100 / totalMonthNumberToShow).toString() + '%;' : '';
+            monthTdStyle = totalMonthNumberToShow > 1 ? 'width: ' + (100 / totalMonthNumberToShow).toString() + '%;' : '';
 
         monthsTdHtml = monthsTdHtml.replace(/{{monthTdStyle}}/img, monthTdStyle);
 
@@ -999,13 +1002,14 @@
 
         return html;
     }
-    function getDateTimePickerMonthHtml1(setting, dateTimeToShow) {
-        dateTimeToShow = !dateTimeToShow ? setting.selectedDate : dateTimeToShow;
+    function getDateTimePickerMonthHtml1(setting) {
+        var dateTimeToShow = getClonedDate(setting.selectedDateToShow);
         if (!dateTimeToShow) throw new Error('مقدار تاریخ معتبر نمی باشد');
         var dateTimeToShowTemp = getClonedDate(dateTimeToShow),
-            isNextOrPrevMonth = setting.selectedDate != dateTimeToShow, // آیا ماه انتخاب شده است یا ماه های قبل و بعد است
-            isNextMonth = setting.selectedDate.getTime() < dateTimeToShow.getTime(), // آیا ماه بعد از ماه انتخاب شده است
-            isPrevMonth = setting.selectedDate.getTime() > dateTimeToShow.getTime(), // آیا ماه قبل از ماه انتخاب شده است
+            selectedDateTime = setting.selectedDate != undefined ? getClonedDate(setting.selectedDate) : undefined,
+            isNextOrPrevMonth = setting.selectedDate != undefined && setting.selectedDate.getTime() != dateTimeToShow.getTime(), // آیا ماه انتخاب شده است یا ماه های قبل و بعد است
+            isNextMonth = setting.selectedDate != undefined && setting.selectedDate.getTime() < dateTimeToShow.getTime(), // آیا ماه بعد از ماه انتخاب شده است
+            isPrevMonth = setting.selectedDate != undefined && setting.selectedDate.getTime() > dateTimeToShow.getTime(), // آیا ماه قبل از ماه انتخاب شده است
             html = dateTimePickerMonthTableHtmlTemplate;
 
         html = html.replace(/{{monthTdAttribute}}/img, isNextMonth ? 'data-next-month' : isPrevMonth ? 'data-prev-month' : '');
@@ -1043,11 +1047,12 @@
             cellNumber = 0,
             tdNumber = 0,
             selectedYear = 0,
+            selectedDateNumber = 0,
             selectedMonthName = '',
             todayDateTimeJson = {}, // year, month, day, hour, minute, second
             dateTimeToShowJson = {}, // year, month, day, hour, minute, second
             numberOfDaysInCurrentMonth,
-            $tr = $('<tr />'), 
+            $tr = $('<tr />'),
             $td = $('<td />'),
             daysHtml = '',
             currentDateNumber = 0,
@@ -1102,6 +1107,7 @@
             disableBeforeDateTimeJson = !setting.disableBeforeDate ? undefined : getDateTimeJson1(setting.disableBeforeDate);
             disableAfterDateTimeJson = !setting.disableAfterDate ? undefined : getDateTimeJson1(setting.disableAfterDate);
             firstWeekDayNumber = new Date(dateTimeToShowJson.year, dateTimeToShowJson.month - 1, 1).getDay();
+            selectedDateNumber = !selectedDateTime ? 0 : convertToNumber1(getDateTimeJson1(selectedDateTime));
             numberOfDaysInCurrentMonth = getDaysInMonth(dateTimeToShowJson.year, dateTimeToShowJson.month);
             numberOfDaysInPreviousMonth = getDaysInMonth(dateTimeToShowJson.year, dateTimeToShowJson.month - 1);
             previousMonthDateNumber = convertToNumber1(getDateTimeJson1(getLastDayDateOfPreviousMonth(dateTimeToShowTemp, true)));
@@ -1124,6 +1130,7 @@
             disableBeforeDateTimeJson = !setting.disableBeforeDate ? undefined : getDateTimeJsonPersian1(setting.disableBeforeDate);
             disableAfterDateTimeJson = !setting.disableAfterDate ? undefined : getDateTimeJsonPersian1(setting.disableAfterDate);
             firstWeekDayNumber = getDateTimeJsonPersian2(dateTimeToShowJson.year, dateTimeToShowJson.month, 1, 0, 0, 0).dayOfWeek;
+            selectedDateNumber = !selectedDateTime ? 0 : convertToNumber1(getDateTimeJsonPersian1(selectedDateTime));
             numberOfDaysInCurrentMonth = getDaysInMonthPersian(dateTimeToShowJson.year, dateTimeToShowJson.month);
             numberOfDaysInPreviousMonth = getDaysInMonthPersian(dateTimeToShowJson.year - 1, dateTimeToShowJson.month - 1);
             previousMonthDateNumber = convertToNumber1(getDateTimeJsonPersian1(getLastDayDateOfPreviousMonth(dateTimeToShowTemp, false)));
@@ -1148,7 +1155,7 @@
         disableBeforeDateTimeNumber = !disableBeforeDateTimeJson ? undefined : convertToNumber1(disableBeforeDateTimeJson);
         disableAfterDateTimeNumber = !disableAfterDateTimeJson ? undefined : convertToNumber1(disableAfterDateTimeJson);
         currentMonthInfo = getMonthName(dateTimeToShowJson.month - 1, setting.isGregorian) + ' ' + dateTimeToShowJson.year.toString();
-        if(!setting.englishNumber) currentMonthInfo = toPersianNumber(currentMonthInfo);
+        if (!setting.englishNumber) currentMonthInfo = toPersianNumber(currentMonthInfo);
         selectedMonthName = getMonthName(dateTimeToShowJson.month - 1, setting.isGregorian);
 
         if (setting.yearOffset <= 0) {
@@ -1211,8 +1218,7 @@
                     dayOfWeek = getWeekDayName(tdNumber - 1 < 0 ? 0 : tdNumber - 1, setting.isGregorian)
             }
             // روز از قبل انتخاب شده
-            // روزی که در تکس باکس انتخاب شده
-            if (i == dateTimeToShowJson.day) {
+            if (selectedDateNumber == currentDateNumber) {
                 $td.attr('data-selectedday', '');
                 dayOfWeek = getWeekDayName(tdNumber - 1 < 0 ? 0 : tdNumber - 1, setting.isGregorian);
             }
@@ -1377,16 +1383,27 @@
     $(document).on('click', mdDatePickerContainerSelector + ' [data-day]', function () {
         var $this = $(this),
             disabled = $this.attr('disabled'),
+            dayNumber = Number($this.attr('data-number')),
             setting = getSetting($this),
-            day = Number(toEnglishNumber($this.text().trim()));
+            selectedDate = getClonedDate(setting.selectedDateToShow),
+            day = dayNumber % 100,
+            month = Math.floor(dayNumber / 100) % 100,
+            year = Math.floor(dayNumber / 10000);
         if (disabled) return;
         if (!setting.isGregorian) {
-            var dateTimeJsonPersian = getDateTimeJsonPersian1(setting.selectedDate);
+            var dateTimeJsonPersian = getDateTimeJsonPersian1(selectedDate);
+            dateTimeJsonPersian.year = year;
+            dateTimeJsonPersian.month = month;
             dateTimeJsonPersian.day = day;
-            setting.selectedDate = getDateTime2(dateTimeJsonPersian);
+            selectedDate = getDateTime2(dateTimeJsonPersian);
         }
-        else
-            setting.selectedDate = new Date(setting.selectedDate.setDate(day));
+        else {
+            selectedDate = new Date(setting.selectedDate.setDate(day));
+            selectedDate = new Date(setting.selectedDate.setMonth(month - 1));
+            selectedDate = new Date(setting.selectedDate.setFullYear(year));
+        }
+        setting.selectedDate = getClonedDate(selectedDate);
+        setting.selectedDateToShow = getClonedDate(selectedDate);
         setSetting($this, setting);
         setSelectedText(setting);
         if (!setting.inLine) hidePopover($(mdDatePickerPopoverSelector));
@@ -1400,12 +1417,12 @@
             month = Number(toEnglishNumber($this.attr('data-dropdown-month').trim()));
         if ($this.hasClass('disabled') || $this.attr('disabled')) return;
         if (!setting.isGregorian) {
-            var dateTimeJsonPersian = getDateTimeJsonPersian1(setting.selectedDate);
+            var dateTimeJsonPersian = getDateTimeJsonPersian1(setting.selectedDateToShow);
             dateTimeJsonPersian.month = month;
-            setting.selectedDate = getDateTime2(dateTimeJsonPersian);
+            setting.selectedDateToShow = getDateTime2(dateTimeJsonPersian);
         }
         else
-            setting.selectedDate = new Date(setting.selectedDate.setMonth(month - 1));
+            setting.selectedDateToShow = new Date(setting.selectedDateToShow.setMonth(month - 1));
         setSetting($this, setting);
         updateCalendarHtml1($this, setting);
     });
@@ -1416,7 +1433,7 @@
             setting = getSetting($this),
             monthAdd = Number(toEnglishNumber($this.attr('data-change-month').trim()));
         if (!setting.isGregorian) {
-            var dateTimeJsonPersian = getDateTimeJsonPersian1(setting.selectedDate);
+            var dateTimeJsonPersian = getDateTimeJsonPersian1(setting.selectedDateToShow);
             dateTimeJsonPersian.month += monthAdd;
             if (dateTimeJsonPersian.month <= 0) {
                 dateTimeJsonPersian.month = 12;
@@ -1426,10 +1443,10 @@
                 dateTimeJsonPersian.year++;
                 dateTimeJsonPersian.month = 1;
             }
-            setting.selectedDate = getDateTime2(dateTimeJsonPersian);
+            setting.selectedDateToShow = getDateTime2(dateTimeJsonPersian);
         }
         else
-            setting.selectedDate = new Date(setting.selectedDate.setMonth(setting.selectedDate.getMonth() + monthAdd));
+            setting.selectedDateToShow = new Date(setting.selectedDateToShow.setMonth(setting.selectedDateToShow.getMonth() + monthAdd));
         setSetting($this, setting);
         updateCalendarHtml1($this, setting);
     });
@@ -1440,12 +1457,12 @@
             setting = getSetting($this),
             yearAdd = Number(toEnglishNumber($this.attr('data-change-year').trim()));
         if (!setting.isGregorian) {
-            var dateTimeJsonPersian = getDateTimeJsonPersian1(setting.selectedDate);
+            var dateTimeJsonPersian = getDateTimeJsonPersian1(setting.selectedDateToShow);
             dateTimeJsonPersian.year += yearAdd;
-            setting.selectedDate = getDateTime2(dateTimeJsonPersian);
+            setting.selectedDateToShow = getDateTime2(dateTimeJsonPersian);
         }
         else
-            setting.selectedDate = new Date(setting.selectedDate.setFullYear(setting.selectedDate.getFullYear() + yearAdd));
+            setting.selectedDateToShow = new Date(setting.selectedDateToShow.setFullYear(setting.selectedDateToShow.getFullYear() + yearAdd));
         setSetting($this, setting);
         updateCalendarHtml1($this, setting);
     });
@@ -1457,12 +1474,12 @@
             year = Number(toEnglishNumber($this.text().trim()));
         $this.parents(mdDatePickerContainerSelector + ':first').find('.select-year-box').addClass('w-0');
         if (!setting.isGregorian) {
-            var dateTimeJsonPersian = getDateTimeJsonPersian1(setting.selectedDate);
+            var dateTimeJsonPersian = getDateTimeJsonPersian1(setting.selectedDateToShow);
             dateTimeJsonPersian.year = year;
-            setting.selectedDate = getDateTime2(dateTimeJsonPersian);
+            setting.selectedDateToShow = getDateTime2(dateTimeJsonPersian);
         }
         else
-            setting.selectedDate = new Date(setting.selectedDate.setFullYear(year));
+            setting.selectedDateToShow = new Date(setting.selectedDateToShow.setFullYear(year));
         setSetting($this, setting);
         updateCalendarHtml1($this, setting);
     });
@@ -1479,9 +1496,9 @@
             second = Number($second.val()),
             setting = getSetting($this);
 
-        hour = !isNumber(hour) ? setting.selectedDate.getHours() : hour;
-        minute = !isNumber(minute) ? setting.selectedDate.getMinutes() : minute;
-        second = !isNumber(second) ? setting.selectedDate.getSeconds() : second;
+        hour = !isNumber(hour) ? setting.selectedDateToShow.getHours() : hour;
+        minute = !isNumber(minute) ? setting.selectedDateToShow.getMinutes() : minute;
+        second = !isNumber(second) ? setting.selectedDateToShow.getSeconds() : second;
 
         setting.selectedDate = new Date(setting.selectedDate.setHours(hour));
         setting.selectedDate = new Date(setting.selectedDate.setMinutes(minute));
@@ -1501,6 +1518,7 @@
         var $this = $(this),
             setting = getSetting($this);
         setting.selectedDate = new Date();
+        setting.selectedDateToShow = new Date();
         setSetting($this, setting);
         updateCalendarHtml1($this, setting);
     });
@@ -1534,7 +1552,8 @@
                         isGregorian: false,
                         gregorianStartDayIndex: 0,
                         inLine: false,
-                        selectedDate: new Date(),
+                        selectedDate: undefined,
+                        selectedDateToShow: new Date(),
                         monthsToShow: [0, 0],
                         yearOffset: 30,
                         holiDays: [],
