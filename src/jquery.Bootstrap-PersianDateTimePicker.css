@@ -28,17 +28,12 @@
     height: 0;
 }
 
-.mds-bootstrap-persian-datetime-picker-container .select-year-box [data-year] {
-    cursor: pointer;
-    font-size: 14px;
+.mds-bootstrap-persian-datetime-picker-container .select-year-box button {
+    font-size: 16px;
 }
 
-.mds-bootstrap-persian-datetime-picker-container .select-year-box [data-year][selected-year] {
+.mds-bootstrap-persian-datetime-picker-container .select-year-box [selected-year] button {
     background-color: aquamarine;
-}
-
-.mds-bootstrap-persian-datetime-picker-container .select-year-box [data-year]:hover {
-    background-color: #ccc;
 }
 
 .mds-bootstrap-persian-datetime-picker-container.rtl table {
