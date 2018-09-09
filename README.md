@@ -1,8 +1,6 @@
 # MD.BootstrapPersianDateTimePicker
 #### Bootstrap 4+ Persian And Gregorian Date Time Picker jQuery 3+ Plugin
 
-![jQuery 3+](https://jquery.com/jquery-wp-content/themes/jquery/images/logo-jquery.png) ![Bootstrap 4+](https://themes.getbootstrap.com/wp-content/themes/bootstrap-marketplace/assets/images/elements/bootstrap-stack.png)
-
 ![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/Bootstrap4/src/MdPersianDateTimePicker.jpg)
 
 `MD.BootstrapPersianDateTimePicker` uses bootstrap [Popovers](https://getbootstrap.com/docs/4.1/components/popovers/), so it has flexibility of bootstrap's popover.
@@ -52,6 +50,10 @@ Name | Values | Description | Sample
 **disableAfterToday** | [false], true | Disable days after today 
 **disableBeforeDate** | Date | Disable days before this Date | new Date(2018, 11, 12) 
 **disableAfterDate** | Date | Disable days after this Date | new Date(2018, 12, 11) 
+
+<hr>
+
+### String format:
 
 Format | English Description | Persian Description 
 ------------- | ------------- | -------------
