@@ -9,8 +9,11 @@
 ### Installing:
 First you have to install `Bootstrap 4+` and `jQuery 3+` and link them to your html file.
 Then you can install latest version of the plugin via npm or nuget:
+
 ***Install-Package MD.BootstrapPersianDateTimePicker***
+
 ***npm install md.bootstrappersiandatetimepicker@latest***
+
 Now add these files to you html:
 ```html
 <link href="/Content/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.css" rel="stylesheet"/>
