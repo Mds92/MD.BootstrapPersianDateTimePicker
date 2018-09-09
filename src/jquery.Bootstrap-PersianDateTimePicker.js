@@ -175,7 +175,6 @@
     var mdDatePickerFlag = 'data-mdpersiandatetimepicker',
         mdDatePickerFlagSelector = '[' + mdDatePickerFlag + ']',
         mdDatePickerGroupIdAttribute = 'data-mdpersiandatetimepicker-group',
-        mdDatePickerGroupIdAttributeSelector = '[' + mdDatePickerGroupIdAttribute + ']',
         mdDatePickerPopoverFlag = 'data-mdpersiandatetimepicker-popover',
         mdDatePickerPopoverSelector = '[' + mdDatePickerPopoverFlag + ']',
         mdDatePickerContainerFlag = 'data-mdpersiandatetimepicker-container',
@@ -424,31 +423,43 @@
         return $popoverDescriber;
     }
 
-    function getSetting($element) {
+    function getSetting1($element) {
         return getPopoverDescriber($element).data(mdPluginName);
     }
 
-    function setSetting($element, setting) {
+    function getSetting2($popoverDescriber) {
+        return $popoverDescriber.data(mdPluginName);
+    }
+
+    function setSetting1($element, setting) {
         return getPopoverDescriber($element).data(mdPluginName, setting);
+    }
+
+    function setSetting2($popoverDescriber, setting) {
+        return $popoverDescriber.data(mdPluginName, setting);
     }
 
     function updateCalendarHtml1($element, setting) {
         var calendarHtml = getDateTimePickerHtml(setting),
             $container = setting.inLine ? $element.parents(mdDatePickerFlagSelector + ':first') : $element.parents('[data-name="mds-datetimepicker-popoverbody"]:first');
-        selectedDateString = $(calendarHtml).find('[data-selecteddatestring]').text().trim();
+        //selectedDateString = $(calendarHtml).find('[data-selecteddatestring]').text().trim();
         $container.html(calendarHtml);
     }
 
+    function getSelectedDateTimeText(setting) {
+        if (setting.selectedDate == undefined) return '';
+        return getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.selectedDate) : getDateTimeJson1(setting.selectedDate), setting.format, setting.isGregorian, setting.englishNumber);
+    }
+
     function setSelectedText(setting) {
-        var $target = $(setting.targetSelector),
-            dateTimeJson = !setting.isGregorian ? getDateTimeJsonPersian1(setting.selectedDate) : getDateTimeJson1(setting.selectedDate);
+        var $target = $(setting.targetSelector);
         if ($target.length <= 0) return;
         switch ($target[0].tagName.toLowerCase()) {
             case 'input':
-                $target.val(getDateTimeString(dateTimeJson, setting));
+                $target.val(getSelectedDateTimeText(setting));
                 break;
             default:
-                $target.text(getDateTimeString(dateTimeJson, setting));
+                $target.text(getSelectedDateTimeText(setting));
                 break;
         }
     }
@@ -619,8 +630,8 @@
             dateTimeJsonPersian.day = dateTimeJson.day;
             dateTime = getDateTime2(dateTimeJsonPersian);
         }
-        else 
-            dateTime = new Date(dateTimeJson.year, dateTimeJson.month - 1, dateTimeJson.day);        
+        else
+            dateTime = new Date(dateTimeJson.year, dateTimeJson.month - 1, dateTimeJson.day);
         return dateTime;
     }
 
@@ -696,12 +707,9 @@
         return len > 0 ? new Array(len).join('0') + nr : nr;
     }
 
-    function getDateTimeString(dateTimeJson, setting) {
-        var gregorian = setting.isGregorian ?
-            new Date(dateTimeJson.year, dateTimeJson.month, dateTimeJson.day, dateTimeJson.hour, dateTimeJson.minute, dateTimeJson.second) :
-            toGregorian(dateTimeJson.year, dateTimeJson.month, dateTimeJson.day),
-            dateTime = setting.isGregorian ? gregorian : new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, dateTimeJson.hour, dateTimeJson.minute, dateTimeJson.second),
-            selectedDateTimeString = setting.format;
+    function getDateTimeString(dateTimeJson, format, isGregorian, englishNumber) {
+
+        if (isGregorian) englishNumber = true;
 
         /// فرمت های که پشتیبانی می شوند
         /// <para />
@@ -747,32 +755,30 @@
         /// <para />
         /// t: حرف اول از ب.ظ یا ق.ظ
 
-        selectedDateTimeString = selectedDateTimeString.replace(/yyyy/mg, dateTimeJson.year);
-        selectedDateTimeString = selectedDateTimeString.replace(/yy/mg, dateTimeJson.year % 100);
-        selectedDateTimeString = selectedDateTimeString.replace(/MMMM/mg, getMonthName(dateTimeJson.month, setting.isGregorian));
-        selectedDateTimeString = selectedDateTimeString.replace(/MM/mg, setting.isGregorian ? zeroPad(dateTimeJson.month + 1) : zeroPad(dateTimeJson.month));
-        selectedDateTimeString = selectedDateTimeString.replace(/M/mg, setting.isGregorian ? dateTimeJson.month + 1 : dateTimeJson.month);
-        selectedDateTimeString = selectedDateTimeString.replace(/dddd/mg, getWeekDayName(dateTime.getDay(), setting.isGregorian));
-        selectedDateTimeString = selectedDateTimeString.replace(/dd/mg, zeroPad(dateTimeJson.day));
-        selectedDateTimeString = selectedDateTimeString.replace(/d/mg, dateTimeJson.day);
-        selectedDateTimeString = selectedDateTimeString.replace(/HH/mg, zeroPad(dateTime.getHours()));
-        selectedDateTimeString = selectedDateTimeString.replace(/H/mg, dateTime.getHours());
-        selectedDateTimeString = selectedDateTimeString.replace(/hh/mg, zeroPad(getShortHour(dateTime.getHours())));
-        selectedDateTimeString = selectedDateTimeString.replace(/h/mg, zeroPad(dateTime.getHours()));
-        selectedDateTimeString = selectedDateTimeString.replace(/mm/mg, zeroPad(dateTime.getMinutes()));
-        selectedDateTimeString = selectedDateTimeString.replace(/m/mg, dateTime.getMinutes());
-        selectedDateTimeString = selectedDateTimeString.replace(/ss/mg, zeroPad(dateTime.getSeconds()));
-        selectedDateTimeString = selectedDateTimeString.replace(/s/mg, dateTime.getSeconds());
-        selectedDateTimeString = selectedDateTimeString.replace(/fff/mg, zeroPad(dateTime.getMilliseconds(), '000'));
-        selectedDateTimeString = selectedDateTimeString.replace(/ff/mg, zeroPad(dateTime.getMilliseconds() / 10));
-        selectedDateTimeString = selectedDateTimeString.replace(/f/mg, dateTime.getMilliseconds() / 100);
-        selectedDateTimeString = selectedDateTimeString.replace(/tt/mg, getAmPm(dateTime.getHours(), setting.isGregorian));
-        selectedDateTimeString = selectedDateTimeString.replace(/t/mg, getAmPm(dateTime.getHours(), setting.isGregorian)[0]);
+        format = format.replace(/yyyy/mg, dateTimeJson.year);
+        format = format.replace(/yy/mg, dateTimeJson.year % 100);
+        format = format.replace(/MMMM/mg, getMonthName(dateTimeJson.month, isGregorian));
+        format = format.replace(/MM/mg, zeroPad(dateTimeJson.month));
+        format = format.replace(/M/mg, dateTimeJson.month);
+        format = format.replace(/dddd/mg, getWeekDayName(dateTimeJson.day, isGregorian));
+        format = format.replace(/dd/mg, zeroPad(dateTimeJson.day));
+        format = format.replace(/d/mg, dateTimeJson.day);
+        format = format.replace(/HH/mg, zeroPad(dateTimeJson.hour));
+        format = format.replace(/H/mg, dateTimeJson.hour);
+        format = format.replace(/hh/mg, zeroPad(getShortHour(dateTimeJson.hour)));
+        format = format.replace(/h/mg, zeroPad(dateTimeJson.hour));
+        format = format.replace(/mm/mg, zeroPad(dateTimeJson.minute));
+        format = format.replace(/m/mg, dateTimeJson.minute);
+        format = format.replace(/ss/mg, zeroPad(dateTimeJson.second));
+        format = format.replace(/s/mg, dateTimeJson.second);
+        format = format.replace(/fff/mg, zeroPad(dateTimeJson.millisecond, '000'));
+        format = format.replace(/ff/mg, zeroPad(dateTimeJson.millisecond / 10));
+        format = format.replace(/f/mg, dateTimeJson.millisecond / 100);
+        format = format.replace(/tt/mg, getAmPm(dateTimeJson.hour, isGregorian));
+        format = format.replace(/t/mg, getAmPm(dateTimeJson.hour, isGregorian)[0]);
 
-        if (!setting.englishNumber)
-            selectedDateTimeString = toPersianNumber(selectedDateTimeString);
-
-        return selectedDateTimeString;
+        if (!englishNumber) format = toPersianNumber(format);
+        return format;
     }
 
     function getLastDayDateOfPreviousMonth(dateTime, isGregorian) {
@@ -811,7 +817,7 @@
             dateTimeJsonPersian.year++;
             dateTimeJsonPersian.month = 1;
         }
-        return getDateTime1(dateTimeJsonPersian.year, dateTimeJsonPersian.month, getDaysInMonthPersian(dateTimeJsonPersian.year, dateTimeJsonPersian.month));
+        return getDateTime1(dateTimeJsonPersian.year, dateTimeJsonPersian.month, 1);
     }
 
     function parsePersianDateTime(persianDateTimeInString, dateSeperatorPattern) {
@@ -936,18 +942,6 @@
         return new Date(gregorianDateTimeString);
     }
 
-    function parsePersianFromDateToDateValues(fromDateString, toDateString, isGregorian) {
-        if (!fromDateString && !toDateString) return undefined;
-        var fromDate = !isGregorian ? parsePersianDateTime(fromDateString) : parseGregorianDateTime(fromDateString),
-            toDate = !isGregorian ? parsePersianDateTime(toDateString) : parseGregorianDateTime(toDateString);
-        return {
-            fromDateNumber: convertToNumber1(fromDate),
-            fromDateObject: fromDate,
-            toDateNumber: convertToNumber1(toDate),
-            toDateObject: toDate
-        };
-    }
-
     // Get Html of calendar
 
     function getDateTimePickerHtml(setting) {
@@ -960,25 +954,45 @@
         html = html.replace(/{{minuteText}}/img, setting.isGregorian ? minuteText : minuteTextPersian);
         html = html.replace(/{{secondText}}/img, setting.isGregorian ? secondText : secondTextPersian);
         html = html.replace(/{{goTodayText}}/img, setting.isGregorian ? goTodayText : goTodayTextPersian);
+        html = html.replace(/{{timePickerAttribute}}/img, setting.enableTimePicker ? '' : 'hidden');
 
         var yearsToSelectHtml = '',
             selectedDateString = '',
             todayDateString = '',
             todayDateTimeJson = {}, // year, month, day, hour, minute, second
-            selectedDateTimeJson = {}, // year, month, day, hour, minute, second
+            selectedDateTimeJson = {}, 
+            selectedDateTimeToShowJson = {},
             disableBeforeDateTimeJson = undefined,
             disableAfterDateTimeJson = undefined;
 
         if (setting.isGregorian) {
-            selectedDateTimeJson = getDateTimeJson1(selectedDateToShow);
+            selectedDateTimeToShowJson = getDateTimeJson1(selectedDateToShow);
             todayDateTimeJson = getDateTimeJson1(new Date());
+            selectedDateTimeJson = setting.selectedDate == undefined ? todayDateTimeJson : getDateTimeJson1(setting.selectedDate);
             disableBeforeDateTimeJson = !setting.disableBeforeDate ? undefined : getDateTimeJson1(setting.disableBeforeDate);
             disableAfterDateTimeJson = !setting.disableAfterDate ? undefined : getDateTimeJson1(setting.disableAfterDate);
         } else {
-            selectedDateTimeJson = getDateTimeJsonPersian1(selectedDateToShow);
+            selectedDateTimeToShowJson = getDateTimeJsonPersian1(selectedDateToShow);
             todayDateTimeJson = getDateTimeJsonPersian1(new Date());
+            selectedDateTimeJson = setting.selectedDate == undefined ? todayDateTimeJson : getDateTimeJsonPersian1(setting.selectedDate);
             disableBeforeDateTimeJson = !setting.disableBeforeDate ? undefined : getDateTimeJsonPersian1(setting.disableBeforeDate);
             disableAfterDateTimeJson = !setting.disableAfterDate ? undefined : getDateTimeJsonPersian1(setting.disableAfterDate);
+        }
+
+        // بررسی پراپرتی های از تاریخ، تا تاریخ
+        if ((setting.fromDate || setting.toDate) && setting.groupId) {
+            var $toDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]'),
+                $fromDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]');
+            if (setting.fromDate) {
+                var toDateSetting = getSetting2($toDateElement),
+                    toDateSelectedDate = toDateSetting.selectedDate;
+                disableAfterDateTimeJson = !toDateSelectedDate ? undefined : setting.isGregorian ? getDateTimeJson1(toDateSelectedDate) : getDateTimeJsonPersian1(toDateSelectedDate);
+            }
+            else if (setting.toDate) {
+                var fromDateSetting = getSetting2($fromDateElement),
+                    fromDateSelectedDate = fromDateSetting.selectedDate;
+                disableBeforeDateTimeJson = !fromDateSelectedDate ? undefined : setting.isGregorian ? getDateTimeJson1(fromDateSelectedDate) : getDateTimeJsonPersian1(fromDateSelectedDate);
+            }
         }
 
         selectedDateString = `${getWeekDayName(selectedDateTimeJson.dayOfWeek, setting.isGregorian)}، ${selectedDateTimeJson.day} ${getMonthName(selectedDateTimeJson.month - 1, setting.isGregorian)} ${selectedDateTimeJson.year}`;
@@ -993,10 +1007,10 @@
             if (setting.disableAfterToday && i > todayDateTimeJson.year) continue;
             if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year != undefined && i < disableBeforeDateTimeJson.year) continue;
             if (disableAfterDateTimeJson != undefined && disableAfterDateTimeJson.year != undefined && i > disableAfterDateTimeJson.year) continue;
-            var currentYearDateTimeNumber = convertToNumber2(i, selectedDateTimeJson.month, getDaysInMonthPersian(i, selectedDateTimeJson.month)),
+            var currentYearDateTimeNumber = convertToNumber2(i, selectedDateTimeToShowJson.month, getDaysInMonthPersian(i, selectedDateTimeToShowJson.month)),
                 currentYearDisabledAttr = '',
                 yearText = setting.englishNumber ? i.toString() : toPersianNumber(i),
-                yearDateNumber = convertToNumber2(i, selectedDateTimeJson.month, 1);
+                yearDateNumber = convertToNumber2(i, selectedDateTimeToShowJson.month, 1);
             if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year != undefined && currentYearDateTimeNumber < convertToNumber1(disableBeforeDateTimeJson))
                 currentYearDisabledAttr = 'disabled';
             if (disableAfterDateTimeJson != undefined && disableAfterDateTimeJson.year != undefined && currentYearDateTimeNumber < convertToNumber1(disableAfterDateTimeJson))
@@ -1006,10 +1020,16 @@
             if (setting.disableAfterToday && currentYearDateTimeNumber > convertToNumber1(todayDateTimeJson))
                 currentYearDisabledAttr = 'disabled';
             yearsToSelectHtml += `
-<div class="col-3 text-center" ${selectedDateTimeJson.year == i ? 'selected-year' : ''}>
+<div class="col-3 text-center" ${selectedDateTimeToShowJson.year == i ? 'selected-year' : ''}>
     <button class="btn btn-sm btn-light" type="button" data-changedatebutton data-number="${yearDateNumber}" ${currentYearDisabledAttr}>${yearText}</button>
 </div>`;
         }
+
+        if (disableAfterDateTimeJson != undefined && disableAfterDateTimeJson.month < selectedDateTimeToShowJson.month)
+            selectedDateToShow = setting.isGregorian ? new Date(disableAfterDateTimeJson.year, disableAfterDateTimeJson.month - 1, 1) : getDateTime1(disableAfterDateTimeJson.year, disableAfterDateTimeJson.month, disableAfterDateTimeJson.day);
+
+        if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.month > selectedDateTimeToShowJson.month)
+            selectedDateToShow = setting.isGregorian ? new Date(disableBeforeDateTimeJson.year, disableBeforeDateTimeJson.month - 1, 1) : getDateTime1(disableBeforeDateTimeJson.year, disableBeforeDateTimeJson.month, disableBeforeDateTimeJson.day);
 
         var monthsTdHtml = '',
             numberOfNextMonths = setting.monthsToShow[1] <= 0 ? 0 : setting.monthsToShow[1],
@@ -1034,9 +1054,9 @@
         html = html.replace(/{{yearsToSelectHtml}}/img, yearsToSelectHtml);
         html = html.replace(/{{selectedDateString}}/img, selectedDateString);
         html = html.replace(/{{todayDateString}}/img, todayDateString);
-        html = html.replace(/{{hour}}/img, selectedDateTimeJson.hour);
-        html = html.replace(/{{minute}}/img, selectedDateTimeJson.minute);
-        html = html.replace(/{{second}}/img, selectedDateTimeJson.second);
+        html = html.replace(/{{hour}}/img, selectedDateTimeToShowJson.hour);
+        html = html.replace(/{{minute}}/img, selectedDateTimeToShowJson.minute);
+        html = html.replace(/{{second}}/img, selectedDateTimeToShowJson.second);
         html = html.replace(/{{monthsTdHtml}}/img, monthsTdHtml);
 
         return html;
@@ -1069,7 +1089,6 @@
         html = html.replace(/{{monthName10}}/img, getMonthName(9, setting.isGregorian));
         html = html.replace(/{{monthName11}}/img, getMonthName(10, setting.isGregorian));
         html = html.replace(/{{monthName12}}/img, getMonthName(11, setting.isGregorian));
-        html = html.replace(/{{timePickerAttribute}}/img, setting.enableTimePicker ? '' : 'hidden');
         html = html.replace(/{{weekDayShortName1}}/img, getWeekDayShortName(0, setting.isGregorian));
         html = html.replace(/{{weekDayShortName2}}/img, getWeekDayShortName(1, setting.isGregorian));
         html = html.replace(/{{weekDayShortName3}}/img, getWeekDayShortName(2, setting.isGregorian));
@@ -1181,6 +1200,22 @@
             }
             for (i = 0; i < setting.holiDays.length; i++) {
                 holiDaysDateNumbers.push(convertToNumber1(getDateTimeJsonPersian1(setting.holiDays[i])));
+            }
+        }
+
+        // بررسی پراپرتی های از تاریخ، تا تاریخ
+        if ((setting.fromDate || setting.toDate) && setting.groupId) {
+            var $toDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]'),
+                $fromDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]');
+            if (setting.fromDate) {
+                var toDateSetting = getSetting2($toDateElement),
+                    toDateSelectedDate = toDateSetting.selectedDate;
+                disableAfterDateTimeJson = !toDateSelectedDate ? undefined : setting.isGregorian ? getDateTimeJson1(toDateSelectedDate) : getDateTimeJsonPersian1(toDateSelectedDate);
+            }
+            else if (setting.toDate) {
+                var fromDateSetting = getSetting2($fromDateElement),
+                    fromDateSelectedDate = fromDateSetting.selectedDate;
+                disableBeforeDateTimeJson = !fromDateSelectedDate ? undefined : setting.isGregorian ? getDateTimeJson1(fromDateSelectedDate) : getDateTimeJsonPersian1(fromDateSelectedDate);
             }
         }
 
@@ -1397,7 +1432,6 @@
         html = html.replace(/{{nextMonthButtonDateNumber}}/img, nextMonthDateNumber);
         html = html.replace(/{{nextYearButtonDisabledAttribute}}/img, nextYearButtonDisabledAttribute);
         html = html.replace(/{{nextYearButtonDateNumber}}/img, nextYearDateNumber);
-
         html = html.replace(/{{dropDownMenuMonth1DateNumber}}/img, monthsDateNumberAndAttr.month1DateNumber);
         html = html.replace(/{{dropDownMenuMonth2DateNumber}}/img, monthsDateNumberAndAttr.month2DateNumber);
         html = html.replace(/{{dropDownMenuMonth3DateNumber}}/img, monthsDateNumberAndAttr.month3DateNumber);
@@ -1410,7 +1444,6 @@
         html = html.replace(/{{dropDownMenuMonth10DateNumber}}/img, monthsDateNumberAndAttr.month10DateNumber);
         html = html.replace(/{{dropDownMenuMonth11DateNumber}}/img, monthsDateNumberAndAttr.month11DateNumber);
         html = html.replace(/{{dropDownMenuMonth12DateNumber}}/img, monthsDateNumberAndAttr.month12DateNumber);
-
         html = html.replace(/{{selectMonth1ButtonCssClass}}/img, monthsDateNumberAndAttr.selectMonth1ButtonCssClass);
         html = html.replace(/{{selectMonth2ButtonCssClass}}/img, monthsDateNumberAndAttr.selectMonth2ButtonCssClass);
         html = html.replace(/{{selectMonth3ButtonCssClass}}/img, monthsDateNumberAndAttr.selectMonth3ButtonCssClass);
@@ -1436,13 +1469,13 @@
         var $this = $(this),
             disabled = $this.attr('disabled'),
             dateNumber = Number($this.attr('data-number')),
-            setting = getSetting($this),
+            setting = getSetting1($this),
             selectedDateToShow = getClonedDate(setting.selectedDateToShow);
         if (disabled) return;
         selectedDateToShow = getDateTime4(dateNumber, selectedDateToShow, setting);
         setting.selectedDate = getClonedDate(selectedDateToShow);
         setting.selectedDateToShow = getClonedDate(selectedDateToShow);
-        setSetting($this, setting);
+        setSetting1($this, setting);
         setSelectedText(setting);
         if (!setting.inLine) hidePopover($(mdDatePickerPopoverSelector));
         else updateCalendarHtml1($this, setting);
@@ -1453,12 +1486,12 @@
         var $this = $(this),
             disabled = $this.attr('disabled'),
             dateNumber = Number($this.attr('data-number')),
-            setting = getSetting($this),
+            setting = getSetting1($this),
             selectedDateToShow = getClonedDate(setting.selectedDateToShow);
         if (disabled) return;
         selectedDateToShow = getDateTime4(dateNumber, selectedDateToShow, setting);
         setting.selectedDateToShow = getClonedDate(selectedDateToShow);
-        setSetting($this, setting);
+        setSetting1($this, setting);
         updateCalendarHtml1($this, setting);
     });
 
@@ -1472,7 +1505,9 @@
             hour = Number($hour.val()),
             minute = Number($minute.val()),
             second = Number($second.val()),
-            setting = getSetting($this);
+            setting = getSetting1($this);
+
+        if (!setting.enableTimePicker) return;
 
         hour = !isNumber(hour) ? setting.selectedDateToShow.getHours() : hour;
         minute = !isNumber(minute) ? setting.selectedDateToShow.getMinutes() : minute;
@@ -1482,7 +1517,7 @@
         setting.selectedDate = new Date(setting.selectedDate.setMinutes(minute));
         setting.selectedDate = new Date(setting.selectedDate.setSeconds(second));
 
-        setSetting($this, setting);
+        setSetting1($this, setting);
         setSelectedText(setting);
     });
 
@@ -1494,12 +1529,10 @@
     // برو به امروز
     $(document).on('click', mdDatePickerContainerSelector + ' [data-go-today]', function () {
         var $this = $(this),
-            setting = getSetting($this);
-        setting.selectedDate = new Date();
+            setting = getSetting1($this);
         setting.selectedDateToShow = new Date();
-        setSetting($this, setting);
+        setSetting1($this, setting);
         updateCalendarHtml1($this, setting);
-        setSelectedText(setting);
     });
 
     // مخفی کردن تقویم با کلیک روی جایی که تقویم نیست
@@ -1543,8 +1576,13 @@
                         disableAfterDate: undefined
                     }, options);
                 $this.attr(mdDatePickerFlag, '');
-                if (setting.groupId) $this.attr(mdDatePickerGroupIdAttribute, setting.groupId);
+                if ((setting.fromDate || setting.toDate) && setting.groupId) {
+                    $this.attr(mdDatePickerGroupIdAttribute, setting.groupId);
+                    if (setting.toDate) $this.attr('data-toDate', '');
+                    else if (setting.fromDate) $this.attr('data-fromDate', '');
+                }
                 if (setting.isGregorian) setting.englishNumber = true;
+                if (setting.disable) $this.attr('disabled', '');
                 if (setting.enableTimePicker && !setting.format) setting.format = 'yyyy/MM/dd   HH:mm:ss';
                 else if (!setting.enableTimePicker && !setting.format) setting.format = 'yyyy/MM/dd';
                 $this.data(mdPluginName, setting);
@@ -1580,25 +1618,62 @@
             });
         },
         getText: function () {
-
+            return getSelectedDateTimeText(getSetting2($(this)));
         },
         getDate: function () {
-
+            return getSetting2($(this)).selectedDate;
         },
-        setDate: function (dateObject) {
-
+        getDateRange: function () {
+            var setting = getSetting2($(this));
+            if (!setting.toDate && !setting.fromDate || !setting.groupId) return [];
+            var fromDateSetting = getSetting2($('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]')),
+                toDateSetting = getSetting2($('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]'));
+            return [fromDateSetting.selectedDate, toDateSetting.selectedDate];
         },
-        setDatePersian: function (dateObject) {
-
+        setDate: function (dateTimeObject) {
+            if (dateTimeObject == undefined) throw new Error('MdPersianDateTimePicker => setDate => مقدار ورودی نا معتبر است');
+            var $this = $(this),
+                setting = getSetting2($this);
+            setting.selectedDate = getClonedDate(dateTimeObject);
+            setSetting2($this, setting);
+            setSelectedText(setting);
+        },
+        setDatePersian: function (dateTimeObjectJson) {
+            if (dateTimeObjectJson == undefined) throw new Error('MdPersianDateTimePicker => setDatePersian => ورودی باید از نوه جی سان با حداقل پراپرتی های year, month, day باشد');
+            dateTimeObjectJson.hour = !dateTimeObjectJson.hour ? 0 : dateTimeObjectJson.hour;
+            dateTimeObjectJson.minute = !dateTimeObjectJson.hour ? 0 : dateTimeObjectJson.minute;
+            dateTimeObjectJson.second = !dateTimeObjectJson.second ? 0 : dateTimeObjectJson.second;
+            var $this = $(this),
+                setting = getSetting2($this);
+            setting.selectedDate = getDateTime2(dateTimeObjectJson);
+            setSetting2($this, setting);
+            setSelectedText(setting);
         },
         hide: function () {
-
+            hidePopover($(this));
         },
         show: function () {
-
+            var $this = $(this),
+                setting = getSetting2($this);
+            $(this).trigger(setting.trigger);
         },
         disable: function (isDisable) {
-
+            var $this = $(this),
+                setting = getSetting2($this);
+            setting.disabled = isDisable;
+            setSetting2($this, setting);
+            if (isDisable) $this.attr('disabled', '');
+            else $this.removeAttr('disabled');
+        },
+        changeType: function (isGregorian, englishNumber) {
+            var $this = $(this),
+                setting = getSetting2($this);
+            hidePopover($this);
+            setting.isGregorian = isGregorian;
+            setting.englishNumber = englishNumber;
+            if (setting.isGregorian) setting.englishNumber = true;
+            setSetting2($this, setting);
+            setSelectedText(setting);
         }
     };
 

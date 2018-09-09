@@ -21,14 +21,40 @@
         <div class="row mb-3">
             <div class="col-sm-6">
                 <div id="date1"> </div>
-                <input type="text" class="form-control" id="inputDate1" placeholder="Date1" aria-label="Date1" aria-describedby="date1">
+                <input type="text" class="form-control" id="inputDate1" placeholder="Date1" aria-label="Date1"
+                    aria-describedby="date1">
             </div>
             <div class="col-sm-6">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text cursor-pointer" id="date3">Icon</span>
+                        <span class="input-group-text cursor-pointer" id="date3">Icon - date3</span>
                     </div>
-                    <input type="text" id="inputDate3" class="form-control" placeholder="date3" aria-label="date3" aria-describedby="date3" readonly>
+                    <input type="text" id="inputDate3" class="form-control" placeholder="date3 - fromDate" aria-label="date3"
+                        aria-describedby="date3">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text cursor-pointer" id="date4">Icon - date4</span>
+                    </div>
+                    <input type="text" id="inputDate4" class="form-control" placeholder="date4 - toDate" aria-label="date4"
+                        aria-describedby="date4">
+                </div>
+                <div class="form-group">
+                    <button type="button" id="date3getText" class="btn btn-light">date3 - getText</button>
+                    <button type="button" id="date3getDate" class="btn btn-light">date3 - getDate</button>
+                    <button type="button" id="date3show" class="btn btn-light">date3 - show</button>
+                </div>
+                <div class="form-group">
+                    <button type="button" id="date3changeType" class="btn btn-light">date3 - type</button>
+                    <button type="button" id="date3disable" class="btn btn-light">date3 - disable</button>
+                    <button type="button" id="date3enable" class="btn btn-light">date3 - enable</button>
+                </div>
+                <div class="form-group">
+                    <button type="button" id="date3getDateRange" class="btn btn-light">date3 - getDateRange</button>
+                    <button type="button" id="date3setDatePersian" class="btn btn-light">date3 - setDatePersian - 1397-08-01</button>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12" id="message"></div>
                 </div>
             </div>
         </div>
@@ -36,7 +62,8 @@
         <div class="row">
             <div class="col-sm-6">
                 <div id="date2"> </div>
-                <input type="text" class="form-control" id="inputDate2" placeholder="Date2" aria-label="Date2" aria-describedby="date2">
+                <input type="text" class="form-control" id="inputDate2" placeholder="Date2" aria-label="Date2"
+                    aria-describedby="date2">
             </div>
         </div>
     </div>
@@ -47,33 +74,58 @@
             targetSelector: '#inputDate1',
             inLine: true,
             isGregorian: true,
-            //disableBeforeDate: new Date(new Date().setDate(26))
         });
         $('#date2').MdPersianDateTimePicker({
             targetSelector: '#inputDate2',
             inLine: true,
-            isGregorian: false
         });
+
         $('#date3').MdPersianDateTimePicker({
             targetSelector: '#inputDate3',
-            enableTimePicker: true,
             fromDate: true,
-            //disableBeforeToday: true,
             holiDays: [new Date(2018, 08, 18), new Date(2018, 08, 19), new Date(2018, 08, 20)],
-            monthsToShow: [0, 0],
-            //disableBeforeDate: new Date(new Date().setDate(26)),
-            isGregorian: false
+            monthsToShow: [1, 1],
+            fromDate: true,
+            isGregorian: false,
+            groupId: 'DateRange1'
         });
         $('#date4').MdPersianDateTimePicker({
             targetSelector: '#inputDate4',
-            enableTimePicker: true,
             toDate: true,
-            //disableBeforeToday: true,
             holiDays: [new Date(2018, 08, 18), new Date(2018, 08, 19), new Date(2018, 08, 20)],
             monthsToShow: [0, 0],
-            //disableBeforeDate: new Date(new Date().setDate(26)),
-            isGregorian: false
+            toDate: true,
+            isGregorian: false,
+            groupId: 'DateRange1'
         });
+
+        var $message = $('#message');
+        $('#date3getText').click(function () {
+            $message.html($('#date3').MdPersianDateTimePicker('getText'));
+        });
+        $('#date3getDate').click(function () {
+            var selectedDateTime = $('#date3').MdPersianDateTimePicker('getDate');
+            console.log(selectedDateTime);
+            $message.html(selectedDateTime);
+        });
+        $('#date3show').click(function () {
+            $('#date3').MdPersianDateTimePicker('show');
+        });
+        $('#date3disable').click(function () {
+            $('#date3').MdPersianDateTimePicker('disable', true);
+        });
+        $('#date3enable').click(function () {
+            $('#date3').MdPersianDateTimePicker('disable', false);
+        });
+        $('#date3changeType').click(function () {
+            $('#date3').MdPersianDateTimePicker('changeType', true);
+        });
+        $('#date3getDateRange').click(function () {
+            console.log($('#date3').MdPersianDateTimePicker('getDateRange'));           
+        });
+        $('#date3setDatePersian').click(function () {
+            $('#date3').MdPersianDateTimePicker('setDatePersian', { year: 1397, month: 08, day: 01 });
+        });          
     </script>
 </body>
 
