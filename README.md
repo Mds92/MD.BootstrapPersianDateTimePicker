@@ -50,3 +50,17 @@ Name | Values | Description | Sample
 **disableAfterToday** | [false], true | Disable days after today 
 **disableBeforeDate** | Date | Disable days before this Date | new Date(2018, 11, 12) 
 **disableAfterDate** | Date | Disable days after this Date | new Date(2018, 12, 11) 
+
+### Functions:
+
+Name | Return | Description | Sample
+------------- | ------------- | ------------- |-------------
+**getText** | string | Get selected date text | $('#id').MdPersianDateTimePicker('getText');
+**getDate** | Date | Get selected date | $('#id').MdPersianDateTimePicker('getDate');
+**getDateRange** | [fromDate, toDate]: Date[] | Get selected date range | $('#id').MdPersianDateTimePicker('getDateRange');
+**setDate** | void | Set selected datetime with Date object argument | $('#id').MdPersianDateTimePicker('setDate', new Date(2018, 11, 12));
+**setDatePersian** | void | Set selected datetime with persian json argument | $('#id').MdPersianDateTimePicker('setDatePersian', {year: 1397, month: 1, day: 1, hour: 0, minute: 0, second: 0});
+**hide** | void | Hide date time picker | $('#id').MdPersianDateTimePicker('hide');
+**show** | void | Show date time picker | $('#id').MdPersianDateTimePicker('show');
+**disable** | void | Disable or enable date time picker | $('#id').MdPersianDateTimePicker('disable', /*isDisable*/ true);
+**changeType** | void | Switch between Persian or Gregorian calendar | $('#id').MdPersianDateTimePicker('changeType', /*isGregorian*/ true, /* englishNumber */ true);
