@@ -31,7 +31,7 @@ $('#id').MdPersianDateTimePicker({ targetSelector: '#inputDate2' });
 
 ### Options:
 Default values are into `[ ]`
-Name | Values | Description | Sample |
+Name | Values | Description | Sample 
 ------------- | ------------- | ------------- |------------- 
 **englishNumber** | [false], true | Switch between English number or Persian number |
 **placement** | top, right, [bottom], left | Position of date time picker |
