@@ -24,6 +24,8 @@ I suggest to add scripts at the end of  `body`  tag and after  `jQuery`  library
 $('#id').MdPersianDateTimePicker({ targetSelector: '#inputDate2' });
 ```
 
+<hr>
+
 ### Options:
 Default values are into `[ ]`
 
@@ -50,6 +52,27 @@ Name | Values | Description | Sample
 **disableAfterToday** | [false], true | Disable days after today 
 **disableBeforeDate** | Date | Disable days before this Date | new Date(2018, 11, 12) 
 **disableAfterDate** | Date | Disable days after this Date | new Date(2018, 12, 11) 
+
+Format | English Description | Persian Description 
+------------- | ------------- | -------------
+**yyyy** | Year, 4 digits | سال چهار رقمی
+**yy** | Year, 2 digits | سال دو رقمی
+**MMMM** | Month name | نام ماه
+**MM** | Month, 2 digits | عدد دو رقمی ماه
+**M** | Month, 1 digit | عدد تک رقمی ماه
+**dddd** | Week day name | نام روز هفته
+**dd** | Month's day, 2 digits | عدد دو رقمی روز 
+**d** | Month's day, 1 digit | عدد تک رقمی روز 
+**HH** | Hour, 2 digits - 0 - 24 | عدد دو رقمی ساعت با فرمت 0 تا 24
+**H** | Hour, 1 digit - 0 - 24 | عدد تک رقمی ساعت با فرمت 0 تا 24
+**hh** | Hour, 2 digits - 0 - 12 | عدد دو رقمی ساعت با فرمت 0 تا 12
+**h** | Hour, 1 digit - 0 - 12 | عدد تک رقمی ساعت با فرمت 0 تا 12
+**mm** | Minute, 2 digits | عدد دو رقمی دقیقه
+**m** | Minute, 1 digit | عدد تک رقمی دقیقه
+**ss** | Second, 2 digits | ثانیه دو رقمی
+**s** | Second, 1 digit | ثانیه تک رقمی
+**tt** | AM / PM | ب.ظ یا ق.ظ
+**t** |  | حرف اول از ب.ظ یا ق.ظ
 
 <hr>
 
