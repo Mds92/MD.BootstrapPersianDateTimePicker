@@ -619,11 +619,8 @@
             dateTimeJsonPersian.day = dateTimeJson.day;
             dateTime = getDateTime2(dateTimeJsonPersian);
         }
-        else {
-            dateTime = new Date(dateTime.setFullYear(dateTimeJson.year));
-            dateTime = new Date(dateTime.setMonth(dateTimeJson.month - 1));
-            dateTime = new Date(dateTime.setDate(dateTimeJson.day));
-        }
+        else 
+            dateTime = new Date(dateTimeJson.year, dateTimeJson.month - 1, dateTimeJson.day);        
         return dateTime;
     }
 
@@ -1051,10 +1048,6 @@
             isNextOrPrevMonth = isNextMonth || isPrevMonth,
             html = dateTimePickerMonthTableHtmlTemplate;
 
-            //TODO: data-number
-            // برای ماه های میلادی به درستی ست نمی شود
-            // به احتمال زیاد مشکل از ست کردن صحیح ماه است
-
         html = html.replace(/{{monthTdAttribute}}/img, isNextMonth ? 'data-next-month' : isPrevMonth ? 'data-prev-month' : '');
         html = html.replace(/{{monthNameAttribute}}/img, !isNextOrPrevMonth ? 'hidden' : '');
         html = html.replace(/{{theadSelectDateButtonTrAttribute}}/img, setting.inLine || !isNextOrPrevMonth ? '' : 'hidden');
@@ -1154,14 +1147,14 @@
             numberOfDaysInPreviousMonth = getDaysInMonth(dateTimeToShowJson.year, dateTimeToShowJson.month - 2);
             previousMonthDateNumber = convertToNumber1(getDateTimeJson1(getLastDayDateOfPreviousMonth(selectedDateToShowTemp, true)));
             nextMonthDateNumber = convertToNumber1(getDateTimeJson1(getFirstDayDateOfNextMonth(selectedDateToShowTemp, true)));
-            selectedDateToShowTemp = getClonedDate(selectedDateToShowTemp);
+            selectedDateToShowTemp = getClonedDate(selectedDateToShow);
             previousYearDateNumber = convertToNumber1(getDateTimeJson1(new Date(selectedDateToShowTemp.setFullYear(selectedDateToShowTemp.getFullYear() - 1))));
-            selectedDateToShowTemp = getClonedDate(selectedDateToShowTemp);
+            selectedDateToShowTemp = getClonedDate(selectedDateToShow);
             nextYearDateNumber = convertToNumber1(getDateTimeJson1(new Date(selectedDateToShowTemp.setFullYear(selectedDateToShowTemp.getFullYear() + 1))));
-            selectedDateToShowTemp = getClonedDate(selectedDateToShowTemp);
+            selectedDateToShowTemp = getClonedDate(selectedDateToShow);
             for (i = 1; i <= 12; i++) {
                 monthsDateNumberAndAttr['month' + i.toString() + 'DateNumber'] = convertToNumber1(getDateTimeJson1(new Date(selectedDateToShowTemp.setMonth(i - 1))));
-                selectedDateToShowTemp = getClonedDate(selectedDateToShowTemp);
+                selectedDateToShowTemp = getClonedDate(selectedDateToShow);
             }
             for (i = 0; i < setting.holiDays.length; i++) {
                 holiDaysDateNumbers.push(convertToNumber1(getDateTimeJson1(setting.holiDays[i])));
@@ -1176,15 +1169,15 @@
             numberOfDaysInCurrentMonth = getDaysInMonthPersian(dateTimeToShowJson.year, dateTimeToShowJson.month);
             numberOfDaysInPreviousMonth = getDaysInMonthPersian(dateTimeToShowJson.year - 1, dateTimeToShowJson.month - 1);
             previousMonthDateNumber = convertToNumber1(getDateTimeJsonPersian1(getLastDayDateOfPreviousMonth(selectedDateToShowTemp, false)));
-            selectedDateToShowTemp = getClonedDate(selectedDateToShowTemp);
+            selectedDateToShowTemp = getClonedDate(selectedDateToShow);
             nextMonthDateNumber = convertToNumber1(getDateTimeJsonPersian1(getFirstDayDateOfNextMonth(selectedDateToShowTemp, false)));
-            selectedDateToShowTemp = getClonedDate(selectedDateToShowTemp);
+            selectedDateToShowTemp = getClonedDate(selectedDateToShow);
             previousYearDateNumber = convertToNumber2(dateTimeToShowJson.year - 1, dateTimeToShowJson.month, dateTimeToShowJson.day);
             nextYearDateNumber = convertToNumber2(dateTimeToShowJson.year + 1, dateTimeToShowJson.month, dateTimeToShowJson.day);
-            selectedDateToShowTemp = getClonedDate(selectedDateToShowTemp);
+            selectedDateToShowTemp = getClonedDate(selectedDateToShow);
             for (i = 1; i <= 12; i++) {
                 monthsDateNumberAndAttr['month' + i.toString() + 'DateNumber'] = convertToNumber2(dateTimeToShowJson.year, i, getDaysInMonthPersian(i));
-                selectedDateToShowTemp = getClonedDate(selectedDateToShowTemp);
+                selectedDateToShowTemp = getClonedDate(selectedDateToShow);
             }
             for (i = 0; i < setting.holiDays.length; i++) {
                 holiDaysDateNumbers.push(convertToNumber1(getDateTimeJsonPersian1(setting.holiDays[i])));
