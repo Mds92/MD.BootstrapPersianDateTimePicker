@@ -51,6 +51,8 @@ Name | Values | Description | Sample
 **disableBeforeDate** | Date | Disable days before this Date | new Date(2018, 11, 12) 
 **disableAfterDate** | Date | Disable days after this Date | new Date(2018, 12, 11) 
 
+<hr>
+
 ### Functions:
 
 Name | Return | Description | Sample
