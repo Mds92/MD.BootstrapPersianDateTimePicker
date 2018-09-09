@@ -8,6 +8,7 @@
 
 ### Installing:
 First you have to install `Bootstrap 4+` and `jQuery 3+` and link them to your html file.
+
 Then you can install latest version of the plugin via npm or nuget:
 
 ***Install-Package MD.BootstrapPersianDateTimePicker***
@@ -77,7 +78,7 @@ Format | English Description | Persian Description
 **ss** | Second, 2 digits | ثانیه دو رقمی
 **s** | Second, 1 digit | ثانیه تک رقمی
 **tt** | AM / PM | ب.ظ یا ق.ظ
-**t** |  | حرف اول از ب.ظ یا ق.ظ
+**t** | A / P | حرف اول از ب.ظ یا ق.ظ
 
 <hr>
 
