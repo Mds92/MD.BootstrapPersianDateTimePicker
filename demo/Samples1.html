@@ -17,17 +17,17 @@
 
 <body>
     <div class="container">
-        <h1>Simples</h1>
-        <hr>
-        <div class="row mb-3">
+        <h2>Simple</h2>
+        <div class="row">
             <div class="col-sm-6">
                 <pre>
 $('#date1').MdPersianDateTimePicker({
     targetSelector: '#inputDate1',
-    isGregorian: false
+    isGregorian: false,
+    enableTimePicker: true
 });
                 </pre>
-                <div class="input-group mb-3">
+                <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text cursor-pointer" id="date1">Icon</span>
                     </div>
@@ -42,12 +42,67 @@ $('#date2').MdPersianDateTimePicker({
     isGregorian: true
 });
                 </pre>
-                <div class="input-group mb-3">
+                <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text cursor-pointer" id="date2">Icon</span>
                     </div>
                     <input type="text" id="inputDate2" class="form-control" placeholder="Gregorian Calendar" aria-label="date2"
                         aria-describedby="date2">
+                </div>
+            </div>
+        </div>
+        <hr>
+        <h3>Multiple Month</h3>
+        <div class="row">
+            <div class="col-sm-12">
+                <pre>
+$('#date3').MdPersianDateTimePicker({
+    targetSelector: '#inputDate3',
+    monthsToShow: [1, 1]
+});
+                </pre>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text cursor-pointer" id="date3">Icon</span>
+                    </div>
+                    <input type="text" id="inputDate3" class="form-control" placeholder="DateTimePicker With Multiple Month" aria-label="date3"
+                        aria-describedby="date3">
+                </div>
+            </div>
+        </div>
+        <hr>
+        <h3>Range</h3>
+        <div class="row">
+            <div class="col-sm-6">
+                <pre>
+$('#date4').MdPersianDateTimePicker({
+    targetSelector: '#inputDate4',
+    fromDate: true,
+    groupId: 'rangeSelector1'
+});
+                </pre>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text cursor-pointer" id="date4">Icon</span>
+                    </div>
+                    <input type="text" id="inputDate4" class="form-control" placeholder="From Date" aria-label="date4"
+                        aria-describedby="date4">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <pre>
+$('#date5').MdPersianDateTimePicker({
+    targetSelector: '#inputDate5',
+    toDate: true,
+    groupId: 'rangeSelector1'
+});
+                </pre>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text cursor-pointer" id="date5">Icon</span>
+                    </div>
+                    <input type="text" id="inputDate5" class="form-control" placeholder="To Date" aria-label="date5"
+                        aria-describedby="date5">
                 </div>
             </div>
         </div>
@@ -58,12 +113,29 @@ $('#date2').MdPersianDateTimePicker({
     <script type="text/javascript">
         $('#date1').MdPersianDateTimePicker({
             targetSelector: '#inputDate1',
-            isGregorian: false
+            isGregorian: false,
+            enableTimePicker: true
         });
 
         $('#date2').MdPersianDateTimePicker({
             targetSelector: '#inputDate2',
             isGregorian: true
+        });
+
+        $('#date3').MdPersianDateTimePicker({
+            targetSelector: '#inputDate3',
+            monthsToShow: [1, 1]
+        });
+
+        $('#date4').MdPersianDateTimePicker({
+            targetSelector: '#inputDate4',
+            fromDate: true,
+            groupId: 'rangeSelector1'
+        });
+        $('#date5').MdPersianDateTimePicker({
+            targetSelector: '#inputDate5',
+            toDate: true,
+            groupId: 'rangeSelector1'
         });
     </script>
 </body>
