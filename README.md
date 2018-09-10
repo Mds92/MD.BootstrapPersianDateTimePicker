@@ -9,7 +9,7 @@
 ### Installing:
 First you have to install `Bootstrap 4+` and `jQuery 3+` and link them to your html file.
 
-Then you can install latest version of the plugin via npm or nuget:
+Then you can install latest version of the plugin via npm:
 
 ***npm install md.bootstrappersiandatetimepicker@latest***
 
