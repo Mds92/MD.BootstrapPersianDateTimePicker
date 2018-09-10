@@ -16,11 +16,12 @@ There is a file in `Manual` folder that you can learn how to use this plugin.
 ----
 Installing:
 
-`**Install-Package MD.BootstrapPersianDateTimePicker**`<br>
+**`Install-Package MD.BootstrapPersianDateTimePicker`**<br>
 **`npm install md.bootstrappersiandatetimepicker`**
 
 Now add these files to you html:
-```
+
+```html
 <link href="/Content/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.css" rel="stylesheet"/>
 
 <script src="/Scripts/MdBootstrapPersianDateTimePicker/jalaali.js"></script>
@@ -29,12 +30,11 @@ Now add these files to you html:
 
 I suggest to add scripts at the end of `body` tag and after `jQuery` library.
 
-----
+<hr>
 
 There are two approaches to use MdPersianDateTime
 - Use JavaScript and jQuery.
 
-Sample :
 ```javascript
 <script type="text/javascript">
     $('#textBoxInputId').MdPersianDateTimePicker({
