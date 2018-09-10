@@ -15,8 +15,8 @@ Then you can install latest version of the plugin via npm:
 
 Now add these files to you html:
 ```html
-<link href="/Content/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.css" rel="stylesheet"/>
-<script src="/Scripts/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker"></script>
+<link href="/dist/jquery.md.bootstrap.datetimepicker.style.css" rel="stylesheet"/>
+<script src="/dist/jquery.md.bootstrap.datetimepicker.js"></script>
 ```
 I suggest to add scripts at the end of  `body`  tag and after  `jQuery`  library.
 ### How to use:
