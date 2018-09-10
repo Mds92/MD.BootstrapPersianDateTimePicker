@@ -37,7 +37,7 @@ Name | Values | Description | Sample
 **placement** | top, right, [bottom], left | Position of date time picker 
 **trigger** | [click], mousedown, focus, ... | Event to show date time picker 
 **enableTimePicker** | [false], true | Time picker visibility 
-**targetSelector** | String | CSS selector to show selected date into it | '#YousElementId'
+**targetSelector** | String | CSS selector to show selected date into it | '#ElementId'
 **toDate** | [false], true | When you want to set date picker as `toDate` to enable date range selecting 
 **fromDate** | [false], true | When you want to set date picker as `fromDate` to enable date range selecting
 **groupId** | String | When you want to use `toDate`, `fromDate` you have to enter a group id to specify date time pickers| 'dateRangeSelector1'
