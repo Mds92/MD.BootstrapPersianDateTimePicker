@@ -12,7 +12,7 @@
 
 (function ($) {
 
-    //#region jalali calendar
+    // #region jalali calendar
 
     function toJalaali(gy, gm, gd) {
         return d2j(g2d(gy, gm, gd));
@@ -149,7 +149,7 @@
         var j;
         j = 4 * jdn + 139361631;
         j = j + div(div(4 * jdn + 183187720, 146097) * 3, 4) * 4 - 3908;
-        var i = div(mod(j, 1461), 4) * 5 + 308;;
+        var i = div(mod(j, 1461), 4) * 5 + 308;
         var gd = div(mod(i, 153), 5) + 1;
         var gm = mod(div(i, 153), 12) + 1;
         var gy = div(j, 1461) - 100100 + div(8 - gm, 6);
@@ -157,7 +157,7 @@
             gy: gy,
             gm: gm,
             gd: gd
-        }
+        };
     }
 
     function div(a, b) {
@@ -170,7 +170,7 @@
 
     //#endregion jalali calendar
 
-    //#region variables
+    // #region variables
 
     var mdDatePickerFlag = 'data-mdpersiandatetimepicker',
         mdDatePickerFlagSelector = '[' + mdDatePickerFlag + ']',
@@ -410,7 +410,7 @@
 
     //#endregion
 
-    //#region Functions
+    // #region Functions
 
     function getPopoverDescriber($element) {
         // المانی را بر میگرداند که کاربر پلاگین را روی آن فعال کرده است
@@ -541,7 +541,6 @@
         return getDateTime3(dateTimeJson);
     }
 
-    
     function getWeekDayName(englishWeekDayIndex, isGregorian) {
         if (!isGregorian) return weekDayNamesPersian[englishWeekDayIndex];
         return weekDayNames[englishWeekDayIndex];
@@ -573,7 +572,7 @@
                 amPm = 'AM';
             else
                 amPm = 'ق.ظ';
-        return amPm;
+        return amPm;        
     }
 
     function hideOthers($exceptThis) {
@@ -645,7 +644,7 @@
             minute: dateTime.getMinutes(),
             second: dateTime.getSeconds(),
             dayOfWeek: dateTime.getDay()
-        }
+        };
     }
 
     function getDateTimeJson2(dateNumber) {
@@ -669,7 +668,7 @@
             minute: dateTime.getMinutes(),
             second: dateTime.getSeconds(),
             dayOfWeek: dateTime.getDay(),
-        }
+        };
     }
 
     function getDateTimeJsonPersian2(yearPersian, monthPersian, dayPersian, hour, minute, second) {
@@ -876,7 +875,7 @@
         } else {
             for (var i = 1; i < 12; i++) {
                 var persianMonthName = getMonthName(i - 1, false);
-                if (!persianDateTimeInString.indexOf(persianMonthName) > -1) continue;
+                if (persianDateTimeInString.indexOf(persianMonthName) > -1) continue;
                 month = i;
                 break;
             }
@@ -963,8 +962,8 @@
             todayDateTimeJson = {}, // year, month, day, hour, minute, second
             selectedDateTimeJson = {}, 
             selectedDateTimeToShowJson = {},
-            disableBeforeDateTimeJson = undefined,
-            disableAfterDateTimeJson = undefined;
+            disableBeforeDateTimeJson,
+            disableAfterDateTimeJson;
 
         if (setting.isGregorian) {
             selectedDateTimeToShowJson = getDateTimeJson1(selectedDateToShow);
@@ -1036,14 +1035,14 @@
             numberOfNextMonths = setting.monthsToShow[1] <= 0 ? 0 : setting.monthsToShow[1],
             numberOfPrevMonths = setting.monthsToShow[0] <= 0 ? 0 : setting.monthsToShow[0];
         numberOfPrevMonths *= -1;
-        for (var i = numberOfPrevMonths; i < 0; i++) {
-            setting.selectedDateToShow = addMonthToDateTime(getClonedDate(selectedDateToShow), i);
+        for (var i1 = numberOfPrevMonths; i1 < 0; i1++) {
+            setting.selectedDateToShow = addMonthToDateTime(getClonedDate(selectedDateToShow), i1);
             monthsTdHtml += getDateTimePickerMonthHtml1(setting, false, true);
         }
         setting.selectedDateToShow = getClonedDate(selectedDateToShow);
         monthsTdHtml += getDateTimePickerMonthHtml1(setting, false, false);
-        for (var i = 1; i <= numberOfNextMonths; i++) {
-            setting.selectedDateToShow = addMonthToDateTime(getClonedDate(selectedDateToShow), i);
+        for (var i2 = 1; i2 <= numberOfNextMonths; i2++) {
+            setting.selectedDateToShow = addMonthToDateTime(getClonedDate(selectedDateToShow), i2);
             monthsTdHtml += getDateTimePickerMonthHtml1(setting, true, false);
         }
 
@@ -1286,7 +1285,7 @@
                 // اگر نام روز هفته انتخاب شده در تکس باکس قبل از تاریخ امروز باشد
                 // نباید دیگر نام روز هفته تغییر کند
                 if (!dayOfWeek)
-                    dayOfWeek = getWeekDayName(tdNumber - 1 < 0 ? 0 : tdNumber - 1, setting.isGregorian)
+                    dayOfWeek = getWeekDayName(tdNumber - 1 < 0 ? 0 : tdNumber - 1, setting.isGregorian);
             }
             // روز از قبل انتخاب شده
             if (selectedDateNumber == currentDateNumber) {

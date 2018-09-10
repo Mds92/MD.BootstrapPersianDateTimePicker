@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Persian DateTime</title>
+
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="demo.css" />
+    <link rel="stylesheet" href="../dist/jquery.md.bootstrap.datetimepicker.style.css" />
+
+    <script src="../node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="../node_modules/popper.js/dist/umd/popper.min.js" type="text/javascript"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <h1>Simples</h1>
+        <hr>
+        <div class="row mb-3">
+            <div class="col-sm-6">
+                <pre>
+$('#date1').MdPersianDateTimePicker({
+    targetSelector: '#inputDate1',
+    isGregorian: false
+});
+                </pre>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text cursor-pointer" id="date1">Icon</span>
+                    </div>
+                    <input type="text" id="inputDate1" class="form-control" placeholder="Persian Calendar" aria-label="date1"
+                        aria-describedby="date1">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <pre>
+$('#date2').MdPersianDateTimePicker({
+    targetSelector: '#inputDate2',
+    isGregorian: true
+});
+                </pre>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text cursor-pointer" id="date2">Icon</span>
+                    </div>
+                    <input type="text" id="inputDate2" class="form-control" placeholder="Gregorian Calendar" aria-label="date2"
+                        aria-describedby="date2">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../dist/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $('#date1').MdPersianDateTimePicker({
+            targetSelector: '#inputDate1',
+            isGregorian: false
+        });
+
+        $('#date2').MdPersianDateTimePicker({
+            targetSelector: '#inputDate2',
+            isGregorian: true
+        });
+    </script>
+</body>
+
+</html>
