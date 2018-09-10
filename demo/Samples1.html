@@ -106,6 +106,23 @@ $('#date5').MdPersianDateTimePicker({
                 </div>
             </div>
         </div>
+        <hr>
+        <h3>InLine</h3>
+        <div class="row">
+            <div class="col-sm-6">
+                <pre>
+$('#date6').MdPersianDateTimePicker({
+    targetSelector: '#inputDate6',
+    inLine: true,
+    format: 'yyyy - MMMM - dd'
+});
+                </pre>
+                <div id="date6"></div>
+                <input type="text" id="inputDate6" class="form-control" placeholder="In Line Date" aria-label="date6"
+                        aria-describedby="date6">
+            </div>
+            
+        </div>
     </div>
 
     <script src="../dist/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script>
@@ -137,7 +154,14 @@ $('#date5').MdPersianDateTimePicker({
             toDate: true,
             groupId: 'rangeSelector1'
         });
+        $('#date6').MdPersianDateTimePicker({
+            targetSelector: '#inputDate6',
+            inLine: true,
+            format: 'yyyy - MMMM - dd'
+        });
     </script>
+
+    <br ><br >
 </body>
 
 </html>
