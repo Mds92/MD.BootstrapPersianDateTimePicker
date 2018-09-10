@@ -159,6 +159,7 @@ ClientBin/
 *.dbproj.schemaview
 *.pfx
 *.publishsettings
+package-lock.json
 node_modules/
 
 # RIA/Silverlight projects
