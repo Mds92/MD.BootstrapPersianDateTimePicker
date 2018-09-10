@@ -1,7 +1,7 @@
 # MD.BootstrapPersianDateTimePicker
 #### Bootstrap 4+ Persian And Gregorian Date Time Picker jQuery 3+ Plugin
 
-![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/Bootstrap4/src/MdPersianDateTimePicker.jpg)
+![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master-bs4/src/MdPersianDateTimePicker.jpg)
 
 `MD.BootstrapPersianDateTimePicker` uses bootstrap [Popovers](https://getbootstrap.com/docs/4.1/components/popovers/), so it has flexibility of bootstrap's popover.
 <hr>
