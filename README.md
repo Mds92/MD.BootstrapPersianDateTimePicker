@@ -119,7 +119,7 @@ Format | English Description | Persian Description
 **tt** | AM / PM | ب.ظ یا ق.ظ
 **t** | A / P | 
 
-##### Functions:<br>
+### Functions:<br>
 Name | Description | Sample
 ------------ | ------------- | -------------
 **getValue** | Get value of datetime picker | $('[data-name="datepicker1"]').MdPersianDateTimePicker('getValue');
