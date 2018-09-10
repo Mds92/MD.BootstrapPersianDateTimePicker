@@ -102,11 +102,11 @@ Name | Return | Description | Sample
 
 Event Type | Description
 ------------- | -------------
-show.bs.popover | This event fires immediately when the show instance method is called.
-shown.bs.popover | This event is fired when the popover has been made visible to the user (will wait for CSS transitions to complete).
-hide.bs.popover | This event is fired immediately when the hide instance method has been called.
-hidden.bs.popover | This event is fired when the popover has finished being hidden from the user (will wait for CSS transitions to complete).
-inserted.bs.popover | This event is fired after the show.bs.popover event when the popover template has been added to the DOM.
+**show.bs.popover** | This event fires immediately when the show instance method is called.
+**shown.bs.popover** | This event is fired when the popover has been made visible to the user (will wait for CSS transitions to complete).
+**hide.bs.popover** | This event is fired immediately when the hide instance method has been called.
+**hidden.bs.popover** | This event is fired when the popover has finished being hidden from the user (will wait for CSS transitions to complete).
+**inserted.bs.popover** | This event is fired after the show.bs.popover event when the popover template has been added to the DOM.
 
 ```javascript
 $('#date1').on('hidden.bs.popover', function () {
