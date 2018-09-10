@@ -74,35 +74,50 @@ data-disablebeforetoday="false"
 data-inline="false"
 ```
 
-Sample :
 ```html
 <button class="btn btn-default" data-MdDateTimePicker="true" data-TargetSelector="#input1" data-EnableTimePicker="true" data-Placement="left" data-Trigger="click">انتخاب تاریخ</button>
 ```
 
-```javascript
-//Supported format
-yyyy: سال چهار رقمی
-yy: سال دو رقمی
-MMMM: نام فارسی ماه
-MM: عدد دو رقمی ماه
-M: عدد یک رقمی ماه
-dddd: نام فارسی روز هفته
-dd: عدد دو رقمی روز ماه
-d: عدد یک رقمی روز ماه
-HH: ساعت دو رقمی با فرمت 00 تا 24
-H: ساعت یک رقمی با فرمت 0 تا 24
-hh: ساعت دو رقمی با فرمت 00 تا 12
-h: ساعت یک رقمی با فرمت 0 تا 12
-mm: عدد دو رقمی دقیقه
-m: عدد یک رقمی دقیقه
-ss: ثانیه دو رقمی
-s: ثانیه یک رقمی
-fff: میلی ثانیه 3 رقمی
-ff: میلی ثانیه 2 رقمی
-f: میلی ثانیه یک رقمی
-tt: ب.ظ یا ق.ظ
-t: حرف اول از ب.ظ یا ق.ظ
-```
+### Options:
+Default values are into `[ ]`
+
+Name | Values | Description | Sample
+------------- | ------------- | ------------- |-------------
+**EnglishNumber** | [false], true | Switch between English number or Persian number 
+**Placement** | top, right, [bottom], left | Position of date time picker 
+**Trigger** | [click], mousedown, focus, ... | Event to show date time picker 
+**EnableTimePicker** | [false], true | Time picker visibility 
+**TargetSelector** | String | CSS selector to show selected date into it | '#ElementId'
+**ToDate** | [false], true | When you want to set date picker as `toDate` to enable date range selecting 
+**FromDate** | [false], true | When you want to set date picker as `fromDate` to enable date range selecting
+**GroupId** | String | When you want to use `toDate`, `fromDate` you have to enter a group id to specify date time pickers| 'dateRangeSelector1'
+**Disabled** | [false], true | Disable date time picker 
+**Format** | String | date selecting string format | 'yyyy/MM/dd HH:mm:ss'
+**IsGregorian** | [false], true | Is calendar Gregorian 
+**InLine** | [false], true | Is date time picker in line 
+
+### String format:
+
+Format | English Description | Persian Description 
+------------- | ------------- | -------------
+**yyyy** | Year, 4 digits | سال چهار رقمی
+**yy** | Year, 2 digits | سال دو رقمی
+**MMMM** | Month name | نام ماه
+**MM** | Month, 2 digits | عدد دو رقمی ماه
+**M** | Month, 1 digit | عدد تک رقمی ماه
+**dddd** | Week day name | نام روز هفته
+**dd** | Month's day, 2 digits | عدد دو رقمی روز 
+**d** | Month's day, 1 digit | عدد تک رقمی روز 
+**HH** | Hour, 2 digits - 0 - 24 | عدد دو رقمی ساعت با فرمت 0 تا 24
+**H** | Hour, 1 digit - 0 - 24 | عدد تک رقمی ساعت با فرمت 0 تا 24
+**hh** | Hour, 2 digits - 0 - 12 | عدد دو رقمی ساعت با فرمت 0 تا 12
+**h** | Hour, 1 digit - 0 - 12 | عدد تک رقمی ساعت با فرمت 0 تا 12
+**mm** | Minute, 2 digits | عدد دو رقمی دقیقه
+**m** | Minute, 1 digit | عدد تک رقمی دقیقه
+**ss** | Second, 2 digits | ثانیه دو رقمی
+**s** | Second, 1 digit | ثانیه تک رقمی
+**tt** | AM / PM | ب.ظ یا ق.ظ
+**t** | A / P | 
 
 ##### Functions:<br>
 Name | Description | Sample
