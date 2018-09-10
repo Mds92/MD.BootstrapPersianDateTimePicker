@@ -5,8 +5,8 @@
   "license": "MIT",
   "moduleResolution": "node",
   "author": {
-    "email": "mds_soft@yahoo.com",
     "name": "Mohammad Dayyan",
+    "email": "mds_soft@yahoo.com",
     "social": "@mdssoft",
     "url": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker"
   },
@@ -27,6 +27,7 @@
     "webpack-merge": "^4.1.4"
   },
   "scripts": {
-    "compile": "tsc"
+    "compile": "tsc",
+    "webpack":"webpack --watch"
   }
 }

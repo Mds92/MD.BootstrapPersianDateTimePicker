@@ -541,6 +541,7 @@
         return getDateTime3(dateTimeJson);
     }
 
+    
     function getWeekDayName(englishWeekDayIndex, isGregorian) {
         if (!isGregorian) return weekDayNamesPersian[englishWeekDayIndex];
         return weekDayNames[englishWeekDayIndex];
