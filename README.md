@@ -2,8 +2,8 @@
 Bootstrap 3
 
 
-![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master/MD.BootstrapPersianDateTimePicker/Content/MD.PersianDateTimePicker1.png "MD.BootstrapPersianDateTimePicker")
-![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master/MD.BootstrapPersianDateTimePicker/Content/MD.PersianDateTimePicker2.png "MD.BootstrapPersianDateTimePicker")
+![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master-bs3/MD.BootstrapPersianDateTimePicker/Content/MD.PersianDateTimePicker1.png "MD.BootstrapPersianDateTimePicker")
+![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master-bs3/MD.BootstrapPersianDateTimePicker/Content/MD.PersianDateTimePicker2.png "MD.BootstrapPersianDateTimePicker")
 
 `MD.BootstrapPersianDateTimePicker` is a DateTimePicker plugin for jquery and Bootstrap 3.
 
@@ -131,6 +131,18 @@ Name | Description | Sample
 **hide** 	 | Hide datetime picker | $('[data-name="datepicker1"]').MdPersianDateTimePicker('hide');
 **show** 	 | Show datetime picker | $('[data-name="datepicker1"]').MdPersianDateTimePicker('show');
 
+
+### Events
+
+MD.BootstrapPersianDateTimePicker uses Bootstrap's popover, so you can use popover events.
+
+Event Type | Description | Sample
+------------ | ------------- | -------------
+**show.bs.popover** | This event fires immediately when the show instance method is called.
+**shown.bs.popover** | This event is fired when the popover has been made visible to the user (will wait for CSS transitions to complete).
+**hide.bs.popover** | This event is fired immediately when the hide instance method has been called.
+**hidden.bs.popover** | This event is fired when the popover has finished being hidden from the user (will wait for CSS transitions to complete).
+**inserted.bs.popover** | This event is fired after the show.bs.popover event when the popover template has been added to the DOM.
 
 If you are using `.Net` for programming, I recommend to use the following library to parse and use PersianDateTime as easy as DateTime.
 [MD.PersianDateTime](https://github.com/Mds92/MD.PersianDateTime)
