@@ -15,8 +15,10 @@ There is a file in `Manual` folder that you can learn how to use this plugin.
 
 ----
 Installing:
-## Install-Package MD.BootstrapPersianDateTimePicker
-## npm install md.bootstrappersiandatetimepicker
+
+### Install-Package MD.BootstrapPersianDateTimePicker
+
+### npm install md.bootstrappersiandatetimepicker
 
 Now add these files to you html:
 ```
