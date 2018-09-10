@@ -6,6 +6,9 @@
 `MD.BootstrapPersianDateTimePicker` uses bootstrap [Popovers](https://getbootstrap.com/docs/4.1/components/popovers/), so it has flexibility of bootstrap's popover.
 <hr>
 
+**NOTE:**
+If you want Bootstrap 3 version see `https://github.com/Mds92/MD.BootstrapPersianDateTimePicker/tree/master-bs3`
+
 ### Installing:
 First you have to install `Bootstrap 4+` and `jQuery 3+` and link them to your html file.
 
