@@ -144,5 +144,7 @@ Event Type | Description | Sample
 **hidden.bs.popover** | This event is fired when the popover has finished being hidden from the user (will wait for CSS transitions to complete).
 **inserted.bs.popover** | This event is fired after the show.bs.popover event when the popover template has been added to the DOM.
 
+<hr>
+
 If you are using `.Net` for programming, I recommend to use the following library to parse and use PersianDateTime as easy as DateTime.
 [MD.PersianDateTime](https://github.com/Mds92/MD.PersianDateTime)
