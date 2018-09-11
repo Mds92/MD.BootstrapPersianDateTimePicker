@@ -10,6 +10,16 @@
  * My weblog: mds-soft.persianblog.ir
  */
 
+// TODO: اضافه کردن فانکشن زیر
+// setDateRange برای ست کردن رنج تاریخی
+// اگر rangeSelector
+// ترو بود، بیاد startDate, endDate
+// مقدار دهی کنه و اگر toDate, fromDate
+// ست شده بود بیاد اونا رو مقدار بده
+
+// TODO: اضافه کردن قابلیت پارس کردن محتوای اولیه موجود در پیکر برای مقدار دهی تاریخ انتخاب شده
+// TODO: 
+
 (function ($) {
 
     // #region jalali calendar
