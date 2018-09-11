@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.0.0
+ * version : 3.1.0
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -442,12 +442,14 @@
     function updateCalendarHtml1($element, setting) {
         var calendarHtml = getDateTimePickerHtml(setting),
             $container = setting.inLine ? $element.parents(mdDatePickerFlagSelector + ':first') : $element.parents('[data-name="mds-datetimepicker-popoverbody"]:first');
-        //selectedDateString = $(calendarHtml).find('[data-selecteddatestring]').text().trim();
         $container.html(calendarHtml);
     }
 
     function getSelectedDateTimeText(setting) {
         if (setting.selectedDate == undefined) return '';
+        if (setting.rangeSelector && setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined)
+            return getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.rangeSelectorStartDate) : getDateTimeJson1(setting.rangeSelectorStartDate), setting.format, setting.isGregorian, setting.englishNumber) + ' - ' +
+                getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.rangeSelectorEndDate) : getDateTimeJson1(setting.rangeSelectorEndDate), setting.format, setting.isGregorian, setting.englishNumber);
         return getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.selectedDate) : getDateTimeJson1(setting.selectedDate), setting.format, setting.isGregorian, setting.englishNumber);
     }
 
@@ -572,7 +574,7 @@
                 amPm = 'AM';
             else
                 amPm = 'ق.ظ';
-        return amPm;        
+        return amPm;
     }
 
     function hideOthers($exceptThis) {
@@ -599,6 +601,10 @@
 
     function convertToNumber2(year, month, day) {
         return Number(zeroPad(year) + zeroPad(month) + zeroPad(day));
+    }
+
+    function convertToNumber3(dateTime) {
+        return convertToNumber1(getDateTimeJson1(dateTime));
     }
 
     function getDateTime1(yearPersian, monthPersian, dayPersian, hour, minute, second) {
@@ -960,7 +966,11 @@
             selectedDateString = '',
             todayDateString = '',
             todayDateTimeJson = {}, // year, month, day, hour, minute, second
-            selectedDateTimeJson = {}, 
+            rangeSelectorStartDate = !setting.rangeSelector || !setting.rangeSelectorStartDate ? undefined : getClonedDate(setting.rangeSelectorStartDate),
+            rangeSelectorEndDate = !setting.rangeSelector || !setting.rangeSelectorEndDate ? undefined : getClonedDate(setting.rangeSelectorEndDate),
+            rangeSelectorStartDateJson = {},
+            rangeSelectorEndDateJson = {},
+            selectedDateTimeJson = {},
             selectedDateTimeToShowJson = {},
             disableBeforeDateTimeJson,
             disableAfterDateTimeJson;
@@ -968,12 +978,16 @@
         if (setting.isGregorian) {
             selectedDateTimeToShowJson = getDateTimeJson1(selectedDateToShow);
             todayDateTimeJson = getDateTimeJson1(new Date());
+            rangeSelectorStartDateJson = rangeSelectorStartDate != undefined ? getDateTimeJson1(rangeSelectorStartDate) : undefined;
+            rangeSelectorEndDateJson = rangeSelectorEndDate != undefined ? getDateTimeJson1(rangeSelectorEndDate) : undefined;
             selectedDateTimeJson = setting.selectedDate == undefined ? todayDateTimeJson : getDateTimeJson1(setting.selectedDate);
             disableBeforeDateTimeJson = !setting.disableBeforeDate ? undefined : getDateTimeJson1(setting.disableBeforeDate);
             disableAfterDateTimeJson = !setting.disableAfterDate ? undefined : getDateTimeJson1(setting.disableAfterDate);
         } else {
             selectedDateTimeToShowJson = getDateTimeJsonPersian1(selectedDateToShow);
             todayDateTimeJson = getDateTimeJsonPersian1(new Date());
+            rangeSelectorStartDateJson = rangeSelectorStartDate != undefined ? getDateTimeJsonPersian1(rangeSelectorStartDate) : undefined;
+            rangeSelectorEndDateJson = rangeSelectorEndDate != undefined ? getDateTimeJsonPersian1(rangeSelectorEndDate) : undefined;
             selectedDateTimeJson = setting.selectedDate == undefined ? todayDateTimeJson : getDateTimeJsonPersian1(setting.selectedDate);
             disableBeforeDateTimeJson = !setting.disableBeforeDate ? undefined : getDateTimeJsonPersian1(setting.disableBeforeDate);
             disableAfterDateTimeJson = !setting.disableAfterDate ? undefined : getDateTimeJsonPersian1(setting.disableAfterDate);
@@ -995,7 +1009,12 @@
             }
         }
 
-        selectedDateString = `${getWeekDayName(selectedDateTimeJson.dayOfWeek, setting.isGregorian)}، ${selectedDateTimeJson.day} ${getMonthName(selectedDateTimeJson.month - 1, setting.isGregorian)} ${selectedDateTimeJson.year}`;
+        if (setting.rangeSelector && rangeSelectorStartDateJson != undefined && rangeSelectorEndDateJson != undefined) {
+            selectedDateString = `${getWeekDayName(rangeSelectorStartDateJson.dayOfWeek, setting.isGregorian)}، ${rangeSelectorStartDateJson.day} ${getMonthName(rangeSelectorStartDateJson.month - 1, setting.isGregorian)} ${rangeSelectorStartDateJson.year} - 
+                ${getWeekDayName(rangeSelectorEndDateJson.dayOfWeek, setting.isGregorian)}، ${rangeSelectorEndDateJson.day} ${getMonthName(rangeSelectorEndDateJson.month - 1, setting.isGregorian)} ${rangeSelectorEndDateJson.year}`;
+        }
+        else
+            selectedDateString = `${getWeekDayName(selectedDateTimeJson.dayOfWeek, setting.isGregorian)}، ${selectedDateTimeJson.day} ${getMonthName(selectedDateTimeJson.month - 1, setting.isGregorian)} ${selectedDateTimeJson.year}`;
         todayDateString = `${setting.isGregorian ? 'Today,' : 'امروز،'} ${todayDateTimeJson.day} ${getMonthName(todayDateTimeJson.month - 1, setting.isGregorian)} ${todayDateTimeJson.year}`;
         if (!setting.englishNumber) {
             selectedDateString = toPersianNumber(selectedDateString);
@@ -1104,6 +1123,7 @@
             selectedYear = 0,
             selectedDateNumber = 0,
             selectedMonthName = '',
+            todayDateNumber,
             todayDateTimeJson = {}, // year, month, day, hour, minute, second
             dateTimeToShowJson = {}, // year, month, day, hour, minute, second
             numberOfDaysInCurrentMonth,
@@ -1118,6 +1138,10 @@
             nextYearDateNumber = 0,
             disableBeforeDateTimeNumber = 0,
             disableAfterDateTimeNumber = 0,
+            rangeSelectorStartDate = !setting.rangeSelector || setting.rangeSelectorStartDate == undefined ? undefined : getClonedDate(setting.rangeSelectorStartDate),
+            rangeSelectorEndDate = !setting.rangeSelector || setting.rangeSelectorEndDate == undefined ? undefined : getClonedDate(setting.rangeSelectorEndDate),
+            rangeSelectorStartDateNumber = 0,
+            rangeSelectorEndDateNumber = 0,
             dayNumberInString = '0',
             dayOfWeek = '', // نام روز هفته
             monthsDateNumberAndAttr = {
@@ -1171,6 +1195,8 @@
             selectedDateToShowTemp = getClonedDate(selectedDateToShow);
             nextYearDateNumber = convertToNumber1(getDateTimeJson1(new Date(selectedDateToShowTemp.setFullYear(selectedDateToShowTemp.getFullYear() + 1))));
             selectedDateToShowTemp = getClonedDate(selectedDateToShow);
+            rangeSelectorStartDateNumber = !setting.rangeSelector || !rangeSelectorStartDate ? 0 : convertToNumber3(rangeSelectorStartDate);
+            rangeSelectorEndDateNumber = !setting.rangeSelector || !rangeSelectorEndDate ? 0 : convertToNumber3(rangeSelectorEndDate);
             for (i = 1; i <= 12; i++) {
                 monthsDateNumberAndAttr['month' + i.toString() + 'DateNumber'] = convertToNumber1(getDateTimeJson1(new Date(selectedDateToShowTemp.setMonth(i - 1))));
                 selectedDateToShowTemp = getClonedDate(selectedDateToShow);
@@ -1194,6 +1220,8 @@
             previousYearDateNumber = convertToNumber2(dateTimeToShowJson.year - 1, dateTimeToShowJson.month, dateTimeToShowJson.day);
             nextYearDateNumber = convertToNumber2(dateTimeToShowJson.year + 1, dateTimeToShowJson.month, dateTimeToShowJson.day);
             selectedDateToShowTemp = getClonedDate(selectedDateToShow);
+            rangeSelectorStartDateNumber = !setting.rangeSelector || !rangeSelectorStartDate ? 0 : convertToNumber1(getDateTimeJsonPersian1(rangeSelectorStartDate));
+            rangeSelectorEndDateNumber = !setting.rangeSelector || !rangeSelectorEndDate ? 0 : convertToNumber1(getDateTimeJsonPersian1(rangeSelectorEndDate));
             for (i = 1; i <= 12; i++) {
                 monthsDateNumberAndAttr['month' + i.toString() + 'DateNumber'] = convertToNumber2(dateTimeToShowJson.year, i, getDaysInMonthPersian(i));
                 selectedDateToShowTemp = getClonedDate(selectedDateToShow);
@@ -1219,8 +1247,7 @@
             }
         }
 
-        var todayDateNumber = convertToNumber1(todayDateTimeJson);
-
+        todayDateNumber = convertToNumber1(todayDateTimeJson);
         selectedYear = setting.englishNumber ? dateTimeToShowJson.year : toPersianNumber(dateTimeToShowJson.year);
         disableBeforeDateTimeNumber = !disableBeforeDateTimeJson ? undefined : convertToNumber1(disableBeforeDateTimeJson);
         disableAfterDateTimeNumber = !disableAfterDateTimeJson ? undefined : convertToNumber1(disableAfterDateTimeJson);
@@ -1239,10 +1266,17 @@
             if (setting.isGregorian) firstWeekDayNumber--;
             var previousMonthDateTimeJson = addMonthToDateTimeJson(dateTimeToShowJson, -1, setting.isGregorian);
             for (i = numberOfDaysInPreviousMonth - firstWeekDayNumber; i <= numberOfDaysInPreviousMonth; i++) {
+                currentDateNumber = convertToNumber2(previousMonthDateTimeJson.year, previousMonthDateTimeJson.month, i);
                 dayNumberInString = setting.englishNumber ? zeroPad(i) : toPersianNumber(zeroPad(i));
                 $td = $('<td data-nm />')
-                    .attr('data-number', convertToNumber2(previousMonthDateTimeJson.year, previousMonthDateTimeJson.month, i))
+                    .attr('data-number', currentDateNumber)
                     .html(dayNumberInString);
+                if (setting.rangeSelector) {
+                    if (currentDateNumber == rangeSelectorStartDateNumber || currentDateNumber == rangeSelectorEndDateNumber)
+                        $td.addClass('selected-range-days-start-end');
+                    else if (rangeSelectorStartDateNumber > 0 && rangeSelectorEndDateNumber > 0 && currentDateNumber > rangeSelectorStartDateNumber && currentDateNumber < rangeSelectorEndDateNumber)
+                        $td.addClass('selected-range-days');
+                }
                 // روز جمعه
                 if (!setting.isGregorian && tdNumber == 6)
                     $td.addClass('text-danger');
@@ -1287,8 +1321,9 @@
                 if (!dayOfWeek)
                     dayOfWeek = getWeekDayName(tdNumber - 1 < 0 ? 0 : tdNumber - 1, setting.isGregorian);
             }
+
             // روز از قبل انتخاب شده
-            if (selectedDateNumber == currentDateNumber) {
+            if (!setting.rangeSelector && selectedDateNumber == currentDateNumber) {
                 $td.attr('data-selectedday', '');
                 dayOfWeek = getWeekDayName(tdNumber - 1 < 0 ? 0 : tdNumber - 1, setting.isGregorian);
             }
@@ -1377,6 +1412,13 @@
             }
             // \\
 
+            if (setting.rangeSelector) {
+                if (currentDateNumber == rangeSelectorStartDateNumber || currentDateNumber == rangeSelectorEndDateNumber)
+                    $td.addClass('selected-range-days-start-end');
+                else if (rangeSelectorStartDateNumber > 0 && rangeSelectorEndDateNumber > 0 && currentDateNumber > rangeSelectorStartDateNumber && currentDateNumber < rangeSelectorEndDateNumber)
+                    $td.addClass('selected-range-days');
+            }
+
             $tr.append($td);
             isTrAppended = false;
 
@@ -1395,9 +1437,16 @@
         var nextMonthDateTimeJson = addMonthToDateTimeJson(dateTimeToShowJson, 1, setting.isGregorian);
         for (i = 1; i <= 42 - cellNumber; i++) {
             dayNumberInString = setting.englishNumber ? zeroPad(i) : toPersianNumber(zeroPad(i));
+            currentDateNumber = convertToNumber2(nextMonthDateTimeJson.year, nextMonthDateTimeJson.month, i);
             $td = $('<td data-nm />')
-                .attr('data-number', convertToNumber2(nextMonthDateTimeJson.year, nextMonthDateTimeJson.month, i))
+                .attr('data-number', currentDateNumber)
                 .html(dayNumberInString);
+            if (setting.rangeSelector) {
+                if (currentDateNumber == rangeSelectorStartDateNumber || currentDateNumber == rangeSelectorEndDateNumber)
+                    $td.addClass('selected-range-days-start-end');
+                else if (rangeSelectorStartDateNumber > 0 && rangeSelectorEndDateNumber > 0 && currentDateNumber > rangeSelectorStartDateNumber && currentDateNumber < rangeSelectorEndDateNumber)
+                    $td.addClass('selected-range-days');
+            }
             // روز جمعه
             if (!setting.isGregorian && tdNumber == 6)
                 $td.addClass('text-danger');
@@ -1473,12 +1522,77 @@
             selectedDateToShow = getClonedDate(setting.selectedDateToShow);
         if (disabled) return;
         selectedDateToShow = getDateTime4(dateNumber, selectedDateToShow, setting);
+
+        if (setting.rangeSelector) { // اگر رنج سلکتور فعال بود
+            if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined) {
+                setting.rangeSelectorStartDate = undefined;
+                setting.rangeSelectorEndDate = undefined;
+                $this.parents('tbody:first').find('td.selected-range-days-start-end,td.selected-range-days')
+                    .removeClass('selected-range-days')
+                    .removeClass('selected-range-days-start-end');
+            }
+            if (setting.rangeSelectorStartDate == undefined) {
+                $this.addClass('selected-range-days-start-end');
+                setting.rangeSelectorStartDate = getClonedDate(selectedDateToShow);
+                setting.selectedDate = getClonedDate(selectedDateToShow);
+                setting.selectedDateToShow = getClonedDate(selectedDateToShow);
+            }
+            else if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate == undefined) {
+                $this.addClass('selected-range-days-start-end');
+                setting.rangeSelectorEndDate = getClonedDate(selectedDateToShow);
+                setSelectedText(setting);
+            }
+            setSetting1($this, setting);
+            if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined) {
+                if (!setting.inLine) hidePopover($(mdDatePickerPopoverSelector));
+                else updateCalendarHtml1($this, setting);
+            }
+            return;
+        }
         setting.selectedDate = getClonedDate(selectedDateToShow);
         setting.selectedDateToShow = getClonedDate(selectedDateToShow);
         setSetting1($this, setting);
         setSelectedText(setting);
         if (!setting.inLine) hidePopover($(mdDatePickerPopoverSelector));
         else updateCalendarHtml1($this, setting);
+    });
+
+    // هاور روی روزها
+    $(document).on('mouseenter', mdDatePickerContainerSelector + ' [data-day],' + mdDatePickerContainerSelector + ' [data-nm],'+ mdDatePickerContainerSelector + ' [data-pm]', function () {
+        var $this = $(this),
+            $tbody = $this.parents('tbody:first'),
+            $allTdDays = $tbody.find('td[data-day]'),
+            disabled = $this.attr('disabled'),
+            dateNumber = Number($this.attr('data-number')),
+            setting = getSetting1($this);
+        if (disabled || !setting.rangeSelector || (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined)) return;
+
+        $allTdDays.removeClass('selected-range-days');
+
+        var rangeSelectorStartDate = !setting.rangeSelectorStartDate ? undefined : getClonedDate(setting.rangeSelectorStartDate),
+            rangeSelectorEndDate = !setting.rangeSelectorEndDate ? undefined : getClonedDate(setting.rangeSelectorEndDate),
+            rangeSelectorStartDateNumber = 0,
+            rangeSelectorEndDateNumber = 0;
+
+        if (setting.isGregorian) {
+            rangeSelectorStartDateNumber = !rangeSelectorStartDate ? 0 : convertToNumber3(rangeSelectorStartDate);
+            rangeSelectorEndDateNumber = !rangeSelectorEndDate ? 0 : convertToNumber3(rangeSelectorEndDate);
+        } else {
+            rangeSelectorStartDateNumber = !rangeSelectorStartDate ? 0 : convertToNumber1(getDateTimeJsonPersian1(rangeSelectorStartDate));
+            rangeSelectorEndDateNumber = !rangeSelectorEndDate ? 0 : convertToNumber1(getDateTimeJsonPersian1(rangeSelectorEndDate));
+        }
+
+        if (rangeSelectorStartDateNumber > 0 && dateNumber > rangeSelectorStartDateNumber) {
+            for (var i1 = rangeSelectorStartDateNumber; i1 <= dateNumber; i1++) {
+                $allTdDays.filter('[data-number="' + i1.toString() + '"]:not(.selected-range-days-start-end)').addClass('selected-range-days');
+            }
+        }
+        else if (rangeSelectorEndDateNumber > 0 && dateNumber < rangeSelectorEndDateNumber) {
+            for (var i2 = dateNumber; i2 <= rangeSelectorEndDateNumber; i2++) {
+                $allTdDays.filter('[data-number="' + i2.toString() + '"]:not(.selected-range-days-start-end)').addClass('selected-range-days');
+            }
+        }
+
     });
 
     // کلیک روی دکمه هایی که تاریخ را تغییر می دهند
@@ -1572,15 +1686,25 @@
                         disableBeforeToday: false,
                         disableAfterToday: false,
                         disableBeforeDate: undefined,
-                        disableAfterDate: undefined
+                        disableAfterDate: undefined,
+                        rangeSelector: false,
+                        rangeSelectorStartDate: undefined,
+                        rangeSelectorEndDate: undefined
                     }, options);
                 $this.attr(mdDatePickerFlag, '');
+                if (setting.rangeSelector) {
+                    setting.fromDate = false;
+                    setting.toDate = false;
+                    setting.enableTimePicker = false;
+                }
                 if ((setting.fromDate || setting.toDate) && setting.groupId) {
                     $this.attr(mdDatePickerGroupIdAttribute, setting.groupId);
                     if (setting.toDate) $this.attr('data-toDate', '');
                     else if (setting.fromDate) $this.attr('data-fromDate', '');
                 }
                 if (setting.isGregorian) setting.englishNumber = true;
+                if (setting.toDate && setting.fromDate) throw new Error(`MdPersianDateTimePicker => You can not set true 'toDate' and 'fromDate' together`);
+                if (!setting.groupId && (setting.toDate || setting.fromDate)) throw new Error(`MdPersianDateTimePicker => When you set 'toDate' or 'fromDate' true, you have to set 'groupId'`);
                 if (setting.disable) $this.attr('disabled', '');
                 if (setting.enableTimePicker && !setting.format) setting.format = 'yyyy/MM/dd   HH:mm:ss';
                 else if (!setting.enableTimePicker && !setting.format) setting.format = 'yyyy/MM/dd';
@@ -1624,6 +1748,7 @@
         },
         getDateRange: function () {
             var setting = getSetting2($(this));
+            if (setting.rangeSelector) return [setting.rangeSelectorStartDate, setting.rangeSelectorEndDate];
             if (!setting.toDate && !setting.fromDate || !setting.groupId) return [];
             var fromDateSetting = getSetting2($('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]')),
                 toDateSetting = getSetting2($('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]'));

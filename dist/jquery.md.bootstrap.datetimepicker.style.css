@@ -2,7 +2,7 @@
  * 
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
- * 
+ * version : 3.1.0
  * Written By Mohammad Dayyan, Mordad 1397
  * mds.soft@gmail.com - @mdssoft
  * 
@@ -128,6 +128,14 @@
 
 .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-day][data-selectedday] {
     background-color: #96daff;
+}
+
+.mds-bootstrap-persian-datetime-picker-container table table tbody.days td.selected-range-days-start-end {
+    background-color: #c9e1ff;
+}
+
+.mds-bootstrap-persian-datetime-picker-container table table tbody.days td.selected-range-days {
+    background-color: #d9f2e6;
 }
 
 .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-pm], .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-nm], .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[disabled] {
