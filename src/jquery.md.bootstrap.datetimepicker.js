@@ -18,7 +18,6 @@
 // ست شده بود بیاد اونا رو مقدار بده
 
 // TODO: اضافه کردن قابلیت پارس کردن محتوای اولیه موجود در پیکر برای مقدار دهی تاریخ انتخاب شده
-// TODO: 
 
 (function ($) {
 
@@ -1233,7 +1232,7 @@
             rangeSelectorStartDateNumber = !setting.rangeSelector || !rangeSelectorStartDate ? 0 : convertToNumber1(getDateTimeJsonPersian1(rangeSelectorStartDate));
             rangeSelectorEndDateNumber = !setting.rangeSelector || !rangeSelectorEndDate ? 0 : convertToNumber1(getDateTimeJsonPersian1(rangeSelectorEndDate));
             for (i = 1; i <= 12; i++) {
-                monthsDateNumberAndAttr['month' + i.toString() + 'DateNumber'] = convertToNumber2(dateTimeToShowJson.year, i, getDaysInMonthPersian(i));
+                monthsDateNumberAndAttr['month' + i.toString() + 'DateNumber'] = convertToNumber2(dateTimeToShowJson.year, i, getDaysInMonthPersian(dateTimeToShowJson.year, i));
                 selectedDateToShowTemp = getClonedDate(selectedDateToShow);
             }
             for (i = 0; i < setting.holiDays.length; i++) {
