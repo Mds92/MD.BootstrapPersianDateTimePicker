@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.1.0
+ * version : 3.1.4
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -1053,10 +1053,10 @@
 </div>`;
         }
 
-        if (disableAfterDateTimeJson != undefined && disableAfterDateTimeJson.month < selectedDateTimeToShowJson.month)
+        if (disableAfterDateTimeJson != undefined && disableAfterDateTimeJson.year <= selectedDateTimeToShowJson.year && disableAfterDateTimeJson.month < selectedDateTimeToShowJson.month)
             selectedDateToShow = setting.isGregorian ? new Date(disableAfterDateTimeJson.year, disableAfterDateTimeJson.month - 1, 1) : getDateTime1(disableAfterDateTimeJson.year, disableAfterDateTimeJson.month, disableAfterDateTimeJson.day);
 
-        if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.month > selectedDateTimeToShowJson.month)
+        if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year >= selectedDateTimeToShowJson.year && disableBeforeDateTimeJson.month > selectedDateTimeToShowJson.month)
             selectedDateToShow = setting.isGregorian ? new Date(disableBeforeDateTimeJson.year, disableBeforeDateTimeJson.month - 1, 1) : getDateTime1(disableBeforeDateTimeJson.year, disableBeforeDateTimeJson.month, disableBeforeDateTimeJson.day);
 
         var monthsTdHtml = '',
@@ -1090,8 +1090,8 @@
         return html;
     }
     function getDateTimePickerMonthHtml1(setting, isNextMonth, isPrevMonth) {
-        var selectedDateToShow = getClonedDate(setting.selectedDateToShow);
-        var selectedDateToShowTemp = getClonedDate(selectedDateToShow),
+        var selectedDateToShow = getClonedDate(setting.selectedDateToShow),
+            selectedDateToShowTemp = getClonedDate(selectedDateToShow),
             selectedDateTime = setting.selectedDate != undefined ? getClonedDate(setting.selectedDate) : undefined,
             isNextOrPrevMonth = isNextMonth || isPrevMonth,
             html = dateTimePickerMonthTableHtmlTemplate;
