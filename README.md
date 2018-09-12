@@ -24,7 +24,10 @@ Now add these files to you html:
 I suggest to add scripts at the end of  `body`  tag and after  `jQuery`  library.
 ### How to use:
 ```javascript
-$('#id').MdPersianDateTimePicker({ targetSelector: '#inputDate2' });
+$('#id').MdPersianDateTimePicker({ 
+  targetTextSelector: '#inputTextDate1',
+  targetDateSelector: '#inputHiddenDate1',
+});
 ```
 
 <hr>
@@ -38,7 +41,8 @@ Name | Values | Description | Sample
 **placement** | top, right, [bottom], left | Position of date time picker 
 **trigger** | [click], mousedown, focus, ... | Event to show date time picker 
 **enableTimePicker** | [false], true | Time picker visibility 
-**targetSelector** | String | CSS selector to show selected date into it | '#ElementId'
+**targetTextSelector** | String | CSS selector to show selected date as `format` property into it | '#TextBoxId'
+**targetDateSelector** | String | CSS selector to save selected date into it | '#InputHiddenId'
 **toDate** | [false], true | When you want to set date picker as `toDate` to enable date range selecting 
 **fromDate** | [false], true | When you want to set date picker as `fromDate` to enable date range selecting
 **groupId** | String | When you want to use `toDate`, `fromDate` you have to enter a group id to specify date time pickers| 'dateRangeSelector1'
