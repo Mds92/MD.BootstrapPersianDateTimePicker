@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.1.5
+ * version : 3.1.6
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -462,16 +462,28 @@
         return getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.selectedDate) : getDateTimeJson1(setting.selectedDate), setting.format, setting.isGregorian, setting.englishNumber);
     }
 
-    function setSelectedText(setting) {
-        var $target = $(setting.targetSelector);
-        if ($target.length <= 0) return;
-        switch ($target[0].tagName.toLowerCase()) {
-            case 'input':
-                $target.val(getSelectedDateTimeText(setting));
-                break;
-            default:
-                $target.text(getSelectedDateTimeText(setting));
-                break;
+    function setSelectedData(setting) {
+        var $targetText = $(setting.targetTextSelector);
+        if ($targetText.length > 0) {
+            switch ($targetText[0].tagName.toLowerCase()) {
+                case 'input':
+                    $targetText.val(getSelectedDateTimeText(setting));
+                    break;
+                default:
+                    $targetText.text(getSelectedDateTimeText(setting));
+                    break;
+            }
+        }
+        var $targetDate = $(setting.targetDateSelector);
+        if ($targetDate.length > 0) {
+            switch ($targetDate[0].tagName.toLowerCase()) {
+                case 'input':
+                    $targetDate.val(setting.selectedDate);
+                    break;
+                default:
+                    $targetDate.text(setting.selectedDate);
+                    break;
+            }
         }
     }
 
@@ -1549,7 +1561,7 @@
             else if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate == undefined) {
                 $this.addClass('selected-range-days-start-end');
                 setting.rangeSelectorEndDate = getClonedDate(selectedDateToShow);
-                setSelectedText(setting);
+                setSelectedData(setting);
             }
             setSetting1($this, setting);
             if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined) {
@@ -1561,13 +1573,13 @@
         setting.selectedDate = getClonedDate(selectedDateToShow);
         setting.selectedDateToShow = getClonedDate(selectedDateToShow);
         setSetting1($this, setting);
-        setSelectedText(setting);
+        setSelectedData(setting);
         if (!setting.inLine) hidePopover($(mdDatePickerPopoverSelector));
         else updateCalendarHtml1($this, setting);
     });
 
     // هاور روی روزها
-    $(document).on('mouseenter', mdDatePickerContainerSelector + ' [data-day],' + mdDatePickerContainerSelector + ' [data-nm],'+ mdDatePickerContainerSelector + ' [data-pm]', function () {
+    $(document).on('mouseenter', mdDatePickerContainerSelector + ' [data-day],' + mdDatePickerContainerSelector + ' [data-nm],' + mdDatePickerContainerSelector + ' [data-pm]', function () {
         var $this = $(this),
             $allTdDays = $this.parents('table:last').find('td[data-day]'),
             disabled = $this.attr('disabled'),
@@ -1640,7 +1652,7 @@
         setting.selectedDate = new Date(setting.selectedDate.setSeconds(second));
 
         setSetting1($this, setting);
-        setSelectedText(setting);
+        setSelectedData(setting);
     });
 
     // کلیک روی سال انتخابی برای عوض کردن سال
@@ -1677,7 +1689,8 @@
                         placement: 'bottom',
                         trigger: 'click',
                         enableTimePicker: false,
-                        targetSelector: '',
+                        targetTextSelector: '',
+                        targetDateSelector: '',
                         toDate: false,
                         fromDate: false,
                         groupId: '',
@@ -1768,7 +1781,7 @@
                 setting = getSetting2($this);
             setting.selectedDate = getClonedDate(dateTimeObject);
             setSetting2($this, setting);
-            setSelectedText(setting);
+            setSelectedData(setting);
         },
         setDatePersian: function (dateTimeObjectJson) {
             if (dateTimeObjectJson == undefined) throw new Error('MdPersianDateTimePicker => setDatePersian => ورودی باید از نوه جی سان با حداقل پراپرتی های year, month, day باشد');
@@ -1779,7 +1792,7 @@
                 setting = getSetting2($this);
             setting.selectedDate = getDateTime2(dateTimeObjectJson);
             setSetting2($this, setting);
-            setSelectedText(setting);
+            setSelectedData(setting);
         },
         hide: function () {
             hidePopover($(this));
@@ -1805,7 +1818,7 @@
             setting.englishNumber = englishNumber;
             if (setting.isGregorian) setting.englishNumber = true;
             setSetting2($this, setting);
-            setSelectedText(setting);
+            setSelectedData(setting);
         }
     };
 
