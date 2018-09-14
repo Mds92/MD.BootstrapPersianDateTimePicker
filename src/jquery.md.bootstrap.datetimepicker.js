@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.1.7
+ * version : 3.1.8
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -596,10 +596,10 @@
             else
                 amPm = 'ب.ظ';
         } else
-            if (isGregorian)
-                amPm = 'AM';
-            else
-                amPm = 'ق.ظ';
+        if (isGregorian)
+            amPm = 'AM';
+        else
+            amPm = 'ق.ظ';
         return amPm;
     }
 
@@ -661,8 +661,7 @@
             dateTimeJsonPersian.month = dateTimeJson.month;
             dateTimeJsonPersian.day = dateTimeJson.day;
             dateTime = getDateTime2(dateTimeJsonPersian);
-        }
-        else
+        } else
             dateTime = new Date(dateTimeJson.year, dateTimeJson.month - 1, dateTimeJson.day);
         return dateTime;
     }
@@ -825,8 +824,7 @@
         if (dateTimeJsonPersian.month <= 0) {
             dateTimeJsonPersian.month = 12;
             dateTimeJsonPersian.year--;
-        }
-        else if (dateTimeJsonPersian.month > 12) {
+        } else if (dateTimeJsonPersian.month > 12) {
             dateTimeJsonPersian.year++;
             dateTimeJsonPersian.month = 1;
         }
@@ -1027,8 +1025,7 @@
                 var toDateSetting = getSetting2($toDateElement),
                     toDateSelectedDate = toDateSetting.selectedDate;
                 disableAfterDateTimeJson = !toDateSelectedDate ? undefined : setting.isGregorian ? getDateTimeJson1(toDateSelectedDate) : getDateTimeJsonPersian1(toDateSelectedDate);
-            }
-            else if (setting.toDate) {
+            } else if (setting.toDate) {
                 var fromDateSetting = getSetting2($fromDateElement),
                     fromDateSelectedDate = fromDateSetting.selectedDate;
                 disableBeforeDateTimeJson = !fromDateSelectedDate ? undefined : setting.isGregorian ? getDateTimeJson1(fromDateSelectedDate) : getDateTimeJsonPersian1(fromDateSelectedDate);
@@ -1038,8 +1035,7 @@
         if (setting.rangeSelector && rangeSelectorStartDateJson != undefined && rangeSelectorEndDateJson != undefined) {
             selectedDateString = `${getWeekDayName(rangeSelectorStartDateJson.dayOfWeek, setting.isGregorian)}، ${rangeSelectorStartDateJson.day} ${getMonthName(rangeSelectorStartDateJson.month - 1, setting.isGregorian)} ${rangeSelectorStartDateJson.year} - 
                 ${getWeekDayName(rangeSelectorEndDateJson.dayOfWeek, setting.isGregorian)}، ${rangeSelectorEndDateJson.day} ${getMonthName(rangeSelectorEndDateJson.month - 1, setting.isGregorian)} ${rangeSelectorEndDateJson.year}`;
-        }
-        else
+        } else
             selectedDateString = `${getWeekDayName(selectedDateTimeJson.dayOfWeek, setting.isGregorian)}، ${selectedDateTimeJson.day} ${getMonthName(selectedDateTimeJson.month - 1, setting.isGregorian)} ${selectedDateTimeJson.year}`;
         todayDateString = `${setting.isGregorian ? 'Today,' : 'امروز،'} ${todayDateTimeJson.day} ${getMonthName(todayDateTimeJson.month - 1, setting.isGregorian)} ${todayDateTimeJson.year}`;
         if (!setting.englishNumber) {
@@ -1106,6 +1102,7 @@
 
         return html;
     }
+
     function getDateTimePickerMonthHtml1(setting, isNextMonth, isPrevMonth) {
         var selectedDateToShow = getClonedDate(setting.selectedDateToShow),
             selectedDateToShowTemp = getClonedDate(selectedDateToShow),
@@ -1142,7 +1139,8 @@
         html = html.replace(/{{weekDayShortName6}}/img, getWeekDayShortName(5, setting.isGregorian));
         html = html.replace(/{{weekDayShortName7}}/img, getWeekDayShortName(6, setting.isGregorian));
 
-        var i = 0, j = 0,
+        var i = 0,
+            j = 0,
             firstWeekDayNumber,
             cellNumber = 0,
             tdNumber = 0,
@@ -1265,8 +1263,7 @@
                 var toDateSetting = getSetting2($toDateElement),
                     toDateSelectedDate = toDateSetting.selectedDate;
                 disableAfterDateTimeJson = !toDateSelectedDate ? undefined : setting.isGregorian ? getDateTimeJson1(toDateSelectedDate) : getDateTimeJsonPersian1(toDateSelectedDate);
-            }
-            else if (setting.toDate) {
+            } else if (setting.toDate) {
                 var fromDateSetting = getSetting2($fromDateElement),
                     fromDateSelectedDate = fromDateSetting.selectedDate;
                 disableBeforeDateTimeJson = !fromDateSelectedDate ? undefined : setting.isGregorian ? getDateTimeJson1(fromDateSelectedDate) : getDateTimeJsonPersian1(fromDateSelectedDate);
@@ -1545,6 +1542,7 @@
             disabled = $this.attr('disabled'),
             dateNumber = Number($this.attr('data-number')),
             setting = getSetting1($this),
+            selectedDateJson = setting.selectedDate == undefined ? undefined : getDateTimeJson1(setting.selectedDate),
             selectedDateToShow = getClonedDate(setting.selectedDateToShow);
         if (disabled) return;
         selectedDateToShow = getDateTime4(dateNumber, selectedDateToShow, setting);
@@ -1562,8 +1560,7 @@
                 setting.rangeSelectorStartDate = getClonedDate(selectedDateToShow);
                 setting.selectedDate = getClonedDate(selectedDateToShow);
                 setting.selectedDateToShow = getClonedDate(selectedDateToShow);
-            }
-            else if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate == undefined) {
+            } else if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate == undefined) {
                 $this.addClass('selected-range-days-start-end');
                 setting.rangeSelectorEndDate = getClonedDate(selectedDateToShow);
                 setSelectedData(setting);
@@ -1577,6 +1574,11 @@
         }
         setting.selectedDate = getClonedDate(selectedDateToShow);
         setting.selectedDateToShow = getClonedDate(selectedDateToShow);
+        if (selectedDateJson != undefined) {
+            setting.selectedDate.setHours(selectedDateJson.hour);
+            setting.selectedDate.setMinutes(selectedDateJson.minute);
+            setting.selectedDate.setSeconds(selectedDateJson.second);
+        }
         setSetting1($this, setting);
         setSelectedData(setting);
         if (!setting.inLine) hidePopover($(mdDatePickerPopoverSelector));
@@ -1611,8 +1613,7 @@
             for (var i1 = rangeSelectorStartDateNumber; i1 <= dateNumber; i1++) {
                 $allTdDays.filter('[data-number="' + i1.toString() + '"]:not(.selected-range-days-start-end)').addClass('selected-range-days');
             }
-        }
-        else if (rangeSelectorEndDateNumber > 0 && dateNumber < rangeSelectorEndDateNumber) {
+        } else if (rangeSelectorEndDateNumber > 0 && dateNumber < rangeSelectorEndDateNumber) {
             for (var i2 = dateNumber; i2 <= rangeSelectorEndDateNumber; i2++) {
                 $allTdDays.filter('[data-number="' + i2.toString() + '"]:not(.selected-range-days-start-end)').addClass('selected-range-days');
             }
@@ -1648,10 +1649,12 @@
 
         if (!setting.enableTimePicker) return;
 
+        if (setting.selectedDateToShow == undefined) setting.selectedDateToShow = new Date();
         hour = !isNumber(hour) ? setting.selectedDateToShow.getHours() : hour;
         minute = !isNumber(minute) ? setting.selectedDateToShow.getMinutes() : minute;
         second = !isNumber(second) ? setting.selectedDateToShow.getSeconds() : second;
 
+        if (setting.selectedDate == undefined) setting.selectedDate = new Date();
         setting.selectedDate = new Date(setting.selectedDate.setHours(hour));
         setting.selectedDate = new Date(setting.selectedDate.setMinutes(minute));
         setting.selectedDate = new Date(setting.selectedDate.setSeconds(second));
