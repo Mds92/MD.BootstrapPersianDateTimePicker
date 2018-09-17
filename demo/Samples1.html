@@ -28,7 +28,8 @@ $('#date1').MdPersianDateTimePicker({
     targetTextSelector: '#inputDate1',
     targetDateSelector: '#inputDate1-1',
     isGregorian: false,
-    enableTimePicker: true
+    enableTimePicker: true,
+    disableBeforeToday: true
 });
                 </pre>
                 <div class="input-group">
@@ -148,15 +149,16 @@ $('#date6').MdPersianDateTimePicker({
         </div>
     </div>
 
-    <script src="../src/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script>
-    <!-- <script src="../dist/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script> -->
+    <!-- <script src="../src/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script> -->
+    <script src="../dist/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script>
 
     <script type="text/javascript">
         $('#date1').MdPersianDateTimePicker({
             targetTextSelector: '#inputDate1',
             targetDateSelector: '#inputDate1-1',
             isGregorian: false,
-            enableTimePicker: true
+            enableTimePicker: true,
+            disableBeforeToday: true
         });
 
         $('#date2').MdPersianDateTimePicker({
