@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.1.8
+ * version : 3.1.9
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -596,10 +596,10 @@
             else
                 amPm = 'ب.ظ';
         } else
-        if (isGregorian)
-            amPm = 'AM';
-        else
-            amPm = 'ق.ظ';
+            if (isGregorian)
+                amPm = 'AM';
+            else
+                amPm = 'ق.ظ';
         return amPm;
     }
 
@@ -1738,6 +1738,7 @@
                 if (setting.enableTimePicker && !setting.format) setting.format = 'yyyy/MM/dd   HH:mm:ss';
                 else if (!setting.enableTimePicker && !setting.format) setting.format = 'yyyy/MM/dd';
                 $this.data(mdPluginName, setting);
+                if (setting.selectedDate != undefined) setSelectedData(setting);
                 // نمایش تقویم
                 if (setting.inLine) {
                     $this.append(getDateTimePickerHtml(setting));
