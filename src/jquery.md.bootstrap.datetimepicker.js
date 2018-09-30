@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.1.9
+ * version : 3.2.0
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -454,12 +454,19 @@
         $container.html(calendarHtml);
     }
 
-    function getSelectedDateTimeText(setting) {
+    function getSelectedDateTimeTextFormatted(setting) {
         if (setting.selectedDate == undefined) return '';
         if (setting.rangeSelector && setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined)
-            return getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.rangeSelectorStartDate) : getDateTimeJson1(setting.rangeSelectorStartDate), setting.format, setting.isGregorian, setting.englishNumber) + ' - ' +
-                getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.rangeSelectorEndDate) : getDateTimeJson1(setting.rangeSelectorEndDate), setting.format, setting.isGregorian, setting.englishNumber);
-        return getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.selectedDate) : getDateTimeJson1(setting.selectedDate), setting.format, setting.isGregorian, setting.englishNumber);
+            return getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.rangeSelectorStartDate) : getDateTimeJson1(setting.rangeSelectorStartDate), setting.textFormat, setting.isGregorian, setting.englishNumber) + ' - ' +
+                getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.rangeSelectorEndDate) : getDateTimeJson1(setting.rangeSelectorEndDate), setting.textFormat, setting.isGregorian, setting.englishNumber);
+        return getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.selectedDate) : getDateTimeJson1(setting.selectedDate), setting.textFormat, setting.isGregorian, setting.englishNumber);
+    }
+    function getSelectedDateTimeFormatted(setting) {
+        if (setting.selectedDate == undefined) return '';
+        if (setting.rangeSelector && setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined)
+            return getDateTimeString(getDateTimeJson1(setting.rangeSelectorStartDate), setting.dateFormat, setting.isGregorian, true) + ' - ' +
+                getDateTimeString(getDateTimeJson1(setting.rangeSelectorEndDate), setting.dateFormat, setting.isGregorian, true);
+        return getDateTimeString(getDateTimeJson1(setting.selectedDate), setting.dateFormat, setting.isGregorian, true);
     }
 
     function setSelectedData(setting) {
@@ -467,26 +474,21 @@
         if ($targetText.length > 0) {
             switch ($targetText[0].tagName.toLowerCase()) {
                 case 'input':
-                    $targetText.val(getSelectedDateTimeText(setting));
+                    $targetText.val(getSelectedDateTimeTextFormatted(setting));
                     break;
                 default:
-                    $targetText.text(getSelectedDateTimeText(setting));
+                    $targetText.text(getSelectedDateTimeTextFormatted(setting));
                     break;
             }
         }
         var $targetDate = $(setting.targetDateSelector);
         if ($targetDate.length > 0) {
-            var dateTimeString = '';
-            if (setting.selectedDate != undefined) {
-                var dateTimeJson = getDateTimeJson1(setting.selectedDate);
-                dateTimeString = `${dateTimeJson.year}/${dateTimeJson.month}/${dateTimeJson.day}   ${dateTimeJson.hour}:${dateTimeJson.minute}:${dateTimeJson.second}`;
-            }
             switch ($targetDate[0].tagName.toLowerCase()) {
                 case 'input':
-                    $targetDate.val(dateTimeString);
+                    $targetDate.val(getSelectedDateTimeFormatted(setting));
                     break;
                 default:
-                    $targetDate.text(dateTimeString);
+                    $targetDate.text(getSelectedDateTimeFormatted(setting));
                     break;
             }
         }
@@ -1703,7 +1705,8 @@
                         fromDate: false,
                         groupId: '',
                         disabled: false,
-                        format: '',
+                        textFormat: '',
+                        dateFormat: '',
                         isGregorian: false,
                         inLine: false,
                         selectedDate: undefined,
@@ -1735,8 +1738,10 @@
                 if (setting.toDate && setting.fromDate) throw new Error(`MdPersianDateTimePicker => You can not set true 'toDate' and 'fromDate' together`);
                 if (!setting.groupId && (setting.toDate || setting.fromDate)) throw new Error(`MdPersianDateTimePicker => When you set 'toDate' or 'fromDate' true, you have to set 'groupId'`);
                 if (setting.disable) $this.attr('disabled', '');
-                if (setting.enableTimePicker && !setting.format) setting.format = 'yyyy/MM/dd   HH:mm:ss';
-                else if (!setting.enableTimePicker && !setting.format) setting.format = 'yyyy/MM/dd';
+                if (setting.enableTimePicker && !setting.textFormat) setting.textFormat = 'yyyy/MM/dd   HH:mm:ss';
+                else if (!setting.enableTimePicker && !setting.textFormat) setting.textFormat = 'yyyy/MM/dd';
+                if (setting.enableTimePicker && !setting.dateFormat) setting.dateFormat = 'yyyy/MM/dd   HH:mm:ss';
+                else if (!setting.enableTimePicker && !setting.dateFormat) setting.dateFormat = 'yyyy/MM/dd';
                 $this.data(mdPluginName, setting);
                 if (setting.selectedDate != undefined) setSelectedData(setting);
                 // نمایش تقویم
@@ -1771,7 +1776,7 @@
             });
         },
         getText: function () {
-            return getSelectedDateTimeText(getSetting2($(this)));
+            return getSelectedDateTimeTextFormatted(getSetting2($(this)));
         },
         getDate: function () {
             return getSetting2($(this)).selectedDate;

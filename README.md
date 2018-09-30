@@ -47,7 +47,8 @@ Name | Values | Description | Sample
 **fromDate** | [false], true | When you want to set date picker as `fromDate` to enable date range selecting
 **groupId** | String | When you want to use `toDate`, `fromDate` you have to enter a group id to specify date time pickers| 'dateRangeSelector1'
 **disabled** | [false], true | Disable date time picker 
-**format** | String | date selecting string format | 'yyyy/MM/dd HH:mm:ss'
+**textFormat** | String | format of selected date to show into `targetTextSelector` | 'yyyy/MM/dd HH:mm:ss'
+**dateFormat** | String | format of selected date to save into `targetDateSelector` | 'yyyy/MM/dd HH:mm:ss'
 **isGregorian** | [false], true | Is calendar Gregorian 
 **inLine** | [false], true | Is date time picker in line 
 **selectedDate** | [undefined], new Date() | Selected date as JavaScript Date object | new Date('2018/9/30')
