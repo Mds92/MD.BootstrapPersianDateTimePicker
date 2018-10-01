@@ -32,11 +32,6 @@ $('#date1').MdPersianDateTimePicker({
     enableTimePicker: true,
     disableBeforeToday: true
 });
-$('#inputDate1').on('change', function(){
-    // to clear date
-    var $this = $(this);
-    if(!$this.val()) $('#date1').MdPersianDateTimePicker('clearDate');
-});
                 </pre>
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -167,11 +162,6 @@ $('#date6').MdPersianDateTimePicker({
             isGregorian: false,
             enableTimePicker: true,
             disableBeforeToday: true
-        });
-        $('#inputDate1').on('change', function(){
-            // to clear date
-            var $this = $(this);
-            if(!$this.val()) $('#date1').MdPersianDateTimePicker('clearDate');
         });
 
         $('#date2').MdPersianDateTimePicker({

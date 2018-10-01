@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.2.1
+ * version : 3.2.3
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -10,14 +10,6 @@
  * My weblog: mds-soft.persianblog.ir
  */
 
-// TODO: اضافه کردن فانکشن زیر
-// setDateRange برای ست کردن رنج تاریخی
-// اگر rangeSelector
-// ترو بود، بیاد startDate, endDate
-// مقدار دهی کنه و اگر toDate, fromDate
-// ست شده بود بیاد اونا رو مقدار بده
-
-// TODO: اضافه کردن قابلیت پارس کردن محتوای اولیه موجود در پیکر برای مقدار دهی تاریخ انتخاب شده
 
 (function ($) {
 
@@ -957,7 +949,7 @@
                 break;
         }
 
-        return getDateTimeJsonPersian2(numericYear, numericMonth, numericDay, numericHour, numericMinute, numericSecond, numericMiliSecond);
+        return getDateTime1(numericYear, numericMonth, numericDay, numericHour, numericMinute, numericSecond, numericMiliSecond);
     }
 
     function parseGregorianDateTime(gregorianDateTimeString) {
@@ -972,6 +964,12 @@
             return dateTime;
         }
         return new Date(gregorianDateTimeString);
+    }
+
+    function parseDateTime(value, setting) {
+        if (!value) return undefined;
+        if (setting.isGregorian) return parseGregorianDateTime(value);
+        return parsePersianDateTime(value);
     }
 
     // Get Html of calendar
@@ -1773,6 +1771,25 @@
                         }, 10);
                     });
                 }
+                $(document).on('change', setting.targetTextSelector, function () {
+                    var $this1 = $(this),
+                        value1 = $this1.val();
+                    if (!value1) {
+                        $this.MdPersianDateTimePicker('clearDate');
+                        return;
+                    }
+                    try {
+                        if (!setting.rangeSelector)
+                            $this.MdPersianDateTimePicker('setDate', parseDateTime(value1, setting));
+                        else {
+                            let dateValues = value1.split(' - ');
+                            $this.MdPersianDateTimePicker('setDateRange', parseDateTime(dateValues[0], setting), parseDateTime(dateValues[1], setting));
+                        }
+                    }
+                    catch (e) {
+                        setSelectedData(setting);
+                    }
+                });
             });
         },
         getText: function () {
@@ -1796,6 +1813,35 @@
             setting.selectedDate = getClonedDate(dateTimeObject);
             setSetting2($this, setting);
             setSelectedData(setting);
+        },
+        setDateRange: function (startDateTimeObject, endDateTimeObject) {
+            if (startDateTimeObject == undefined || endDateTimeObject == undefined) throw new Error('MdPersianDateTimePicker => setDateRange => مقدار ورودی نا معتبر است');
+            if (startDateTimeObject.getTime() >= endDateTimeObject.getTime()) throw new Error('MdPersianDateTimePicker => setDateRange => مقدار ورودی نا معتبر است, تاریخ شروع باید بزرگتر از تاریخ پایان باشد');
+            var $this = $(this),
+                setting = getSetting2($this);
+            if (setting.rangeSelector) {
+                setting.selectedDate = startDateTimeObject;
+                setting.rangeSelectorStartDate = startDateTimeObject;
+                setting.rangeSelectorEndDate = endDateTimeObject;
+                setSetting2($this, setting);
+                setSelectedData(setting);
+            }
+            else if ((setting.fromDate || setting.toDate) && setting.groupId) {
+                var $toDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]'),
+                    $fromDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]');
+                if ($fromDateElement.length > 0) {
+                    var fromDateSetting = getSetting2($fromDateElement);
+                    fromDateSetting.selectedDate = startDateTimeObject;
+                    setSetting2($fromDateElement, fromDateSetting);
+                    setSelectedData(fromDateSetting);
+                }
+                if ($toDateElement.length > 0) {
+                    var toDateSetting = getSetting2($toDateElement);
+                    toDateSetting.selectedDate = endDateTimeObject;
+                    setSetting2($toDateElement, toDateSetting);
+                    setSelectedData(toDateSetting);
+                }
+            }
         },
         clearDate: function () {
             var $this = $(this),

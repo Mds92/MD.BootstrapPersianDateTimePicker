@@ -97,6 +97,7 @@ Name | Return | Description | Sample
 **getDate** | Date | Get selected date | $('#id').MdPersianDateTimePicker('getDate');
 **getDateRange** | [fromDate, toDate]: Date[] | Get selected date range | $('#id').MdPersianDateTimePicker('getDateRange');
 **setDate** | void | Set selected datetime with Date object argument | $('#id').MdPersianDateTimePicker('setDate', new Date(2018, 11, 12));
+**setDateRange** | void | Set selected datetime range with Date object argument | $('#id').MdPersianDateTimePicker('setDateRange', new Date(2018, 11, 01), new Date(2018, 11, 12));
 **clearDate** | void | clear selected date | $('#id').MdPersianDateTimePicker('clearDate');
 **setDatePersian** | void | Set selected datetime with persian json argument | $('#id').MdPersianDateTimePicker('setDatePersian', {year: 1397, month: 1, day: 1, hour: 0, minute: 0, second: 0});
 **hide** | void | Hide date time picker | $('#id').MdPersianDateTimePicker('hide');

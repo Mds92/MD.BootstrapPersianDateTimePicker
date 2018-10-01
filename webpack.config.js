@@ -14,7 +14,7 @@ module.exports = {
   output: {
     filename: '[name].js'
   },
-  watch: false,
+  watch: true,
   devServer: {
     lazy: false,
     watchContentBase: true
@@ -76,7 +76,7 @@ module.exports = {
       banner: `
 Bootstrap 4+ Persian Date Time Picker jQuery Plugin
 https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
-version : 3.2.1
+version : 3.2.3
 Written By Mohammad Dayyan, Mordad 1397
 mds.soft@gmail.com - @mdssoft
 
