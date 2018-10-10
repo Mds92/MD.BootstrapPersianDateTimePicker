@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.2.3
+ * version : 3.2.4
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -212,7 +212,7 @@
         </tbody>
         <tfoot>
             <tr {{timePickerAttribute}}>
-                <td colspan="100">
+                <td colspan="100" class="border-0">
                     <table class="table table-sm table-borderless">
                         <tbody>
                             <tr>
@@ -242,11 +242,11 @@
 </div>`;
 
     var dateTimePickerMonthTableHtmlTemplate = `
-<td style="{{monthTdStyle}}" {{monthTdAttribute}} data-td-month>
+<td class="border-0" style="{{monthTdStyle}}" {{monthTdAttribute}} data-td-month>
 	<table class="table table-sm table-striped table-borderless">
 		<thead>
 			<tr {{monthNameAttribute}}>
-				<th colspan="100">
+				<th colspan="100" class="border-0">
 					<table class="table table-sm table-borderless">
 						<thead>
 							<tr>
@@ -259,7 +259,7 @@
 				</th>
 			</tr>
 			<tr {{theadSelectDateButtonTrAttribute}}>
-                <td colspan="100">
+                <td colspan="100" class="border-0">
                     <table class="table table-sm table-borderless">
                         <tr>
                             <th>
@@ -1195,6 +1195,7 @@
                 selectMonth12ButtonCssClass: '',
             },
             holiDaysDateNumbers = [],
+            disabledDatesNumber = [],
             disableBeforeDateTimeJson = {},
             disableAfterDateTimeJson = {},
             previousYearButtonDisabledAttribute = '',
@@ -1228,6 +1229,9 @@
             for (i = 0; i < setting.holiDays.length; i++) {
                 holiDaysDateNumbers.push(convertToNumber1(getDateTimeJson1(setting.holiDays[i])));
             }
+            for (i = 0; i < setting.disabledDates.length; i++) {
+                disabledDatesNumber.push(convertToNumber1(getDateTimeJson1(setting.disabledDates[i])));
+            }
         } else {
             dateTimeToShowJson = getDateTimeJsonPersian1(selectedDateToShowTemp);
             todayDateTimeJson = getDateTimeJsonPersian1(new Date());
@@ -1252,6 +1256,9 @@
             }
             for (i = 0; i < setting.holiDays.length; i++) {
                 holiDaysDateNumbers.push(convertToNumber1(getDateTimeJsonPersian1(setting.holiDays[i])));
+            }
+            for (i = 0; i < setting.disabledDates.length; i++) {
+                disabledDatesNumber.push(convertToNumber1(getDateTimeJsonPersian1(setting.disabledDates[i])));
             }
         }
 
@@ -1426,12 +1433,9 @@
                         monthsDateNumberAndAttr['selectMonth' + j.toString() + 'ButtonCssClass'] = 'disabled';
                 }
             }
-            if (setting.disabledDates.length > 0) {
-                for (j = 0; j < setting.disabledDates.length; j++) {
-                    var disabledDattenumber = convertToNumber1(setting.disabledDates[j]);
-                    if (currentDateNumber == disabledDattenumber)
-                        $td.attr('disabled', '');
-                }
+            for (j = 0; j < disabledDatesNumber.length; j++) {
+                if (currentDateNumber == disabledDatesNumber[j]) 
+                    $td.attr('disabled', '');
             }
             // \\
 
@@ -1751,7 +1755,7 @@
                         content: '',
                         html: true,
                         placement: setting.placement,
-                        title: 'انتخاب تاریخ',
+                        title: ' ',
                         trigger: 'manual',
                         template: popverHtmlTemplate,
                     }).on(setting.trigger, function () {
