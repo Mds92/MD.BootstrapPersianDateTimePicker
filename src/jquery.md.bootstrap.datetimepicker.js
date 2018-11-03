@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.2.5
+ * version : 3.2.6
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -467,9 +467,11 @@
             switch ($targetText[0].tagName.toLowerCase()) {
                 case 'input':
                     $targetText.val(getSelectedDateTimeTextFormatted(setting));
+                    $targetText.trigger('change');
                     break;
                 default:
                     $targetText.text(getSelectedDateTimeTextFormatted(setting));
+                    $targetText.trigger('change');
                     break;
             }
         }
@@ -478,9 +480,11 @@
             switch ($targetDate[0].tagName.toLowerCase()) {
                 case 'input':
                     $targetDate.val(getSelectedDateTimeFormatted(setting));
+                    $targetDate.trigger('change');
                     break;
                 default:
                     $targetDate.text(getSelectedDateTimeFormatted(setting));
+                    $targetDate.trigger('change');
                     break;
             }
         }
@@ -1434,7 +1438,7 @@
                 }
             }
             for (j = 0; j < disabledDatesNumber.length; j++) {
-                if (currentDateNumber == disabledDatesNumber[j]) 
+                if (currentDateNumber == disabledDatesNumber[j])
                     $td.attr('disabled', '');
             }
             // \\
