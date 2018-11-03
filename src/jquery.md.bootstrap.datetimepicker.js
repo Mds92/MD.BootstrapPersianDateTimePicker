@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.2.6
+ * version : 3.2.7
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -339,6 +339,7 @@
         hourText = 'Hour',
         minuteText = 'Minute',
         secondText = 'Second',
+        triggerChangeCalling = false,
         amPm = {
             am: 0,
             pm: 1,
@@ -467,10 +468,12 @@
             switch ($targetText[0].tagName.toLowerCase()) {
                 case 'input':
                     $targetText.val(getSelectedDateTimeTextFormatted(setting));
+                    triggerChangeCalling = true;
                     $targetText.trigger('change');
                     break;
                 default:
                     $targetText.text(getSelectedDateTimeTextFormatted(setting));
+                    triggerChangeCalling = true;
                     $targetText.trigger('change');
                     break;
             }
@@ -480,10 +483,12 @@
             switch ($targetDate[0].tagName.toLowerCase()) {
                 case 'input':
                     $targetDate.val(getSelectedDateTimeFormatted(setting));
+                    triggerChangeCalling = true;
                     $targetDate.trigger('change');
                     break;
                 default:
                     $targetDate.text(getSelectedDateTimeFormatted(setting));
+                    triggerChangeCalling = true;
                     $targetDate.trigger('change');
                     break;
             }
@@ -1779,7 +1784,11 @@
                         }, 10);
                     });
                 }
-                $(document).on('change', setting.targetTextSelector, function () {
+                $(document).on('change', setting.targetTextSelector, function () {                    
+                    if(triggerChangeCalling) {
+                        triggerChangeCalling = false;
+                        return;
+                    }
                     var $this1 = $(this),
                         value1 = $this1.val();
                     if (!value1) {
