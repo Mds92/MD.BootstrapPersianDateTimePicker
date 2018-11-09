@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.2.7
+ * version : 3.2.8
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -1830,6 +1830,13 @@
             setting.selectedDate = getClonedDate(dateTimeObject);
             setSetting2($this, setting);
             setSelectedData(setting);
+        },
+        setOption: function (name, value) {
+            if (!name) throw new Error('MdPersianDateTimePicker => setOption => name parameter مقدار ورودی نا معتبر است');
+            var $this = $(this),
+                setting = getSetting2($this);
+            setting[name] = value;
+            setSetting2($this, setting);
         },
         setDateRange: function (startDateTimeObject, endDateTimeObject) {
             if (startDateTimeObject == undefined || endDateTimeObject == undefined) throw new Error('MdPersianDateTimePicker => setDateRange => مقدار ورودی نا معتبر است');
