@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.2.8
+ * version : 3.2.9
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -1780,6 +1780,7 @@
                                 selectedDateString = $(calendarHtml).find('[data-selecteddatestring]').text().trim();
                             $('#' + $this.attr('aria-describedby')).find('[data-name="mds-datetimepicker-title"]').html(selectedDateString);
                             $('#' + $this.attr('aria-describedby')).find('[data-name="mds-datetimepicker-popoverbody"]').html(calendarHtml);
+                            $this.popover('update');
                             triggerStart = false;
                         }, 10);
                     });
