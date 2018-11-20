@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.3.0
+ * version : 3.3.1
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -454,6 +454,7 @@
                 getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.rangeSelectorEndDate) : getDateTimeJson1(setting.rangeSelectorEndDate), setting.textFormat, setting.isGregorian, setting.englishNumber);
         return getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.selectedDate) : getDateTimeJson1(setting.selectedDate), setting.textFormat, setting.isGregorian, setting.englishNumber);
     }
+
     function getSelectedDateTimeFormatted(setting) {
         if (setting.selectedDate == undefined) return '';
         if (setting.rangeSelector && setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined)
@@ -599,10 +600,10 @@
             else
                 amPm = 'ب.ظ';
         } else
-            if (isGregorian)
-                amPm = 'AM';
-            else
-                amPm = 'ق.ظ';
+        if (isGregorian)
+            amPm = 'AM';
+        else
+            amPm = 'ق.ظ';
         return amPm;
     }
 
@@ -1735,6 +1736,19 @@
                         rangeSelectorEndDate: undefined
                     }, options);
                 $this.attr(mdDatePickerFlag, '');
+                if (setting.targetDateSelector) {
+                    var targetValue = $(setting.targetDateSelector).val();
+                    if (targetValue) {
+                        setting.selectedDate = new Date(Date.parse(targetValue));
+                        setting.selectedDateToShow = getClonedDate(setting.selectedDate);
+                    }
+                } else if (setting.targetTextSelector) {
+                    var textValue = $(setting.targetTextSelector).val();
+                    if (textValue) {
+                        setting.selectedDate = parseDateTime(textValue, setting);
+                        setting.selectedDateToShow = getClonedDate(setting.selectedDate);
+                    }
+                }
                 if (setting.rangeSelector) {
                     setting.fromDate = false;
                     setting.toDate = false;
@@ -1785,8 +1799,8 @@
                         }, 10);
                     });
                 }
-                $(document).on('change', setting.targetTextSelector, function () {                    
-                    if(triggerChangeCalling) {
+                $(document).on('change', setting.targetTextSelector, function () {
+                    if (triggerChangeCalling) {
                         triggerChangeCalling = false;
                         return;
                     }
@@ -1803,8 +1817,7 @@
                             let dateValues = value1.split(' - ');
                             $this.MdPersianDateTimePicker('setDateRange', parseDateTime(dateValues[0], setting), parseDateTime(dateValues[1], setting));
                         }
-                    }
-                    catch (e) {
+                    } catch (e) {
                         setSelectedData(setting);
                     }
                 });
@@ -1850,8 +1863,7 @@
                 setting.rangeSelectorEndDate = endDateTimeObject;
                 setSetting2($this, setting);
                 setSelectedData(setting);
-            }
-            else if ((setting.fromDate || setting.toDate) && setting.groupId) {
+            } else if ((setting.fromDate || setting.toDate) && setting.groupId) {
                 var $toDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]'),
                     $fromDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]');
                 if ($fromDateElement.length > 0) {
