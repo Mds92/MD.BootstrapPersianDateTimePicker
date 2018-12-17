@@ -323,6 +323,7 @@
 </td>
     `;
 
+    triggerChangeCalling = false;
     var previousYearTextPersian = 'سال قبل',
         previousMonthTextPersian = 'ماه قبل',
         nextYearTextPersian = 'سال بعد',
@@ -339,7 +340,6 @@
         hourText = 'Hour',
         minuteText = 'Minute',
         secondText = 'Second',
-        triggerChangeCalling = false,
         amPm = {
             am: 0,
             pm: 1,
@@ -1733,7 +1733,7 @@
                         disableAfterDate: undefined,
                         rangeSelector: false,
                         rangeSelectorStartDate: undefined,
-                        rangeSelectorEndDate: undefined
+                        rangeSelectorEndDate: undefined                        
                     }, options);
                 $this.attr(mdDatePickerFlag, '');
                 if (setting.targetDateSelector) {
@@ -1801,7 +1801,9 @@
                 }
                 $(document).on('change', setting.targetTextSelector, function () {
                     if (triggerChangeCalling) {
-                        triggerChangeCalling = false;
+                        setTimeout(function(){
+                            triggerChangeCalling = false;
+                        }, 100);
                         return;
                     }
                     var $this1 = $(this),
