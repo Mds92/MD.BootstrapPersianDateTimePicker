@@ -183,12 +183,12 @@
         mdPluginName = 'MdPersianDateTimePicker',
         triggerStart = false;
 
-    var popverHtmlTemplate = `
-<div class="popover mds-bootstrap-persian-datetime-picker-popover" role="tooltip" ${mdDatePickerPopoverFlag}>
-    <div class="arrow"></div>
-    <h3 class="popover-header text-center" data-name="mds-datetimepicker-title"></h3>
+    var popverHtmlTemplate = `<div class="popover mds-bootstrap-persian-datetime-picker-popover" role="tooltip" ${mdDatePickerPopoverFlag}>    
+    <div class="arrow"></div>    
+    <h3 class="popover-header text-center" data-name="mds-datetimepicker-title"></h3>    
     <div class="popover-body p-0" data-name="mds-datetimepicker-popoverbody"></div>
-</div>`;
+</div>
+    `;
 
     var dateTimePickerHtmlTemplate = `
 <div class="mds-bootstrap-persian-datetime-picker-container {{rtlCssClass}}" ${mdDatePickerContainerFlag}>

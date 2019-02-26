@@ -5,17 +5,14 @@
     <meta charset="utf-8" />
     <title>Persian DateTime</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
     <link rel="stylesheet" href="demo.css" />
     <link rel="stylesheet" href="../dist/jquery.md.bootstrap.datetimepicker.style.css" />
 
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -42,10 +39,10 @@ $('#date1').MdPersianDateTimePicker({
                     <div class="input-group-prepend">
                         <span class="input-group-text cursor-pointer" id="date1">Icon</span>
                     </div>
-                    <input type="text" id="inputDate1" class="form-control" placeholder="Persian Calendar Text" aria-label="date1"
-                        aria-describedby="date1">
-                    <input type="text" id="inputDate1-1" class="form-control" placeholder="Persian Calendar Date" aria-label="date11"
-                        aria-describedby="date11">
+                    <input type="text" id="inputDate1" class="form-control" placeholder="Persian Calendar Text"
+                        aria-label="date1" aria-describedby="date1">
+                    <input type="text" id="inputDate1-1" class="form-control" placeholder="Persian Calendar Date"
+                        aria-label="date11" aria-describedby="date11">
                 </div>
             </div>
             <div class="col-sm-6">
@@ -157,7 +154,7 @@ $('#date6').MdPersianDateTimePicker({
         </div>
     </div>
 
-    <script src="../src/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script> 
+    <script src="../src/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script>
     <!-- <script src="../dist/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script> -->
 
     <script type="text/javascript">
@@ -168,7 +165,9 @@ $('#date6').MdPersianDateTimePicker({
             isGregorian: false,
             enableTimePicker: true,
             disableBeforeToday: true,
-            disabledDates: [new Date(), new Date(2018, 9, 11), new Date(2018, 9, 12), new Date(2018, 9, 13), new Date(2018, 9, 14)]
+            disabledDates: [new Date(), new Date(2018, 9, 11), new Date(2018, 9, 12), new Date(2018, 9, 13),
+                new Date(2018, 9, 14)
+            ]
         });
 
         $('#date2').MdPersianDateTimePicker({
