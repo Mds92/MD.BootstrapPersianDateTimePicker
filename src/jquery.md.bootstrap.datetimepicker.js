@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.3.7
+ * version : 3.3.8
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -183,7 +183,8 @@
         mdPluginName = 'MdPersianDateTimePicker',
         triggerStart = false;
 
-    var popverHtmlTemplate = `<div class="popover mds-bootstrap-persian-datetime-picker-popover" role="tooltip" ${mdDatePickerPopoverFlag}>    
+    var popverHtmlTemplate = `
+<div class="popover mds-bootstrap-persian-datetime-picker-popover" role="tooltip" ${mdDatePickerPopoverFlag}>    
     <div class="arrow"></div>    
     <h3 class="popover-header text-center" data-name="mds-datetimepicker-title"></h3>    
     <div class="popover-body p-0" data-name="mds-datetimepicker-popoverbody"></div>
@@ -1784,6 +1785,7 @@
                         title: ' ',
                         trigger: 'manual',
                         template: popverHtmlTemplate,
+                        sanitize: false,
                     }).on(setting.trigger, function () {
                         triggerStart = true;
                         $this = $(this);
