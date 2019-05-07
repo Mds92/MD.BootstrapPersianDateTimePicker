@@ -449,7 +449,7 @@
             $popoverDescriber = $('[aria-describedby="' + $popoverDescriber.attr('id') + '"]');
         }
         return $popoverDescriber;
-    }   
+    }
 
     function getSetting1($element) {
         return getPopoverDescriber($element).data(mdPluginName);
@@ -460,7 +460,7 @@
     }
 
     function setPopoverHeaderHtml(htmlString) {
-        $(mdDatePickerPopoverSelector).find('[data-name="mds-datetimepicker-title"]').html(htmlString);        
+        $(mdDatePickerPopoverSelector).find('[data-name="mds-datetimepicker-title"]').html(htmlString);
     }
 
     function setSetting1($element, setting) {
@@ -1463,12 +1463,14 @@
                 break;
             }
 
-            // روز جمعه
-            if (!setting.isGregorian && tdNumber == 6)
+            // روز جمعه شمسی
+            if (!setting.isGregorian && tdNumber == 6) {
                 $td.addClass('text-danger');
-            // روز یکشنبه
-            else if (setting.isGregorian && tdNumber == 0)
+            }
+            // روز یکشنبه میلادی
+            else if (setting.isGregorian && tdNumber == 0) {
                 $td.addClass('text-danger');
+            }
 
             // روزهای غیر فعال شده
             if (setting.disableBeforeToday) {
@@ -1534,6 +1536,9 @@
             for (j = 0; j < disabledDatesNumber.length; j++) {
                 if (currentDateNumber == disabledDatesNumber[j])
                     $td.attr('disabled', '');
+            }
+            if (setting.disabledDays && setting.disabledDays.indexOf(tdNumber) >= 0) {
+                $td.attr('disabled', '');
             }
             // \\
 
@@ -1849,6 +1854,7 @@
                         yearOffset: 15,
                         holiDays: [],
                         disabledDates: [],
+                        disabledDays: [],
                         disableBeforeToday: false,
                         disableAfterToday: false,
                         disableBeforeDate: undefined,

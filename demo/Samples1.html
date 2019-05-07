@@ -31,7 +31,8 @@ $('#date1').MdPersianDateTimePicker({
         new Date(2018, 9, 11), 
         new Date(2018, 9, 12), 
         new Date(2018, 9, 13), 
-        new Date(2018, 9, 14)]
+        new Date(2018, 9, 14)],
+    disabledDays: [5, 6]
 });
                 </pre>
                 <div class="input-group">
@@ -153,8 +154,8 @@ $('#date6').MdPersianDateTimePicker({
         </div>
     </div>
 
-    <script src="../src/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script>
-    <!-- <script src="../dist/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script> -->
+    <!-- <script src="../src/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script> -->
+    <script src="../dist/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script>
 
     <script type="text/javascript">
         $('#date1').MdPersianDateTimePicker({
@@ -166,7 +167,8 @@ $('#date6').MdPersianDateTimePicker({
             disableBeforeToday: true,
             disabledDates: [new Date(), new Date(2018, 9, 11), new Date(2018, 9, 12), new Date(2018, 9, 13),
                 new Date(2018, 9, 14)
-            ]
+            ],
+            disabledDays: [5, 6]
         });
 
         $('#date2').MdPersianDateTimePicker({
@@ -177,7 +179,7 @@ $('#date6').MdPersianDateTimePicker({
 
         $('#date3').MdPersianDateTimePicker({
             targetTextSelector: '#inputDate3',
-            monthsToShow: [1, 1]
+            monthsToShow: [1, 1],
         });
         $('#date3-1').MdPersianDateTimePicker({
             targetTextSelector: '#inputDate3-1',
