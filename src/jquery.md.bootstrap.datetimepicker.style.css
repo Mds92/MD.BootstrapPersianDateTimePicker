@@ -15,7 +15,8 @@
     direction: rtl;
 }
 
-.mds-bootstrap-persian-datetime-picker-container .select-year-box {
+.mds-bootstrap-persian-datetime-picker-container .select-year-box,
+.mds-bootstrap-persian-datetime-picker-container .select-year-inline-box {
     position: absolute;
     left: 0;
     top: 0;
@@ -29,7 +30,12 @@
     z-index: 9999999;
 }
 
-.mds-bootstrap-persian-datetime-picker-container .select-year-box.w-0 {
+.mds-bootstrap-persian-datetime-picker-container .select-year-box.inline {
+    top: 23px !important;
+}
+
+.mds-bootstrap-persian-datetime-picker-container .select-year-box.w-0,
+.mds-bootstrap-persian-datetime-picker-container .select-year-inline-box.w-0 {
     height: 0;
 }
 
@@ -62,13 +68,15 @@
     margin-bottom: 0;
 }
 
-.mds-bootstrap-persian-datetime-picker-container table th, .mds-bootstrap-persian-datetime-picker-container table td {
+.mds-bootstrap-persian-datetime-picker-container table th,
+.mds-bootstrap-persian-datetime-picker-container table td {
     padding: 1px;
     font-size: 14px;
     text-align: center;
 }
 
-.mds-bootstrap-persian-datetime-picker-container table tbody td[data-next-month] .btn, .mds-bootstrap-persian-datetime-picker-container table tbody td[data-prev-month] .btn {
+.mds-bootstrap-persian-datetime-picker-container table tbody td[data-next-month] .btn,
+.mds-bootstrap-persian-datetime-picker-container table tbody td[data-prev-month] .btn {
     background: #fff;
     border: none;
     cursor: default;
@@ -128,19 +136,25 @@
     background-color: #d9f2e6;
 }
 
-.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-pm], .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-nm], .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[disabled] {
+.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-pm],
+.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-nm],
+.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[disabled] {
     cursor: default;
     opacity: 0.2;
     transition: none;
 }
 
-.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-pm]:hover, .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-nm]:hover, .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[disabled] {
+.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-pm]:hover,
+.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-nm]:hover,
+.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[disabled] {
     cursor: default;
     opacity: 0.3;
     transition: none;
 }
 
-.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-day]:hover, .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-nm]:hover, .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-pm]:hover {
+.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-day]:hover,
+.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-nm]:hover,
+.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-pm]:hover {
     background: #ccc;
 }
 

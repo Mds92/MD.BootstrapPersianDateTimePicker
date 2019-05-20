@@ -218,6 +218,8 @@
     var dateTimePickerHtmlTemplate = `
 <div class="mds-bootstrap-persian-datetime-picker-container {{rtlCssClass}}" ${mdDatePickerContainerFlag}>
 
+	<div class="select-year-inline-box w-0" data-name="dateTimePickerYearsButtonsContainer">        
+    </div>
     <div class="select-year-box w-0" data-name="dateTimePickerYearsToSelectContainer">        
     </div>
 
@@ -459,8 +461,14 @@
         return $popoverDescriber.data(mdPluginName);
     }
 
-    function setPopoverHeaderHtml(htmlString) {
-        $(mdDatePickerPopoverSelector).find('[data-name="mds-datetimepicker-title"]').html(htmlString);
+    function setPopoverHeaderHtml(isInLine, htmlString) {
+        if (!isInLine) {
+            $(mdDatePickerPopoverSelector).find('[data-name="mds-datetimepicker-title"]').html(htmlString);
+        } else {
+            var $inlineTitleBox = $(mdDatePickerFlagSelector).find('[data-name="dateTimePickerYearsButtonsContainer"]');
+            $inlineTitleBox.html(htmlString);
+            $inlineTitleBox.removeClass('w-0');
+        }
     }
 
     function setSetting1($element, setting) {
@@ -474,7 +482,7 @@
     function updateCalendarHtml1($element, setting) {
         var calendarHtml = getDateTimePickerHtml(setting),
             $container = setting.inLine ? $element.parents(mdDatePickerFlagSelector + ':first') : $element.parents('[data-name="mds-datetimepicker-popoverbody"]:first');
-        setPopoverHeaderHtml($(calendarHtml).find('[data-selecteddatestring]').text().trim());
+        setPopoverHeaderHtml(setting.inLine, $(calendarHtml).find('[data-selecteddatestring]').text().trim());
         $container.html(calendarHtml);
     }
 
@@ -1777,16 +1785,23 @@
             yearsToSelectObject = getYearsToSelectHtml(setting),
             yearsRangeText = ` ${yearsToSelectObject.yearStart} - ${yearsToSelectObject.yearEnd} `,
             popoverHeaderHtml = popoverHeaderSelectYearHtmlTemplate,
-            dateTimePickerYearsToSelectHtml = yearsToSelectObject.html;
+            dateTimePickerYearsToSelectHtml = yearsToSelectObject.html,
+            $mdDatePickerContainerSelector = $this.parents(mdDatePickerContainerSelector + ':first'),
+            $dateTimePickerYearsToSelectContainer = $mdDatePickerContainerSelector.find('[data-name="dateTimePickerYearsToSelectContainer"]');
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{rtlCssClass}}/img, setting.isGregorian ? '' : 'rtl');
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{yearsRangeText}}/img, setting.isGregorian ? yearsRangeText : toPersianNumber(yearsRangeText));
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{previousText}}/img, setting.isGregorian ? previousText : previousTextPersian);
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{nextText}}/img, setting.isGregorian ? nextText : nextTextPersian);
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{latestPreviousYear}}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearEnd : yearsToSelectObject.yearStart);
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{latestNextYear}}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearStart : yearsToSelectObject.yearEnd);
-        setPopoverHeaderHtml(popoverHeaderHtml);
-        $this.parents(mdDatePickerContainerSelector + ':first').find('[data-name="dateTimePickerYearsToSelectContainer"]').html(dateTimePickerYearsToSelectHtml);
-        $this.parents(mdDatePickerContainerSelector + ':first').find('.select-year-box').removeClass('w-0');
+        setPopoverHeaderHtml(setting.inLine, popoverHeaderHtml);
+        $dateTimePickerYearsToSelectContainer.html(dateTimePickerYearsToSelectHtml);
+        $dateTimePickerYearsToSelectContainer.removeClass('w-0');
+        if (setting.inLine) {
+            $dateTimePickerYearsToSelectContainer.addClass('inline');
+        } else {
+            $dateTimePickerYearsToSelectContainer.removeClass('inline');
+        }
     });
 
     // کلیک روی دکمه های عوض کردن رنج سال انتخابی
@@ -1805,7 +1820,7 @@
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{nextText}}/img, setting.isGregorian ? nextText : nextTextPersian);
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{latestPreviousYear}}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearEnd : yearsToSelectObject.yearStart);
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{latestNextYear}}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearStart : yearsToSelectObject.yearEnd);
-        setPopoverHeaderHtml(popoverHeaderHtml);
+        setPopoverHeaderHtml(setting.inLine, popoverHeaderHtml);
         $(mdDatePickerContainerSelector).find('[data-name="dateTimePickerYearsToSelectContainer"]').html(dateTimePickerYearsToSelectHtml);
     });
 
@@ -1923,7 +1938,7 @@
                         setTimeout(function () {
                             setting.selectedDateToShow = setting.selectedDate != undefined ? getClonedDate(setting.selectedDate) : new Date();
                             var calendarHtml = getDateTimePickerHtml(setting);
-                            setPopoverHeaderHtml($(calendarHtml).find('[data-selecteddatestring]').text().trim());
+                            setPopoverHeaderHtml(setting.inLine, $(calendarHtml).find('[data-selecteddatestring]').text().trim());
                             $('#' + $this.attr('aria-describedby')).find('[data-name="mds-datetimepicker-popoverbody"]').html(calendarHtml);
                             $this.popover('update');
                             triggerStart = false;
