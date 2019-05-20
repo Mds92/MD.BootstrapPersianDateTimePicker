@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.4.0
+ * version : 3.4.2
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -1768,6 +1768,10 @@
         hour = !isNumber(hour) ? setting.selectedDateToShow.getHours() : hour;
         minute = !isNumber(minute) ? setting.selectedDateToShow.getMinutes() : minute;
         second = !isNumber(second) ? setting.selectedDateToShow.getSeconds() : second;
+
+        setting.selectedDateToShow = new Date(setting.selectedDateToShow.setHours(hour));
+        setting.selectedDateToShow = new Date(setting.selectedDateToShow.setMinutes(minute));
+        setting.selectedDateToShow = new Date(setting.selectedDateToShow.setSeconds(second));
 
         if (setting.selectedDate == undefined) setting.selectedDate = new Date();
         setting.selectedDate = new Date(setting.selectedDate.setHours(hour));
