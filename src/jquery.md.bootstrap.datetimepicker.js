@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.4.3
+ * version : 3.4.4
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -461,11 +461,12 @@
         return $popoverDescriber.data(mdPluginName);
     }
 
-    function setPopoverHeaderHtml(isInLine, htmlString) {
+    function setPopoverHeaderHtml($element, isInLine, htmlString) {
+        // $element = المانی که روی آن فعالیتی انجام شده و باید عنوان تقویم آن عوض شود
         if (!isInLine) {
-            $(mdDatePickerPopoverSelector).find('[data-name="mds-datetimepicker-title"]').html(htmlString);
+            $element.parents(mdDatePickerPopoverSelector + ':first').find('[data-name="mds-datetimepicker-title"]').html(htmlString);
         } else {
-            var $inlineTitleBox = $(mdDatePickerFlagSelector).find('[data-name="dateTimePickerYearsButtonsContainer"]');
+            var $inlineTitleBox = $element.parents(mdDatePickerFlagSelector + ':first').find('[data-name="dateTimePickerYearsButtonsContainer"]');
             $inlineTitleBox.html(htmlString);
             $inlineTitleBox.removeClass('w-0');
         }
@@ -481,8 +482,10 @@
 
     function updateCalendarHtml1($element, setting) {
         var calendarHtml = getDateTimePickerHtml(setting),
-            $container = setting.inLine ? $element.parents(mdDatePickerFlagSelector + ':first') : $element.parents('[data-name="mds-datetimepicker-popoverbody"]:first');
-        setPopoverHeaderHtml(setting.inLine, $(calendarHtml).find('[data-selecteddatestring]').text().trim());
+            $container = setting.inLine ?
+            $element.parents(mdDatePickerFlagSelector + ':first') :
+            $element.parents('[data-name="mds-datetimepicker-popoverbody"]:first');
+        setPopoverHeaderHtml($element, setting.inLine, $(calendarHtml).find('[data-selecteddatestring]').text().trim());
         $container.html(calendarHtml);
     }
 
@@ -1151,11 +1154,11 @@
         if ((setting.fromDate || setting.toDate) && setting.groupId) {
             var $toDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]'),
                 $fromDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]');
-            if (setting.fromDate) {
+            if (setting.fromDate && $toDateElement.length > 0) {
                 var toDateSetting = getSetting2($toDateElement),
                     toDateSelectedDate = toDateSetting.selectedDate;
                 disableAfterDateTimeJson = !toDateSelectedDate ? undefined : setting.isGregorian ? getDateTimeJson1(toDateSelectedDate) : getDateTimeJsonPersian1(toDateSelectedDate);
-            } else if (setting.toDate) {
+            } else if (setting.toDate && $fromDateElement.length > 0) {
                 var fromDateSetting = getSetting2($fromDateElement),
                     fromDateSelectedDate = fromDateSetting.selectedDate;
                 disableBeforeDateTimeJson = !fromDateSelectedDate ? undefined : setting.isGregorian ? getDateTimeJson1(fromDateSelectedDate) : getDateTimeJsonPersian1(fromDateSelectedDate);
@@ -1372,11 +1375,11 @@
         if ((setting.fromDate || setting.toDate) && setting.groupId) {
             var $toDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]'),
                 $fromDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]');
-            if (setting.fromDate) {
+            if (setting.fromDate && $toDateElement.length > 0) {
                 var toDateSetting = getSetting2($toDateElement),
                     toDateSelectedDate = toDateSetting.selectedDate;
                 disableAfterDateTimeJson = !toDateSelectedDate ? undefined : setting.isGregorian ? getDateTimeJson1(toDateSelectedDate) : getDateTimeJsonPersian1(toDateSelectedDate);
-            } else if (setting.toDate) {
+            } else if (setting.toDate && $fromDateElement.length > 0) {
                 var fromDateSetting = getSetting2($fromDateElement),
                     fromDateSelectedDate = fromDateSetting.selectedDate;
                 disableBeforeDateTimeJson = !fromDateSelectedDate ? undefined : setting.isGregorian ? getDateTimeJson1(fromDateSelectedDate) : getDateTimeJsonPersian1(fromDateSelectedDate);
@@ -1697,7 +1700,21 @@
         setSetting1($this, setting);
         setSelectedData(setting);
         if (!setting.inLine) hidePopover($(mdDatePickerPopoverSelector));
-        else updateCalendarHtml1($this, setting);
+        else if (setting.inLine && (setting.toDate || setting.fromDate)) {
+            // وقتی در حالت این لاین هستیم و ' ار تاریخ ' تا تاریخ ' داریم
+            // وقتی روی روز یکی از تقویم ها کلیک می شود
+            // باید تقویم دیگر نیز تغییر کند و روزهایی از آن غیر فعال شود
+            var $toDateDayElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]').find('[data-day]:first'),
+                $fromDateDayElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]').find('[data-day]:first');
+            if (setting.fromDate && $toDateDayElement.length > 0) {
+                updateCalendarHtml1($toDateDayElement, getSetting1($toDateDayElement));
+            } else if (setting.toDate && $fromDateDayElement.length > 0) {
+                updateCalendarHtml1($fromDateDayElement, getSetting1($fromDateDayElement));
+            }
+            updateCalendarHtml1($this, setting);
+        } else {
+            updateCalendarHtml1($this, setting);
+        }
     });
 
     // هاور روی روزها
@@ -1798,7 +1815,7 @@
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{nextText}}/img, setting.isGregorian ? nextText : nextTextPersian);
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{latestPreviousYear}}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearEnd : yearsToSelectObject.yearStart);
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{latestNextYear}}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearStart : yearsToSelectObject.yearEnd);
-        setPopoverHeaderHtml(setting.inLine, popoverHeaderHtml);
+        setPopoverHeaderHtml($this, setting.inLine, popoverHeaderHtml);
         $dateTimePickerYearsToSelectContainer.html(dateTimePickerYearsToSelectHtml);
         $dateTimePickerYearsToSelectContainer.removeClass('w-0');
         if (setting.inLine) {
@@ -1824,7 +1841,7 @@
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{nextText}}/img, setting.isGregorian ? nextText : nextTextPersian);
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{latestPreviousYear}}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearEnd : yearsToSelectObject.yearStart);
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{latestNextYear}}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearStart : yearsToSelectObject.yearEnd);
-        setPopoverHeaderHtml(setting.inLine, popoverHeaderHtml);
+        setPopoverHeaderHtml($this, setting.inLine, popoverHeaderHtml);
         $(mdDatePickerContainerSelector).find('[data-name="dateTimePickerYearsToSelectContainer"]').html(dateTimePickerYearsToSelectHtml);
     });
 
@@ -1942,7 +1959,7 @@
                         setTimeout(function () {
                             setting.selectedDateToShow = setting.selectedDate != undefined ? getClonedDate(setting.selectedDate) : new Date();
                             var calendarHtml = getDateTimePickerHtml(setting);
-                            setPopoverHeaderHtml(setting.inLine, $(calendarHtml).find('[data-selecteddatestring]').text().trim());
+                            setPopoverHeaderHtml($this, setting.inLine, $(calendarHtml).find('[data-selecteddatestring]').text().trim());
                             $('#' + $this.attr('aria-describedby')).find('[data-name="mds-datetimepicker-popoverbody"]').html(calendarHtml);
                             $this.popover('update');
                             triggerStart = false;
