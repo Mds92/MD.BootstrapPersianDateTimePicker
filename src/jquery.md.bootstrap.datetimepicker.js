@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.4.4
+ * version : 3.4.5
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -453,6 +453,14 @@
         return $popoverDescriber;
     }
 
+    function getPopover($popoverDescriber) {
+        return $('#' + $popoverDescriber.attr('aria-describedby'));
+    }
+
+    function isPopoverDescriber($element) {
+        return $element.attr('aria-describedby') != undefined;
+    }
+
     function getSetting1($element) {
         return getPopoverDescriber($element).data(mdPluginName);
     }
@@ -461,10 +469,14 @@
         return $popoverDescriber.data(mdPluginName);
     }
 
-    function setPopoverHeaderHtml($element, isInLine, htmlString) {
+    function setPopoverHeaderHtml($element, isInLine, htmlString) {        
         // $element = المانی که روی آن فعالیتی انجام شده و باید عنوان تقویم آن عوض شود
         if (!isInLine) {
-            $element.parents(mdDatePickerPopoverSelector + ':first').find('[data-name="mds-datetimepicker-title"]').html(htmlString);
+            if (isPopoverDescriber($element)) {
+                getPopover($element).find('[data-name="mds-datetimepicker-title"]').html(htmlString);
+            } else {
+                $element.parents(mdDatePickerPopoverSelector + ':first').find('[data-name="mds-datetimepicker-title"]').html(htmlString);
+            }
         } else {
             var $inlineTitleBox = $element.parents(mdDatePickerFlagSelector + ':first').find('[data-name="dateTimePickerYearsButtonsContainer"]');
             $inlineTitleBox.html(htmlString);
@@ -1960,7 +1972,7 @@
                             setting.selectedDateToShow = setting.selectedDate != undefined ? getClonedDate(setting.selectedDate) : new Date();
                             var calendarHtml = getDateTimePickerHtml(setting);
                             setPopoverHeaderHtml($this, setting.inLine, $(calendarHtml).find('[data-selecteddatestring]').text().trim());
-                            $('#' + $this.attr('aria-describedby')).find('[data-name="mds-datetimepicker-popoverbody"]').html(calendarHtml);
+                            getPopover($this).find('[data-name="mds-datetimepicker-popoverbody"]').html(calendarHtml);
                             $this.popover('update');
                             triggerStart = false;
                         }, 10);
