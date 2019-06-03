@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.4.5
+ * version : 3.4.6
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -469,7 +469,7 @@
         return $popoverDescriber.data(mdPluginName);
     }
 
-    function setPopoverHeaderHtml($element, isInLine, htmlString) {        
+    function setPopoverHeaderHtml($element, isInLine, htmlString) {
         // $element = المانی که روی آن فعالیتی انجام شده و باید عنوان تقویم آن عوض شود
         if (!isInLine) {
             if (isPopoverDescriber($element)) {
@@ -2005,105 +2005,141 @@
             });
         },
         getText: function () {
-            return getSelectedDateTimeTextFormatted(getSetting2($(this)));
+            var textArray = [];
+            this.each(function () {
+                textArray.push(getSelectedDateTimeTextFormatted(getSetting2($(this))));
+            });
+            if (textArray.length > 0) return textArray;
+            return textArray[0];
         },
         getDate: function () {
-            return getSetting2($(this)).selectedDate;
+            var dateArray = [];
+            this.each(function () {
+                dateArray.push(getSetting2($(this)).selectedDate);
+            });
+            if (dateArray.length > 0) return dateArray;
+            return dateArray[0];
         },
         getDateRange: function () {
-            var setting = getSetting2($(this));
-            if (setting.rangeSelector) return [setting.rangeSelectorStartDate, setting.rangeSelectorEndDate];
-            if (!setting.toDate && !setting.fromDate || !setting.groupId) return [];
-            var fromDateSetting = getSetting2($('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]')),
-                toDateSetting = getSetting2($('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]'));
-            return [fromDateSetting.selectedDate, toDateSetting.selectedDate];
+            var dateRangeArray = [];
+            this.each(function () {
+                var setting = getSetting2($(this));
+                if (setting.rangeSelector) return [setting.rangeSelectorStartDate, setting.rangeSelectorEndDate];
+                if (!setting.toDate && !setting.fromDate || !setting.groupId) return [];
+                var fromDateSetting = getSetting2($('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]')),
+                    toDateSetting = getSetting2($('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]'));
+                dateRangeArray.push([fromDateSetting.selectedDate, toDateSetting.selectedDate]);
+            });
+            if (dateRangeArray.length > 0) return dateRangeArray;
+            return dateRangeArray[0];
         },
         setDate: function (dateTimeObject) {
             if (dateTimeObject == undefined) throw new Error('MdPersianDateTimePicker => setDate => مقدار ورودی نا معتبر است');
-            var $this = $(this),
-                setting = getSetting2($this);
-            setting.selectedDate = getClonedDate(dateTimeObject);
-            setSetting2($this, setting);
-            setSelectedData(setting);
+            return this.each(function () {
+                var $this = $(this),
+                    setting = getSetting2($this);
+                setting.selectedDate = getClonedDate(dateTimeObject);
+                setSetting2($this, setting);
+                setSelectedData(setting);
+            });
         },
         setOption: function (name, value) {
             if (!name) throw new Error('MdPersianDateTimePicker => setOption => name parameter مقدار ورودی نا معتبر است');
-            var $this = $(this),
-                setting = getSetting2($this);
-            setting[name] = value;
-            setSetting2($this, setting);
+            return this.each(function () {
+                var $this = $(this),
+                    setting = getSetting2($this);
+                setting[name] = value;
+                setSetting2($this, setting);
+            });
         },
         setDateRange: function (startDateTimeObject, endDateTimeObject) {
             if (startDateTimeObject == undefined || endDateTimeObject == undefined) throw new Error('MdPersianDateTimePicker => setDateRange => مقدار ورودی نا معتبر است');
             if (startDateTimeObject.getTime() >= endDateTimeObject.getTime()) throw new Error('MdPersianDateTimePicker => setDateRange => مقدار ورودی نا معتبر است, تاریخ شروع باید بزرگتر از تاریخ پایان باشد');
-            var $this = $(this),
-                setting = getSetting2($this);
-            if (setting.rangeSelector) {
-                setting.selectedDate = startDateTimeObject;
-                setting.rangeSelectorStartDate = startDateTimeObject;
-                setting.rangeSelectorEndDate = endDateTimeObject;
-                setSetting2($this, setting);
-                setSelectedData(setting);
-            } else if ((setting.fromDate || setting.toDate) && setting.groupId) {
-                var $toDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]'),
-                    $fromDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]');
-                if ($fromDateElement.length > 0) {
-                    var fromDateSetting = getSetting2($fromDateElement);
-                    fromDateSetting.selectedDate = startDateTimeObject;
-                    setSetting2($fromDateElement, fromDateSetting);
-                    setSelectedData(fromDateSetting);
+            return this.each(function () {
+                var $this = $(this),
+                    setting = getSetting2($this);
+                if (setting.rangeSelector) {
+                    setting.selectedDate = startDateTimeObject;
+                    setting.rangeSelectorStartDate = startDateTimeObject;
+                    setting.rangeSelectorEndDate = endDateTimeObject;
+                    setSetting2($this, setting);
+                    setSelectedData(setting);
+                } else if ((setting.fromDate || setting.toDate) && setting.groupId) {
+                    var $toDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]'),
+                        $fromDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]');
+                    if ($fromDateElement.length > 0) {
+                        var fromDateSetting = getSetting2($fromDateElement);
+                        fromDateSetting.selectedDate = startDateTimeObject;
+                        setSetting2($fromDateElement, fromDateSetting);
+                        setSelectedData(fromDateSetting);
+                    }
+                    if ($toDateElement.length > 0) {
+                        var toDateSetting = getSetting2($toDateElement);
+                        toDateSetting.selectedDate = endDateTimeObject;
+                        setSetting2($toDateElement, toDateSetting);
+                        setSelectedData(toDateSetting);
+                    }
                 }
-                if ($toDateElement.length > 0) {
-                    var toDateSetting = getSetting2($toDateElement);
-                    toDateSetting.selectedDate = endDateTimeObject;
-                    setSetting2($toDateElement, toDateSetting);
-                    setSelectedData(toDateSetting);
-                }
-            }
+            });
         },
         clearDate: function () {
-            var $this = $(this),
-                setting = getSetting2($this);
-            setting.selectedDate = undefined;
-            setSetting2($this, setting);
-            setSelectedData(setting);
+            return this.each(function () {
+                var $this = $(this),
+                    setting = getSetting2($this);
+                setting.selectedDate = undefined;
+                setSetting2($this, setting);
+                setSelectedData(setting);
+            });
         },
         setDatePersian: function (dateTimeObjectJson) {
             if (dateTimeObjectJson == undefined) throw new Error('MdPersianDateTimePicker => setDatePersian => ورودی باید از نوه جی سان با حداقل پراپرتی های year, month, day باشد');
             dateTimeObjectJson.hour = !dateTimeObjectJson.hour ? 0 : dateTimeObjectJson.hour;
             dateTimeObjectJson.minute = !dateTimeObjectJson.hour ? 0 : dateTimeObjectJson.minute;
             dateTimeObjectJson.second = !dateTimeObjectJson.second ? 0 : dateTimeObjectJson.second;
-            var $this = $(this),
-                setting = getSetting2($this);
-            setting.selectedDate = getDateTime2(dateTimeObjectJson);
-            setSetting2($this, setting);
-            setSelectedData(setting);
+            return this.each(function () {
+                var $this = $(this),
+                    setting = getSetting2($this);
+                setting.selectedDate = getDateTime2(dateTimeObjectJson);
+                setSetting2($this, setting);
+                setSelectedData(setting);
+            });
         },
         hide: function () {
-            hidePopover($(this));
+            return this.each(function () {
+                hidePopover($(this));
+            });
         },
         show: function () {
-            var $this = $(this),
-                setting = getSetting2($this);
-            $(this).trigger(setting.trigger);
+            return this.each(function () {
+                var $this = $(this),
+                    setting = getSetting2($this);
+                $(this).trigger(setting.trigger);
+            });
         },
         disable: function (isDisable) {
-            var $this = $(this),
-                setting = getSetting2($this);
-            setting.disabled = isDisable;
-            setSetting2($this, setting);
-            if (isDisable) $this.attr('disabled', '');
-            else $this.removeAttr('disabled');
+            return this.each(function () {
+                var $this = $(this),
+                    setting = getSetting2($this);
+                setting.disabled = isDisable;
+                setSetting2($this, setting);
+                if (isDisable) $this.attr('disabled', '');
+                else $this.removeAttr('disabled');
+            });
         },
+        // destroy: function () {
+        //     return this.each(function () {});
+        // },
         changeType: function (isGregorian, englishNumber) {
-            var $this = $(this),
-                setting = getSetting2($this);
-            hidePopover($this);
-            setting.isGregorian = isGregorian;
-            setting.englishNumber = englishNumber;
-            if (setting.isGregorian) setting.englishNumber = true;
-            setSetting2($this, setting);
-            setSelectedData(setting);
+            return this.each(function () {
+                var $this = $(this),
+                    setting = getSetting2($this);
+                hidePopover($this);
+                setting.isGregorian = isGregorian;
+                setting.englishNumber = englishNumber;
+                if (setting.isGregorian) setting.englishNumber = true;
+                setSetting2($this, setting);
+                setSelectedData(setting);
+            });
         }
     };
 
