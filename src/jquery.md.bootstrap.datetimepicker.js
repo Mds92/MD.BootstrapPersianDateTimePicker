@@ -2154,8 +2154,8 @@
                     .removeAttr('data-fromDate');
                 $this.off(setting.trigger).popover('dispose');
                 //if ($(mdDatePickerFlagSelector).length <= 1) {
-                    // $(document).off('change', setting.targetTextSelector);
-                    // unbindEvents();
+                // $(document).off('change', setting.targetTextSelector);
+                // unbindEvents();
                 //}
                 $this.removeData(mdPluginName);
             });
