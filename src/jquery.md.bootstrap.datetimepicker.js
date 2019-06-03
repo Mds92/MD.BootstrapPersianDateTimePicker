@@ -11,6 +11,7 @@
  */
 
 
+;
 (function ($) {
 
     // #region jalali calendar
@@ -1662,6 +1663,18 @@
         return html;
     }
 
+    function unbindEvents() {
+        $(document).off('click', mdDatePickerContainerSelector + ' [data-day]');
+        $(document).off('mouseenter', mdDatePickerContainerSelector + ' [data-day]');
+        $(document).off('click', mdDatePickerContainerSelector + ' [data-changedatebutton]');
+        $(document).off('blur', mdDatePickerContainerSelector + ' input[data-clock]');
+        $(document).off('blur', mdDatePickerContainerSelector + ' input[data-clock]');
+        $(document).off('click', mdDatePickerContainerSelector + ' [select-year-button]');
+        $(document).off('click', '[data-yearrangebuttonchange]');
+        $(document).off('click', mdDatePickerContainerSelector + ' [data-go-today]');
+        $(document).off('click', 'html');
+    }
+
     //#endregion
 
     //#region Events
@@ -2127,7 +2140,25 @@
             });
         },
         destroy: function () {
-            return this.each(function () {});
+            return this.each(function () {
+                var $this = $(this),
+                    setting = getSetting2($this);
+                if (setting.disable) {
+                    $this.removeAttr('disabled')
+                }
+                if (setting.inLine) {
+                    $this.find(mdDatePickerContainerSelector).remove();
+                }
+                $this.removeAttr(mdDatePickerFlag)
+                    .removeAttr('data-toDate')
+                    .removeAttr('data-fromDate');
+                $this.off(setting.trigger).popover('dispose');
+                if ($(mdDatePickerFlagSelector).length <= 1) {
+                    $(document).off('change', setting.targetTextSelector);
+                    unbindEvents();
+                }
+                $this.removeData(mdPluginName);
+            });
         },
         changeType: function (isGregorian, englishNumber) {
             return this.each(function () {
