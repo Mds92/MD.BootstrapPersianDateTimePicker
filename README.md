@@ -104,6 +104,7 @@ Name | Return | Description | Sample
 **hide** | void | Hide date time picker | $('#id').MdPersianDateTimePicker('hide');
 **show** | void | Show date time picker | $('#id').MdPersianDateTimePicker('show');
 **disable** | void | Disable or enable date time picker | $('#id').MdPersianDateTimePicker('disable', /*isDisable*/ true);
+**destroy** | void | Dispose date time picker | $('#id').MdPersianDateTimePicker('destroy');
 **changeType** | void | Switch between Persian or Gregorian calendar | $('#id').MdPersianDateTimePicker('changeType', /*isGregorian*/ true, /* englishNumber */ true);
 **setOption** | void | Set an option | $('#id').MdPersianDateTimePicker('setOption', 'yearOffset', 5);
 

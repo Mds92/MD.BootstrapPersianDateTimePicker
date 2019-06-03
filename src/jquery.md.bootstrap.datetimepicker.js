@@ -11,7 +11,7 @@
  */
 
 
-;
+
 (function ($) {
 
     // #region jalali calendar
@@ -2144,7 +2144,7 @@
                 var $this = $(this),
                     setting = getSetting2($this);
                 if (setting.disable) {
-                    $this.removeAttr('disabled')
+                    $this.removeAttr('disabled');
                 }
                 if (setting.inLine) {
                     $this.find(mdDatePickerContainerSelector).remove();
