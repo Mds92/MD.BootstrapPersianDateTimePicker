@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.4.6
+ * version : 3.4.7
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -2153,10 +2153,10 @@
                     .removeAttr('data-toDate')
                     .removeAttr('data-fromDate');
                 $this.off(setting.trigger).popover('dispose');
-                if ($(mdDatePickerFlagSelector).length <= 1) {
-                    $(document).off('change', setting.targetTextSelector);
-                    unbindEvents();
-                }
+                //if ($(mdDatePickerFlagSelector).length <= 1) {
+                    // $(document).off('change', setting.targetTextSelector);
+                    // unbindEvents();
+                //}
                 $this.removeData(mdPluginName);
             });
         },
