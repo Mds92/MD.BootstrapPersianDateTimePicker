@@ -2009,7 +2009,7 @@
             this.each(function () {
                 textArray.push(getSelectedDateTimeTextFormatted(getSetting2($(this))));
             });
-            if (textArray.length > 0) return textArray;
+            if (textArray.length > 1) return textArray;
             return textArray[0];
         },
         getDate: function () {
@@ -2017,7 +2017,7 @@
             this.each(function () {
                 dateArray.push(getSetting2($(this)).selectedDate);
             });
-            if (dateArray.length > 0) return dateArray;
+            if (dateArray.length > 1) return dateArray;
             return dateArray[0];
         },
         getDateRange: function () {
@@ -2030,7 +2030,7 @@
                     toDateSetting = getSetting2($('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]'));
                 dateRangeArray.push([fromDateSetting.selectedDate, toDateSetting.selectedDate]);
             });
-            if (dateRangeArray.length > 0) return dateRangeArray;
+            if (dateRangeArray.length > 1) return dateRangeArray;
             return dateRangeArray[0];
         },
         setDate: function (dateTimeObject) {
@@ -2126,9 +2126,9 @@
                 else $this.removeAttr('disabled');
             });
         },
-        // destroy: function () {
-        //     return this.each(function () {});
-        // },
+        destroy: function () {
+            return this.each(function () {});
+        },
         changeType: function (isGregorian, englishNumber) {
             return this.each(function () {
                 var $this = $(this),
