@@ -128,6 +128,8 @@ $('#date1').on('hidden.bs.popover', function () {
 })
 ```
 
+<hr>
+
 ### Backend:
 
-If you are using .net in backend I suggest you https://github.com/Mds92/MD.PersianDateTime to handle PersianDateTime as easy as DateTime.
+If you are using .net in your backend I suggest you https://github.com/Mds92/MD.PersianDateTime to handle PersianDateTime as easy as DateTime.
