@@ -1088,7 +1088,6 @@
             if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year != undefined && i < disableBeforeDateTimeJson.year) continue;
             if (disableAfterDateTimeJson != undefined && disableAfterDateTimeJson.year != undefined && i > disableAfterDateTimeJson.year) continue;
             var currentYearDateTimeJson = getDateTimeJson2(convertToNumber2(i, selectedDateTimeToShowJson.month, getDaysInMonthPersian(i, selectedDateTimeToShowJson.month))),
-             //convertToNumber2(i, selectedDateTimeToShowJson.month, getDaysInMonthPersian(i, selectedDateTimeToShowJson.month)),
                 currentYearDisabledAttr = '',
                 yearText = setting.englishNumber ? i.toString() : toPersianNumber(i),
                 yearDateNumber = convertToNumber2(i, selectedDateTimeToShowJson.month, 1);
@@ -1113,7 +1112,7 @@
         html = html.replace(/{{yearsToSelectHtml}}/img, yearsToSelectHtml);
         return {
             yearStart,
-            yearEnd,
+            yearEnd: yearEnd,
             html
         };
     }
@@ -1852,9 +1851,9 @@
         var $this = $(this),
             setting = getSetting1($this),
             isNext = $this.attr('data-yearrangebuttonchange') == '1',
-            yearStart = Number($this.attr('data-year')) - 1,
+            yearStart = Number($this.attr('data-year')),
             yearsToSelectObject = getYearsToSelectHtml(setting, isNext ? yearStart : yearStart - setting.yearOffset * 2),
-            yearsRangeText = ` ${yearsToSelectObject.yearStart} - ${yearsToSelectObject.yearEnd} `,
+            yearsRangeText = ` ${yearsToSelectObject.yearStart} - ${yearsToSelectObject.yearEnd - 1} `,
             popoverHeaderHtml = popoverHeaderSelectYearHtmlTemplate,
             dateTimePickerYearsToSelectHtml = yearsToSelectObject.html;
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{rtlCssClass}}/img, setting.isGregorian ? '' : 'rtl');
