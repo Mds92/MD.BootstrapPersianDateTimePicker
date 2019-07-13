@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.4.7
+ * version : 3.4.8
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -1047,11 +1047,7 @@
             html = dateTimePickerYearsToSelectHtmlTemplate;
 
         var yearsToSelectHtml = '',
-            selectedDateString = '',
-            todayDateString = '',
             todayDateTimeJson = {}, // year, month, day, hour, minute, second
-            rangeSelectorStartDate = !setting.rangeSelector || !setting.rangeSelectorStartDate ? undefined : getClonedDate(setting.rangeSelectorStartDate),
-            rangeSelectorEndDate = !setting.rangeSelector || !setting.rangeSelectorEndDate ? undefined : getClonedDate(setting.rangeSelectorEndDate),
             selectedDateTimeToShowJson = {},
             disableBeforeDateTimeJson,
             disableAfterDateTimeJson,
@@ -1091,17 +1087,18 @@
             if (setting.disableAfterToday && i > todayDateTimeJson.year) continue;
             if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year != undefined && i < disableBeforeDateTimeJson.year) continue;
             if (disableAfterDateTimeJson != undefined && disableAfterDateTimeJson.year != undefined && i > disableAfterDateTimeJson.year) continue;
-            var currentYearDateTimeNumber = convertToNumber2(i, selectedDateTimeToShowJson.month, getDaysInMonthPersian(i, selectedDateTimeToShowJson.month)),
+            var currentYearDateTimeJson = getDateTimeJson2(convertToNumber2(i, selectedDateTimeToShowJson.month, getDaysInMonthPersian(i, selectedDateTimeToShowJson.month))),
+             //convertToNumber2(i, selectedDateTimeToShowJson.month, getDaysInMonthPersian(i, selectedDateTimeToShowJson.month)),
                 currentYearDisabledAttr = '',
                 yearText = setting.englishNumber ? i.toString() : toPersianNumber(i),
                 yearDateNumber = convertToNumber2(i, selectedDateTimeToShowJson.month, 1);
-            if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year != undefined && currentYearDateTimeNumber < convertToNumber1(disableBeforeDateTimeJson))
+            if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year != undefined && currentYearDateTimeJson.year < disableBeforeDateTimeJson.year)
                 currentYearDisabledAttr = 'disabled';
-            if (disableAfterDateTimeJson != undefined && disableAfterDateTimeJson.year != undefined && currentYearDateTimeNumber < convertToNumber1(disableAfterDateTimeJson))
+            if (disableAfterDateTimeJson != undefined && disableAfterDateTimeJson.year != undefined && currentYearDateTimeJson.year > disableAfterDateTimeJson.year)
                 currentYearDisabledAttr = 'disabled';
-            if (setting.disableBeforeToday && currentYearDateTimeNumber < convertToNumber1(todayDateTimeJson))
+            if (setting.disableBeforeToday && currentYearDateTimeJson.year < todayDateTimeJson.year)
                 currentYearDisabledAttr = 'disabled';
-            if (setting.disableAfterToday && currentYearDateTimeNumber > convertToNumber1(todayDateTimeJson))
+            if (setting.disableAfterToday && currentYearDateTimeJson.year > todayDateTimeJson.year)
                 currentYearDisabledAttr = 'disabled';
             if (counter == 1) yearsToSelectHtml += '<tr>';
             yearsToSelectHtml += `

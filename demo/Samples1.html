@@ -70,6 +70,19 @@ $('#date2').MdPersianDateTimePicker({
                 </div>
             </div>
         </div>
+        <div class="row mt-3">
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text cursor-pointer" id="fromDateSegment">Icon</span>
+                    </div>
+                    <input type="text" id="inputFromDate" class="form-control" placeholder="Persian Calendar Text"
+                        aria-label="inputFromDate" aria-describedby="inputFromDate">
+                    <input type="text" id="fromdate1" class="form-control" placeholder="Persian Calendar Date"
+                        aria-label="fromdate1" aria-describedby="fromdate1">
+                </div>
+            </div>
+        </div>
         <hr>
         <div class="row">
             <div class="col-sm-6">
@@ -166,10 +179,10 @@ $('#date6').MdPersianDateTimePicker({
 });
                 </pre>
                 <div id="date6"></div>
-                <input type="text" id="inputDate6" class="form-control" placeholder="In Line Date" aria-label="In Line Date"
-                    aria-describedby="date6">
-                <input type="text" id="inputDate7" class="form-control" placeholder="In Line Date" aria-label="In Line Date"
-                    aria-describedby="date6">
+                <input type="text" id="inputDate6" class="form-control" placeholder="In Line Date"
+                    aria-label="In Line Date" aria-describedby="date6">
+                <input type="text" id="inputDate7" class="form-control" placeholder="In Line Date"
+                    aria-label="In Line Date" aria-describedby="date6">
             </div>
             <div class="col-sm-6">
                 <pre>
@@ -183,16 +196,16 @@ $('#date7').MdPersianDateTimePicker({
 });
                 </pre>
                 <div id="date7"></div>
-                <input type="text" id="inputDate8" class="form-control" placeholder="In Line Date" aria-label="In Line Date"
-                    aria-describedby="In Line Date">
-                <input type="text" id="inputDate9" class="form-control" placeholder="In Line Date" aria-label="In Line Date"
-                    aria-describedby="In Line Date">
+                <input type="text" id="inputDate8" class="form-control" placeholder="In Line Date"
+                    aria-label="In Line Date" aria-describedby="In Line Date">
+                <input type="text" id="inputDate9" class="form-control" placeholder="In Line Date"
+                    aria-label="In Line Date" aria-describedby="In Line Date">
             </div>
         </div>
     </div>
 
-    <!-- <script src="../src/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script> -->
-    <script src="../dist/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script>
+    <script src="../src/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script>
+    <!-- <script src="../dist/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script> -->
 
     <script type="text/javascript">
         $('#date1').MdPersianDateTimePicker({
@@ -206,6 +219,15 @@ $('#date7').MdPersianDateTimePicker({
                 new Date(2018, 9, 14)
             ],
             disabledDays: [5, 6]
+        });
+
+        $('#fromDateSegment').MdPersianDateTimePicker({
+            disableAfterDate: new Date(),
+            targetTextSelector: '#inputFromDate',
+            targetDateSelector: '#fromdate',
+            isGregorian: false,
+            enableTimePicker: false,
+            englishNumber: false
         });
 
         $('#date2').MdPersianDateTimePicker({
@@ -259,7 +281,6 @@ $('#date7').MdPersianDateTimePicker({
             fromDate: true,
             groupId: 'date6-7-range'
         });
-        
     </script>
 
     <br><br>
