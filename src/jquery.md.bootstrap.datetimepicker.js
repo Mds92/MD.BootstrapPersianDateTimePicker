@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.4.8
+ * version : 3.5.0
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -1314,6 +1314,7 @@
             },
             holiDaysDateNumbers = [],
             disabledDatesNumber = [],
+            specialDatesNumber = [],
             disableBeforeDateTimeJson = {},
             disableAfterDateTimeJson = {},
             previousYearButtonDisabledAttribute = '',
@@ -1350,6 +1351,9 @@
             for (i = 0; i < setting.disabledDates.length; i++) {
                 disabledDatesNumber.push(convertToNumber1(getDateTimeJson1(setting.disabledDates[i])));
             }
+            for (i = 0; i < setting.specialDates.length; i++) {
+                specialDatesNumber.push(convertToNumber1(getDateTimeJson1(setting.specialDates[i])));
+            }
         } else {
             dateTimeToShowJson = getDateTimeJsonPersian1(selectedDateToShowTemp);
             todayDateTimeJson = getDateTimeJsonPersian1(new Date());
@@ -1377,6 +1381,9 @@
             }
             for (i = 0; i < setting.disabledDates.length; i++) {
                 disabledDatesNumber.push(convertToNumber1(getDateTimeJsonPersian1(setting.disabledDates[i])));
+            }
+            for(i = 0; i < setting.specialDates.length; i++){
+                specialDatesNumber.push(convertToNumber1(getDateTimeJsonPersian1(setting.specialDates[i])));
             }
         }
 
@@ -1556,6 +1563,10 @@
             for (j = 0; j < disabledDatesNumber.length; j++) {
                 if (currentDateNumber == disabledDatesNumber[j])
                     $td.attr('disabled', '');
+            }
+            for (j = 0; j < specialDatesNumber.length; j++) {
+                if (currentDateNumber == specialDatesNumber[j])
+                    $td.attr('data-special-date', '');
             }
             if (setting.disabledDays && setting.disabledDays.indexOf(tdNumber) >= 0) {
                 $td.attr('disabled', '');
@@ -1912,6 +1923,7 @@
                         holiDays: [],
                         disabledDates: [],
                         disabledDays: [],
+                        specialDates: [],
                         disableBeforeToday: false,
                         disableAfterToday: false,
                         disableBeforeDate: undefined,

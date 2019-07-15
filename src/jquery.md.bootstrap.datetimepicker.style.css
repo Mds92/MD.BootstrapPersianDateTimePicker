@@ -136,6 +136,17 @@
     background-color: #d9f2e6;
 }
 
+.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-special-date] {
+    background-color: #c7f7c7;
+    border: 1px solid #00ce00;
+    transition: all 200ms ease;
+}
+
+.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-special-date]:hover {
+    background-color: #7bff7b;
+    border-color: #31cc31;
+}
+
 .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-pm],
 .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-nm],
 .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[disabled] {
@@ -146,13 +157,13 @@
 
 .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-pm]:hover,
 .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-nm]:hover,
-.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[disabled] {
+.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[disabled]:hover {
     cursor: default;
     opacity: 0.3;
     transition: none;
 }
 
-.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-day]:hover,
+.mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-day]:not([data-special-date]):hover,
 .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-nm]:hover,
 .mds-bootstrap-persian-datetime-picker-container table table tbody.days td[data-pm]:hover {
     background: #ccc;

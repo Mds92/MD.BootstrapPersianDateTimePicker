@@ -56,6 +56,7 @@ Name | Values | Description | Sample
 **yearOffset** | Number | Number of years to select in year selector | 30
 **holiDays** | Array: Date[] | Array of holidays to show in date time picker as holiday | [new Date(), new Date(2017, 3, 2)]
 **disabledDates** | Array: Date[] | Array of disabled dates to prevent user to select them | [new Date(2017, 1, 1), new Date(2017, 1, 2)] 
+**specialDates** | Array: Date[] | Array of dates to mark some dates as special | [new Date(2017, 2, 1), new Date(2017, 3, 2)] 
 **disabledDays** | Array: number[] | Array of disabled days to prevent user to select them | Disable all "Thursday", "Friday" in persian [ 5, 6 ]
 **disableBeforeToday** | [false], true | Disable days before today 
 **disableAfterToday** | [false], true | Disable days after today 
