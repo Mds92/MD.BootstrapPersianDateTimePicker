@@ -58,7 +58,10 @@ $('#date1').MdPersianDateTimePicker({
 $('#date2').MdPersianDateTimePicker({
     targetTextSelector: '#inputDate2',
     selectedDate: new Date('2018/9/30'),
-    isGregorian: true
+    isGregorian: true,
+    calendarViewOnChange: function (date) {
+        console.log(date);
+    }
 });
                 </pre>
                 <div class="input-group">
@@ -67,19 +70,6 @@ $('#date2').MdPersianDateTimePicker({
                     </div>
                     <input type="text" id="inputDate2" class="form-control" placeholder="Gregorian Calendar"
                         aria-label="date2" aria-describedby="date2">
-                </div>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-sm-6">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text cursor-pointer" id="fromDateSegment">Icon</span>
-                    </div>
-                    <input type="text" id="inputFromDate" class="form-control" placeholder="Persian Calendar Text"
-                        aria-label="inputFromDate" aria-describedby="inputFromDate">
-                    <input type="text" id="fromdate1" class="form-control" placeholder="Persian Calendar Date"
-                        aria-label="fromdate1" aria-describedby="fromdate1">
                 </div>
             </div>
         </div>
@@ -233,7 +223,10 @@ $('#date7').MdPersianDateTimePicker({
         $('#date2').MdPersianDateTimePicker({
             targetTextSelector: '#inputDate2',
             selectedDate: new Date('2018/9/30'),
-            isGregorian: true
+            isGregorian: true,
+            calendarViewOnChange: function (date) {
+                console.log(date);
+            }
         });
 
         $('#date3').MdPersianDateTimePicker({
