@@ -63,7 +63,7 @@ Name | Values | Description | Sample
 **disableBeforeDate** | Date | Disable days before this Date | new Date(2018, 11, 12) 
 **disableAfterDate** | Date | Disable days after this Date | new Date(2018, 12, 11) 
 **rangeSelector** | [false], true | Enables rangeSelector feature on date time picker
-**calendarViewOnChange** | function | Event fires on view change
+**calendarViewOnChange(selectedDateToShow)** | function | Event fires on view change
 
 <hr>
 
