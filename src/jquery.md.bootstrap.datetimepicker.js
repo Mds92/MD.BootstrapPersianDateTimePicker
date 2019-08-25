@@ -489,10 +489,6 @@
         return getPopoverDescriber($element).data(mdPluginName, setting);
     }
 
-    function setSetting2($popoverDescriber, setting) {
-        return $popoverDescriber.data(mdPluginName, setting);
-    }
-
     function updateCalendarHtml1($element, setting) {
         var calendarHtml = getDateTimePickerHtml(setting),
             $container = setting.inLine ?
@@ -2065,7 +2061,7 @@
                 var $this = $(this),
                     setting = getSetting2($this);
                 setting.selectedDate = getClonedDate(dateTimeObject);
-                setSetting2($this, setting);
+                setSetting1($this, setting);
                 setSelectedData(setting);
             });
         },
@@ -2075,7 +2071,7 @@
                 var $this = $(this),
                     setting = getSetting2($this);
                 setting[name] = value;
-                setSetting2($this, setting);
+                setSetting1($this, setting);
             });
         },
         setDateRange: function (startDateTimeObject, endDateTimeObject) {
@@ -2088,7 +2084,7 @@
                     setting.selectedDate = startDateTimeObject;
                     setting.rangeSelectorStartDate = startDateTimeObject;
                     setting.rangeSelectorEndDate = endDateTimeObject;
-                    setSetting2($this, setting);
+                    setSetting1($this, setting);
                     setSelectedData(setting);
                 } else if ((setting.fromDate || setting.toDate) && setting.groupId) {
                     var $toDateElement = $('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]'),
@@ -2096,13 +2092,13 @@
                     if ($fromDateElement.length > 0) {
                         var fromDateSetting = getSetting2($fromDateElement);
                         fromDateSetting.selectedDate = startDateTimeObject;
-                        setSetting2($fromDateElement, fromDateSetting);
+                        setSetting1($fromDateElement, fromDateSetting);
                         setSelectedData(fromDateSetting);
                     }
                     if ($toDateElement.length > 0) {
                         var toDateSetting = getSetting2($toDateElement);
                         toDateSetting.selectedDate = endDateTimeObject;
-                        setSetting2($toDateElement, toDateSetting);
+                        setSetting1($toDateElement, toDateSetting);
                         setSelectedData(toDateSetting);
                     }
                 }
@@ -2113,7 +2109,9 @@
                 var $this = $(this),
                     setting = getSetting2($this);
                 setting.selectedDate = undefined;
-                setSetting2($this, setting);
+                setting.rangeSelectorStartDate = undefined;
+                setting.rangeSelectorEndDate = undefined;
+                setSetting1($this, setting);
                 setSelectedData(setting);
             });
         },
@@ -2126,7 +2124,7 @@
                 var $this = $(this),
                     setting = getSetting2($this);
                 setting.selectedDate = getDateTime2(dateTimeObjectJson);
-                setSetting2($this, setting);
+                setSetting1($this, setting);
                 setSelectedData(setting);
             });
         },
@@ -2147,7 +2145,7 @@
                 var $this = $(this),
                     setting = getSetting2($this);
                 setting.disabled = isDisable;
-                setSetting2($this, setting);
+                setSetting1($this, setting);
                 if (isDisable) $this.attr('disabled', '');
                 else $this.removeAttr('disabled');
             });
@@ -2181,7 +2179,7 @@
                 setting.isGregorian = isGregorian;
                 setting.englishNumber = englishNumber;
                 if (setting.isGregorian) setting.englishNumber = true;
-                setSetting2($this, setting);
+                setSetting1($this, setting);
                 setSelectedData(setting);
             });
         }
