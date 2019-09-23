@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.6.0
+ * version : 3.6.2
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -843,10 +843,10 @@
 
         format = format.replace(/yyyy/mg, dateTimeJson.year);
         format = format.replace(/yy/mg, dateTimeJson.year % 100);
-        format = format.replace(/MMMM/mg, getMonthName(dateTimeJson.month, isGregorian));
+        format = format.replace(/MMMM/mg, getMonthName(dateTimeJson.month - 1, isGregorian));
         format = format.replace(/MM/mg, zeroPad(dateTimeJson.month));
         format = format.replace(/M/mg, dateTimeJson.month);
-        format = format.replace(/dddd/mg, getWeekDayName(dateTimeJson.day, isGregorian));
+        format = format.replace(/dddd/mg, getWeekDayName(dateTimeJson.dayOfWeek, isGregorian));
         format = format.replace(/dd/mg, zeroPad(dateTimeJson.day));
         format = format.replace(/d/mg, dateTimeJson.day);
         format = format.replace(/HH/mg, zeroPad(dateTimeJson.hour));
