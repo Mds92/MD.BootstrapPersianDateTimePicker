@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.6.2
+ * version : 3.6.3
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -456,6 +456,11 @@
 
     function getPopover($popoverDescriber) {
         return $('#' + $popoverDescriber.attr('aria-describedby'));
+    }
+
+    function isCalendarOpen($element) {
+        // آیا تقویم باز شده است یا خیر
+        return $element.attr('aria-describedby') != null;
     }
 
     function isPopoverDescriber($element) {
@@ -1793,8 +1798,7 @@
         setting.selectedDateToShow = getClonedDate(selectedDateToShow);
         setSetting1($this, setting);
         updateCalendarHtml1($this, setting);
-        if(setting.calendarViewOnChange != undefined)
-        {
+        if (setting.calendarViewOnChange != undefined) {
             // $this.trigger('md.calendarViewOnChange', setting.selectedDateToShow);
             setting.calendarViewOnChange(setting.selectedDateToShow);
         }
@@ -1892,7 +1896,7 @@
         if (triggerStart) return;
         var $target = $(e.target),
             $popoverDescriber = getPopoverDescriber($target);
-        if ($popoverDescriber.length >= 1) return;
+        if ($popoverDescriber.length >= 1 || isCalendarOpen($target)) return;
         hidePopover($(mdDatePickerPopoverSelector));
     });
 
@@ -1987,7 +1991,10 @@
                         triggerStart = true;
                         $this = $(this);
                         setting = $this.data(mdPluginName);
-                        if (setting.disabled) return;
+                        if (setting.disabled || isCalendarOpen($this)) {
+                            triggerStart = false;
+                            return;
+                        }
                         hideOthers($this);
                         showPopover($this);
                         setTimeout(function () {
