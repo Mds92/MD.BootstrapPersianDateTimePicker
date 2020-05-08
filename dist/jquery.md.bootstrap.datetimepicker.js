@@ -2,8 +2,8 @@
  * 
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
- * version : 3.6.3
- * Written By Mohammad Dayyan, Mordad 1397
+ * version : 3.7.1
+ * Written By Mohammad Dayyan, Mordad 1397 - 1399
  * mds.soft@gmail.com - @mdssoft
  * 
  *       

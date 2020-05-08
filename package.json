@@ -1,6 +1,6 @@
 {
   "name": "md.bootstrappersiandatetimepicker",
-  "version": "3.7.0",
+  "version": "3.7.1",
   "description": "Persian Date Time Picker with jQuery 3+ & Bootstrap 4+",
   "license": "MIT",
   "moduleResolution": "node",
@@ -17,8 +17,9 @@
   "homepage": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker",
   "dependencies": {
     "@popperjs/core": "^2.4.0",
-    "bootstrap": "^4.3.1",
-    "jquery": "^3.4.1"
+    "bootstrap": "^4.4.1",
+    "jquery": "^3.4.1",
+    "npm": "^6.14.5"
   },
   "devDependencies": {
     "@types/jquery": "^3.3.31",
