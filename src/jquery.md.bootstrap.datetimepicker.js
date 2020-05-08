@@ -693,6 +693,10 @@
         return convertToNumber1(getDateTimeJson1(dateTime));
     }
 
+    function convertToNumber4(dateTime) {
+        return Number(zeroPad(dateTime.getFullYear()) + zeroPad(dateTime.getMonth()) + zeroPad(dateTime.getDate()));
+    }
+
     function getDateTime1(yearPersian, monthPersian, dayPersian, hour, minute, second) {
         if (!isNumber(hour)) hour = 0;
         if (!isNumber(minute)) minute = 0;
@@ -1685,7 +1689,7 @@
 
     //#endregion
 
-    //#region Events
+    // #region Events
 
     // کلیک روی روزها
     $(document).on('click', mdDatePickerContainerSelector + ' [data-day]', function () {
@@ -2083,7 +2087,7 @@
         },
         setDateRange: function (startDateTimeObject, endDateTimeObject) {
             if (startDateTimeObject == undefined || endDateTimeObject == undefined) throw new Error('MdPersianDateTimePicker => setDateRange => مقدار ورودی نا معتبر است');
-            if (startDateTimeObject.getTime() >= endDateTimeObject.getTime()) throw new Error('MdPersianDateTimePicker => setDateRange => مقدار ورودی نا معتبر است, تاریخ شروع باید بزرگتر از تاریخ پایان باشد');
+            if (convertToNumber4(startDateTimeObject) > convertToNumber4(endDateTimeObject)) throw new Error('MdPersianDateTimePicker => setDateRange => مقدار ورودی نا معتبر است, تاریخ شروع باید بزرگتر از تاریخ پایان باشد');
             return this.each(function () {
                 var $this = $(this),
                     setting = getSetting2($this);
