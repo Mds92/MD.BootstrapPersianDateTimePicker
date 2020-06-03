@@ -1117,7 +1117,7 @@
         html = html.replace(/{{yearsToSelectHtml}}/img, yearsToSelectHtml);
         return {
             yearStart,
-            yearEnd: yearEnd,
+            yearEnd,
             html
         };
     }
@@ -1851,7 +1851,7 @@
             $mdDatePickerContainerSelector = $this.parents(mdDatePickerContainerSelector + ':first'),
             $dateTimePickerYearsToSelectContainer = $mdDatePickerContainerSelector.find('[data-name="dateTimePickerYearsToSelectContainer"]');
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{rtlCssClass}}/img, setting.isGregorian ? '' : 'rtl');
-        popoverHeaderHtml = popoverHeaderHtml.replace(/{{yearsRangeText}}/img, setting.isGregorian ? yearsRangeText : toPersianNumber(yearsRangeText));
+        popoverHeaderHtml = popoverHeaderHtml.replace(/{{yearsRangeText}}/img, setting.isGregorian || setting.englishNumber ? yearsRangeText : toPersianNumber(yearsRangeText));
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{previousText}}/img, setting.isGregorian ? previousText : previousTextPersian);
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{nextText}}/img, setting.isGregorian ? nextText : nextTextPersian);
         popoverHeaderHtml = popoverHeaderHtml.replace(/{{latestPreviousYear}}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearEnd : yearsToSelectObject.yearStart);
