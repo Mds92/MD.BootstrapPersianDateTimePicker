@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.7.2
+ * version : 3.7.3
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -2057,7 +2057,10 @@
             var dateRangeArray = [];
             this.each(function () {
                 var setting = getSetting2($(this));
-                if (setting.rangeSelector) return [setting.rangeSelectorStartDate, setting.rangeSelectorEndDate];
+                if (setting.rangeSelector) {
+                    dateRangeArray.push([setting.rangeSelectorStartDate, setting.rangeSelectorEndDate]);
+                    return;
+                }
                 if (!setting.toDate && !setting.fromDate || !setting.groupId) return [];
                 var fromDateSetting = getSetting2($('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]')),
                     toDateSetting = getSetting2($('[' + mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]'));
