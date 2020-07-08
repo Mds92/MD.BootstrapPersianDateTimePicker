@@ -59,6 +59,7 @@ $('#date2').MdPersianDateTimePicker({
     targetTextSelector: '#inputDate2',
     selectedDate: new Date('2018/9/30'),
     isGregorian: true,
+    dateFormat: 'yyyy-MM-dd hh:mm:ss',
     calendarViewOnChange: function (date) {
         console.log(date);
     }
@@ -225,6 +226,8 @@ $('#date7').MdPersianDateTimePicker({
             targetTextSelector: '#inputDate2',
             selectedDate: new Date('2018/9/30'),
             isGregorian: true,
+            dateFormat: 'yyyy-MM-dd hh:mm:ss',
+            enableTimePicker: true,
             calendarViewOnChange: function (date) {
                 console.log(date);
             }
