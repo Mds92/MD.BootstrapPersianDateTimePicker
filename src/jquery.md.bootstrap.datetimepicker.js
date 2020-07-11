@@ -177,20 +177,33 @@
   var mdDatePickerFlag = 'data-mdpersiandatetimepicker',
     mdDatePickerFlagSelector = '[' + mdDatePickerFlag + ']',
     mdDatePickerGroupIdAttribute = 'data-mdpersiandatetimepicker-group',
-    mdDatePickerPopoverFlag = 'data-mdpersiandatetimepicker-popover',
-    mdDatePickerPopoverSelector = '[' + mdDatePickerPopoverFlag + ']',
+    mdDatePickerElementFlag = 'data-mdpersiandatetimepicker-element',
+    mdDatePickerElementSelector = '[' + mdDatePickerElementFlag + ']',
     mdDatePickerContainerFlag = 'data-mdpersiandatetimepicker-container',
     mdDatePickerContainerSelector = '[' + mdDatePickerContainerFlag + ']',
     mdPluginName = 'MdPersianDateTimePicker',
     triggerStart = false;
 
+  var modalHtmlTemplate = `
+<div class="modal fade mds-bootstrap-persian-datetime-picker-modal" tabindex="-1" role="dialog" aria-labelledby="mdDateTimePickerModalLabel" aria-hidden="true" 
+  ${mdDatePickerElementFlag}>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-body" data-name="mds-datetimepicker-body">
+        MD DateTimePicker Html
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+
   var popverHtmlTemplate = `
-<div class="popover mds-bootstrap-persian-datetime-picker-popover" role="tooltip" ${mdDatePickerPopoverFlag}>    
+<div class="popover mds-bootstrap-persian-datetime-picker-popover" role="tooltip" ${mdDatePickerElementFlag}>    
     <div class="arrow"></div>    
     <h3 class="popover-header text-center" data-name="mds-datetimepicker-title"></h3>    
-    <div class="popover-body p-0" data-name="mds-datetimepicker-popoverbody"></div>
-</div>
-    `;
+    <div class="popover-body p-0" data-name="mds-datetimepicker-body"></div>
+</div>`;
 
   var popoverHeaderSelectYearHtmlTemplate = `
 <table class="table table-sm table-borderless text-center p-0 m-0 {{rtlCssClass}}">
@@ -205,16 +218,14 @@
             <a href="javascript:void(0)" title="{{nextText}}" data-year="{{latestNextYear}}" data-yearrangebuttonchange="1"> &gt; </a>
         </th>
     </tr>       
-</table>
-    `;
+</table>`;
 
   var dateTimePickerYearsToSelectHtmlTemplate = `
 <table class="table table-sm text-center p-0 m-0">
     <tbody>
         {{yearsToSelectHtml}}
     </tbody>            
-</table>
-    `;
+</table>`;
 
   var dateTimePickerHtmlTemplate = `
 <div class="mds-bootstrap-persian-datetime-picker-container {{rtlCssClass}}" ${mdDatePickerContainerFlag}>
@@ -448,7 +459,7 @@
     var $popoverDescriber = $element.parents(mdDatePickerFlagSelector + ':first'); // inline
     // not inline
     if ($popoverDescriber.length <= 0) {
-      $popoverDescriber = $element.parents(mdDatePickerPopoverSelector + ':first');
+      $popoverDescriber = $element.parents(mdDatePickerElementSelector + ':first');
       $popoverDescriber = $('[aria-describedby="' + $popoverDescriber.attr('id') + '"]');
     }
     return $popoverDescriber;
@@ -481,7 +492,7 @@
       if (isPopoverDescriber($element)) {
         getPopover($element).find('[data-name="mds-datetimepicker-title"]').html(htmlString);
       } else {
-        $element.parents(mdDatePickerPopoverSelector + ':first').find('[data-name="mds-datetimepicker-title"]').html(htmlString);
+        $element.parents(mdDatePickerElementSelector + ':first').find('[data-name="mds-datetimepicker-title"]').html(htmlString);
       }
     } else {
       var $inlineTitleBox = $element.parents(mdDatePickerFlagSelector + ':first').find('[data-name="dateTimePickerYearsButtonsContainer"]');
@@ -498,7 +509,7 @@
     var calendarHtml = getDateTimePickerHtml(setting),
       $container = setting.inLine ?
       $element.parents(mdDatePickerFlagSelector + ':first') :
-      $element.parents('[data-name="mds-datetimepicker-popoverbody"]:first');
+      $element.parents('[data-name="mds-datetimepicker-body"]:first');
     setPopoverHeaderHtml($element, setting.inLine, $(calendarHtml).find('[data-selecteddatestring]').text().trim());
     $container.html(calendarHtml);
   }
@@ -664,7 +675,7 @@
   }
 
   function hideOthers($exceptThis) {
-    $(mdDatePickerPopoverSelector).each(function () {
+    $(mdDatePickerElementSelector).each(function () {
       var $thisPopover = $(this);
       if (!$exceptThis && $exceptThis.is($thisPopover)) return;
       hidePopover($thisPopover);
@@ -1723,7 +1734,7 @@
       }
       setSetting1($this, setting);
       if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined) {
-        if (!setting.inLine) hidePopover($(mdDatePickerPopoverSelector));
+        if (!setting.inLine) hidePopover($(mdDatePickerElementSelector));
         else updateCalendarHtml1($this, setting);
       }
       return;
@@ -1737,7 +1748,7 @@
     }
     setSetting1($this, setting);
     setSelectedData(setting);
-    if (!setting.inLine) hidePopover($(mdDatePickerPopoverSelector));
+    if (!setting.inLine) hidePopover($(mdDatePickerElementSelector));
     else if (setting.inLine && (setting.toDate || setting.fromDate)) {
       // وقتی در حالت این لاین هستیم و ' ار تاریخ ' تا تاریخ ' داریم
       // وقتی روی روز یکی از تقویم ها کلیک می شود
@@ -1902,7 +1913,7 @@
     var $target = $(e.target),
       $popoverDescriber = getPopoverDescriber($target);
     if ($popoverDescriber.length >= 1 || isCalendarOpen($target)) return;
-    hidePopover($(mdDatePickerPopoverSelector));
+    hidePopover($(mdDatePickerElementSelector));
   });
 
   //#endregion
@@ -1940,7 +1951,8 @@
             disableAfterDate: undefined,
             rangeSelector: false,
             rangeSelectorStartDate: undefined,
-            rangeSelectorEndDate: undefined
+            rangeSelectorEndDate: undefined,
+            modalMode: false
           }, options);
         $this.attr(mdDatePickerFlag, '');
         if (setting.targetDateSelector) {
@@ -1982,7 +1994,7 @@
         // نمایش تقویم
         if (setting.inLine) {
           $this.append(getDateTimePickerHtml(setting));
-        } else {
+        } else if (!setting.modalMode) {
           $this.popover({
             container: 'body',
             content: '',
@@ -2006,10 +2018,21 @@
               setting.selectedDateToShow = setting.selectedDate != undefined ? getClonedDate(setting.selectedDate) : new Date();
               var calendarHtml = getDateTimePickerHtml(setting);
               setPopoverHeaderHtml($this, setting.inLine, $(calendarHtml).find('[data-selecteddatestring]').text().trim());
-              getPopover($this).find('[data-name="mds-datetimepicker-popoverbody"]').html(calendarHtml);
+              getPopover($this).find('[data-name="mds-datetimepicker-body"]').html(calendarHtml);
               $this.popover('update');
               triggerStart = false;
             }, 10);
+          });
+        } else if (setting.modalMode) {
+          $('body').append(modalHtmlTemplate);
+          $this.on('click', function () {
+            if (setting.disabled) {
+              return;
+            }
+            setting.selectedDateToShow = setting.selectedDate != undefined ? getClonedDate(setting.selectedDate) : new Date();
+            var calendarHtml = getDateTimePickerHtml(setting);
+            $(mdDatePickerElementSelector).find('[data-name="mds-datetimepicker-body"]').html(calendarHtml);
+            $(mdDatePickerElementSelector).modal('show');
           });
         }
         $(document).on('change', setting.targetTextSelector, function () {
