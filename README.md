@@ -116,7 +116,7 @@ Name | Return | Description | Sample
 
 `MD.BootstrapPersianDateTimePicker` uses Bootstrap's popover, so you can use `popover` events.
 
-https://getbootstrap.com/docs/4.5/components/modal/#events
+https://getbootstrap.com/docs/4.5/components/popovers/#events
 
 ```javascript
 $('#date1').on('hidden.bs.popover', function () {
