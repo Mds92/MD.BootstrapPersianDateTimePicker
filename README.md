@@ -2,6 +2,7 @@
 #### Bootstrap 4+ Persian And Gregorian Date Time Picker jQuery 3+ Plugin
 
 ![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master-bs4/src/MdPersianDateTimePicker.jpg)
+![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master-bs4/src/MdPersianDateTimePickerModalMode.jpg)
 
 `MD.BootstrapPersianDateTimePicker` uses bootstrap [Popovers](https://getbootstrap.com/docs/4.5/components/popovers/), so it has flexibility of bootstrap's popover.
 <hr>
@@ -51,6 +52,7 @@ Name | Values | Description | Sample
 **dateFormat** | String | format of selected date to save into `targetDateSelector` | 'yyyy/MM/dd HH:mm:ss'
 **isGregorian** | [false], true | Is calendar Gregorian 
 **inLine** | [false], true | Is date time picker in line 
+**modalMode** | [false], true | Open in modal mode, suitable for smart phones
 **selectedDate** | [undefined], new Date() | Selected date as JavaScript Date object | new Date('2018/9/30')
 **monthsToShow** | Numeric array with 2 items, [0 ,0] | To show, number of month before and after selected date in date time picker, first item is for before month, second item is for after month | [1, 1]
 **yearOffset** | Number | Number of years to select in year selector | 30

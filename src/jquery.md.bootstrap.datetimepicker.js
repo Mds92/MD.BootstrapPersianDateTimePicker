@@ -185,9 +185,9 @@
     triggerStart = false;
 
   var modalHtmlTemplate = `
-<div class="modal fade mds-bootstrap-persian-datetime-picker-modal" tabindex="-1" role="dialog" aria-labelledby="mdDateTimePickerModalLabel" aria-hidden="true" 
-  ${mdDatePickerElementFlag}>
-  <div class="modal-dialog modal-xl">
+<div class="modal fade mds-bootstrap-persian-datetime-picker-modal" tabindex="-1" role="dialog" 
+  aria-labelledby="mdDateTimePickerModalLabel" aria-hidden="true" ${mdDatePickerElementFlag}>
+  <div class="modal-dialog modal-xl modal-dialog-centered" data-buttonselector="">
     <div class="modal-content">
       <div class="modal-body" data-name="mds-datetimepicker-body">
         MD DateTimePicker Html
@@ -454,6 +454,10 @@
 
   // #region Functions
 
+  function isWithinMdModal($element) {
+    return $element.parents('.modal' + mdDatePickerElementSelector + ':first').length > 0;
+  }
+
   function getPopoverDescriber($element) {
     // المانی را بر میگرداند که کاربر پلاگین را روی آن فعال کرده است
     var $popoverDescriber = $element.parents(mdDatePickerFlagSelector + ':first'); // inline
@@ -479,7 +483,13 @@
   }
 
   function getSetting1($element) {
-    return getPopoverDescriber($element).data(mdPluginName);
+    // modal mode
+    if (isWithinMdModal($element)) {
+      var buttonSelector = $element.parents('[data-buttonselector]:first').attr('data-buttonselector');
+      return $('[data-uniqueid="' + buttonSelector + '"]').data(mdPluginName);
+    } else {
+      return getPopoverDescriber($element).data(mdPluginName);
+    }
   }
 
   function getSetting2($popoverDescriber) {
@@ -690,6 +700,7 @@
   function hidePopover($element) {
     if (!$element) return;
     $element.popover('hide');
+    $element.modal('hide');
   }
 
   function convertToNumber1(dateTimeJson) {
@@ -1734,8 +1745,9 @@
       }
       setSetting1($this, setting);
       if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined) {
-        if (!setting.inLine) hidePopover($(mdDatePickerElementSelector));
-        else updateCalendarHtml1($this, setting);
+        if (!setting.inLine) {
+          hidePopover($(mdDatePickerElementSelector));
+        } else updateCalendarHtml1($this, setting);
       }
       return;
     }
@@ -1748,8 +1760,9 @@
     }
     setSetting1($this, setting);
     setSelectedData(setting);
-    if (!setting.inLine) hidePopover($(mdDatePickerElementSelector));
-    else if (setting.inLine && (setting.toDate || setting.fromDate)) {
+    if (!setting.inLine) {
+      hidePopover($(mdDatePickerElementSelector));
+    } else if (setting.inLine && (setting.toDate || setting.fromDate)) {
       // وقتی در حالت این لاین هستیم و ' ار تاریخ ' تا تاریخ ' داریم
       // وقتی روی روز یکی از تقویم ها کلیک می شود
       // باید تقویم دیگر نیز تغییر کند و روزهایی از آن غیر فعال شود
@@ -1911,8 +1924,8 @@
   $('html').on('click', function (e) {
     if (triggerStart) return;
     var $target = $(e.target),
-      $popoverDescriber = getPopoverDescriber($target);
-    if ($popoverDescriber.length >= 1 || isCalendarOpen($target)) return;
+      $popoverDescriber = getPopoverDescriber($target);    
+    if ($popoverDescriber.length >= 1 || isWithinMdModal($target) || isCalendarOpen($target)) return;
     hidePopover($(mdDatePickerElementSelector));
   });
 
@@ -1986,7 +1999,9 @@
         else if (!setting.enableTimePicker && !setting.textFormat) setting.textFormat = 'yyyy/MM/dd';
         if (setting.enableTimePicker && !setting.dateFormat) setting.dateFormat = 'yyyy/MM/dd   HH:mm:ss';
         else if (!setting.enableTimePicker && !setting.dateFormat) setting.dateFormat = 'yyyy/MM/dd';
+        var uniqeId = new Date().getTime();
         $this.data(mdPluginName, setting);
+        $this.attr('data-uniqueid', uniqeId);
         if (setting.selectedDate != undefined) {
           setSelectedData(setting);
           triggerChangeCalling = false;
@@ -2032,6 +2047,7 @@
             setting.selectedDateToShow = setting.selectedDate != undefined ? getClonedDate(setting.selectedDate) : new Date();
             var calendarHtml = getDateTimePickerHtml(setting);
             $(mdDatePickerElementSelector).find('[data-name="mds-datetimepicker-body"]').html(calendarHtml);
+            $(mdDatePickerElementSelector).find('[data-buttonselector]').attr('data-buttonselector', uniqeId);
             $(mdDatePickerElementSelector).modal('show');
           });
         }

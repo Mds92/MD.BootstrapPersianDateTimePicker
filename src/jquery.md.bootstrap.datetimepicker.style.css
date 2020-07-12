@@ -8,7 +8,6 @@
     font-size: 12px;
     position: relative;
     overflow: visible;
-    z-index: 999999;
 }
 
 .mds-bootstrap-persian-datetime-picker-container.rtl {
@@ -25,13 +24,13 @@
     background: #fff;
     text-align: center;
     transition: all 200ms ease;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
     z-index: 9999999;
 }
 
 .mds-bootstrap-persian-datetime-picker-container .select-year-box.inline {
     top: 23px !important;
+    overflow: hidden;
 }
 
 .mds-bootstrap-persian-datetime-picker-container .select-year-box.w-0,
