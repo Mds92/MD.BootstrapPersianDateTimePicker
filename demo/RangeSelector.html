@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Persian DateTime</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous">
+  </script>
+
+  <link rel="stylesheet" href="demo.css" />
+  <link rel="stylesheet" href="../src/jquery.md.bootstrap.datetimepicker.style.css" />
+  <!-- <link rel="stylesheet" href="../dist/jquery.md.bootstrap.datetimepicker.style.css" /> -->
+</head>
+
+<body>
+  <div class="container">
+    <h1>Range Selector</h1>
+    <hr>
+    <div class="row">
+      <div class="col-sm-6">
+        <pre>
+  $('#date3-1').MdPersianDateTimePicker({
+    targetTextSelector: '#inputDate3-1',
+    monthsToShow: [1, 1],
+    selectedDate: new Date(2020, 6, 20),
+    selectedRangeDate: [new Date(2020, 6, 20), new Date(2020, 7, 10)],
+    rangeSelector: true
+  });
+        </pre>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text cursor-pointer" id="date3-1">Icon</span>
+          </div>
+          <input type="text" id="inputDate3-1" class="form-control"
+            placeholder="DateTimePicker Range Selector With Multiple Months" aria-label="date3-1"
+            aria-describedby="date3-1">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../src/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script>
+  <!-- <script src="../dist/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script> -->
+
+  <script type="text/javascript">
+    $('#date3-1').MdPersianDateTimePicker({
+      targetTextSelector: '#inputDate3-1',
+      monthsToShow: [1, 1],
+      selectedDate: new Date(2020, 6, 20),
+      selectedRangeDate: [new Date(2020, 6, 20), new Date(2020, 7, 10)],
+      rangeSelector: true
+    });
+  </script>
+
+  <br><br>
+</body>
+
+</html>

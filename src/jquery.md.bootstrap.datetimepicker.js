@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.7.4
+ * version : 3.9.0
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -535,9 +535,9 @@
   function getSelectedDateTimeFormatted(setting) {
     if (setting.selectedDate == undefined) return '';
     if (setting.rangeSelector && setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined)
-      return getDateTimeString(getDateTimeJson1(setting.rangeSelectorStartDate), setting.dateFormat, setting.isGregorian, true) + ' - ' +
-        getDateTimeString(getDateTimeJson1(setting.rangeSelectorEndDate), setting.dateFormat, setting.isGregorian, true);
-    return getDateTimeString(getDateTimeJson1(setting.selectedDate), setting.dateFormat, setting.isGregorian, true);
+      return getDateTimeString(getDateTimeJson1(setting.rangeSelectorStartDate), setting.dateFormat, setting.isGregorian, setting.englishNumber) + ' - ' +
+        getDateTimeString(getDateTimeJson1(setting.rangeSelectorEndDate), setting.dateFormat, setting.isGregorian, setting.englishNumber);
+    return getDateTimeString(getDateTimeJson1(setting.selectedDate), setting.dateFormat, setting.isGregorian, setting.englishNumber);
   }
 
   function setSelectedData(setting) {
@@ -566,6 +566,36 @@
           break;
         default:
           $targetDate.text(getSelectedDateTimeFormatted(setting));
+          triggerChangeCalling = true;
+          $targetDate.trigger('change');
+          break;
+      }
+    }
+  }
+
+  function setSelectedRangeData(setting) {
+    var $targetDate = $(setting.targetTextSelector),
+      startDateTimeObject = setting.selectedRangeDate[0],
+      endDateTimeObject = setting.selectedRangeDate[1];
+
+    if (!startDateTimeObject)
+      throw new Error(`Start Date of '${setting.targetTextSelector}' is not valid for range selector`);
+    if (!endDateTimeObject)
+      throw new Error(`End Date of '${setting.targetTextSelector}' is not valid for range selector`);
+
+    setting.selectedDate = startDateTimeObject;
+    setting.rangeSelectorStartDate = startDateTimeObject;
+    setting.rangeSelectorEndDate = endDateTimeObject;
+
+    if ($targetDate.length > 0) {
+      switch ($targetDate[0].tagName.toLowerCase()) {
+        case 'input':
+          $targetDate.val(getSelectedDateTimeTextFormatted(setting));
+          triggerChangeCalling = true;
+          $targetDate.trigger('change');
+          break;
+        default:
+          $targetDate.text(getSelectedDateTimeTextFormatted(setting));
           triggerChangeCalling = true;
           $targetDate.trigger('change');
           break;
@@ -1727,6 +1757,7 @@
 
     if (setting.rangeSelector) { // اگر رنج سلکتور فعال بود
       if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined) {
+        setting.selectedRangeDate = [];
         setting.rangeSelectorStartDate = undefined;
         setting.rangeSelectorEndDate = undefined;
         $this.parents('table:last').find('td.selected-range-days-start-end,td.selected-range-days')
@@ -1745,6 +1776,7 @@
       }
       setSetting1($this, setting);
       if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined) {
+        setting.selectedRangeDate = [getClonedDate(setting.rangeSelectorStartDate), getClonedDate(setting.rangeSelectorEndDate)];
         if (!setting.inLine) {
           hidePopover($(mdDatePickerElementSelector));
         } else updateCalendarHtml1($this, setting);
@@ -1924,7 +1956,7 @@
   $('html').on('click', function (e) {
     if (triggerStart) return;
     var $target = $(e.target),
-      $popoverDescriber = getPopoverDescriber($target);    
+      $popoverDescriber = getPopoverDescriber($target);
     if ($popoverDescriber.length >= 1 || isWithinMdModal($target) || isCalendarOpen($target)) return;
     hidePopover($(mdDatePickerElementSelector));
   });
@@ -2002,7 +2034,10 @@
         var uniqeId = new Date().getTime();
         $this.data(mdPluginName, setting);
         $this.attr('data-uniqueid', uniqeId);
-        if (setting.selectedDate != undefined) {
+        if (setting.rangeSelector && setting.selectedRangeDate != undefined) {
+          setSelectedRangeData(setting);
+          triggerChangeCalling = false;
+        } else if (setting.selectedDate != undefined) {
           setSelectedData(setting);
           triggerChangeCalling = false;
         }
@@ -2136,6 +2171,7 @@
           setting = getSetting2($this);
         if (setting.rangeSelector) {
           setting.selectedDate = startDateTimeObject;
+          setting.selectedRangeDate = [startDateTimeObject, endDateTimeObject];
           setting.rangeSelectorStartDate = startDateTimeObject;
           setting.rangeSelectorEndDate = endDateTimeObject;
           setSetting1($this, setting);
@@ -2163,6 +2199,7 @@
         var $this = $(this),
           setting = getSetting2($this);
         setting.selectedDate = undefined;
+        setting.selectedRangeDate = [];
         setting.rangeSelectorStartDate = undefined;
         setting.rangeSelectorEndDate = undefined;
         setSetting1($this, setting);
