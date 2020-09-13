@@ -527,17 +527,23 @@
   function getSelectedDateTimeTextFormatted(setting) {
     if (setting.selectedDate == undefined) return '';
     if (setting.rangeSelector && setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined)
-      return getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.rangeSelectorStartDate) : getDateTimeJson1(setting.rangeSelectorStartDate), setting.textFormat, setting.isGregorian, setting.englishNumber) + ' - ' +
-        getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.rangeSelectorEndDate) : getDateTimeJson1(setting.rangeSelectorEndDate), setting.textFormat, setting.isGregorian, setting.englishNumber);
-    return getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.selectedDate) : getDateTimeJson1(setting.selectedDate), setting.textFormat, setting.isGregorian, setting.englishNumber);
+      return getDateTimeString(!setting.isGregorian 
+        ? getDateTimeJsonPersian1(setting.rangeSelectorStartDate) 
+        : getDateTimeJson1(setting.rangeSelectorStartDate), setting.textFormat, setting.isGregorian, setting.englishNumber) + ' - ' +
+          getDateTimeString(!setting.isGregorian 
+              ? getDateTimeJsonPersian1(setting.rangeSelectorEndDate) 
+              : getDateTimeJson1(setting.rangeSelectorEndDate), setting.textFormat, setting.isGregorian, setting.englishNumber);
+    return getDateTimeString(!setting.isGregorian 
+      ? getDateTimeJsonPersian1(setting.selectedDate) 
+      : getDateTimeJson1(setting.selectedDate), setting.textFormat, setting.isGregorian, setting.englishNumber);
   }
 
   function getSelectedDateTimeFormatted(setting) {
     if (setting.selectedDate == undefined) return '';
     if (setting.rangeSelector && setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined)
-      return getDateTimeString(getDateTimeJson1(setting.rangeSelectorStartDate), setting.dateFormat, setting.isGregorian, true) + ' - ' +
-        getDateTimeString(getDateTimeJson1(setting.rangeSelectorEndDate), setting.dateFormat, setting.isGregorian, true);
-    return getDateTimeString(getDateTimeJson1(setting.selectedDate), setting.dateFormat, setting.isGregorian, true);
+      return getDateTimeString(getDateTimeJson1(setting.rangeSelectorStartDate), setting.dateFormat, setting.isGregorian, setting.englishNumber) + ' - ' +
+        getDateTimeString(getDateTimeJson1(setting.rangeSelectorEndDate), setting.dateFormat, setting.isGregorian, setting.englishNumber);
+    return getDateTimeString(getDateTimeJson1(setting.selectedDate), setting.dateFormat, setting.isGregorian, setting.englishNumber);
   }
 
   function setSelectedData(setting) {
@@ -560,12 +566,12 @@
     if ($targetDate.length > 0) {
       switch ($targetDate[0].tagName.toLowerCase()) {
         case 'input':
-          $targetDate.val(getSelectedDateTimeFormatted(setting));
+          $targetDate.val(toEnglishNumber(getSelectedDateTimeFormatted(setting)));
           triggerChangeCalling = true;
           $targetDate.trigger('change');
           break;
         default:
-          $targetDate.text(getSelectedDateTimeFormatted(setting));
+          $targetDate.text(toEnglishNumber(getSelectedDateTimeFormatted(setting)));
           triggerChangeCalling = true;
           $targetDate.trigger('change');
           break;

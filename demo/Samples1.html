@@ -90,6 +90,7 @@ $('#date3').MdPersianDateTimePicker({
           </div>
           <input type="text" id="inputDate3" class="form-control" placeholder="DateTimePicker With Multiple Month"
             aria-label="date3" aria-describedby="date3" value="1397/02/01">
+          <input type="hidden" id="inputDate3-11">
         </div>
       </div>
       <div class="col-sm-6">
@@ -253,6 +254,7 @@ $('#date7').MdPersianDateTimePicker({
 
     $('#date3').MdPersianDateTimePicker({
       targetTextSelector: '#inputDate3',
+      targetDateSelector: '#inputDate3-11',
       monthsToShow: [1, 1],
     });
     $('#date3-1').MdPersianDateTimePicker({
