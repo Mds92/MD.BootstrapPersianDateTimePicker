@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.9.1
+ * version : 3.9.2
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -528,7 +528,7 @@
     if (setting.selectedDate == undefined) return '';
     if (setting.rangeSelector && setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined)
       return getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.rangeSelectorStartDate) : getDateTimeJson1(setting.rangeSelectorStartDate), setting.textFormat, setting.isGregorian, setting.englishNumber) + ' - ' +
-          getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.rangeSelectorEndDate) : getDateTimeJson1(setting.rangeSelectorEndDate), setting.textFormat, setting.isGregorian, setting.englishNumber);
+        getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.rangeSelectorEndDate) : getDateTimeJson1(setting.rangeSelectorEndDate), setting.textFormat, setting.isGregorian, setting.englishNumber);
     return getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.selectedDate) : getDateTimeJson1(setting.selectedDate), setting.textFormat, setting.isGregorian, setting.englishNumber);
   }
 
@@ -1751,10 +1751,10 @@
       dateNumber = Number($this.attr('data-number')),
       setting = getSetting1($this),
       selectedDateJson = setting.selectedDate == undefined ? undefined : getDateTimeJson1(setting.selectedDate),
-      selectedDateToShow = getClonedDate(setting.selectedDateToShow);
+      selectedDateToShow = getClonedDate(setting.selectedDateToShow),
+      selectedDateToShowJson = selectedDateToShow == undefined ? undefined : getDateTimeJson1(selectedDateToShow);
     if (disabled) return;
     selectedDateToShow = getDateTime4(dateNumber, selectedDateToShow, setting);
-
     if (setting.rangeSelector) { // اگر رنج سلکتور فعال بود
       if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined) {
         setting.selectedRangeDate = [];
@@ -1786,6 +1786,9 @@
     setting.selectedDate = getClonedDate(selectedDateToShow);
     setting.selectedDateToShow = getClonedDate(selectedDateToShow);
     if (selectedDateJson != undefined) {
+      selectedDateJson.hour = selectedDateToShowJson.hour;
+      selectedDateJson.minute = selectedDateToShowJson.minute;
+      selectedDateJson.second = selectedDateToShowJson.second;
       setting.selectedDate.setHours(selectedDateJson.hour);
       setting.selectedDate.setMinutes(selectedDateJson.minute);
       setting.selectedDate.setSeconds(selectedDateJson.second);
