@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.9.0
+ * version : 3.9.1
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -527,15 +527,9 @@
   function getSelectedDateTimeTextFormatted(setting) {
     if (setting.selectedDate == undefined) return '';
     if (setting.rangeSelector && setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined)
-      return getDateTimeString(!setting.isGregorian 
-        ? getDateTimeJsonPersian1(setting.rangeSelectorStartDate) 
-        : getDateTimeJson1(setting.rangeSelectorStartDate), setting.textFormat, setting.isGregorian, setting.englishNumber) + ' - ' +
-          getDateTimeString(!setting.isGregorian 
-              ? getDateTimeJsonPersian1(setting.rangeSelectorEndDate) 
-              : getDateTimeJson1(setting.rangeSelectorEndDate), setting.textFormat, setting.isGregorian, setting.englishNumber);
-    return getDateTimeString(!setting.isGregorian 
-      ? getDateTimeJsonPersian1(setting.selectedDate) 
-      : getDateTimeJson1(setting.selectedDate), setting.textFormat, setting.isGregorian, setting.englishNumber);
+      return getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.rangeSelectorStartDate) : getDateTimeJson1(setting.rangeSelectorStartDate), setting.textFormat, setting.isGregorian, setting.englishNumber) + ' - ' +
+          getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.rangeSelectorEndDate) : getDateTimeJson1(setting.rangeSelectorEndDate), setting.textFormat, setting.isGregorian, setting.englishNumber);
+    return getDateTimeString(!setting.isGregorian ? getDateTimeJsonPersian1(setting.selectedDate) : getDateTimeJson1(setting.selectedDate), setting.textFormat, setting.isGregorian, setting.englishNumber);
   }
 
   function getSelectedDateTimeFormatted(setting) {
