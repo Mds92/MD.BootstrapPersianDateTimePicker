@@ -40,16 +40,17 @@
   <script src="../src/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script>
 
   <script type="text/javascript">
-    $(document).ready(function () {
       $("#dt_class").MdPersianDateTimePicker({
         targetDateSelector: "#inputDate3",
         targetTextSelector: "#showDate_class",
         textFormat: " dddd dd MMMM yyyy ",
         isGregorian: false,
         modalMode: false,
-        englishNumber: false
+        englishNumber: false,
+        calendarViewOnChange: function(param1){
+          console.log(param1);
+        }
       });
-    });
   </script>
 
   <br><br>
