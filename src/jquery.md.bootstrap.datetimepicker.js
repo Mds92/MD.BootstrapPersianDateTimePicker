@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.9.2
+ * version : 3.10.0
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -9,8 +9,6 @@
  *
  * My weblog: mds-soft.persianblog.ir
  */
-
-
 
 (function ($) {
 
@@ -2068,7 +2066,7 @@
             hideOthers($this);
             showPopover($this);
             setTimeout(function () {
-              setting.selectedDateToShow = setting.selectedDate != undefined ? getClonedDate(setting.selectedDate) : new Date();
+              setting.selectedDateToShow = setting.selectedDate != undefined ? getClonedDate(setting.selectedDate) : getClonedDate(setting.selectedDateToShow);
               var calendarHtml = getDateTimePickerHtml(setting);
               setPopoverHeaderHtml($this, setting.inLine, $(calendarHtml).find('[data-selecteddatestring]').text().trim());
               getPopover($this).find('[data-name="mds-datetimepicker-body"]').html(calendarHtml);

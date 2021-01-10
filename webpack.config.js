@@ -1,8 +1,7 @@
 const webpack = require('webpack');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -20,13 +19,9 @@ module.exports = {
     watchContentBase: true
   },
   optimization: {
-    minimizer: [
-      new UglifyJsPlugin({
-        test: /\.js$/i,
-        sourceMap: true,
-        parallel: true
-      })
-    ]
+    minimizer: [new TerserPlugin({
+      extractComments: false,
+    })],
   },
   module: {
     rules:
@@ -46,13 +41,6 @@ module.exports = {
               }
             ]
         },
-        // {
-        //   test: /\.css$/,
-        //   use: [
-        //     { loader: "style-loader" },
-        //     { loader: "css-loader" }
-        //   ]
-        // },
         {
           test: /\.css$/,
           use: [
@@ -76,8 +64,8 @@ module.exports = {
       banner: `
 Bootstrap 4+ Persian Date Time Picker jQuery Plugin
 https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
-version : 3.9.2
-Written By Mohammad Dayyan, Mordad 1397 - 1399
+version : 3.10.0
+Written By Mohammad Dayyan, Mordad 1397 - 1400
 mds.soft@gmail.com - @mdssoft
 
       `
