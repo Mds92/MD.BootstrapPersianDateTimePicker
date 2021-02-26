@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.10.0
+ * version : 3.10.1
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -14,7 +14,7 @@
 
   // #region jalali calendar
 
-  function toJalaali(gy, gm, gd) {
+  function toJalali(gy, gm, gd) {
     return d2j(g2d(gy, gm, gd));
   }
 
@@ -22,25 +22,25 @@
     return d2g(j2d(jy, jm, jd));
   }
 
-  function isValidJalaaliDate(jy, jm, jd) {
+  function isValidJalaliDate(jy, jm, jd) {
     return jy >= -61 && jy <= 3177 &&
       jm >= 1 && jm <= 12 &&
-      jd >= 1 && jd <= jalaaliMonthLength(jy, jm);
+      jd >= 1 && jd <= jalaliMonthLength(jy, jm);
   }
 
-  function isLeapJalaaliYear(jy) {
+  function isLeapJalaliYear(jy) {
     return jalCal(jy).leap === 0;
   }
 
-  function jalaaliMonthLength(jy, jm) {
+  function jalaliMonthLength(jy, jm) {
     if (jm <= 6) return 31;
     if (jm <= 11) return 30;
-    if (isLeapJalaaliYear(jy)) return 30;
+    if (isLeapJalaliYear(jy)) return 30;
     return 29;
   }
 
   function jalCal(jy) {
-    // Jalaali years starting the 33-year rule.
+    // Jalali years starting the 33-year rule.
     var breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178],
       bl = breaks.length,
       gy = jy + 621,
@@ -53,9 +53,9 @@
       i;
 
     if (jy < jp || jy >= breaks[bl - 1])
-      throw new Error('Invalid Jalaali year ' + jy);
+      throw new Error('Invalid Jalali year ' + jy);
 
-    // Find the limiting years for the Jalaali year jy.
+    // Find the limiting years for the Jalali year jy.
     for (i = 1; i < bl; i += 1) {
       jm = breaks[i];
       jump = jm - jp;
@@ -67,7 +67,7 @@
     n = jy - jp;
 
     // Find the number of leap years from AD 621 to the beginning
-    // of the current Jalaali year in the Persian calendar.
+    // of the current Jalali year in the Persian calendar.
     leapJ = leapJ + div(n, 33) * 8 + div(mod(n, 33) + 3, 4);
     if (mod(jump, 33) === 4 && jump - n === 4)
       leapJ += 1;
@@ -122,7 +122,7 @@
         k -= 186;
       }
     } else {
-      // Previous Jalaali year.
+      // Previous Jalali year.
       jy -= 1;
       k += 179;
       if (r.leap === 1)
@@ -196,7 +196,7 @@
 `;
 
 
-  var popverHtmlTemplate = `
+  var popoverHtmlTemplate = `
 <div class="popover mds-bootstrap-persian-datetime-picker-popover" role="tooltip" ${mdDatePickerElementFlag}>    
     <div class="arrow"></div>    
     <h3 class="popover-header text-center" data-name="mds-datetimepicker-title"></h3>    
@@ -805,7 +805,7 @@
   }
 
   function getDateTimeJsonPersian1(dateTime) {
-    var persianDate = toJalaali(dateTime.getFullYear(), dateTime.getMonth() + 1, dateTime.getDate());
+    var persianDate = toJalali(dateTime.getFullYear(), dateTime.getMonth() + 1, dateTime.getDate());
     return {
       year: persianDate.jy,
       month: persianDate.jm,
@@ -826,7 +826,7 @@
   }
 
   function isLeapYear(persianYear) {
-    return isLeapJalaaliYear(persianYear);
+    return isLeapJalaliYear(persianYear);
   }
 
   function getDaysInMonthPersian(year, month) {
@@ -965,9 +965,9 @@
     return getDateTime1(dateTimeJsonPersian.year, dateTimeJsonPersian.month, 1);
   }
 
-  function parsePersianDateTime(persianDateTimeInString, dateSeperatorPattern) {
-    if (!dateSeperatorPattern) dateSeperatorPattern = "\/|-";
-    dateSeperatorPattern = new RegExp(dateSeperatorPattern, 'img');
+  function parsePersianDateTime(persianDateTimeInString, dateSeparatorPattern) {
+    if (!dateSeparatorPattern) dateSeparatorPattern = "\/|-";
+    dateSeparatorPattern = new RegExp(dateSeparatorPattern, 'img');
     persianDateTimeInString = toEnglishNumber(persianDateTimeInString);
 
     var month = 0,
@@ -976,37 +976,37 @@
       hour = 0,
       minute = 0,
       second = 0,
-      miliSecond = 0,
+      millisecond = 0,
       amPmEnum = amPm.none,
-      containMonthSeperator = dateSeperatorPattern.test(persianDateTimeInString);
+      containMonthSeparator = dateSeparatorPattern.test(persianDateTimeInString);
 
     persianDateTimeInString = persianDateTimeInString.replace(/&nbsp;/img, ' ');
     persianDateTimeInString = persianDateTimeInString.replace(/\s+/img, '-');
     persianDateTimeInString = persianDateTimeInString.replace(/\\/img, '-');
     persianDateTimeInString = persianDateTimeInString.replace(/ك/img, 'ک');
     persianDateTimeInString = persianDateTimeInString.replace(/ي/img, 'ی');
-    persianDateTimeInString = persianDateTimeInString.replace(dateSeperatorPattern, '-');
+    persianDateTimeInString = persianDateTimeInString.replace(dateSeparatorPattern, '-');
     persianDateTimeInString = '-' + persianDateTimeInString + '-';
 
     // بدست آوردن ب.ظ یا ق.ظ
     if (persianDateTimeInString.indexOf('ق.ظ') > -1)
-      amPmEnum = amPmEnum.AM;
+      amPmEnum = amPm.AM;
     else if (persianDateTimeInString.indexOf('ب.ظ') > -1)
-      amPmEnum = amPmEnum.PM;
+      amPmEnum = amPm.PM;
 
     if (persianDateTimeInString.indexOf(':') > -1) // رشته ورودی شامل ساعت نیز هست
     {
       persianDateTimeInString = persianDateTimeInString.replace(/-*:-*/img, ':');
       hour = (persianDateTimeInString.match(/-\d{1,2}(?=:)/img)[0]).replace(/\D+/, '');
-      var minuteAndSecondAndMiliSecondMatch = persianDateTimeInString.match(/:\d{1,2}(?=:?)/img);
-      minute = minuteAndSecondAndMiliSecondMatch[0].replace(/\D+/, '');
-      if (minuteAndSecondAndMiliSecondMatch[1] != undefined)
-        second = minuteAndSecondAndMiliSecondMatch[1].replace(/\D+/, '');
-      if (minuteAndSecondAndMiliSecondMatch[2] != undefined)
-        miliSecond = minuteAndSecondAndMiliSecondMatch[2].replace(/\D+/, '');
+      var minuteAndSecondAndMillisecondMatch = persianDateTimeInString.match(/:\d{1,2}(?=:?)/img);
+      minute = minuteAndSecondAndMillisecondMatch[0].replace(/\D+/, '');
+      if (minuteAndSecondAndMillisecondMatch[1] != undefined)
+        second = minuteAndSecondAndMillisecondMatch[1].replace(/\D+/, '');
+      if (minuteAndSecondAndMillisecondMatch[2] != undefined)
+        millisecond = minuteAndSecondAndMillisecondMatch[2].replace(/\D+/, '');
     }
 
-    if (containMonthSeperator) {
+    if (containMonthSeparator) {
       var monthDayMath = persianDateTimeInString.match(/-\d{1,2}(?=-\d{1,2}[^:]|-)/img);
 
       // بدست آوردن ماه
@@ -1049,7 +1049,7 @@
     var numericHour = Number(hour);
     var numericMinute = Number(minute);
     var numericSecond = Number(second);
-    var numericMiliSecond = Number(miliSecond);
+    var numericMillisecond = Number(millisecond);
 
     if (numericYear <= 0)
       numericYear = persianDateTime[0];
@@ -1061,16 +1061,16 @@
       numericDay = persianDateTime[2];
 
     switch (amPmEnum) {
-      case amPmEnum.PM:
+      case amPm.PM:
         if (numericHour < 12)
           numericHour = numericHour + 12;
         break;
-      case amPmEnum.AM:
-      case amPmEnum.None:
+      case amPm.AM:
+      case amPm.None:
         break;
     }
 
-    return getDateTime1(numericYear, numericMonth, numericDay, numericHour, numericMinute, numericSecond, numericMiliSecond);
+    return getDateTime1(numericYear, numericMonth, numericDay, numericHour, numericMinute, numericSecond, numericMillisecond);
   }
 
   function parseGregorianDateTime(gregorianDateTimeString) {
@@ -1368,7 +1368,7 @@
         selectMonth11ButtonCssClass: '',
         selectMonth12ButtonCssClass: '',
       },
-      holiDaysDateNumbers = [],
+      holidaysDateNumbers = [],
       disabledDatesNumber = [],
       specialDatesNumber = [],
       disableBeforeDateTimeJson = {},
@@ -1402,7 +1402,7 @@
         selectedDateToShowTemp = getClonedDate(selectedDateToShow);
       }
       for (i = 0; i < setting.holiDays.length; i++) {
-        holiDaysDateNumbers.push(convertToNumber1(getDateTimeJson1(setting.holiDays[i])));
+        holidaysDateNumbers.push(convertToNumber1(getDateTimeJson1(setting.holiDays[i])));
       }
       for (i = 0; i < setting.disabledDates.length; i++) {
         disabledDatesNumber.push(convertToNumber1(getDateTimeJson1(setting.disabledDates[i])));
@@ -1433,7 +1433,7 @@
         selectedDateToShowTemp = getClonedDate(selectedDateToShow);
       }
       for (i = 0; i < setting.holiDays.length; i++) {
-        holiDaysDateNumbers.push(convertToNumber1(getDateTimeJsonPersian1(setting.holiDays[i])));
+        holidaysDateNumbers.push(convertToNumber1(getDateTimeJsonPersian1(setting.holiDays[i])));
       }
       for (i = 0; i < setting.disabledDates.length; i++) {
         disabledDatesNumber.push(convertToNumber1(getDateTimeJsonPersian1(setting.disabledDates[i])));
@@ -1540,8 +1540,8 @@
       }
 
       // روزهای تعطیل
-      for (j = 0; j < holiDaysDateNumbers.length; j++) {
-        if (holiDaysDateNumbers[j] != currentDateNumber) continue;
+      for (j = 0; j < holidaysDateNumbers.length; j++) {
+        if (holidaysDateNumbers[j] != currentDateNumber) continue;
         $td.addClass('text-danger');
         break;
       }
@@ -2032,9 +2032,9 @@
         else if (!setting.enableTimePicker && !setting.textFormat) setting.textFormat = 'yyyy/MM/dd';
         if (setting.enableTimePicker && !setting.dateFormat) setting.dateFormat = 'yyyy/MM/dd   HH:mm:ss';
         else if (!setting.enableTimePicker && !setting.dateFormat) setting.dateFormat = 'yyyy/MM/dd';
-        var uniqeId = new Date().getTime();
+        var uniqueId = new Date().getTime();
         $this.data(mdPluginName, setting);
-        $this.attr('data-uniqueid', uniqeId);
+        $this.attr('data-uniqueid', uniqueId);
         if (setting.rangeSelector && setting.selectedRangeDate != undefined) {
           setSelectedRangeData(setting);
           triggerChangeCalling = false;
@@ -2053,7 +2053,7 @@
             placement: setting.placement,
             title: ' ',
             trigger: 'manual',
-            template: popverHtmlTemplate,
+            template: popoverHtmlTemplate,
             sanitize: false,
           }).on(setting.trigger, function () {
             triggerStart = true;
@@ -2083,7 +2083,7 @@
             setting.selectedDateToShow = setting.selectedDate != undefined ? getClonedDate(setting.selectedDate) : new Date();
             var calendarHtml = getDateTimePickerHtml(setting);
             $(mdDatePickerElementSelector).find('[data-name="mds-datetimepicker-body"]').html(calendarHtml);
-            $(mdDatePickerElementSelector).find('[data-buttonselector]').attr('data-buttonselector', uniqeId);
+            $(mdDatePickerElementSelector).find('[data-buttonselector]').attr('data-buttonselector', uniqueId);
             $(mdDatePickerElementSelector).modal('show');
           });
         }
