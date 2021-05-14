@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.10.1
+ * version : 3.11.0
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -1743,7 +1743,7 @@
   // #region Events
 
   // کلیک روی روزها
-  $(document).on('click', mdDatePickerContainerSelector + ' [data-day]', function () {
+  $(document).on('click', mdDatePickerContainerSelector + ' [data-day]', function (e) {
     var $this = $(this),
       disabled = $this.attr('disabled'),
       dateNumber = Number($this.attr('data-number')),
@@ -1751,7 +1751,18 @@
       selectedDateJson = setting.selectedDate == undefined ? undefined : getDateTimeJson1(setting.selectedDate),
       selectedDateToShow = getClonedDate(setting.selectedDateToShow),
       selectedDateToShowJson = selectedDateToShow == undefined ? undefined : getDateTimeJson1(selectedDateToShow);
-    if (disabled) return;
+    if (disabled) {
+      if (setting.onDayClick != undefined)
+        setting.onDayClick({
+          selectedDate: setting.selectedDate,
+          disabled,
+          event: e,
+          selectedDateToShow,
+          rangeSelectorStartDate: setting.rangeSelectorStartDate,
+          rangeSelectorEndDate: setting.rangeSelectorEndDate,
+        });
+      return;
+    }
     selectedDateToShow = getDateTime4(dateNumber, selectedDateToShow, setting);
     if (setting.rangeSelector) { // اگر رنج سلکتور فعال بود
       if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined) {
@@ -1810,6 +1821,16 @@
     } else {
       updateCalendarHtml1($this, setting);
     }
+    if (setting.onDayClick != undefined)
+      setting.onDayClick({
+        rangeSelector: setting.rangeSelector,
+        selectedDate: setting.selectedDate,
+        disabled,
+        event: e,
+        selectedDateToShow,
+        rangeSelectorStartDate: setting.rangeSelectorStartDate,
+        rangeSelectorEndDate: setting.rangeSelectorEndDate,
+      });
   });
 
   // هاور روی روزها
@@ -1860,10 +1881,8 @@
     setting.selectedDateToShow = getClonedDate(selectedDateToShow);
     setSetting1($this, setting);
     updateCalendarHtml1($this, setting);
-    if (setting.calendarViewOnChange != undefined) {
-      // $this.trigger('md.calendarViewOnChange', setting.selectedDateToShow);
+    if (setting.calendarViewOnChange != undefined)
       setting.calendarViewOnChange(setting.selectedDateToShow);
-    }
   });
 
   // عوض کردن ساعت
@@ -1983,7 +2002,7 @@
             dateFormat: '',
             isGregorian: false,
             inLine: false,
-            selectedDate: undefined,
+            selectedDate: undefined, // initial value
             selectedDateToShow: new Date(),
             monthsToShow: [0, 0],
             yearOffset: 15,
@@ -1998,7 +2017,9 @@
             rangeSelector: false,
             rangeSelectorStartDate: undefined,
             rangeSelectorEndDate: undefined,
-            modalMode: false
+            modalMode: false,
+            calendarViewOnChange: () => {},
+            onDayClick: () => {}
           }, options);
         $this.attr(mdDatePickerFlag, '');
         if (setting.targetDateSelector) {
