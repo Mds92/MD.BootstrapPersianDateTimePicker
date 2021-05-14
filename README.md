@@ -53,7 +53,7 @@ Name | Values | Description | Sample
 **isGregorian** | [false], true | Is calendar Gregorian 
 **inLine** | [false], true | Is date time picker in line 
 **modalMode** | [false], true | Open in modal mode, suitable for smart phones
-**selectedDate** | [undefined], Date | Selected date as JavaScript Date object | new Date('2018/9/30')
+**selectedDate** | [undefined], Date | Selected date as JavaScript Date object (Initial Value) | new Date('2018/9/30')
 **selectedDateToShow** | [new Date()], Date | Selected date to start calendar from it as JavaScript Date object | new Date('2018/9/30')
 **selectedRangeDate** | Array: Date[] | Selected range date as JavaScript Date object | [new Date('2020/8/5'), new Date('2020/8/15')]
 **monthsToShow** | Numeric array with 2 items, [0 ,0] | To show, number of month before and after selected date in date time picker, first item is for before month, second item is for after month | [1, 1]
