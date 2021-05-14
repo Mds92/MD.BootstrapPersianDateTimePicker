@@ -40,7 +40,7 @@ Name | Values | Description | Sample
 ------------- | ------------- | ------------- |-------------
 **englishNumber** | [false], true | Switch between English number or Persian number 
 **placement** | top, right, [bottom], left | Position of date time picker 
-**trigger** | [click], mousedown, focus, ... | Event to show date time picker 
+**trigger** | [click], mouse down, focus, ... | Event to show date time picker 
 **enableTimePicker** | [false], true | Time picker visibility 
 **targetTextSelector** | String | CSS selector to show selected date as `format` property into it | '#TextBoxId'
 **targetDateSelector** | String | CSS selector to save selected date into it | '#InputHiddenId'
