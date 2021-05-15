@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.11.0
+ * version : 3.11.1
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -2025,7 +2025,7 @@
         if (setting.targetDateSelector) {
           var targetValue = $(setting.targetDateSelector).val();
           if (targetValue) {
-            setting.selectedDate = new Date(Date.parse(targetValue));
+            setting.selectedDate = new Date(targetValue);
             setting.selectedDateToShow = getClonedDate(setting.selectedDate);
           }
         } else if (setting.targetTextSelector) {
