@@ -19,36 +19,54 @@
 </head>
 
 <body>
-  <div class="container">
-    <h2>Simple</h2>
+  <section>
     <div class="row">
-      <div class="col-sm-6">
+
+      <div class="col-md-4 form-group">
+        <label for="enter_date_1"> تاریخ شروع </label>
         <div class="input-group">
           <div class="input-group-prepend">
-            <span class="input-group-text cursor-pointer" id="dt_class">Icon</span>
+            <span class="input-group-text cursor-pointer" id="enter_date">انتخاب تاریخ</span>
           </div>
-          <input type="text" id="inputDate3" class="form-control">
+          <input type="text" name="enter_date_1" id="enter_date_1" class="form-control form-group"
+            aria-label="enter_date" aria-describedby="enter_date" />
+          <input type="hidden" name="enter_date_2" id="enter_date_2" class="form-control form-group"
+            aria-label="enter_date" aria-describedby="enter_date" />
         </div>
-        <label id="showDate_class">   </label>
-        <input type="hidden" id="targetDateSelector_id" value="2009-12-15T00:00:00Z">
+      </div>
+      <div class="col-md-4 form-group">
+        <label for="exit_date_1"> تاریخ پایان </label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text cursor-pointer" id="exit_date">انتخاب تاریخ</span>
+          </div>
+          <input type="text" name="exit_date_1" id="exit_date_1" class="form-control form-group" aria-label="exit_date"
+            aria-describedby="exit_date" />
+          <input type="hidden" name="exit_date_2" id="exit_date_2" class="form-control form-group"
+            aria-label="exit_date" aria-describedby="exit_date" />
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <script src="../dist/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script>
-  <!-- <script src="../src/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script> -->
+  <!-- <script src="../dist/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script> -->
+  <script src="../src/jquery.md.bootstrap.datetimepicker.js" type="text/javascript"></script>
 
   <script type="text/javascript">
-    $("#dt_class").MdPersianDateTimePicker({
-      targetDateSelector: "#targetDateSelector_id",
-      targetTextSelector: "#inputDate3",
-      textFormat: " dddd dd MMMM yyyy ",
-      calendarViewOnChange: function (param1) {
-        console.log('calendarViewOnChange', param1);
-      },
-      onDayClick: function (param1) {
-        console.log('onDayClick', param1);
-      }
+    $('#enter_date').MdPersianDateTimePicker({
+      targetTextSelector: '#enter_date_1',
+      targetDateSelector: '#enter_date_2',
+      fromDate: true,
+      groupId: 'enter_date',
+      modalMode: true
+    });
+
+    $('#exit_date').MdPersianDateTimePicker({
+      targetTextSelector: '#exit_date_1',
+      targetDateSelector: '#exit_date_2',
+      toDate: true,
+      groupId: 'enter_date',
+      modalMode: true
     });
   </script>
 

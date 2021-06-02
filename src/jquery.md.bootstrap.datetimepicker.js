@@ -1,6 +1,6 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.11.4
+ * version : 3.11.5
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -451,6 +451,13 @@
   //#endregion
 
   // #region Functions
+
+  function newGuid(){
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
 
   function isWithinMdModal($element) {
     return $element.parents('.modal' + mdDatePickerElementSelector + ':first').length > 0;
@@ -2053,7 +2060,7 @@
         else if (!setting.enableTimePicker && !setting.textFormat) setting.textFormat = 'yyyy/MM/dd';
         if (setting.enableTimePicker && !setting.dateFormat) setting.dateFormat = 'yyyy/MM/dd   HH:mm:ss';
         else if (!setting.enableTimePicker && !setting.dateFormat) setting.dateFormat = 'yyyy/MM/dd';
-        var uniqueId = new Date().getTime();
+        var uniqueId = newGuid();
         $this.data(mdPluginName, setting);
         $this.attr('data-uniqueid', uniqueId);
         if (setting.rangeSelector && setting.selectedRangeDate != undefined) {
