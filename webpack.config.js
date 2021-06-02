@@ -1,5 +1,6 @@
 const webpack = require('webpack');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const TerserPlugin = require('terser-webpack-plugin');
 
@@ -8,7 +9,7 @@ module.exports = {
     'jquery.md.bootstrap.datetimepicker': './src/jquery.md.bootstrap.datetimepicker.js',
     'jquery.md.bootstrap.datetimepicker.style': './src/jquery.md.bootstrap.datetimepicker.style.css'
   },
-  devtool: 'source-map',  
+  devtool: 'source-map',
   mode: 'production',
   output: {
     filename: '[name].js'
@@ -19,40 +20,36 @@ module.exports = {
     watchContentBase: true
   },
   optimization: {
-    minimizer: [new TerserPlugin({
-      extractComments: false,
-    })],
+    minimizer: [
+      new TerserPlugin({
+        extractComments: false,
+      }),
+      new CssMinimizerPlugin(),
+    ],
   },
   module: {
-    rules:
-      [
-        {
-          test: /.js$/,
-          enforce: 'pre',
-          exclude: /node_modules/,
-          use:
-            [
-              {
-                loader: `jshint-loader`,
-                options: {
-                  emitErrors: true,
-                  failOnHint: true
-                }
-              }
-            ]
-        },
-        {
-          test: /\.css$/,
-          use: [
-            {
-              loader: MiniCssExtractPlugin.loader,
-              options: {
-              }
-            },
-            "css-loader"
-          ],
-        }
-      ]
+    rules: [{
+        test: /.js$/,
+        enforce: 'pre',
+        exclude: /node_modules/,
+        use: [{
+          loader: `jshint-loader`,
+          options: {
+            emitErrors: true,
+            failOnHint: true
+          }
+        }]
+      },
+      {
+        test: /.s?css$/,
+        use: [{
+            loader: MiniCssExtractPlugin.loader,
+            options: {}
+          },
+          'css-loader'
+        ],
+      }
+    ]
   },
   plugins: [
     new FixStyleOnlyEntriesPlugin(),
