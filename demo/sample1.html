@@ -9,6 +9,7 @@
   <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="demo.css" />
   <link rel="stylesheet" href="../src/mds.bs.datetimepicker.style.css" />
+  <script src="../dist/sample.js" type="text/javascript"></script>
   
 </head>
 
@@ -18,12 +19,15 @@
     <div class="col-md-6">
       <div class="input-group mb-3">
         <span class="input-group-text cursor-pointer" id="basic-addon1">📅</span>
-        <input type="text" class="form-control" placeholder="Username" aria-label="Username"
+        <input type="text" class="form-control" placeholder="Date" aria-label="Date"
           aria-describedby="basic-addon1" data-name="dtp1">
       </div>
     </div>
   </div>
-  <script type="module" src="sample1.js"></script>
+  <script>
+    var d = new Mds.SampleModule(document.querySelector('[data-name="dtp1"]'));
+    console.log(d.getTagName());
+  </script>
 </body>
 
 </html>

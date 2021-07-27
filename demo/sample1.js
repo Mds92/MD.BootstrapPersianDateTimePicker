@@ -1,3 +1,3 @@
-﻿import { MdsPersianDateTimePicker } from '../dist/mds.bs.datetimepicker.js'
+﻿import { SampleModule } from '../dist/sample.js'
 
-const mdsBsDtp = new MdsPersianDateTimePicker(document.querySelector('[data-name="dtp1"]'));
+new SampleModule(document.querySelector('[data-name="dtp1"]'));
