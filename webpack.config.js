@@ -7,13 +7,13 @@ const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 
 module.exports = {
   entry: {
-    'sample': './src/sample.ts',
+    'mds.bs.datetimepicker': './src/mds.bs.datetimepicker.ts',
     'mds.bs.datetimepicker.style': './src/mds.bs.datetimepicker.style.css',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     library: {
-      name: 'SampleModule',
+      name: 'MdsPersianDateTimePicker',
       type: 'umd',
     },
   },
@@ -25,7 +25,7 @@ module.exports = {
       use: [{
         loader: 'expose-loader',
         options: {
-          exposes: ['Mds'],
+          exposes: ['mds'],
         },
       }, {
         loader: 'ts-loader'
@@ -52,10 +52,15 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     clean: true
   },
-  watch: false,
+  watch: true,
   devServer: {
     lazy: false,
-    watchContentBase: true
+    hot: true,
+    inline: true,
+    watchContentBase: true,
+    watchOptions: {
+      poll: true
+    }
   },
   optimization: {
     minimizer: [

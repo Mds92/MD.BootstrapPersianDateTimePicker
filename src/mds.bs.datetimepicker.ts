@@ -3,9 +3,10 @@
 export class MdsPersianDateTimePicker {
   constructor(element: Element, setting: MdsPersianDateTimePickerSetting) {
 
+    if (!setting) setting = new MdsPersianDateTimePickerSetting();
     if (setting.toDate && setting.fromDate) throw new Error(`MdsPersianDateTimePicker => You can not set true 'toDate' and 'fromDate' together`);
     if (!setting.groupId && (setting.toDate || setting.fromDate)) throw new Error(`MdsPersianDateTimePicker => When you set 'toDate' or 'fromDate' true, you have to set 'groupId'`);
-
+    
     this.bsPopover = new Popover(element, {
       container: 'body',
       content: '',
