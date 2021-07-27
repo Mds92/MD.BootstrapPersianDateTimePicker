@@ -1,20 +1,44 @@
+const path = require('path');
 const webpack = require('webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 
 module.exports = {
   entry: {
-    'jquery.md.bootstrap.datetimepicker': './src/jquery.md.bootstrap.datetimepicker.js',
-    'jquery.md.bootstrap.datetimepicker.style': './src/jquery.md.bootstrap.datetimepicker.style.css'
+    'mds.bs.datetimepicker': './src/mds.bs.datetimepicker.ts',
+    'mds.bs.datetimepicker.style': './src/mds.bs.datetimepicker.style.css',
   },
   devtool: 'source-map',
   mode: 'production',
-  output: {
-    filename: '[name].js'
+  module: {
+    rules: [{
+      test: /\.tsx?$/,
+      use: 'ts-loader',
+      exclude: /node_modules/,
+    }, {
+      test: /.s?css$/,
+      use: [{
+          loader: MiniCssExtractPlugin.loader,
+          options: {}
+        },
+        'css-loader'
+      ],
+    }],
   },
-  watch: true,
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+  },
+  externals: {
+    bootstrap: 'bootstrap',
+  },
+  output: {
+    filename: '[name].js',
+    path: path.resolve(__dirname, 'dist'),
+    clean: true
+  },
+  watch: false,
   devServer: {
     lazy: false,
     watchContentBase: true
@@ -27,44 +51,19 @@ module.exports = {
       new CssMinimizerPlugin(),
     ],
   },
-  module: {
-    rules: [{
-        test: /.js$/,
-        enforce: 'pre',
-        exclude: /node_modules/,
-        use: [{
-          loader: `jshint-loader`,
-          options: {
-            emitErrors: true,
-            failOnHint: true
-          }
-        }]
-      },
-      {
-        test: /.s?css$/,
-        use: [{
-            loader: MiniCssExtractPlugin.loader,
-            options: {}
-          },
-          'css-loader'
-        ],
-      }
-    ]
-  },
   plugins: [
-    new FixStyleOnlyEntriesPlugin(),
+    new RemoveEmptyScriptsPlugin(),
     new MiniCssExtractPlugin({
       filename: "[name].css",
       chunkFilename: "[id].css"
     }),
     new webpack.BannerPlugin({
       banner: `
-Bootstrap 4+ Persian Date Time Picker jQuery Plugin
+Bootstrap 5+ Persian Date Time Picker jQuery Plugin
 https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
-version : 3.11.5
+version : 4.0.0
 Written By Mohammad Dayyan, Mordad 1397 - 1400
 mds.soft@gmail.com - @mdssoft
-
       `
     })
   ]
