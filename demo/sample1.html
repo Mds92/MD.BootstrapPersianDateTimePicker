@@ -17,22 +17,40 @@
     <div class="row">
       <div class="col-md-1"></div>
       <div class="col-md-3">
-        <h2>Simple</h2>
+        <h3>Simple</h3>
       </div>
     </div>
     <div class="row">
       <div class="col-md-1"></div>
       <div class="col-md-3">
         <div class="input-group mb-3">
-          <span class="input-group-text cursor-pointer" id="basic-addon1">📅</span>
-          <input type="text" class="form-control" placeholder="Date" aria-label="Date" aria-describedby="basic-addon1"
-            data-name="dtp1">
+          <span class="input-group-text cursor-pointer" id="basic-dtp-simple">📅</span>
+          <input type="text" class="form-control" placeholder="Simple Date Picker">
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-3">
+        <h3>Time</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-3">
+        <div class="input-group mb-3">
+          <span class="input-group-text cursor-pointer" id="basic-dtp-time">📅</span>
+          <input type="text" class="form-control" placeholder="Simple Date Picker">
         </div>
       </div>
     </div>
   </div>
   <script>
-    new mds.MdsPersianDateTimePicker(document.getElementById('basic-addon1'));
+    // new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-simple'));
+    new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-time'), {
+      enableTimePicker: true,
+    });
   </script>
 </body>
 

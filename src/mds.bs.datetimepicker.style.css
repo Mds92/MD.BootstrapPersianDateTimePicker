@@ -168,6 +168,18 @@
   background: #ccc;
 }
 
+.mds-bootstrap-persian-datetime-picker-container table[data-time-picker-table] input[data-clock][type="number"] {
+  -moz-appearance: textfield;
+  text-align: left;
+}
+
+.mds-bootstrap-persian-datetime-picker-container table[data-time-picker-table] input[data-clock][type="number"]::-webkit-inner-spin-button,
+.mds-bootstrap-persian-datetime-picker-container table[data-time-picker-table] input[data-clock][type="number"]::-webkit-outer-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+  direction: ltr;
+}
+
 .mds-bootstrap-persian-datetime-picker-container .btn {
   width: 100%;
   margin-bottom: 1px;

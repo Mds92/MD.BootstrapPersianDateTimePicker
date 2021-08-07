@@ -2,8 +2,7 @@
 
 export class MdsPersianDateTimePicker {
   constructor(element: Element, setting: MdsPersianDateTimePickerSetting) {
-
-    if (!setting) setting = new MdsPersianDateTimePickerSetting();
+    setting = this.extend(new MdsPersianDateTimePickerSetting(), setting);
     if (!element) throw new Error(`MdsPersianDateTimePicker => element is null!`);
     if (setting.toDate && setting.fromDate) throw new Error(`MdsPersianDateTimePicker => You can not set true 'toDate' and 'fromDate' together`);
     if (!setting.groupId && (setting.toDate || setting.fromDate)) throw new Error(`MdsPersianDateTimePicker => When you set 'toDate' or 'fromDate' true, you have to set 'groupId'`);
@@ -31,7 +30,7 @@ export class MdsPersianDateTimePicker {
       trigger: 'manual',
       template: this.popoverHtmlTemplate,
       sanitize: false,
-    });    
+    });
 
     this.enableEvents();
   }
@@ -255,19 +254,19 @@ MD DateTimePicker Html
 <tfoot>
 <tr {{timePickerAttribute}}>
 <td colspan="100" class="border-0">
-<table class="table table-sm table-borderless">
+<table class="table table-sm table-borderless" data-time-picker-table>
 <tbody>
 <tr>
 <td>
-<input type="text" title="{{hourText}}" value="{{hour}}" maxlength="2" data-clock="hour" />
+<input type="number" title="{{hourText}}" value="{{hour}}" maxlength="2" data-clock="hour" />
 </td>
 <td>:</td>
 <td>
-<input type="text" title="{{minuteText}}" value="{{minute}}" maxlength="2" data-clock="minute" />
+<input type="number" title="{{minuteText}}" value="{{minute}}" maxlength="2" data-clock="minute" />
 </td>
 <td>:</td>
 <td>
-<input type="text" title="{{secondText}}" value="{{second}}" maxlength="2" data-clock="second" />
+<input type="number" title="{{secondText}}" value="{{second}}" maxlength="2" data-clock="second" />
 </td>
 </tr>
 </tbody>
@@ -466,6 +465,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
       var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
+  }
+  private extend(...args: any[]) {
+    for (var i = 1; i < args.length; i++)
+      for (var key in args[i])
+        if (args[i].hasOwnProperty(key))
+          args[0][key] = args[i][key];
+    return args[0];
   }
   private getDateTimeJson1(dateTime: Date): GetDateTimeJson1 {
     return {
@@ -1382,9 +1388,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private enableEvents(): void {
     this.element.addEventListener('click', this.showPopoverEvent, true);
     document.getElementsByTagName('HTML')[0].addEventListener('click', this.hidePopoverEvent, false);
-    this.element.addEventListener('hidden.bs.popover', (e) => {
-      console.log();
-    });
   }
   private showPopoverEvent(e: PointerEvent): void {
     MdsPersianDateTimePicker.getInstance(<Element>e.target).show();
@@ -1404,9 +1407,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
         i.hide();
       });
   }
-  private disposePopoverEvent(e: CustomEvent): void {
-    MdsPersianDateTimePicker.getInstance(<Element>e.target).dispose();
-  }
+
 
   show(): void {
     this.bsPopover.show();
@@ -1430,7 +1431,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
     this.bsPopover.dispose();
     this.element.removeEventListener('click', this.showPopoverEvent);
     document.getElementsByTagName('HTML')[0].removeEventListener('click', this.hidePopoverEvent);
-    MdsPersianDateTimePickerData.remove(this.element.getAttribute('mds-date-picker-guid'));
   }
   getBsPopoverInstance() {
     return this.bsPopover;
