@@ -18,10 +18,11 @@ export class MdsPersianDateTimePicker {
     this.setting.selectedDateToShow = setting.selectedDateToShow ? this.getClonedDate(setting.selectedDateToShow) : this.getClonedDate(setting.selectedDate);
 
     const newGuid = this.newGuid();
-    element.setAttribute("mds-guid", newGuid);
-    MdsPersianDateTimePickerData.set(element, newGuid, this);
+    this.element = element;
+    this.element.setAttribute("mds-date-picker-guid", newGuid);
+    MdsPersianDateTimePickerData.set(newGuid, this);
 
-    this.bsPopover = new Popover(element, {
+    this.bsPopover = new Popover(this.element, {
       container: 'body',
       content: this.getDateTimePickerHtml(),
       html: true,
@@ -30,7 +31,9 @@ export class MdsPersianDateTimePicker {
       trigger: 'manual',
       template: this.popoverHtmlTemplate,
       sanitize: false,
-    });
+    });    
+
+    this.enableEvents();
   }
 
   // #region jalali calendar
@@ -200,7 +203,7 @@ export class MdsPersianDateTimePicker {
   private mdPersianDateTimePickerFlag = 'data-mds-date-time-picker';
   private mdDatePickerGroupIdAttribute = 'data-mdpersiandatetimepicker-group';
   private modalHtmlTemplate = `<div class="modal fade mds-bootstrap-persian-datetime-picker-modal" tabindex="-1" role="dialog" aria-labelledby="mdDateTimePickerModalLabel" aria-hidden="true" ${this.mdPersianDateTimePickerFlag}>
-<div class="modal-dialog modal-xl modal-dialog-centered" data-buttonselector="">
+<div class="modal-dialog modal-xl modal-dialog-centered" data-button-selector>
 <div class="modal-content">
 <div class="modal-body" data-name="mds-datetimepicker-body">
 MD DateTimePicker Html
@@ -210,20 +213,20 @@ MD DateTimePicker Html
 </div>
   `;
   private popoverHtmlTemplate = `<div class="popover mds-bootstrap-persian-datetime-picker-popover" role="tooltip" ${this.mdPersianDateTimePickerFlag}>
-<div class="arrow"></div>
-<h3 class="popover-header text-center" data-name="mds-datetimepicker-title"></h3>
+<div class="popover-arrow"></div>
+<h3 class="popover-header text-center p-1" data-name="mds-datetimepicker-title"></h3>
 <div class="popover-body p-0" data-name="mds-datetimepicker-body"></div>
 </div>`;
   private popoverHeaderSelectYearHtmlTemplate = `<table class="table table-sm table-borderless text-center p-0 m-0 {{rtlCssClass}}">
 <tr>
 <th>
-<a href="javascript:void(0)" title="{{previousText}}" data-year="{{latestPreviousYear}}" data-yearrangebuttonchange="-1"> &lt; </a>
+<a href="javascript:void(0)" title="{{previousText}}" data-year="{{latestPreviousYear}}" data-year-range-button-change="-1"> &lt; </a>
 </th>
 <th>
 {{yearsRangeText}}
 </th>
 <th>
-<a href="javascript:void(0)" title="{{nextText}}" data-year="{{latestNextYear}}" data-yearrangebuttonchange="1"> &gt; </a>
+<a href="javascript:void(0)" title="{{nextText}}" data-year="{{latestNextYear}}" data-year-range-button-change="1"> &gt; </a>
 </th>
 </tr>
 </table>`;
@@ -241,7 +244,7 @@ MD DateTimePicker Html
 <table class="table table-sm text-center p-0 m-0">
 <thead>
 <tr {{selectedDateStringAttribute}}>
-<th colspan="100" data-selecteddatestring>{{selectedDateString}}</th>
+<th colspan="100" data-selected-date-string>{{selectedDateString}}</th>
 </tr>
 </thead>
 <tbody>
@@ -301,33 +304,33 @@ MD DateTimePicker Html
 <table class="table table-sm table-borderless">
 <tr>
 <th>
-<button type="button" class="btn btn-light btn-sm" title="{{previousYearText}}" data-changedatebutton data-number="{{previousYearButtonDateNumber}}" {{previousYearButtonDisabledAttribute}}> &lt;&lt; </button>
+<button type="button" class="btn btn-light btn-sm" title="{{previousYearText}}" data-change-date-button data-number="{{previousYearButtonDateNumber}}" {{previousYearButtonDisabledAttribute}}> &lt;&lt; </button>
 </th>
 <th>
-<button type="button" class="btn btn-light btn-sm" title="{{previousMonthText}}" data-changedatebutton data-number="{{previousMonthButtonDateNumber}}" {{previousMonthButtonDisabledAttribute}}> &lt; </button>
+<button type="button" class="btn btn-light btn-sm" title="{{previousMonthText}}" data-change-date-button data-number="{{previousMonthButtonDateNumber}}" {{previousMonthButtonDisabledAttribute}}> &lt; </button>
 </th>
 <th style="width: 120px;">
 <div class="dropdown">
 <button type="button" class="btn btn-light btn-sm dropdown-toggle" id="mdsBootstrapPersianDatetimePickerMonthSelectorButon"
-data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+data-bs-toggle="dropdown" aria-expanded="false">
 {{selectedMonthName}}
 </button>
 <div class="dropdown-menu" aria-labelledby="mdsBootstrapPersianDatetimePickerMonthSelectorButon">
-<a class="dropdown-item {{selectMonth1ButtonCssClass}}" data-changedatebutton data-number="{{dropDownMenuMonth1DateNumber}}">{{monthName1}}</a>
-<a class="dropdown-item {{selectMonth2ButtonCssClass}}" data-changedatebutton data-number="{{dropDownMenuMonth2DateNumber}}">{{monthName2}}</a>
-<a class="dropdown-item {{selectMonth3ButtonCssClass}}" data-changedatebutton data-number="{{dropDownMenuMonth3DateNumber}}">{{monthName3}}</a>
+<a class="dropdown-item {{selectMonth1ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth1DateNumber}}">{{monthName1}}</a>
+<a class="dropdown-item {{selectMonth2ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth2DateNumber}}">{{monthName2}}</a>
+<a class="dropdown-item {{selectMonth3ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth3DateNumber}}">{{monthName3}}</a>
 <div class="dropdown-divider"></div>
-<a class="dropdown-item {{selectMonth4ButtonCssClass}}" data-changedatebutton data-number="{{dropDownMenuMonth4DateNumber}}">{{monthName4}}</a>
-<a class="dropdown-item {{selectMonth5ButtonCssClass}}" data-changedatebutton data-number="{{dropDownMenuMonth5DateNumber}}">{{monthName5}}</a>
-<a class="dropdown-item {{selectMonth6ButtonCssClass}}" data-changedatebutton data-number="{{dropDownMenuMonth6DateNumber}}">{{monthName6}}</a>
+<a class="dropdown-item {{selectMonth4ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth4DateNumber}}">{{monthName4}}</a>
+<a class="dropdown-item {{selectMonth5ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth5DateNumber}}">{{monthName5}}</a>
+<a class="dropdown-item {{selectMonth6ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth6DateNumber}}">{{monthName6}}</a>
 <div class="dropdown-divider"></div>
-<a class="dropdown-item {{selectMonth7ButtonCssClass}}" data-changedatebutton data-number="{{dropDownMenuMonth7DateNumber}}">{{monthName7}}</a>
-<a class="dropdown-item {{selectMonth8ButtonCssClass}}" data-changedatebutton data-number="{{dropDownMenuMonth8DateNumber}}">{{monthName8}}</a>
-<a class="dropdown-item {{selectMonth9ButtonCssClass}}" data-changedatebutton data-number="{{dropDownMenuMonth9DateNumber}}">{{monthName9}}</a>
+<a class="dropdown-item {{selectMonth7ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth7DateNumber}}">{{monthName7}}</a>
+<a class="dropdown-item {{selectMonth8ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth8DateNumber}}">{{monthName8}}</a>
+<a class="dropdown-item {{selectMonth9ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth9DateNumber}}">{{monthName9}}</a>
 <div class="dropdown-divider"></div>
-<a class="dropdown-item {{selectMonth10ButtonCssClass}}" data-changedatebutton data-number="{{dropDownMenuMonth10DateNumber}}">{{monthName10}}</a>
-<a class="dropdown-item {{selectMonth11ButtonCssClass}}" data-changedatebutton data-number="{{dropDownMenuMonth11DateNumber}}">{{monthName11}}</a>
-<a class="dropdown-item {{selectMonth12ButtonCssClass}}" data-changedatebutton data-number="{{dropDownMenuMonth12DateNumber}}">{{monthName12}}</a>
+<a class="dropdown-item {{selectMonth10ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth10DateNumber}}">{{monthName10}}</a>
+<a class="dropdown-item {{selectMonth11ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth11DateNumber}}">{{monthName11}}</a>
+<a class="dropdown-item {{selectMonth12ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth12DateNumber}}">{{monthName12}}</a>
 </div>
 </div>
 </th>
@@ -335,10 +338,10 @@ data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 <button type="button" class="btn btn-light btn-sm" select-year-button {{selectYearButtonDisabledAttribute}}>{{selectedYear}}</button>
 </th>
 <th>
-<button type="button" class="btn btn-light btn-sm" title="{{nextMonthText}}" data-changedatebutton data-number="{{nextMonthButtonDateNumber}}" {{nextMonthButtonDisabledAttribute}}> &gt; </button>
+<button type="button" class="btn btn-light btn-sm" title="{{nextMonthText}}" data-change-date-button data-number="{{nextMonthButtonDateNumber}}" {{nextMonthButtonDisabledAttribute}}> &gt; </button>
 </th>
 <th>
-<button type="button" class="btn btn-light btn-sm" title="{{nextYearText}}" data-changedatebutton data-number="{{nextYearButtonDateNumber}}" {{nextYearButtonDisabledAttribute}}> &gt;&gt; </button>
+<button type="button" class="btn btn-light btn-sm" title="{{nextYearText}}" data-change-date-button data-number="{{nextYearButtonDateNumber}}" {{nextYearButtonDisabledAttribute}}> &gt;&gt; </button>
 </th>
 </tr>
 </table>
@@ -451,6 +454,7 @@ data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
   // #region Properties
 
   private bsPopover: Popover;
+  private element: Element;
   private setting: MdsPersianDateTimePickerSetting;
 
   // #endregion
@@ -961,13 +965,13 @@ data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       const toDateElement = document.querySelector('[' + this.mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]');
       const fromDateElement = document.querySelector('[' + this.mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]');
       if (setting.fromDate && toDateElement != null) {
-        const toDateMdsInstance = this.getInstance(toDateElement);
+        const toDateMdsInstance = MdsPersianDateTimePicker.getInstance(toDateElement);
         if (toDateMdsInstance != null) {
           const toDateSelectedDate = toDateMdsInstance.setting.selectedDate;
           disableAfterDateTimeJson = !toDateSelectedDate ? undefined : setting.isGregorian ? this.getDateTimeJson1(toDateSelectedDate) : this.getDateTimeJsonPersian1(toDateSelectedDate);
         }
       } else if (setting.toDate && fromDateElement != null) {
-        const fromDateInstance = this.getInstance(fromDateElement);
+        const fromDateInstance = MdsPersianDateTimePicker.getInstance(fromDateElement);
         if (fromDateInstance != null) {
           const fromDateSelectedDate = fromDateInstance.setting.selectedDate;
           disableBeforeDateTimeJson = !fromDateSelectedDate ? undefined : setting.isGregorian ? this.getDateTimeJson1(fromDateSelectedDate) : this.getDateTimeJsonPersian1(fromDateSelectedDate);
@@ -1039,6 +1043,7 @@ data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       dayNumberInString = setting.englishNumber ? this.zeroPad(i) : this.toPersianNumber(this.zeroPad(i));
 
       td = document.createElement('TD');
+      td.setAttribute('data-day', '');
       td.setAttribute('data-number', currentDateNumber.toString());
       td.innerHTML = dayNumberInString;
 
@@ -1174,6 +1179,7 @@ data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       dayNumberInString = setting.englishNumber ? this.zeroPad(i) : this.toPersianNumber(this.zeroPad(i));
       currentDateNumber = this.convertToNumber2(nextMonthDateTimeJson.year, nextMonthDateTimeJson.month, i);
       td = document.createElement('TD');
+      td.setAttribute('data-nm', '');
       td.setAttribute('data-number', currentDateNumber.toString());
       td.innerHTML = dayNumberInString;
       if (setting.rangeSelector) {
@@ -1266,7 +1272,7 @@ data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       inlineTitleBox.classList.remove('w-0');
     }
   }
-  private getDateTimePickerHtml() {
+  private getDateTimePickerHtml(): string {
     let selectedDateToShow = this.getClonedDate(this.setting.selectedDateToShow);
     let html = this.dateTimePickerHtmlTemplate;
 
@@ -1313,13 +1319,13 @@ data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       const toDateElement = document.querySelector('[' + this.mdDatePickerGroupIdAttribute + '="' + this.setting.groupId + '"][data-toDate]');
       const fromDateElement = document.querySelector('[' + this.mdDatePickerGroupIdAttribute + '="' + this.setting.groupId + '"][data-fromDate]');
       if (this.setting.fromDate && toDateElement != null) {
-        const toDateMdsInstance = this.getInstance(toDateElement);
+        const toDateMdsInstance = MdsPersianDateTimePicker.getInstance(toDateElement);
         if (toDateMdsInstance != null) {
           const toDateSelectedDate = toDateMdsInstance.setting.selectedDate;
           disableAfterDateTimeJson = !toDateSelectedDate ? undefined : this.setting.isGregorian ? this.getDateTimeJson1(toDateSelectedDate) : this.getDateTimeJsonPersian1(toDateSelectedDate);
         }
       } else if (this.setting.toDate && fromDateElement != null) {
-        const fromDateInstance = this.getInstance(fromDateElement);
+        const fromDateInstance = MdsPersianDateTimePicker.getInstance(fromDateElement);
         if (fromDateInstance != null) {
           const fromDateSelectedDate = fromDateInstance.setting.selectedDate;
           disableBeforeDateTimeJson = !fromDateSelectedDate ? undefined : this.setting.isGregorian ? this.getDateTimeJson1(fromDateSelectedDate) : this.getDateTimeJsonPersian1(fromDateSelectedDate);
@@ -1373,32 +1379,67 @@ data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
     return html;
   }
+  private enableEvents(): void {
+    this.element.addEventListener('click', this.showPopoverEvent, true);
+    document.getElementsByTagName('HTML')[0].addEventListener('click', this.hidePopoverEvent, false);
+    this.element.addEventListener('hidden.bs.popover', (e) => {
+      console.log();
+    });
+  }
+  private showPopoverEvent(e: PointerEvent): void {
+    MdsPersianDateTimePicker.getInstance(<Element>e.target).show();
+  }
+  private hidePopoverEvent(e: PointerEvent): void {
+    const element = <Element>e.target;
+    if (element.tagName == 'HTML') {
+      MdsPersianDateTimePickerData.getAll().forEach(i => {
+        i.hide();
+      });
+      return;
+    }
+    const isWithinDatePicker = element.closest('[data-mds-date-time-picker]') != null ||
+      element.getAttribute('mds-date-picker-guid') != undefined;
+    if (!isWithinDatePicker)
+      MdsPersianDateTimePickerData.getAll().forEach(i => {
+        i.hide();
+      });
+  }
+  private disposePopoverEvent(e: CustomEvent): void {
+    MdsPersianDateTimePicker.getInstance(<Element>e.target).dispose();
+  }
 
-  show() {
+  show(): void {
     this.bsPopover.show();
   }
-  hide() {
+  hide(): void {
     this.bsPopover.hide();
   }
-  toggle() {
+  toggle(): void {
     this.bsPopover.toggle();
   }
-  enable() {
+  enable(): void {
     this.bsPopover.enable();
   }
-  disable() {
+  disable(): void {
     this.bsPopover.disable();
   }
-  update() {
+  update(): void {
     this.bsPopover.update();
   }
-  getInstance(element: Element): MdsPersianDateTimePicker {
-    const elementGuid = element.getAttribute('mds-guid');
-    if (!elementGuid) return null;
-    return MdsPersianDateTimePickerData.get(element, elementGuid);
+  dispose(): void {
+    this.bsPopover.dispose();
+    this.element.removeEventListener('click', this.showPopoverEvent);
+    document.getElementsByTagName('HTML')[0].removeEventListener('click', this.hidePopoverEvent);
+    MdsPersianDateTimePickerData.remove(this.element.getAttribute('mds-date-picker-guid'));
   }
   getBsPopoverInstance() {
     return this.bsPopover;
+  }
+
+  static getInstance(element: Element): MdsPersianDateTimePicker {
+    const elementGuid = element.getAttribute('mds-date-picker-guid');
+    if (!elementGuid) return null;
+    return MdsPersianDateTimePickerData.get(elementGuid);
   }
 
   // #endregion
@@ -1458,31 +1499,23 @@ class MdsPersianDateTimePickerSetting {
 
 const MdsPersianDateTimePickerElementMap = new Map();
 var MdsPersianDateTimePickerData = {
-  set(element: Element, key: string, instance: MdsPersianDateTimePicker) {
-    if (!MdsPersianDateTimePickerElementMap.has(element)) {
-      MdsPersianDateTimePickerElementMap.set(element, new Map());
-    }
-    const instanceMap = MdsPersianDateTimePickerElementMap.get(element);
-    if (!instanceMap.has(key) && instanceMap.size !== 0) {
-      console.error(`MdsPersianDateTimePicker doesn't allow more than one instance per element. Bound instance: ${Array.from(instanceMap.keys())[0]}.`);
+  set(key: string, instance: MdsPersianDateTimePicker): void {
+    if (!MdsPersianDateTimePickerElementMap.has(key)) {
+      MdsPersianDateTimePickerElementMap.set(key, instance);
       return;
     }
-    instanceMap.set(key, instance);
+    MdsPersianDateTimePickerElementMap.set(key, instance);
   },
-  get(element: Element, key: string) {
-    if (MdsPersianDateTimePickerElementMap.has(element)) {
-      return MdsPersianDateTimePickerElementMap.get(element).get(key) || null;
-    }
-    return null;
+  get(key: string): MdsPersianDateTimePicker {
+    return MdsPersianDateTimePickerElementMap.get(key) || null;
   },
-  remove(element: Element, key: string) {
-    if (!MdsPersianDateTimePickerElementMap.has(element)) {
+  getAll(): MdsPersianDateTimePicker[] {
+    return Array.from(MdsPersianDateTimePickerElementMap, ([name, value]) => value);
+  },
+  remove(key: string): void {
+    if (!MdsPersianDateTimePickerElementMap.has(key)) {
       return;
     }
-    const instanceMap = MdsPersianDateTimePickerElementMap.get(element);
-    instanceMap.delete(key);
-    if (instanceMap.size === 0) {
-      MdsPersianDateTimePickerElementMap.delete(element);
-    }
+    MdsPersianDateTimePickerElementMap.delete(key);
   }
 };

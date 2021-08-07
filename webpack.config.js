@@ -52,14 +52,18 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     clean: true
   },
+  target: 'web',
   watch: true,
   devServer: {
     lazy: false,
     hot: true,
     inline: true,
     watchContentBase: true,
+    contentBase: './',
     watchOptions: {
-      poll: true
+      aggregateTimeout: 200,
+      poll: 1000,
+      followSymlinks: true,
     }
   },
   optimization: {
