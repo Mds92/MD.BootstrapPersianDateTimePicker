@@ -523,8 +523,8 @@
   function updateCalendarHtml1($element, setting) {
     var calendarHtml = getDateTimePickerHtml(setting),
       $container = setting.inLine ?
-      $element.parents(mdDatePickerFlagSelector + ':first') :
-      $element.parents('[data-name="mds-datetimepicker-body"]:first');
+        $element.parents(mdDatePickerFlagSelector + ':first') :
+        $element.parents('[data-name="mds-datetimepicker-body"]:first');
     setPopoverHeaderHtml($element, setting.inLine, $(calendarHtml).find('[data-selecteddatestring]').text().trim());
     $container.html(calendarHtml);
   }
