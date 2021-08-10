@@ -127,7 +127,7 @@
   background-color: aquamarine;
 }
 
-.mds-bs-dtp-container table table tbody.days td[data-day][data-selectedday] {
+.mds-bs-dtp-container table table tbody.days td[data-day][data-mds-dtp-selected-day] {
   background-color: #96daff;
 }
 

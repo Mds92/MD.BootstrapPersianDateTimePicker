@@ -347,6 +347,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private nextYearTextPersian = 'سال بعد';
   private nextMonthTextPersian = 'ماه بعد';
   private nextTextPersian = 'بعدی';
+  private todayTextPersian = 'امروز';
   private goTodayTextPersian = 'برو به امروز';
   private cancelTextPersian = 'انصراف';
   private currentYearTextPersian = 'سال جاری';
@@ -356,6 +357,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private nextText = 'Next';
   private nextYearText = 'Next Year';
   private nextMonthText = 'Next Month';
+  private todayText = 'Today';
   private goTodayText = 'Go Today';
   private cancelText = 'Cancel';
   private currentYearText = 'Current Year';
@@ -439,13 +441,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
 
   // #region Methods
 
-  private newGuid() {
+  private newGuid(): string {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
       let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
   }
-  private extend(...args: any[]) {
+  private extend(...args: any[]): any {
     for (let i = 1; i < args.length; i++)
       for (let key in args[i])
         if (args[i].hasOwnProperty(key))
@@ -492,29 +494,29 @@ data-bs-toggle="dropdown" aria-expanded="false">
       dayOfWeek: dateTime.getDay(),
     };
   }
-  private getDateTimeJsonPersian2(yearPersian: number, monthPersian: number, dayPersian: number, hour: number, minute: number, second: number) {
+  private getDateTimeJsonPersian2(yearPersian: number, monthPersian: number, dayPersian: number, hour: number, minute: number, second: number): GetDateTimeJson1 {
     if (!this.isNumber(hour)) hour = 0;
     if (!this.isNumber(minute)) minute = 0;
     if (!this.isNumber(second)) second = 0;
     let gregorian = this.toGregorian(yearPersian, monthPersian, dayPersian);
     return this.getDateTimeJsonPersian1(new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, hour, minute, second));
   }
-  private getWeekDayName(englishWeekDayIndex: number, isGregorian: boolean) {
+  private getWeekDayName(englishWeekDayIndex: number, isGregorian: boolean): string {
     if (!isGregorian) return this.weekDayNamesPersian[englishWeekDayIndex];
     return this.weekDayNames[englishWeekDayIndex];
   }
-  private getMonthName(monthIndex: number, isGregorian: boolean) {
+  private getMonthName(monthIndex: number, isGregorian: boolean): string {
     if (!isGregorian) return this.monthNamesPersian[monthIndex];
     return this.monthNames[monthIndex];
   }
-  private getWeekDayShortName(englishWeekDayIndex: number, isGregorian: boolean) {
+  private getWeekDayShortName(englishWeekDayIndex: number, isGregorian: boolean): string {
     if (!isGregorian) return this.shortDayNamesPersian[englishWeekDayIndex];
     return this.shortDayNames[englishWeekDayIndex];
   }
-  private isLeapYear(persianYear: number) {
+  private isLeapYear(persianYear: number): boolean {
     return this.isLeapJalaliYear(persianYear);
   }
-  private getDaysInMonthPersian(year: number, month: number) {
+  private getDaysInMonthPersian(year: number, month: number): number {
     let numberOfDaysInMonth = 31;
     if (month > 6 && month < 12)
       numberOfDaysInMonth = 30;
@@ -522,10 +524,10 @@ data-bs-toggle="dropdown" aria-expanded="false">
       numberOfDaysInMonth = this.isLeapYear(year) ? 30 : 29;
     return numberOfDaysInMonth;
   }
-  private getDaysInMonth(year: number, month: number) {
+  private getDaysInMonth(year: number, month: number): number {
     return new Date(year, month + 1, 0).getDate();
   }
-  private getLastDayDateOfPreviousMonth(dateTime: Date, isGregorian: boolean) {
+  private getLastDayDateOfPreviousMonth(dateTime: Date, isGregorian: boolean): Date {
     let dateTimeLocal = this.getClonedDate(dateTime);
     if (isGregorian) {
       let previousMonth = new Date(dateTimeLocal.getFullYear(), dateTimeLocal.getMonth() - 1, 1),
@@ -543,7 +545,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     }
     return this.getDateTime1(dateTimeJsonPersian.year, dateTimeJsonPersian.month, this.getDaysInMonthPersian(dateTimeJsonPersian.year, dateTimeJsonPersian.month));
   }
-  private getFirstDayDateOfNextMonth(dateTime: Date, isGregorian: boolean) {
+  private getFirstDayDateOfNextMonth(dateTime: Date, isGregorian: boolean): Date {
     let dateTimeLocal = this.getClonedDate(dateTime);
     if (isGregorian) {
       let nextMonth = new Date(dateTimeLocal.getFullYear(), dateTimeLocal.getMonth() + 1, 1);
@@ -561,24 +563,24 @@ data-bs-toggle="dropdown" aria-expanded="false">
     }
     return this.getDateTime1(dateTimeJsonPersian.year, dateTimeJsonPersian.month, 1);
   }
-  private getDateTime1(yearPersian: number, monthPersian: number, dayPersian: number, hour?: number, minute?: number, second?: number) {
+  private getDateTime1(yearPersian: number, monthPersian: number, dayPersian: number, hour?: number, minute?: number, second?: number): Date {
     if (!this.isNumber(hour)) hour = 0;
     if (!this.isNumber(minute)) minute = 0;
     if (!this.isNumber(second)) second = 0;
     let gregorian = this.toGregorian(yearPersian, monthPersian, dayPersian);
     return new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, hour, minute, second);
   }
-  private getDateTime2(dateTimeJsonPersian: GetDateTimeJson1) {
+  private getDateTime2(dateTimeJsonPersian: GetDateTimeJson1): Date {
     if (!dateTimeJsonPersian.hour) dateTimeJsonPersian.hour = 0;
     if (!dateTimeJsonPersian.minute) dateTimeJsonPersian.minute = 0;
     if (!dateTimeJsonPersian.second) dateTimeJsonPersian.second = 0;
     let gregorian = this.toGregorian(dateTimeJsonPersian.year, dateTimeJsonPersian.month, dateTimeJsonPersian.day);
     return new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, dateTimeJsonPersian.hour, dateTimeJsonPersian.minute, dateTimeJsonPersian.second);
   }
-  private getDateTime3(dateTimeJson: GetDateTimeJson1) {
+  private getDateTime3(dateTimeJson: GetDateTimeJson1): Date {
     return new Date(dateTimeJson.year, dateTimeJson.month - 1, dateTimeJson.day, dateTimeJson.hour, dateTimeJson.minute, dateTimeJson.second);
   }
-  private getDateTime4(dateNumber: number, dateTime: Date, isGregorian: boolean) {
+  private getDateTime4(dateNumber: number, dateTime: Date, isGregorian: boolean): Date {
     let dateTimeJson = this.getDateTimeJson2(dateNumber);
     if (!isGregorian) {
       let dateTimeJsonPersian = this.getDateTimeJsonPersian1(dateTime);
@@ -591,7 +593,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
         dateTime.getHours(), dateTime.getMinutes(), dateTime.getSeconds());
     return dateTime;
   }
-  private addMonthToDateTimeJson(dateTimeJson: GetDateTimeJson1, addedMonth: number, isGregorian: boolean) {
+  private addMonthToDateTimeJson(dateTimeJson: GetDateTimeJson1, addedMonth: number, isGregorian: boolean): GetDateTimeJson1 {
     // وقتی نیاز هست تا ماه یا روز به تاریخی اضافه کنم
     // پس از اضافه کردن ماه یا روز این متد را استفاده میکنم تا سال و ماه
     // با مقادیر جدید تصحیح و برگشت داده شوند
@@ -614,13 +616,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private convertToNumber1(dateTimeJson: GetDateTimeJson1): number {
     return Number(this.zeroPad(dateTimeJson.year) + this.zeroPad(dateTimeJson.month) + this.zeroPad(dateTimeJson.day));
   }
-  private convertToNumber2(year: number, month: number, day: number) {
+  private convertToNumber2(year: number, month: number, day: number): number {
     return Number(this.zeroPad(year) + this.zeroPad(month) + this.zeroPad(day));
   }
-  private convertToNumber3(dateTime: Date) {
+  private convertToNumber3(dateTime: Date): number {
     return this.convertToNumber1(this.getDateTimeJson1(dateTime));
   }
-  private convertToNumber4(dateTime: Date) {
+  private convertToNumber4(dateTime: Date): number {
     return Number(this.zeroPad(dateTime.getFullYear()) + this.zeroPad(dateTime.getMonth()) + this.zeroPad(dateTime.getDate()));
   }
   private getShortHour(hour: number): number {
@@ -645,7 +647,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
         amPm = 'ق.ظ';
     return amPm;
   }
-  private addMonthToDateTime(dateTime: Date, addedMonth: number, isGregorian: boolean) {
+  private addMonthToDateTime(dateTime: Date, addedMonth: number, isGregorian: boolean): Date {
     let dateTimeJson: GetDateTimeJson1;
     if (!isGregorian) {
       dateTimeJson = this.getDateTimeJsonPersian1(dateTime);
@@ -656,10 +658,10 @@ data-bs-toggle="dropdown" aria-expanded="false">
     dateTimeJson = this.addMonthToDateTimeJson(dateTimeJson, addedMonth, isGregorian);
     return this.getDateTime3(dateTimeJson);
   }
-  private isNumber(n: any) {
+  private isNumber(n: any): boolean {
     return !isNaN(parseFloat(n)) && isFinite(n);
   }
-  private toPersianNumber(inputNumber1: number | string) {
+  private toPersianNumber(inputNumber1: number | string): string {
     /* ۰ ۱ ۲ ۳ ۴ ۵ ۶ ۷ ۸ ۹ */
     if (!inputNumber1) return '';
     let str1 = inputNumber1.toString().trim();
@@ -676,7 +678,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     str1 = str1.replace(/9/img, '۹');
     return str1;
   }
-  private toEnglishNumber(inputNumber2: number | string) {
+  private toEnglishNumber(inputNumber2: number | string): string {
     if (!inputNumber2) return '';
     let str = inputNumber2.toString().trim();
     if (!str) return '';
@@ -698,7 +700,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     let len = (String(base).length - String(nr).length) + 1;
     return len > 0 ? new Array(len).join('0') + nr : nr;
   }
-  private getDateTimeString(dateTimeJson: GetDateTimeJson1, format: string, isGregorian: boolean, englishNumber: boolean) {
+  private getDateTimeString(dateTimeJson: GetDateTimeJson1, format: string, isGregorian: boolean, englishNumber: boolean): string {
 
     if (isGregorian) englishNumber = true;
 
@@ -778,7 +780,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
         this.getDateTimeString(!setting.isGregorian ? this.getDateTimeJsonPersian1(setting.rangeSelectorEndDate) : this.getDateTimeJson1(setting.rangeSelectorEndDate), setting.textFormat, setting.isGregorian, setting.isGregorian);
     return this.getDateTimeString(!setting.isGregorian ? this.getDateTimeJsonPersian1(setting.selectedDate) : this.getDateTimeJson1(setting.selectedDate), setting.textFormat, setting.isGregorian, setting.isGregorian);
   }
-  private setSelectedData(setting: MdsPersianDateTimePickerSetting) {
+  private setSelectedData(setting: MdsPersianDateTimePickerSetting): void {
     const targetTextElement = setting.targetTextSelector ? document.querySelector(setting.targetTextSelector) : undefined;
     const targetDateElement = setting.targetDateSelector ? document.querySelector(setting.targetDateSelector) : undefined;
     const changeEvent = new Event('change');
@@ -1078,6 +1080,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       // امروز
       if (currentDateNumber == todayDateNumber) {
         td.setAttribute('data-today', '');
+        td.setAttribute('title', setting.isGregorian ? this.todayText : this.todayTextPersian);
         // اگر نام روز هفته انتخاب شده در تکس باکس قبل از تاریخ امروز باشد
         // نباید دیگر نام روز هفته تغییر کند
         if (!dayOfWeek)
@@ -1086,7 +1089,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
 
       // روز از قبل انتخاب شده
       if (!setting.rangeSelector && selectedDateNumber == currentDateNumber) {
-        td.setAttribute('data-selectedday', '');
+        td.setAttribute('data-mds-dtp-selected-day', '');
         dayOfWeek = this.getWeekDayName(tdNumber - 1 < 0 ? 0 : tdNumber - 1, setting.isGregorian);
       }
 
@@ -1175,7 +1178,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
         if (currentDateNumber == specialDatesNumber[j])
           td.setAttribute('data-special-date', '');
       }
-      if (setting.disabledDays && setting.disabledDays.indexOf(tdNumber) >= 0) {
+      if (setting.disabledDays != null && setting.disabledDays.length > 0 && setting.disabledDays.indexOf(tdNumber) >= 0) {
         td.setAttribute('disabled', '');
       }
       // \\
@@ -1558,7 +1561,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
     const mdsPersianDateTimePickerInstance = MdsPersianDateTimePicker.getInstance(element);
     if (mdsPersianDateTimePickerInstance.setting.disabled || element.getAttribute('disabled') != undefined)
       return;
-    console.log('true');
     let dateNumber = Number(element.getAttribute('data-number'));
     const setting = mdsPersianDateTimePickerInstance.setting;
     const disabled = element.getAttribute('disabled') != undefined;
@@ -1601,6 +1603,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
       }
       return;
     }
+    this.getPopover(element).querySelectorAll('[data-day]').forEach(e => e.removeAttribute('data-mds-dtp-selected-day'));
+    element.setAttribute('data-mds-dtp-selected-day', '');
     setting.selectedDate = this.getClonedDate(selectedDateToShow);
     setting.selectedDateToShow = this.getClonedDate(selectedDateToShow);
     if (selectedDateJson != undefined) {
@@ -1706,7 +1710,10 @@ data-bs-toggle="dropdown" aria-expanded="false">
     }
   }
   private showPopoverEvent = (e: PointerEvent): void => {
-    MdsPersianDateTimePicker.getInstance(<Element>e.target).show();
+    MdsPersianDateTimePickerData.getAll().forEach(i => i.hide());
+    const instance = MdsPersianDateTimePicker.getInstance(<Element>e.target);
+    if (instance.setting.disabled) return;
+    instance.show();
   }
   private hidePopoverEvent = (e: PointerEvent): void => {
     const element = <Element>e.target;
@@ -1803,7 +1810,7 @@ class MdsPersianDateTimePickerSetting {
   monthsToShow = [0, 0];
   yearOffset = 15;
   holiDays: Date[] = [];
-  disabledDates: Date[] = [];
+  disabledDates: Date[] = []; // تاریخ هایی که غیر فعال هستند
   disabledDays: number[] = []; // روزهایی از هفته که غیر فعال هستند
   specialDates: Date[] = [];
   disableBeforeToday = false;
