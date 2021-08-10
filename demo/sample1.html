@@ -41,7 +41,8 @@
       <div class="col-md-3">
         <div class="input-group mb-3">
           <span class="input-group-text cursor-pointer" id="basic-dtp-time">📅</span>
-          <input type="text" class="form-control" placeholder="Simple Date Picker">
+          <input type="text" class="form-control" placeholder="Simple Date Picker" data-name="basic-dtp-time">
+          <input type="hidden" data-name="basic-dtp-time-hidden">
         </div>
       </div>
     </div>
@@ -50,6 +51,8 @@
     // new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-simple'));
     new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-time'), {
       enableTimePicker: true,
+      targetTextSelector: '[data-name="basic-dtp-time"]',
+      targetDateSelector: '[data-name="basic-dtp-time-hidden"]'
     });
   </script>
 </body>
