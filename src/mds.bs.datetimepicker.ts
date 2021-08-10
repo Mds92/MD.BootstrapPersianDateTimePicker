@@ -18,15 +18,15 @@ export class MdsPersianDateTimePicker {
 
     this.guid = this.newGuid();
     this.element = element;
-    this.element.setAttribute("mds-date-picker-guid", this.guid);
+    this.element.setAttribute("mds-dtp-guid", this.guid);
     MdsPersianDateTimePickerData.set(this.guid, this);
 
     this.bsPopover = new Popover(this.element, {
       container: 'body',
       content: this.getDateTimePickerHtml(this.setting),
+      title: this.getPopoverHeaderHtml(this.setting),
       html: true,
       placement: setting.placement,
-      title: this.getPopoverHeaderHtml(this.setting),
       trigger: 'manual',
       template: this.popoverHtmlTemplate,
       sanitize: false,
@@ -40,31 +40,26 @@ export class MdsPersianDateTimePicker {
   private toJalali(gy: number, gm: number, gd: number) {
     return this.d2j(this.g2d(gy, gm, gd));
   }
-
   private toGregorian(jy: number, jm: number, jd: number) {
     return this.d2g(this.j2d(jy, jm, jd));
   }
-
   private isValidJalaliDate(jy: number, jm: number, jd: number) {
     return jy >= -61 && jy <= 3177 &&
       jm >= 1 && jm <= 12 &&
       jd >= 1 && jd <= this.jalaliMonthLength(jy, jm);
   }
-
   private isLeapJalaliYear(jy: number) {
     return this.jalCal(jy).leap === 0;
   }
-
   private jalaliMonthLength(jy: number, jm: number) {
     if (jm <= 6) return 31;
     if (jm <= 11) return 30;
     if (this.isLeapJalaliYear(jy)) return 30;
     return 29;
   }
-
   private jalCal(jy: number) {
     // Jalali years starting the 33-year rule.
-    var breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178],
+    let breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178],
       bl = breaks.length,
       gy = jy + 621,
       leapJ = -14,
@@ -96,10 +91,10 @@ export class MdsPersianDateTimePicker {
       leapJ += 1;
 
     // And the same in the Gregorian calendar (until the year gy).
-    var leapG = this.div(gy, 4) - this.div((this.div(gy, 100) + 1) * 3, 4) - 150;
+    let leapG = this.div(gy, 4) - this.div((this.div(gy, 100) + 1) * 3, 4) - 150;
 
     // Determine the Gregorian date of Farvardin the 1st.
-    var march = 20 + leapJ - leapG;
+    let march = 20 + leapJ - leapG;
 
     // Find how many years have passed since the last leap year.
     if (jump - n < 6)
@@ -113,14 +108,12 @@ export class MdsPersianDateTimePicker {
       march: march
     };
   }
-
   private j2d(jy: number, jm: number, jd: number) {
-    var r = this.jalCal(jy);
+    let r = this.jalCal(jy);
     return this.g2d(r.gy, 3, r.march) + (jm - 1) * 31 - this.div(jm, 7) * (jm - 7) + jd - 1;
   }
-
   private d2j(jdn: number) {
-    var gy = this.d2g(jdn).gy, // Calculate Gregorian year (gy).
+    let gy = this.d2g(jdn).gy, // Calculate Gregorian year (gy).
       jy = gy - 621,
       r = this.jalCal(jy),
       jdn1F = this.g2d(gy, 3, r.march),
@@ -159,34 +152,30 @@ export class MdsPersianDateTimePicker {
       jd: jd
     };
   }
-
   private g2d(gy: number, gm: number, gd: number) {
-    var d = this.div((gy + this.div(gm - 8, 6) + 100100) * 1461, 4) +
+    let d = this.div((gy + this.div(gm - 8, 6) + 100100) * 1461, 4) +
       this.div(153 * this.mod(gm + 9, 12) + 2, 5) +
       gd - 34840408;
     d = d - this.div(this.div(gy + 100100 + this.div(gm - 8, 6), 100) * 3, 4) + 752;
     return d;
   }
-
   private d2g(jdn: number) {
-    var j;
+    let j;
     j = 4 * jdn + 139361631;
     j = j + this.div(this.div(4 * jdn + 183187720, 146097) * 3, 4) * 4 - 3908;
-    var i = this.div(this.mod(j, 1461), 4) * 5 + 308;
-    var gd = this.div(this.mod(i, 153), 5) + 1;
-    var gm = this.mod(this.div(i, 153), 12) + 1;
-    var gy = this.div(j, 1461) - 100100 + this.div(8 - gm, 6);
+    let i = this.div(this.mod(j, 1461), 4) * 5 + 308;
+    let gd = this.div(this.mod(i, 153), 5) + 1;
+    let gm = this.mod(this.div(i, 153), 12) + 1;
+    let gy = this.div(j, 1461) - 100100 + this.div(8 - gm, 6);
     return {
       gy: gy,
       gm: gm,
       gd: gd
     };
   }
-
   private div(a: number, b: number) {
     return ~~(a / b);
   }
-
   private mod(a: number, b: number) {
     return a - ~~(a / b) * b;
   }
@@ -197,7 +186,7 @@ export class MdsPersianDateTimePicker {
 
   private mdDatePickerFlag = 'data-md-persian-date-time-picker';
   private mdDatePickerFlagSelector = '[' + this.mdDatePickerFlag + ']';
-  private mdPersianDateTimePickerFlag = 'data-mds-date-time-picker';
+  private mdPersianDateTimePickerFlag = 'data-mds-dtp';
   private mdDatePickerGroupIdAttribute = 'data-mdpersiandatetimepicker-group';
   private modalHtmlTemplate = `<div class="modal fade mds-bs-persian-datetime-picker-modal" tabindex="-1" role="dialog" aria-labelledby="mdDateTimePickerModalLabel" aria-hidden="true" ${this.mdPersianDateTimePickerFlag}>
 <div class="modal-dialog modal-xl modal-dialog-centered" data-button-selector>
@@ -211,7 +200,7 @@ MD DateTimePicker Html
   `;
   private popoverHtmlTemplate = `<div class="popover mds-bs-persian-datetime-picker-popover" role="tooltip" ${this.mdPersianDateTimePickerFlag}>
 <div class="popover-arrow"></div>
-<h3 class="popover-header text-center p-1" data-name="mds-date-time-picker-title"></h3>
+<h3 class="popover-header text-center p-1" mds-dtp-title="true"></h3>
 <div class="popover-body p-0" data-name="mds-date-time-picker-body"></div>
 </div>`;
   private popoverHeaderSelectYearHtmlTemplate = `<table class="table table-sm table-borderless text-center p-0 m-0 {{rtlCssClass}}">
@@ -230,18 +219,22 @@ MD DateTimePicker Html
   private dateTimePickerYearsToSelectHtmlTemplate = `<table class="table table-sm text-center p-0 m-0" dir="ltr">
 <tbody>
 {{yearsToSelectHtml}}
+<tr>
+<td colspan="100" class="text-center">
+<button class="btn btn-sm btn-light" data-mds-hide-year-list-box="true">{{cancelText}}</button>
+</td>
+</tr>
 </tbody>
 </table>`;
 
   private dateTimePickerHtmlTemplate = `<div class="mds-bs-persian-datetime-picker-container {{rtlCssClass}}">
 <div class="select-year-inline-box w-0" data-name="dateTimePickerYearsButtonsContainer">
 </div>
-<div class="select-year-box w-0" data-name="dateTimePickerYearsToSelectContainer" dir="ltr">
-</div>
+<div class="select-year-box w-0" data-mds-dtp-year-list-box="true" dir="ltr"></div>
 <table class="table table-sm text-center p-0 m-0">
 <thead>
 <tr {{selectedDateStringAttribute}}>
-<th data-selected-date-string colspan="100">{{selectedDateString}}</th>
+<th mds-dtp-inline-header colspan="100">{{dtpInlineHeader}}</th>
 </tr>
 </thead>
 <tbody>
@@ -285,10 +278,10 @@ MD DateTimePicker Html
 <table class="table table-sm table-borderless">
 <tr>
 <th>
-<button type="button" class="btn btn-light btn-sm" title="{{previousYearText}}" data-change-date-button data-number="{{previousYearButtonDateNumber}}" {{previousYearButtonDisabledAttribute}}> &lt;&lt; </button>
+<button type="button" class="btn btn-light btn-sm" title="{{previousYearText}}" data-change-date-button="true" data-number="{{previousYearButtonDateNumber}}" {{previousYearButtonDisabledAttribute}}> &lt;&lt; </button>
 </th>
 <th>
-<button type="button" class="btn btn-light btn-sm" title="{{previousMonthText}}" data-change-date-button data-number="{{previousMonthButtonDateNumber}}" {{previousMonthButtonDisabledAttribute}}> &lt; </button>
+<button type="button" class="btn btn-light btn-sm" title="{{previousMonthText}}" data-change-date-button="true" data-number="{{previousMonthButtonDateNumber}}" {{previousMonthButtonDisabledAttribute}}> &lt; </button>
 </th>
 <th style="width: 120px;">
 <div class="dropdown">
@@ -297,21 +290,21 @@ data-bs-toggle="dropdown" aria-expanded="false">
 {{selectedMonthName}}
 </button>
 <div class="dropdown-menu" aria-labelledby="mdsBootstrapPersianDatetimePickerMonthSelectorButon">
-<a class="dropdown-item {{selectMonth1ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth1DateNumber}}">{{monthName1}}</a>
-<a class="dropdown-item {{selectMonth2ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth2DateNumber}}">{{monthName2}}</a>
-<a class="dropdown-item {{selectMonth3ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth3DateNumber}}">{{monthName3}}</a>
+<a class="dropdown-item {{selectMonth1ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth1DateNumber}}">{{monthName1}}</a>
+<a class="dropdown-item {{selectMonth2ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth2DateNumber}}">{{monthName2}}</a>
+<a class="dropdown-item {{selectMonth3ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth3DateNumber}}">{{monthName3}}</a>
 <div class="dropdown-divider"></div>
-<a class="dropdown-item {{selectMonth4ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth4DateNumber}}">{{monthName4}}</a>
-<a class="dropdown-item {{selectMonth5ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth5DateNumber}}">{{monthName5}}</a>
-<a class="dropdown-item {{selectMonth6ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth6DateNumber}}">{{monthName6}}</a>
+<a class="dropdown-item {{selectMonth4ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth4DateNumber}}">{{monthName4}}</a>
+<a class="dropdown-item {{selectMonth5ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth5DateNumber}}">{{monthName5}}</a>
+<a class="dropdown-item {{selectMonth6ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth6DateNumber}}">{{monthName6}}</a>
 <div class="dropdown-divider"></div>
-<a class="dropdown-item {{selectMonth7ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth7DateNumber}}">{{monthName7}}</a>
-<a class="dropdown-item {{selectMonth8ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth8DateNumber}}">{{monthName8}}</a>
-<a class="dropdown-item {{selectMonth9ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth9DateNumber}}">{{monthName9}}</a>
+<a class="dropdown-item {{selectMonth7ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth7DateNumber}}">{{monthName7}}</a>
+<a class="dropdown-item {{selectMonth8ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth8DateNumber}}">{{monthName8}}</a>
+<a class="dropdown-item {{selectMonth9ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth9DateNumber}}">{{monthName9}}</a>
 <div class="dropdown-divider"></div>
-<a class="dropdown-item {{selectMonth10ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth10DateNumber}}">{{monthName10}}</a>
-<a class="dropdown-item {{selectMonth11ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth11DateNumber}}">{{monthName11}}</a>
-<a class="dropdown-item {{selectMonth12ButtonCssClass}}" data-change-date-button data-number="{{dropDownMenuMonth12DateNumber}}">{{monthName12}}</a>
+<a class="dropdown-item {{selectMonth10ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth10DateNumber}}">{{monthName10}}</a>
+<a class="dropdown-item {{selectMonth11ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth11DateNumber}}">{{monthName11}}</a>
+<a class="dropdown-item {{selectMonth12ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth12DateNumber}}">{{monthName12}}</a>
 </div>
 </div>
 </th>
@@ -319,10 +312,10 @@ data-bs-toggle="dropdown" aria-expanded="false">
 <button type="button" class="btn btn-light btn-sm" mds-pdtp-select-year-button {{selectYearButtonDisabledAttribute}}>{{selectedYear}}</button>
 </th>
 <th>
-<button type="button" class="btn btn-light btn-sm" title="{{nextMonthText}}" data-change-date-button data-number="{{nextMonthButtonDateNumber}}" {{nextMonthButtonDisabledAttribute}}> &gt; </button>
+<button type="button" class="btn btn-light btn-sm" title="{{nextMonthText}}" data-change-date-button="true" data-number="{{nextMonthButtonDateNumber}}" {{nextMonthButtonDisabledAttribute}}> &gt; </button>
 </th>
 <th>
-<button type="button" class="btn btn-light btn-sm" title="{{nextYearText}}" data-change-date-button data-number="{{nextYearButtonDateNumber}}" {{nextYearButtonDisabledAttribute}}> &gt;&gt; </button>
+<button type="button" class="btn btn-light btn-sm" title="{{nextYearText}}" data-change-date-button="true" data-number="{{nextYearButtonDateNumber}}" {{nextYearButtonDisabledAttribute}}> &gt;&gt; </button>
 </th>
 </tr>
 </table>
@@ -344,7 +337,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
 </table>
 </td>`;
 
-  private triggerChangeCalling = false;
   private previousYearTextPersian = 'سال قبل';
   private previousMonthTextPersian = 'ماه قبل';
   private previousTextPersian = 'قبلی';
@@ -352,6 +344,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private nextMonthTextPersian = 'ماه بعد';
   private nextTextPersian = 'بعدی';
   private goTodayTextPersian = 'برو به امروز';
+  private cancelTextPersian = 'انصراف';
   private previousText = 'Previous';
   private previousYearText = 'Previous Year';
   private previousMonthText = 'Previous Month';
@@ -359,6 +352,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private nextYearText = 'Next Year';
   private nextMonthText = 'Next Month';
   private goTodayText = 'Go Today';
+  private cancelText = 'Cancel';
   private shortDayNamesPersian = [
     'ش',
     'ی',
@@ -432,6 +426,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private bsPopover: Popover;
   private element: Element;
   private setting: MdsPersianDateTimePickerSetting;
+  private tempTitleString = '';
 
   // #endregion
 
@@ -439,13 +434,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
 
   private newGuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
   }
   private extend(...args: any[]) {
-    for (var i = 1; i < args.length; i++)
-      for (var key in args[i])
+    for (let i = 1; i < args.length; i++)
+      for (let key in args[i])
         if (args[i].hasOwnProperty(key))
           args[0][key] = args[i][key];
     return args[0];
@@ -478,7 +473,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     };
   }
   private getDateTimeJsonPersian1(dateTime: Date): GetDateTimeJson1 {
-    var persianDate = this.toJalali(dateTime.getFullYear(), dateTime.getMonth() + 1, dateTime.getDate());
+    let persianDate = this.toJalali(dateTime.getFullYear(), dateTime.getMonth() + 1, dateTime.getDate());
     return {
       year: persianDate.jy,
       month: persianDate.jm,
@@ -494,7 +489,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     if (!this.isNumber(hour)) hour = 0;
     if (!this.isNumber(minute)) minute = 0;
     if (!this.isNumber(second)) second = 0;
-    var gregorian = this.toGregorian(yearPersian, monthPersian, dayPersian);
+    let gregorian = this.toGregorian(yearPersian, monthPersian, dayPersian);
     return this.getDateTimeJsonPersian1(new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, hour, minute, second));
   }
   private getWeekDayName(englishWeekDayIndex: number, isGregorian: boolean) {
@@ -513,7 +508,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     return this.isLeapJalaliYear(persianYear);
   }
   private getDaysInMonthPersian(year: number, month: number) {
-    var numberOfDaysInMonth = 31;
+    let numberOfDaysInMonth = 31;
     if (month > 6 && month < 12)
       numberOfDaysInMonth = 30;
     else if (month == 12)
@@ -524,13 +519,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
     return new Date(year, month + 1, 0).getDate();
   }
   private getLastDayDateOfPreviousMonth(dateTime: Date, isGregorian: boolean) {
-    var dateTimeLocal = this.getClonedDate(dateTime);
+    let dateTimeLocal = this.getClonedDate(dateTime);
     if (isGregorian) {
-      var previousMonth = new Date(dateTimeLocal.getFullYear(), dateTimeLocal.getMonth() - 1, 1),
+      let previousMonth = new Date(dateTimeLocal.getFullYear(), dateTimeLocal.getMonth() - 1, 1),
         daysInMonth = this.getDaysInMonth(previousMonth.getFullYear(), previousMonth.getMonth());
       return new Date(previousMonth.getFullYear(), previousMonth.getMonth(), daysInMonth);
     }
-    var dateTimeJsonPersian = this.getDateTimeJsonPersian1(dateTimeLocal);
+    let dateTimeJsonPersian = this.getDateTimeJsonPersian1(dateTimeLocal);
     dateTimeJsonPersian.month += -1;
     if (dateTimeJsonPersian.month <= 0) {
       dateTimeJsonPersian.month = 12;
@@ -542,12 +537,12 @@ data-bs-toggle="dropdown" aria-expanded="false">
     return this.getDateTime1(dateTimeJsonPersian.year, dateTimeJsonPersian.month, this.getDaysInMonthPersian(dateTimeJsonPersian.year, dateTimeJsonPersian.month));
   }
   private getFirstDayDateOfNextMonth(dateTime: Date, isGregorian: boolean) {
-    var dateTimeLocal = this.getClonedDate(dateTime);
+    let dateTimeLocal = this.getClonedDate(dateTime);
     if (isGregorian) {
-      var nextMonth = new Date(dateTimeLocal.getFullYear(), dateTimeLocal.getMonth() + 1, 1);
+      let nextMonth = new Date(dateTimeLocal.getFullYear(), dateTimeLocal.getMonth() + 1, 1);
       return new Date(nextMonth.getFullYear(), nextMonth.getMonth(), 1);
     }
-    var dateTimeJsonPersian = this.getDateTimeJsonPersian1(dateTimeLocal);
+    let dateTimeJsonPersian = this.getDateTimeJsonPersian1(dateTimeLocal);
     dateTimeJsonPersian.month += 1;
     if (dateTimeJsonPersian.month <= 0) {
       dateTimeJsonPersian.month = 12;
@@ -563,23 +558,23 @@ data-bs-toggle="dropdown" aria-expanded="false">
     if (!this.isNumber(hour)) hour = 0;
     if (!this.isNumber(minute)) minute = 0;
     if (!this.isNumber(second)) second = 0;
-    var gregorian = this.toGregorian(yearPersian, monthPersian, dayPersian);
+    let gregorian = this.toGregorian(yearPersian, monthPersian, dayPersian);
     return new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, hour, minute, second);
   }
   private getDateTime2(dateTimeJsonPersian: GetDateTimeJson1) {
     if (!dateTimeJsonPersian.hour) dateTimeJsonPersian.hour = 0;
     if (!dateTimeJsonPersian.minute) dateTimeJsonPersian.minute = 0;
     if (!dateTimeJsonPersian.second) dateTimeJsonPersian.second = 0;
-    var gregorian = this.toGregorian(dateTimeJsonPersian.year, dateTimeJsonPersian.month, dateTimeJsonPersian.day);
+    let gregorian = this.toGregorian(dateTimeJsonPersian.year, dateTimeJsonPersian.month, dateTimeJsonPersian.day);
     return new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, dateTimeJsonPersian.hour, dateTimeJsonPersian.minute, dateTimeJsonPersian.second);
   }
   private getDateTime3(dateTimeJson: GetDateTimeJson1) {
     return new Date(dateTimeJson.year, dateTimeJson.month - 1, dateTimeJson.day, dateTimeJson.hour, dateTimeJson.minute, dateTimeJson.second);
   }
   private getDateTime4(dateNumber: number, dateTime: Date, isGregorian: boolean) {
-    var dateTimeJson = this.getDateTimeJson2(dateNumber);
+    let dateTimeJson = this.getDateTimeJson2(dateNumber);
     if (!isGregorian) {
-      var dateTimeJsonPersian = this.getDateTimeJsonPersian1(dateTime);
+      let dateTimeJsonPersian = this.getDateTimeJsonPersian1(dateTime);
       dateTimeJsonPersian.year = dateTimeJson.year;
       dateTimeJsonPersian.month = dateTimeJson.month;
       dateTimeJsonPersian.day = dateTimeJson.day;
@@ -622,7 +617,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     return Number(this.zeroPad(dateTime.getFullYear()) + this.zeroPad(dateTime.getMonth()) + this.zeroPad(dateTime.getDate()));
   }
   private getShortHour(hour: number): number {
-    var shortHour;
+    let shortHour;
     if (hour > 12)
       shortHour = hour - 12;
     else
@@ -630,7 +625,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     return shortHour;
   }
   private getAmPm(hour: number, isGregorian: boolean): string {
-    var amPm;
+    let amPm;
     if (hour > 12) {
       if (isGregorian)
         amPm = 'PM';
@@ -660,7 +655,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private toPersianNumber(inputNumber1: number | string) {
     /* ۰ ۱ ۲ ۳ ۴ ۵ ۶ ۷ ۸ ۹ */
     if (!inputNumber1) return '';
-    var str1 = inputNumber1.toString().trim();
+    let str1 = inputNumber1.toString().trim();
     if (!str1) return '';
     str1 = str1.replace(/0/img, '۰');
     str1 = str1.replace(/1/img, '۱');
@@ -676,7 +671,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   }
   private toEnglishNumber(inputNumber2: number | string) {
     if (!inputNumber2) return '';
-    var str = inputNumber2.toString().trim();
+    let str = inputNumber2.toString().trim();
     if (!str) return '';
     str = str.replace(/۰/img, '0');
     str = str.replace(/۱/img, '1');
@@ -693,7 +688,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private zeroPad(nr: any, base?: string): string {
     if (nr == undefined || nr == '') return '00';
     if (base == undefined || base == '') base = '00';
-    var len = (String(base).length - String(nr).length) + 1;
+    let len = (String(base).length - String(nr).length) + 1;
     return len > 0 ? new Array(len).join('0') + nr : nr;
   }
   private getDateTimeString(dateTimeJson: GetDateTimeJson1, format: string, isGregorian: boolean, englishNumber: boolean) {
@@ -774,9 +769,9 @@ data-bs-toggle="dropdown" aria-expanded="false">
   }
   private getPopover(element: Element): Element {
     let popoverId = element.getAttribute('aria-describedby');
-    if (!popoverId)
-      return element.closest('[data-mds-date-time-picker]');
-    return document.getElementById('#' + popoverId.toString());
+    if (popoverId == undefined || popoverId == '')
+      return element.closest('[data-mds-dtp]');
+    return document.getElementById(popoverId.toString());
   }
   private getDateTimePickerMonthHtml1(setting: MdsPersianDateTimePickerSetting, isNextMonth: boolean, isPrevMonth: boolean): string {
     let selectedDateToShow = this.getClonedDate(setting.selectedDateToShow),
@@ -966,11 +961,11 @@ data-bs-toggle="dropdown" aria-expanded="false">
     }
 
     todayDateNumber = this.convertToNumber1(todayDateTimeJson);
-    selectedYear = setting.englishNumber ? dateTimeToShowJson.year.toString() : this.toPersianNumber(dateTimeToShowJson.year);
+    selectedYear = setting.isGregorian ? dateTimeToShowJson.year.toString() : this.toPersianNumber(dateTimeToShowJson.year);
     disableBeforeDateTimeNumber = !disableBeforeDateTimeJson ? undefined : this.convertToNumber1(disableBeforeDateTimeJson);
     disableAfterDateTimeNumber = !disableAfterDateTimeJson ? undefined : this.convertToNumber1(disableAfterDateTimeJson);
     currentMonthInfo = this.getMonthName(dateTimeToShowJson.month - 1, setting.isGregorian) + ' ' + dateTimeToShowJson.year.toString();
-    if (!setting.englishNumber) currentMonthInfo = this.toPersianNumber(currentMonthInfo);
+    if (!setting.isGregorian) currentMonthInfo = this.toPersianNumber(currentMonthInfo);
     selectedMonthName = this.getMonthName(dateTimeToShowJson.month - 1, setting.isGregorian);
 
     if (setting.yearOffset <= 0) {
@@ -982,10 +977,10 @@ data-bs-toggle="dropdown" aria-expanded="false">
     // روز های ماه قبل
     if (firstWeekDayNumber != 6) {
       if (setting.isGregorian) firstWeekDayNumber--;
-      var previousMonthDateTimeJson = this.addMonthToDateTimeJson(dateTimeToShowJson, -1, setting.isGregorian);
+      let previousMonthDateTimeJson = this.addMonthToDateTimeJson(dateTimeToShowJson, -1, setting.isGregorian);
       for (i = numberOfDaysInPreviousMonth - firstWeekDayNumber; i <= numberOfDaysInPreviousMonth; i++) {
         currentDateNumber = this.convertToNumber2(previousMonthDateTimeJson.year, previousMonthDateTimeJson.month, i);
-        dayNumberInString = setting.englishNumber ? this.zeroPad(i) : this.toPersianNumber(this.zeroPad(i));
+        dayNumberInString = setting.isGregorian ? this.zeroPad(i) : this.toPersianNumber(this.zeroPad(i));
         td = document.createElement('TD');
         td.setAttribute('data-nm', '');
         td.setAttribute('data-number', currentDateNumber.toString());
@@ -1026,7 +1021,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
 
       // عدد روز
       currentDateNumber = this.convertToNumber2(dateTimeToShowJson.year, dateTimeToShowJson.month, i);
-      dayNumberInString = setting.englishNumber ? this.zeroPad(i) : this.toPersianNumber(this.zeroPad(i));
+      dayNumberInString = setting.isGregorian ? this.zeroPad(i) : this.toPersianNumber(this.zeroPad(i));
 
       td = document.createElement('TD');
       td.setAttribute('data-day', '');
@@ -1160,9 +1155,9 @@ data-bs-toggle="dropdown" aria-expanded="false">
     }
 
     // روزهای ماه بعد
-    var nextMonthDateTimeJson = this.addMonthToDateTimeJson(dateTimeToShowJson, 1, setting.isGregorian);
+    let nextMonthDateTimeJson = this.addMonthToDateTimeJson(dateTimeToShowJson, 1, setting.isGregorian);
     for (i = 1; i <= 42 - cellNumber; i++) {
-      dayNumberInString = setting.englishNumber ? this.zeroPad(i) : this.toPersianNumber(this.zeroPad(i));
+      dayNumberInString = setting.isGregorian ? this.zeroPad(i) : this.toPersianNumber(this.zeroPad(i));
       currentDateNumber = this.convertToNumber2(nextMonthDateTimeJson.year, nextMonthDateTimeJson.month, i);
       td = document.createElement('TD');
       td.setAttribute('data-nm', '');
@@ -1236,23 +1231,36 @@ data-bs-toggle="dropdown" aria-expanded="false">
     return html;
   }
   private getPopoverHeaderHtml(setting: MdsPersianDateTimePickerSetting): string {
-    let dateTimeJson: GetDateTimeJson1;
+    let rangeSelectorStartDateJson: GetDateTimeJson1;
+    let rangeSelectorEndDateJson: GetDateTimeJson1;
+    let selectedDateTimeToShowJson: GetDateTimeJson1;
+    let title = '';
     if (setting.isGregorian) {
-      dateTimeJson = this.getDateTimeJson1(setting.selectedDateToShow);
+      selectedDateTimeToShowJson = this.getDateTimeJson1(setting.selectedDateToShow);
+      rangeSelectorStartDateJson = setting.rangeSelectorStartDate != undefined ? this.getDateTimeJson1(setting.rangeSelectorStartDate) : undefined;
+      rangeSelectorEndDateJson = setting.rangeSelectorEndDate != undefined ? this.getDateTimeJson1(setting.rangeSelectorEndDate) : undefined;
     } else {
-      dateTimeJson = this.getDateTimeJsonPersian1(setting.selectedDateToShow);
+      selectedDateTimeToShowJson = this.getDateTimeJsonPersian1(setting.selectedDateToShow);
+      rangeSelectorStartDateJson = setting.rangeSelectorStartDate != undefined ? this.getDateTimeJsonPersian1(setting.rangeSelectorStartDate) : undefined;
+      rangeSelectorEndDateJson = setting.rangeSelectorEndDate != undefined ? this.getDateTimeJsonPersian1(setting.rangeSelectorEndDate) : undefined;
     }
-    return this.getDateTimeString(dateTimeJson, 'MMMM yyyy', setting.isGregorian, setting.englishNumber);
+    if (setting.rangeSelector && rangeSelectorStartDateJson != undefined && rangeSelectorEndDateJson != undefined)
+      title = `${this.getMonthName(rangeSelectorStartDateJson.month - 1, setting.isGregorian)} ${rangeSelectorStartDateJson.year} - ${this.getMonthName(rangeSelectorEndDateJson.month - 1, setting.isGregorian)} ${rangeSelectorEndDateJson.year}`;
+    else
+      title = `${this.getMonthName(selectedDateTimeToShowJson.month - 1, setting.isGregorian)} ${selectedDateTimeToShowJson.year}`;
+    if (!setting.isGregorian)
+      title = this.toPersianNumber(title);
+    return title;
   }
   private setPopoverHeaderHtml = (element: Element, isInLine: boolean, htmlString: string): void => {
     // element = المانی که روی آن فعالیتی انجام شده و باید عنوان تقویم آن عوض شود    
     if (!isInLine) {
       if (this.isPopoverDescriber(element))
-        this.getPopover(element).querySelector('[data-name="mds-date-time-picker-title"]').innerHTML = htmlString;
+        this.getPopover(element).querySelector('[mds-dtp-title]').innerHTML = htmlString;
       else
-        element.closest('[data-mds-date-time-picker]').querySelector('[data-name="mds-date-time-picker-title"]').innerHTML = htmlString;
+        element.closest('[data-mds-dtp]').querySelector('[mds-dtp-title]').innerHTML = htmlString;
     } else {
-      var inlineTitleBox = element.closest(this.mdDatePickerFlagSelector).querySelector('[data-name="dateTimePickerYearsButtonsContainer"]');
+      let inlineTitleBox = element.closest(this.mdDatePickerFlagSelector).querySelector('[data-name="dateTimePickerYearsButtonsContainer"]');
       inlineTitleBox.innerHTML = htmlString;
       inlineTitleBox.classList.remove('w-0');
     }
@@ -1299,14 +1307,14 @@ data-bs-toggle="dropdown" aria-expanded="false">
     counter = 1;
     const yearStart = yearToStart ? yearToStart : todayDateTimeJson.year - setting.yearOffset;
     const yearEnd = yearToStart ? yearToStart + setting.yearOffset * 2 : todayDateTimeJson.year + setting.yearOffset;
-    for (var i = yearStart; i < yearEnd; i++) {
+    for (let i = yearStart; i < yearEnd; i++) {
       if (setting.disableBeforeToday && i < todayDateTimeJson.year) continue;
       if (setting.disableAfterToday && i > todayDateTimeJson.year) continue;
       if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year != undefined && i < disableBeforeDateTimeJson.year) continue;
       if (disableAfterDateTimeJson != undefined && disableAfterDateTimeJson.year != undefined && i > disableAfterDateTimeJson.year) continue;
-      var currentYearDateTimeJson = this.getDateTimeJson2(this.convertToNumber2(i, selectedDateTimeToShowJson.month, this.getDaysInMonthPersian(i, selectedDateTimeToShowJson.month))),
+      let currentYearDateTimeJson = this.getDateTimeJson2(this.convertToNumber2(i, selectedDateTimeToShowJson.month, this.getDaysInMonthPersian(i, selectedDateTimeToShowJson.month))),
         currentYearDisabledAttr = '',
-        yearText = setting.englishNumber ? i.toString() : this.toPersianNumber(i),
+        yearText = setting.isGregorian ? i.toString() : this.toPersianNumber(i),
         yearDateNumber = this.convertToNumber2(i, selectedDateTimeToShowJson.month, 1);
       if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year != undefined && currentYearDateTimeJson.year < disableBeforeDateTimeJson.year)
         currentYearDisabledAttr = 'disabled';
@@ -1319,7 +1327,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       if (counter == 1) yearsToSelectHtml += '<tr>';
       yearsToSelectHtml += `
 <td class="text-center" ${selectedDateTimeToShowJson.year == i ? 'selected-year' : ''}>
-    <button class="btn btn-sm btn-light" type="button" data-change-date-button data-number="${yearDateNumber}" ${currentYearDisabledAttr}>${yearText}</button>        
+    <button class="btn btn-sm btn-light" type="button" data-change-date-button="true" data-number="${yearDateNumber}" ${currentYearDisabledAttr}>${yearText}</button>        
 </td>
 `;
       if (counter == 5) yearsToSelectHtml += '</tr>';
@@ -1327,6 +1335,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       if (counter > 5) counter = 1;
     }
     html = html.replace(/\{\{yearsToSelectHtml\}\}/img, yearsToSelectHtml);
+    html = html.replace(/\{\{cancelText\}\}/img, setting.isGregorian ? this.cancelText : this.cancelTextPersian);
     return {
       yearStart,
       yearEnd,
@@ -1342,7 +1351,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     html = html.replace(/\{\{goTodayText\}\}/img, setting.isGregorian ? this.goTodayText : this.goTodayTextPersian);
     html = html.replace(/\{\{timePickerAttribute\}\}/img, setting.enableTimePicker ? '' : 'hidden');
 
-    let selectedDateString = '',
+    let title = '',
       todayDateString = '',
       todayDateTimeJson: GetDateTimeJson1, // year, month, day, hour, minute, second
       rangeSelectorStartDate: Date = !setting.rangeSelector || !setting.rangeSelectorStartDate ? undefined : this.getClonedDate(setting.rangeSelectorStartDate),
@@ -1391,14 +1400,9 @@ data-bs-toggle="dropdown" aria-expanded="false">
       }
     }
 
-    if (setting.rangeSelector && rangeSelectorStartDateJson != undefined && rangeSelectorEndDateJson != undefined) {
-      selectedDateString = `${this.getWeekDayName(rangeSelectorStartDateJson.dayOfWeek, setting.isGregorian)}، ${rangeSelectorStartDateJson.day} ${this.getMonthName(rangeSelectorStartDateJson.month - 1, setting.isGregorian)} ${rangeSelectorStartDateJson.year} - 
-                ${this.getWeekDayName(rangeSelectorEndDateJson.dayOfWeek, setting.isGregorian)}، ${rangeSelectorEndDateJson.day} ${this.getMonthName(rangeSelectorEndDateJson.month - 1, setting.isGregorian)} ${rangeSelectorEndDateJson.year}`;
-    } else
-      selectedDateString = `${this.getWeekDayName(selectedDateTimeJson.dayOfWeek, setting.isGregorian)}، ${selectedDateTimeJson.day} ${this.getMonthName(selectedDateTimeJson.month - 1, setting.isGregorian)} ${selectedDateTimeJson.year}`;
+    title = this.getPopoverHeaderHtml(setting);
     todayDateString = `${setting.isGregorian ? 'Today,' : 'امروز،'} ${todayDateTimeJson.day} ${this.getMonthName(todayDateTimeJson.month - 1, setting.isGregorian)} ${todayDateTimeJson.year}`;
-    if (!setting.englishNumber) {
-      selectedDateString = this.toPersianNumber(selectedDateString);
+    if (!setting.isGregorian) {
       todayDateString = this.toPersianNumber(todayDateString);
     }
 
@@ -1408,27 +1412,27 @@ data-bs-toggle="dropdown" aria-expanded="false">
     if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year >= selectedDateTimeToShowJson.year && disableBeforeDateTimeJson.month > selectedDateTimeToShowJson.month)
       selectedDateToShow = setting.isGregorian ? new Date(disableBeforeDateTimeJson.year, disableBeforeDateTimeJson.month - 1, 1) : this.getDateTime1(disableBeforeDateTimeJson.year, disableBeforeDateTimeJson.month, disableBeforeDateTimeJson.day);
 
-    var monthsTdHtml = '',
+    let monthsTdHtml = '',
       numberOfNextMonths = setting.monthsToShow[1] <= 0 ? 0 : setting.monthsToShow[1],
       numberOfPrevMonths = setting.monthsToShow[0] <= 0 ? 0 : setting.monthsToShow[0];
     numberOfPrevMonths *= -1;
-    for (var i1 = numberOfPrevMonths; i1 < 0; i1++) {
+    for (let i1 = numberOfPrevMonths; i1 < 0; i1++) {
       setting.selectedDateToShow = this.addMonthToDateTime(this.getClonedDate(selectedDateToShow), i1, false);
       monthsTdHtml += this.getDateTimePickerMonthHtml1(setting, false, true);
     }
     setting.selectedDateToShow = this.getClonedDate(selectedDateToShow);
     monthsTdHtml += this.getDateTimePickerMonthHtml1(setting, false, false);
-    for (var i2 = 1; i2 <= numberOfNextMonths; i2++) {
+    for (let i2 = 1; i2 <= numberOfNextMonths; i2++) {
       setting.selectedDateToShow = this.addMonthToDateTime(this.getClonedDate(selectedDateToShow), i2, false);
       monthsTdHtml += this.getDateTimePickerMonthHtml1(setting, true, false);
     }
 
-    var totalMonthNumberToShow = Math.abs(numberOfPrevMonths) + 1 + numberOfNextMonths,
+    let totalMonthNumberToShow = Math.abs(numberOfPrevMonths) + 1 + numberOfNextMonths,
       monthTdStyle = totalMonthNumberToShow > 1 ? 'width: ' + (100 / totalMonthNumberToShow).toString() + '%;' : '';
 
     monthsTdHtml = monthsTdHtml.replace(/\{\{monthTdStyle\}\}/img, monthTdStyle);
 
-    html = html.replace(/\{\{selectedDateString\}\}/img, selectedDateString);
+    html = html.replace(/\{\{dtpInlineHeader\}\}/img, title);
     html = html.replace(/\{\{todayDateString\}\}/img, todayDateString);
     html = html.replace(/\{\{time\}\}/img, `${this.zeroPad(selectedDateTimeToShowJson.hour)}:${this.zeroPad(selectedDateTimeToShowJson.minute)}`);
     html = html.replace(/\{\{monthsTdHtml\}\}/img, monthsTdHtml);
@@ -1438,24 +1442,28 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private updateCalendarHtml1 = (element: Element, setting: MdsPersianDateTimePickerSetting): void => {
     const calendarHtml = this.getDateTimePickerHtml(setting);
     const container = element.closest('[data-name="mds-date-time-picker-body"]');
-    const selectedDateString = calendarHtml.match(/<th data-selected-date-string\b[^>]*>(.*?)<\/th>/img)[0];
-    this.setPopoverHeaderHtml(element, setting.inLine, selectedDateString.trim());
+    const dtpInlineHeader = calendarHtml.match(/<th mds-dtp-inline-header\b[^>]*>(.*?)<\/th>/img)[0];
+    this.tempTitleString = dtpInlineHeader;
+    this.setPopoverHeaderHtml(element, setting.inLine, dtpInlineHeader.trim());
     container.innerHTML = calendarHtml;
   }
   private enableEvents(): void {
     setTimeout(() => {
       this.element.addEventListener('click', this.showPopoverEvent, true);
+      this.element.addEventListener('inserted.bs.popover', this.hideYearsBox);
       document.getElementsByTagName('HTML')[0].addEventListener('click', this.hidePopoverEvent, false);
-      document.addEventListener('click', this.selectCorrectEvent);
+      document.addEventListener('click', this.selectCorrectEvent, false);
     }, 100);
   }
   private selectCorrectEvent = (e: PointerEvent): void => {
     const element = <Element>e.target;
+    const instance = MdsPersianDateTimePicker.getInstance(element);
     if (element.getAttribute('mds-pdtp-select-year-button') != null) {
-      const instance = MdsPersianDateTimePicker.getInstance(element);
       instance.showYearsBox(element);
+    } else if (element.getAttribute('data-mds-hide-year-list-box')) {
+      instance.hideYearsBox();
     } else if (element.getAttribute('data-change-date-button')) {
-      this.changeYear(element);
+      this.changeMonth(element);
     } else if (element.getAttribute('data-year-range-button-change')) {
       this.changeYearList(element);
     }
@@ -1471,24 +1479,25 @@ data-bs-toggle="dropdown" aria-expanded="false">
       });
       return;
     }
-    const isWithinDatePicker = element.closest('[data-mds-date-time-picker]') != null ||
-      element.getAttribute('mds-date-picker-guid') != undefined;
+    const isWithinDatePicker = element.closest('[data-mds-dtp]') != null ||
+      element.getAttribute('mds-dtp-guid') != undefined;
     if (!isWithinDatePicker)
       MdsPersianDateTimePickerData.getAll().forEach(i => {
         i.hide();
       });
   }
   private showYearsBox = (element: Element): void => {
+    this.tempTitleString = document.querySelector('[mds-dtp-title]').textContent.trim();
     const mdsPersianDateTimePickerInstance = MdsPersianDateTimePicker.getInstance(element);
     const setting = mdsPersianDateTimePickerInstance.setting;
     const yearsToSelectObject = this.getYearsToSelectHtml(setting, 0);
     const yearsRangeText = ` ${yearsToSelectObject.yearStart} - ${yearsToSelectObject.yearEnd} `;
     let html = this.popoverHeaderSelectYearHtmlTemplate;
     const dateTimePickerYearsToSelectHtml = yearsToSelectObject.html;
-    const mdDatePickerContainerSelector = element.closest('[data-mds-date-time-picker]');
-    const dateTimePickerYearsToSelectContainer = mdDatePickerContainerSelector.querySelector('[data-name="dateTimePickerYearsToSelectContainer"]');
+    const mdDatePickerContainerSelector = element.closest('[data-mds-dtp]');
+    const dateTimePickerYearsToSelectContainer = mdDatePickerContainerSelector.querySelector('[data-mds-dtp-year-list-box]');
     html = html.replace(/\{{rtlCssClass\}\}/img, setting.isGregorian ? '' : 'rtl');
-    html = html.replace(/\{\{yearsRangeText\}\}/img, setting.isGregorian || setting.englishNumber ? yearsRangeText : this.toPersianNumber(yearsRangeText));
+    html = html.replace(/\{\{yearsRangeText\}\}/img, setting.isGregorian ? yearsRangeText : this.toPersianNumber(yearsRangeText));
     html = html.replace(/\{\{previousText\}\}/img, setting.isGregorian ? this.previousText : this.previousTextPersian);
     html = html.replace(/\{\{nextText\}\}/img, setting.isGregorian ? this.nextText : this.nextTextPersian);
     html = html.replace(/\{\{latestPreviousYear\}\}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearEnd.toString() : yearsToSelectObject.yearStart.toString());
@@ -1501,7 +1510,14 @@ data-bs-toggle="dropdown" aria-expanded="false">
     else
       dateTimePickerYearsToSelectContainer.classList.remove('inline');
   }
-  private changeYear = (element: Element): void => {
+  private hideYearsBox = (): void => {
+    if (this.tempTitleString)
+      document.querySelector('[mds-dtp-title]').innerHTML = this.tempTitleString;
+    const yearListBox = this.getPopover(this.element).querySelector('[data-mds-dtp-year-list-box]');
+    yearListBox.classList.add('w-0');
+    yearListBox.innerHTML = '';
+  };
+  private changeMonth = (element: Element): void => {
     const mdsPersianDateTimePickerInstance = MdsPersianDateTimePicker.getInstance(element);
     if (mdsPersianDateTimePickerInstance.setting.disabled) return;
     const dateNumber = Number(element.getAttribute('data-number'));
@@ -1530,7 +1546,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{nextText\}\}/img, setting.isGregorian ? this.nextText : this.nextTextPersian);
     popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{latestPreviousYear\}\}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearEnd.toString() : yearsToSelectObject.yearStart.toString());
     popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{latestNextYear\}\}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearStart.toString() : yearsToSelectObject.yearEnd.toString());
-    element.closest('[data-mds-date-time-picker]').querySelector('[data-name="dateTimePickerYearsToSelectContainer"]').innerHTML = dateTimePickerYearsToSelectHtml;
+    element.closest('[data-mds-dtp]').querySelector('[data-mds-dtp-year-list-box]').innerHTML = dateTimePickerYearsToSelectHtml;
     this.setPopoverHeaderHtml(element, setting.inLine, popoverHeaderHtml);
   };
 
@@ -1555,6 +1571,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   dispose(): void {
     this.bsPopover.dispose();
     this.element.removeEventListener('click', this.showPopoverEvent);
+    this.element.removeEventListener('hide.bs.popover', this.hideYearsBox);
     document.getElementsByTagName('HTML')[0].removeEventListener('click', this.hidePopoverEvent);
     document.removeEventListener('click', this.selectCorrectEvent);
   }
@@ -1563,11 +1580,11 @@ data-bs-toggle="dropdown" aria-expanded="false">
   }
 
   static getInstance(element: Element): MdsPersianDateTimePicker {
-    let elementGuid = element.getAttribute('mds-date-picker-guid');
+    let elementGuid = element.getAttribute('mds-dtp-guid');
     if (!elementGuid) {
-      const id = element.closest('[data-mds-date-time-picker]')?.getAttribute('id');
+      const id = element.closest('[data-mds-dtp]')?.getAttribute('id');
       if (!id) return null;
-      elementGuid = document.querySelector('[aria-describedby="' + id + '"]').getAttribute('mds-date-picker-guid');
+      elementGuid = document.querySelector('[aria-describedby="' + id + '"]').getAttribute('mds-dtp-guid');
       if (!elementGuid)
         return null;
     };
@@ -1601,7 +1618,6 @@ interface MdsPersianDateTimePickerYearToSelect {
 }
 
 class MdsPersianDateTimePickerSetting {
-  englishNumber = false;
   placement: "auto" | "top" | "bottom" | "left" | "right" | (() => void) = 'bottom';
   trigger = 'click';
   enableTimePicker = false;
