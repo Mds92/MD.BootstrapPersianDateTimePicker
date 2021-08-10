@@ -42,8 +42,12 @@
   font-size: 16px;
 }
 
-.mds-bs-persian-datetime-picker-container .select-year-box [selected-year] button {
+.mds-bs-persian-datetime-picker-container .select-year-box [data-selected-year] button {
   background-color: aquamarine;
+}
+
+.mds-bs-persian-datetime-picker-container .select-year-box [data-current-year] button {
+  background-color: #c7f7c7;
 }
 
 .mds-bs-persian-datetime-picker-container.rtl table:not([dir="ltr"]) {

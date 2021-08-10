@@ -218,7 +218,7 @@ MD DateTimePicker Html
 </table>`;
   private dateTimePickerYearsToSelectHtmlTemplate = `<table class="table table-sm text-center p-0 m-0" dir="ltr">
 <tbody>
-{{yearsToSelectHtml}}
+{{yearsBoxHtml}}
 <tr>
 <td colspan="100" class="text-center">
 <button class="btn btn-sm btn-light" data-mds-hide-year-list-box="true">{{cancelText}}</button>
@@ -345,6 +345,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private nextTextPersian = 'بعدی';
   private goTodayTextPersian = 'برو به امروز';
   private cancelTextPersian = 'انصراف';
+  private currentYearTextPersian = 'سال جاری';
   private previousText = 'Previous';
   private previousYearText = 'Previous Year';
   private previousMonthText = 'Previous Month';
@@ -353,6 +354,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private nextMonthText = 'Next Month';
   private goTodayText = 'Go Today';
   private cancelText = 'Cancel';
+  private currentYearText = 'Current Year';
   private shortDayNamesPersian = [
     'ش',
     'ی',
@@ -1265,13 +1267,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
       inlineTitleBox.classList.remove('w-0');
     }
   }
-  private getYearsToSelectHtml(setting: MdsPersianDateTimePickerSetting, yearToStart: number): MdsPersianDateTimePickerYearToSelect {
+  private getYearsBoxHtml(setting: MdsPersianDateTimePickerSetting, yearToStart: number): MdsPersianDateTimePickerYearToSelect {
     // بدست آوردن اچ تی ام ال انتخاب سال
     // yearToStart سال شروع
 
     const selectedDateToShow = this.getClonedDate(setting.selectedDateToShow);
     let html = this.dateTimePickerYearsToSelectHtmlTemplate;
-    let yearsToSelectHtml = '',
+    let yearsBoxHtml = '',
       todayDateTimeJson: GetDateTimeJson1, // year, month, day, hour, minute, second
       selectedDateTimeToShowJson: GetDateTimeJson1,
       disableBeforeDateTimeJson: GetDateTimeJson1,
@@ -1312,10 +1314,16 @@ data-bs-toggle="dropdown" aria-expanded="false">
       if (setting.disableAfterToday && i > todayDateTimeJson.year) continue;
       if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year != undefined && i < disableBeforeDateTimeJson.year) continue;
       if (disableAfterDateTimeJson != undefined && disableAfterDateTimeJson.year != undefined && i > disableAfterDateTimeJson.year) continue;
-      let currentYearDateTimeJson = this.getDateTimeJson2(this.convertToNumber2(i, selectedDateTimeToShowJson.month, this.getDaysInMonthPersian(i, selectedDateTimeToShowJson.month))),
-        currentYearDisabledAttr = '',
-        yearText = setting.isGregorian ? i.toString() : this.toPersianNumber(i),
-        yearDateNumber = this.convertToNumber2(i, selectedDateTimeToShowJson.month, 1);
+
+      let currentYearDateTimeJson = this.getDateTimeJson2(this.convertToNumber2(i, selectedDateTimeToShowJson.month, this.getDaysInMonthPersian(i, selectedDateTimeToShowJson.month)));
+      let currentYearDisabledAttr = '';
+      let yearText = setting.isGregorian ? i.toString() : this.toPersianNumber(i);
+      let yearDateNumber = this.convertToNumber2(i, selectedDateTimeToShowJson.month, 1);
+      let todayAttr = todayDateTimeJson.year == i ? 'data-current-year="true"' : ''
+      let selectedYearAttr = selectedDateTimeToShowJson.year == i ? 'data-selected-year' : ''
+      let selectedYearTitle = '';
+      if (todayAttr) 
+        selectedYearTitle = setting.isGregorian ? this.currentYearText : this.currentYearTextPersian;
       if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year != undefined && currentYearDateTimeJson.year < disableBeforeDateTimeJson.year)
         currentYearDisabledAttr = 'disabled';
       if (disableAfterDateTimeJson != undefined && disableAfterDateTimeJson.year != undefined && currentYearDateTimeJson.year > disableAfterDateTimeJson.year)
@@ -1324,17 +1332,17 @@ data-bs-toggle="dropdown" aria-expanded="false">
         currentYearDisabledAttr = 'disabled';
       if (setting.disableAfterToday && currentYearDateTimeJson.year > todayDateTimeJson.year)
         currentYearDisabledAttr = 'disabled';
-      if (counter == 1) yearsToSelectHtml += '<tr>';
-      yearsToSelectHtml += `
-<td class="text-center" ${selectedDateTimeToShowJson.year == i ? 'selected-year' : ''}>
+      if (counter == 1) yearsBoxHtml += '<tr>';
+      yearsBoxHtml += `
+<td class="text-center" title="${selectedYearTitle}" ${todayAttr} ${selectedYearAttr}>
     <button class="btn btn-sm btn-light" type="button" data-change-date-button="true" data-number="${yearDateNumber}" ${currentYearDisabledAttr}>${yearText}</button>        
 </td>
 `;
-      if (counter == 5) yearsToSelectHtml += '</tr>';
+      if (counter == 5) yearsBoxHtml += '</tr>';
       counter++;
       if (counter > 5) counter = 1;
     }
-    html = html.replace(/\{\{yearsToSelectHtml\}\}/img, yearsToSelectHtml);
+    html = html.replace(/\{\{yearsBoxHtml\}\}/img, yearsBoxHtml);
     html = html.replace(/\{\{cancelText\}\}/img, setting.isGregorian ? this.cancelText : this.cancelTextPersian);
     return {
       yearStart,
@@ -1354,11 +1362,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
     let title = '',
       todayDateString = '',
       todayDateTimeJson: GetDateTimeJson1, // year, month, day, hour, minute, second
-      rangeSelectorStartDate: Date = !setting.rangeSelector || !setting.rangeSelectorStartDate ? undefined : this.getClonedDate(setting.rangeSelectorStartDate),
-      rangeSelectorEndDate: Date = !setting.rangeSelector || !setting.rangeSelectorEndDate ? undefined : this.getClonedDate(setting.rangeSelectorEndDate),
-      rangeSelectorStartDateJson: GetDateTimeJson1,
-      rangeSelectorEndDateJson: GetDateTimeJson1,
-      selectedDateTimeJson: GetDateTimeJson1,
       selectedDateTimeToShowJson: GetDateTimeJson1,
       disableBeforeDateTimeJson: GetDateTimeJson1 | undefined,
       disableAfterDateTimeJson: GetDateTimeJson1 | undefined;
@@ -1366,17 +1369,11 @@ data-bs-toggle="dropdown" aria-expanded="false">
     if (setting.isGregorian) {
       selectedDateTimeToShowJson = this.getDateTimeJson1(selectedDateToShow);
       todayDateTimeJson = this.getDateTimeJson1(new Date());
-      rangeSelectorStartDateJson = rangeSelectorStartDate != undefined ? this.getDateTimeJson1(rangeSelectorStartDate) : undefined;
-      rangeSelectorEndDateJson = rangeSelectorEndDate != undefined ? this.getDateTimeJson1(rangeSelectorEndDate) : undefined;
-      selectedDateTimeJson = setting.selectedDate == undefined ? todayDateTimeJson : this.getDateTimeJson1(setting.selectedDate);
       disableBeforeDateTimeJson = !setting.disableBeforeDate ? undefined : this.getDateTimeJson1(setting.disableBeforeDate);
       disableAfterDateTimeJson = !setting.disableAfterDate ? undefined : this.getDateTimeJson1(setting.disableAfterDate);
     } else {
       selectedDateTimeToShowJson = this.getDateTimeJsonPersian1(selectedDateToShow);
       todayDateTimeJson = this.getDateTimeJsonPersian1(new Date());
-      rangeSelectorStartDateJson = rangeSelectorStartDate != undefined ? this.getDateTimeJsonPersian1(rangeSelectorStartDate) : undefined;
-      rangeSelectorEndDateJson = rangeSelectorEndDate != undefined ? this.getDateTimeJsonPersian1(rangeSelectorEndDate) : undefined;
-      selectedDateTimeJson = setting.selectedDate == undefined ? todayDateTimeJson : this.getDateTimeJsonPersian1(setting.selectedDate);
       disableBeforeDateTimeJson = !setting.disableBeforeDate ? undefined : this.getDateTimeJsonPersian1(setting.disableBeforeDate);
       disableAfterDateTimeJson = !setting.disableAfterDate ? undefined : this.getDateTimeJsonPersian1(setting.disableAfterDate);
     }
@@ -1412,9 +1409,9 @@ data-bs-toggle="dropdown" aria-expanded="false">
     if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year >= selectedDateTimeToShowJson.year && disableBeforeDateTimeJson.month > selectedDateTimeToShowJson.month)
       selectedDateToShow = setting.isGregorian ? new Date(disableBeforeDateTimeJson.year, disableBeforeDateTimeJson.month - 1, 1) : this.getDateTime1(disableBeforeDateTimeJson.year, disableBeforeDateTimeJson.month, disableBeforeDateTimeJson.day);
 
-    let monthsTdHtml = '',
-      numberOfNextMonths = setting.monthsToShow[1] <= 0 ? 0 : setting.monthsToShow[1],
-      numberOfPrevMonths = setting.monthsToShow[0] <= 0 ? 0 : setting.monthsToShow[0];
+    let monthsTdHtml = '';
+    let numberOfNextMonths = setting.monthsToShow[1] <= 0 ? 0 : setting.monthsToShow[1];
+    let numberOfPrevMonths = setting.monthsToShow[0] <= 0 ? 0 : setting.monthsToShow[0];
     numberOfPrevMonths *= -1;
     for (let i1 = numberOfPrevMonths; i1 < 0; i1++) {
       setting.selectedDateToShow = this.addMonthToDateTime(this.getClonedDate(selectedDateToShow), i1, false);
@@ -1427,8 +1424,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
       monthsTdHtml += this.getDateTimePickerMonthHtml1(setting, true, false);
     }
 
-    let totalMonthNumberToShow = Math.abs(numberOfPrevMonths) + 1 + numberOfNextMonths,
-      monthTdStyle = totalMonthNumberToShow > 1 ? 'width: ' + (100 / totalMonthNumberToShow).toString() + '%;' : '';
+    let totalMonthNumberToShow = Math.abs(numberOfPrevMonths) + 1 + numberOfNextMonths;
+    let monthTdStyle = totalMonthNumberToShow > 1 ? 'width: ' + (100 / totalMonthNumberToShow).toString() + '%;' : '';
 
     monthsTdHtml = monthsTdHtml.replace(/\{\{monthTdStyle\}\}/img, monthTdStyle);
 
@@ -1490,7 +1487,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     this.tempTitleString = document.querySelector('[mds-dtp-title]').textContent.trim();
     const mdsPersianDateTimePickerInstance = MdsPersianDateTimePicker.getInstance(element);
     const setting = mdsPersianDateTimePickerInstance.setting;
-    const yearsToSelectObject = this.getYearsToSelectHtml(setting, 0);
+    const yearsToSelectObject = this.getYearsBoxHtml(setting, 0);
     const yearsRangeText = ` ${yearsToSelectObject.yearStart} - ${yearsToSelectObject.yearEnd} `;
     let html = this.popoverHeaderSelectYearHtmlTemplate;
     const dateTimePickerYearsToSelectHtml = yearsToSelectObject.html;
@@ -1536,7 +1533,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     const setting = mdsPersianDateTimePickerInstance.setting;
     const isNext = element.getAttribute('data-year-range-button-change') == '1';
     const yearStart = Number(element.getAttribute('data-year'));
-    const yearsToSelectObject = this.getYearsToSelectHtml(setting, isNext ? yearStart : yearStart - setting.yearOffset * 2);
+    const yearsToSelectObject = this.getYearsBoxHtml(setting, isNext ? yearStart : yearStart - setting.yearOffset * 2);
     const yearsRangeText = ` ${yearsToSelectObject.yearStart} - ${yearsToSelectObject.yearEnd - 1} `;
     let popoverHeaderHtml = this.popoverHeaderSelectYearHtmlTemplate;
     const dateTimePickerYearsToSelectHtml = yearsToSelectObject.html;
@@ -1571,7 +1568,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   dispose(): void {
     this.bsPopover.dispose();
     this.element.removeEventListener('click', this.showPopoverEvent);
-    this.element.removeEventListener('hide.bs.popover', this.hideYearsBox);
+    this.element.removeEventListener('inserted.bs.popover', this.hideYearsBox);
     document.getElementsByTagName('HTML')[0].removeEventListener('click', this.hidePopoverEvent);
     document.removeEventListener('click', this.selectCorrectEvent);
   }
