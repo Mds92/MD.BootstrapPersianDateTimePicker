@@ -8,11 +8,11 @@ export class MdsPersianDateTimePicker {
     if (!setting.groupId && (setting.toDate || setting.fromDate)) throw new Error(`MdsPersianDateTimePicker => When you set 'toDate' or 'fromDate' true, you have to set 'groupId'`);
 
     if (setting.enableTimePicker && !setting.textFormat)
-      setting.textFormat = 'yyyy/MM/dd   HH:mm:ss';
+      setting.textFormat = 'yyyy/MM/dd   HH:mm';
     else if (!setting.enableTimePicker && !setting.textFormat)
       setting.textFormat = 'yyyy/MM/dd';
     if (setting.enableTimePicker && !setting.dateFormat)
-      setting.dateFormat = 'yyyy/MM/dd   HH:mm:ss';
+      setting.dateFormat = 'yyyy/MM/dd   HH:mm';
     else if (!setting.enableTimePicker && !setting.dateFormat)
       setting.dateFormat = 'yyyy/MM/dd';
 
@@ -36,7 +36,7 @@ export class MdsPersianDateTimePicker {
       sanitize: false,
     });
 
-    this.enableEvents();
+    this.enableMainEvents();
   }
 
   // #region jalali calendar
@@ -195,7 +195,7 @@ export class MdsPersianDateTimePicker {
   private modalHtmlTemplate = `<div class="modal fade mds-bs-persian-datetime-picker-modal" tabindex="-1" role="dialog" aria-labelledby="mdDateTimePickerModalLabel" aria-hidden="true" ${this.mdPersianDateTimePickerFlag}>
 <div class="modal-dialog modal-xl modal-dialog-centered" data-button-selector>
 <div class="modal-content">
-<div class="modal-body" data-name="mds-date-time-picker-body">
+<div class="modal-body" data-name="mds-dtp-body">
 MD DateTimePicker Html
 </div>
 </div>
@@ -205,7 +205,7 @@ MD DateTimePicker Html
   private popoverHtmlTemplate = `<div class="popover mds-bs-persian-datetime-picker-popover" role="tooltip" ${this.mdPersianDateTimePickerFlag}>
 <div class="popover-arrow"></div>
 <h3 class="popover-header text-center p-1" mds-dtp-title="true"></h3>
-<div class="popover-body p-0" data-name="mds-date-time-picker-body"></div>
+<div class="popover-body p-0" data-name="mds-dtp-body"></div>
 </div>`;
   private popoverHeaderSelectYearHtmlTemplate = `<table class="table table-sm table-borderless text-center p-0 m-0 {{rtlCssClass}}">
 <tr>
@@ -231,7 +231,7 @@ MD DateTimePicker Html
 </tbody>
 </table>`;
 
-  private dateTimePickerHtmlTemplate = `<div class="mds-bs-persian-datetime-picker-container {{rtlCssClass}}">
+  private dateTimePickerHtmlTemplate = `<div class="mds-bs-dtp-container {{rtlCssClass}}">
 <div class="select-year-inline-box w-0" data-name="dateTimePickerYearsButtonsContainer">
 </div>
 <div class="select-year-box w-0" data-mds-dtp-year-list-box="true" dir="ltr"></div>
@@ -249,12 +249,12 @@ MD DateTimePicker Html
 <tfoot>
 <tr {{timePickerAttribute}}>
 <td colspan="100" class="text-center border-0">
-<input type="time" value="{{time}}" maxlength="2" data-time-picker />
+<input type="time" value="{{time}}" maxlength="2" data-mds-dtp-time />
 </td>
 </tr>
 <tr>
 <td colspan="100">
-<button type="button" class="btn btn-light" title="{{goTodayText}}" data-go-today>{{todayDateString}}</button>
+<button type="button" class="btn btn-light" title="{{goTodayText}}" data-mds-dtp-go-today>{{todayDateString}}</button>
 </td>
 </tr>
 </tfoot>
@@ -799,7 +799,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       this.triggerChangeCalling = true;
       let dateFormat = 'yyyy/MM/dd';
       if (setting.enableTimePicker)
-        dateFormat += ' HH:mm:ss';
+        dateFormat += ' HH:mm';
       switch (targetDateElement.tagName.toLowerCase()) {
         case 'input':
           (<any>targetDateElement).value = this.getDateTimeString(dateTimeJson, dateFormat, setting.isGregorian, true);
@@ -1312,6 +1312,56 @@ data-bs-toggle="dropdown" aria-expanded="false">
       inlineTitleBox.classList.remove('w-0');
     }
   }
+  private hideYearsBox = (): void => {
+    if (this.tempTitleString)
+      document.querySelector('[mds-dtp-title]').innerHTML = this.tempTitleString;
+    const yearListBox = this.getPopover(this.element).querySelector('[data-mds-dtp-year-list-box]');
+    yearListBox.classList.add('w-0');
+    yearListBox.innerHTML = '';
+  };
+  private changeYearList = (element: Element): void => {
+    // کلیک روی دکمه های عوض کردن رنج سال انتخابی
+    const mdsPersianDateTimePickerInstance = MdsPersianDateTimePicker.getInstance(element);
+    const setting = mdsPersianDateTimePickerInstance.setting;
+    const isNext = element.getAttribute('data-year-range-button-change') == '1';
+    const yearStart = Number(element.getAttribute('data-year'));
+    const yearsToSelectObject = this.getYearsBoxHtml(setting, isNext ? yearStart : yearStart - setting.yearOffset * 2);
+    const yearsRangeText = ` ${yearsToSelectObject.yearStart} - ${yearsToSelectObject.yearEnd - 1} `;
+    let popoverHeaderHtml = this.popoverHeaderSelectYearHtmlTemplate;
+    const dateTimePickerYearsToSelectHtml = yearsToSelectObject.html;
+    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{rtlCssClass\}\}/img, setting.isGregorian ? '' : 'rtl');
+    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{yearsRangeText\}\}/img, setting.isGregorian ? yearsRangeText : this.toPersianNumber(yearsRangeText));
+    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{previousText\}\}/img, setting.isGregorian ? this.previousText : this.previousTextPersian);
+    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{nextText\}\}/img, setting.isGregorian ? this.nextText : this.nextTextPersian);
+    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{latestPreviousYear\}\}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearEnd.toString() : yearsToSelectObject.yearStart.toString());
+    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{latestNextYear\}\}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearStart.toString() : yearsToSelectObject.yearEnd.toString());
+    element.closest('[data-mds-dtp]').querySelector('[data-mds-dtp-year-list-box]').innerHTML = dateTimePickerYearsToSelectHtml;
+    this.setPopoverHeaderHtml(element, setting.inLine, popoverHeaderHtml);
+  };
+  private showYearsBox = (element: Element): void => {
+    this.tempTitleString = document.querySelector('[mds-dtp-title]').textContent.trim();
+    const mdsPersianDateTimePickerInstance = MdsPersianDateTimePicker.getInstance(element);
+    const setting = mdsPersianDateTimePickerInstance.setting;
+    const yearsToSelectObject = this.getYearsBoxHtml(setting, 0);
+    const yearsRangeText = ` ${yearsToSelectObject.yearStart} - ${yearsToSelectObject.yearEnd} `;
+    let html = this.popoverHeaderSelectYearHtmlTemplate;
+    const dateTimePickerYearsToSelectHtml = yearsToSelectObject.html;
+    const mdDatePickerContainerSelector = element.closest('[data-mds-dtp]');
+    const dateTimePickerYearsToSelectContainer = mdDatePickerContainerSelector.querySelector('[data-mds-dtp-year-list-box]');
+    html = html.replace(/\{{rtlCssClass\}\}/img, setting.isGregorian ? '' : 'rtl');
+    html = html.replace(/\{\{yearsRangeText\}\}/img, setting.isGregorian ? yearsRangeText : this.toPersianNumber(yearsRangeText));
+    html = html.replace(/\{\{previousText\}\}/img, setting.isGregorian ? this.previousText : this.previousTextPersian);
+    html = html.replace(/\{\{nextText\}\}/img, setting.isGregorian ? this.nextText : this.nextTextPersian);
+    html = html.replace(/\{\{latestPreviousYear\}\}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearEnd.toString() : yearsToSelectObject.yearStart.toString());
+    html = html.replace(/\{\{latestNextYear\}\}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearStart.toString() : yearsToSelectObject.yearEnd.toString());
+    this.setPopoverHeaderHtml(element, setting.inLine, html);
+    dateTimePickerYearsToSelectContainer.innerHTML = dateTimePickerYearsToSelectHtml;
+    dateTimePickerYearsToSelectContainer.classList.remove('w-0');
+    if (setting.inLine)
+      dateTimePickerYearsToSelectContainer.classList.add('inline');
+    else
+      dateTimePickerYearsToSelectContainer.classList.remove('inline');
+  }
   private getYearsBoxHtml(setting: MdsPersianDateTimePickerSetting, yearToStart: number): MdsPersianDateTimePickerYearToSelect {
     // بدست آوردن اچ تی ام ال انتخاب سال
     // yearToStart سال شروع
@@ -1483,84 +1533,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
   }
   private updateCalendarHtml1 = (element: Element, setting: MdsPersianDateTimePickerSetting): void => {
     const calendarHtml = this.getDateTimePickerHtml(setting);
-    const container = element.closest('[data-name="mds-date-time-picker-body"]');
+    const container = element.closest('[data-name="mds-dtp-body"]');
     const dtpInlineHeader = calendarHtml.match(/<th mds-dtp-inline-header\b[^>]*>(.*?)<\/th>/img)[0];
     this.tempTitleString = dtpInlineHeader;
     this.setPopoverHeaderHtml(element, setting.inLine, dtpInlineHeader.trim());
     container.innerHTML = calendarHtml;
+    this.enableEvents();
   }
-  private enableEvents(): void {
-    setTimeout(() => {
-      this.element.addEventListener('click', this.showPopoverEvent, true);
-      this.element.addEventListener('inserted.bs.popover', this.hideYearsBox);
-      document.getElementsByTagName('HTML')[0].addEventListener('click', this.hidePopoverEvent, false);
-      document.addEventListener('click', this.selectCorrectEvent, false);
-    }, 100);
-  }
-  private selectCorrectEvent = (e: PointerEvent): void => {
-    const element = <Element>e.target;
-    const instance = MdsPersianDateTimePicker.getInstance(element);
-    if (element.getAttribute('mds-pdtp-select-year-button') != null) {
-      instance.showYearsBox(element);
-    } else if (element.getAttribute('data-day') != null) {
-      this.selectDay(element);
-    } else if (element.getAttribute('data-mds-hide-year-list-box')) {
-      this.hideYearsBox();
-    } else if (element.getAttribute('data-change-date-button')) {
-      this.changeMonth(element);
-    } else if (element.getAttribute('data-year-range-button-change')) {
-      this.changeYearList(element);
-    }
-  }
-  private showPopoverEvent = (e: PointerEvent): void => {
-    MdsPersianDateTimePicker.getInstance(<Element>e.target).show();
-  }
-  private hidePopoverEvent = (e: PointerEvent): void => {
-    const element = <Element>e.target;
-    if (element.tagName == 'HTML') {
-      MdsPersianDateTimePickerData.getAll().forEach(i => {
-        i.hide();
-      });
-      return;
-    }
-    const isWithinDatePicker = element.closest('[data-mds-dtp]') != null ||
-      element.getAttribute('mds-dtp-guid') != undefined;
-    if (!isWithinDatePicker)
-      MdsPersianDateTimePickerData.getAll().forEach(i => {
-        i.hide();
-      });
-  }
-  private showYearsBox = (element: Element): void => {
-    this.tempTitleString = document.querySelector('[mds-dtp-title]').textContent.trim();
-    const mdsPersianDateTimePickerInstance = MdsPersianDateTimePicker.getInstance(element);
-    const setting = mdsPersianDateTimePickerInstance.setting;
-    const yearsToSelectObject = this.getYearsBoxHtml(setting, 0);
-    const yearsRangeText = ` ${yearsToSelectObject.yearStart} - ${yearsToSelectObject.yearEnd} `;
-    let html = this.popoverHeaderSelectYearHtmlTemplate;
-    const dateTimePickerYearsToSelectHtml = yearsToSelectObject.html;
-    const mdDatePickerContainerSelector = element.closest('[data-mds-dtp]');
-    const dateTimePickerYearsToSelectContainer = mdDatePickerContainerSelector.querySelector('[data-mds-dtp-year-list-box]');
-    html = html.replace(/\{{rtlCssClass\}\}/img, setting.isGregorian ? '' : 'rtl');
-    html = html.replace(/\{\{yearsRangeText\}\}/img, setting.isGregorian ? yearsRangeText : this.toPersianNumber(yearsRangeText));
-    html = html.replace(/\{\{previousText\}\}/img, setting.isGregorian ? this.previousText : this.previousTextPersian);
-    html = html.replace(/\{\{nextText\}\}/img, setting.isGregorian ? this.nextText : this.nextTextPersian);
-    html = html.replace(/\{\{latestPreviousYear\}\}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearEnd.toString() : yearsToSelectObject.yearStart.toString());
-    html = html.replace(/\{\{latestNextYear\}\}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearStart.toString() : yearsToSelectObject.yearEnd.toString());
-    this.setPopoverHeaderHtml(element, setting.inLine, html);
-    dateTimePickerYearsToSelectContainer.innerHTML = dateTimePickerYearsToSelectHtml;
-    dateTimePickerYearsToSelectContainer.classList.remove('w-0');
-    if (setting.inLine)
-      dateTimePickerYearsToSelectContainer.classList.add('inline');
-    else
-      dateTimePickerYearsToSelectContainer.classList.remove('inline');
-  }
-  private hideYearsBox = (): void => {
-    if (this.tempTitleString)
-      document.querySelector('[mds-dtp-title]').innerHTML = this.tempTitleString;
-    const yearListBox = this.getPopover(this.element).querySelector('[data-mds-dtp-year-list-box]');
-    yearListBox.classList.add('w-0');
-    yearListBox.innerHTML = '';
-  };
   private changeMonth = (element: Element): void => {
     const mdsPersianDateTimePickerInstance = MdsPersianDateTimePicker.getInstance(element);
     if (mdsPersianDateTimePickerInstance.setting.disabled) return;
@@ -1574,25 +1553,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
     if (setting.calendarViewOnChange != undefined)
       setting.calendarViewOnChange(selectedDateToShow);
   }
-  private changeYearList = (element: Element): void => {
-    // کلیک روی دکمه های عوض کردن رنج سال انتخابی
-    const mdsPersianDateTimePickerInstance = MdsPersianDateTimePicker.getInstance(element);
-    const setting = mdsPersianDateTimePickerInstance.setting;
-    const isNext = element.getAttribute('data-year-range-button-change') == '1';
-    const yearStart = Number(element.getAttribute('data-year'));
-    const yearsToSelectObject = this.getYearsBoxHtml(setting, isNext ? yearStart : yearStart - setting.yearOffset * 2);
-    const yearsRangeText = ` ${yearsToSelectObject.yearStart} - ${yearsToSelectObject.yearEnd - 1} `;
-    let popoverHeaderHtml = this.popoverHeaderSelectYearHtmlTemplate;
-    const dateTimePickerYearsToSelectHtml = yearsToSelectObject.html;
-    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{rtlCssClass\}\}/img, setting.isGregorian ? '' : 'rtl');
-    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{yearsRangeText\}\}/img, setting.isGregorian ? yearsRangeText : this.toPersianNumber(yearsRangeText));
-    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{previousText\}\}/img, setting.isGregorian ? this.previousText : this.previousTextPersian);
-    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{nextText\}\}/img, setting.isGregorian ? this.nextText : this.nextTextPersian);
-    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{latestPreviousYear\}\}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearEnd.toString() : yearsToSelectObject.yearStart.toString());
-    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{latestNextYear\}\}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearStart.toString() : yearsToSelectObject.yearEnd.toString());
-    element.closest('[data-mds-dtp]').querySelector('[data-mds-dtp-year-list-box]').innerHTML = dateTimePickerYearsToSelectHtml;
-    this.setPopoverHeaderHtml(element, setting.inLine, popoverHeaderHtml);
-  };
   private selectDay = (element: Element): void => {
     // انتخاب روز
     const mdsPersianDateTimePickerInstance = MdsPersianDateTimePicker.getInstance(element);
@@ -1673,6 +1633,92 @@ data-bs-toggle="dropdown" aria-expanded="false">
     if (setting.onDayClick != undefined)
       setting.onDayClick(setting);
   };
+  private goToday = (e: PointerEvent): void => {
+    const element = <Element>e.target;
+    const mdsPersianDateTimePickerInstance = MdsPersianDateTimePicker.getInstance(element);
+    const setting = mdsPersianDateTimePickerInstance.setting;
+    setting.selectedDateToShow = new Date();
+    MdsPersianDateTimePickerData.set(mdsPersianDateTimePickerInstance.guid, mdsPersianDateTimePickerInstance);
+    this.updateCalendarHtml1(element, setting);
+  };
+  private timeChanged = (e: Event): void => {
+    // عوض کردن ساعت
+    const element = <Element>e.target;
+    const mdsPersianDateTimePickerInstance = MdsPersianDateTimePicker.getInstance(element);
+    const setting = mdsPersianDateTimePickerInstance.setting;
+    const value: string = (<any>element).value;
+    if (!setting.enableTimePicker) return;
+    if (setting.selectedDateToShow == undefined)
+      setting.selectedDateToShow = new Date();
+    let hour = Number(value.substr(0, 2));
+    let minute = Number(value.substr(3, 2));
+    setting.selectedDateToShow = new Date(setting.selectedDateToShow.setHours(hour));
+    setting.selectedDateToShow = new Date(setting.selectedDateToShow.setMinutes(minute));
+    if (setting.selectedDate == undefined)
+      setting.selectedDate = new Date();
+    setting.selectedDate = new Date(setting.selectedDate.setHours(hour));
+    setting.selectedDate = new Date(setting.selectedDate.setMinutes(minute));
+    MdsPersianDateTimePickerData.set(mdsPersianDateTimePickerInstance.guid, mdsPersianDateTimePickerInstance);
+    this.setSelectedData(setting);
+  };
+  private enableMainEvents(): void {
+    this.element.addEventListener('shown.bs.popover', this.popoverShownEvent);
+    this.element.addEventListener('hidden.bs.popover', this.popoverHiddenEvent);
+    this.element.addEventListener('inserted.bs.popover', this.popoverInsertedEvent);
+    this.element.addEventListener('click', this.showPopoverEvent, true);
+  }
+  private popoverInsertedEvent = (): void => {
+    this.hideYearsBox();
+  }
+  private popoverShownEvent = (): void => {
+    this.enableEvents();
+  }
+  private popoverHiddenEvent = (e: CustomEvent): void => {
+    this.disableEvents();
+  }
+  private enableEvents(): void {
+    setTimeout(() => {
+      document.querySelector('[data-mds-dtp-time]').addEventListener('change', this.timeChanged, false);
+      document.querySelector('[data-mds-dtp-go-today]').addEventListener('click', this.goToday, false);
+      document.addEventListener('click', this.selectCorrectEvent, false);
+      document.querySelector('html').addEventListener('click', this.hidePopoverEvent, true);
+    }, 100);
+  }
+  private disableEvents(): void {
+    document.removeEventListener('click', this.selectCorrectEvent);
+    document.querySelector('[data-mds-dtp-time]')?.removeEventListener('change', this.timeChanged);
+    document.querySelector('[data-mds-dtp-go-today]')?.removeEventListener('click', this.goToday);
+    document.querySelector('html').removeEventListener('click', this.hidePopoverEvent);
+  }
+  private selectCorrectEvent = (e: PointerEvent): void => {
+    const element = <Element>e.target;
+    const instance = MdsPersianDateTimePicker.getInstance(element);
+    if (element.getAttribute('mds-pdtp-select-year-button') != null) {
+      instance.showYearsBox(element);
+    } else if (element.getAttribute('data-day') != null) {
+      this.selectDay(element);
+    } else if (element.getAttribute('data-mds-hide-year-list-box')) {
+      this.hideYearsBox();
+    } else if (element.getAttribute('data-change-date-button')) {
+      this.changeMonth(element);
+    } else if (element.getAttribute('data-year-range-button-change')) {
+      this.changeYearList(element);
+    }
+  }
+  private showPopoverEvent = (e: PointerEvent): void => {
+    MdsPersianDateTimePicker.getInstance(<Element>e.target).show();
+  }
+  private hidePopoverEvent = (e: PointerEvent): void => {
+    const element = <Element>e.target;
+    if (element.tagName == 'HTML') {
+      MdsPersianDateTimePickerData.getAll().forEach(i => { i.hide(); });
+      return;
+    }
+    const isWithinDatePicker = element.closest('[data-mds-dtp]') != null || element.getAttribute('mds-dtp-guid') != null || element.getAttribute('data-mds-dtp-go-today') != null;
+    if (!isWithinDatePicker) {
+      MdsPersianDateTimePickerData.getAll().forEach(i => { i.hide(); });
+    }
+  }
 
   show(): void {
     this.bsPopover.show();
@@ -1695,9 +1741,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
   dispose(): void {
     this.bsPopover.dispose();
     this.element.removeEventListener('click', this.showPopoverEvent);
-    this.element.removeEventListener('inserted.bs.popover', this.hideYearsBox);
-    document.getElementsByTagName('HTML')[0].removeEventListener('click', this.hidePopoverEvent);
-    document.removeEventListener('click', this.selectCorrectEvent);
   }
   getBsPopoverInstance() {
     return this.bsPopover;
