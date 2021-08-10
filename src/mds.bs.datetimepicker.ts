@@ -7,14 +7,18 @@ export class MdsPersianDateTimePicker {
     if (setting.toDate && setting.fromDate) throw new Error(`MdsPersianDateTimePicker => You can not set true 'toDate' and 'fromDate' together`);
     if (!setting.groupId && (setting.toDate || setting.fromDate)) throw new Error(`MdsPersianDateTimePicker => When you set 'toDate' or 'fromDate' true, you have to set 'groupId'`);
 
-    if (setting.enableTimePicker && !setting.textFormat)
-      setting.textFormat = 'yyyy/MM/dd   HH:mm';
-    else if (!setting.enableTimePicker && !setting.textFormat)
+    if (!setting.textFormat) {
       setting.textFormat = 'yyyy/MM/dd';
-    if (setting.enableTimePicker && !setting.dateFormat)
-      setting.dateFormat = 'yyyy/MM/dd   HH:mm';
-    else if (!setting.enableTimePicker && !setting.dateFormat)
+      if (setting.enableTimePicker)
+        setting.textFormat += ' HH:mm';
+    }
+    if (!setting.dateFormat) {
       setting.dateFormat = 'yyyy/MM/dd';
+      if (setting.enableTimePicker)
+        setting.dateFormat += ' HH:mm';
+    }
+    if (setting.yearOffset > 15)
+      setting.yearOffset = 15;
 
     this.setting = setting;
     this.setting.selectedDate = setting.selectedDate ? this.getClonedDate(setting.selectedDate) : new Date();
@@ -799,15 +803,12 @@ data-bs-toggle="dropdown" aria-expanded="false">
     if (targetDateElement != undefined) {
       const dateTimeJson = this.getDateTimeJson1(setting.selectedDate)
       this.triggerChangeCalling = true;
-      let dateFormat = 'yyyy/MM/dd';
-      if (setting.enableTimePicker)
-        dateFormat += ' HH:mm';
       switch (targetDateElement.tagName.toLowerCase()) {
         case 'input':
-          (<any>targetDateElement).value = this.getDateTimeString(dateTimeJson, dateFormat, setting.isGregorian, true);
+          (<any>targetDateElement).value = this.getDateTimeString(dateTimeJson, setting.dateFormat, setting.isGregorian, true);
           break;
         default:
-          targetDateElement.innerHTML = this.getDateTimeString(dateTimeJson, dateFormat, setting.isGregorian, true);
+          targetDateElement.innerHTML = this.getDateTimeString(dateTimeJson, setting.dateFormat, setting.isGregorian, true);
           break;
       }
       targetDateElement.dispatchEvent(changeEvent);
@@ -1536,11 +1537,11 @@ data-bs-toggle="dropdown" aria-expanded="false">
   }
   private updateCalendarHtml1 = (element: Element, setting: MdsPersianDateTimePickerSetting): void => {
     const calendarHtml = this.getDateTimePickerHtml(setting);
-    const container = element.closest('[data-name="mds-dtp-body"]');
+    const containerElement = element.closest('[data-name="mds-dtp-body"]');
     const dtpInlineHeader = calendarHtml.match(/<th mds-dtp-inline-header\b[^>]*>(.*?)<\/th>/img)[0];
     this.tempTitleString = dtpInlineHeader;
     this.setPopoverHeaderHtml(element, setting.inLine, dtpInlineHeader.trim());
-    container.innerHTML = calendarHtml;
+    containerElement.innerHTML = calendarHtml;
     this.enableEvents();
   }
   private changeMonth = (element: Element): void => {
@@ -1727,32 +1728,76 @@ data-bs-toggle="dropdown" aria-expanded="false">
     }
   }
 
+  /**
+   * نمایش تقویم
+   */
   show(): void {
     this.bsPopover.show();
   }
+  /**
+   * مخفی کردن تقویم
+   */
   hide(): void {
     this.bsPopover.hide();
   }
+  /**
+   * مخفی یا نمایش تقویم 
+   */
   toggle(): void {
     this.bsPopover.toggle();
   }
+  /**
+   * فعال کردن تقویم
+   */
   enable(): void {
+    this.setting.disabled = false;
+    MdsPersianDateTimePickerData.set(this.guid, this);
     this.bsPopover.enable();
   }
+  /**
+   * غیر فعال کردن تقویم
+   */
   disable(): void {
+    this.setting.disabled = true;
+    MdsPersianDateTimePickerData.set(this.guid, this);
     this.bsPopover.disable();
   }
-  update(): void {
+  /**
+   * بروز کردن محل قرار گرفتن تقویم
+   */
+  updatePosition(): void {
     this.bsPopover.update();
   }
+  /**
+   * از بین بردن تقویم
+   */
   dispose(): void {
     this.bsPopover.dispose();
     this.element.removeEventListener('click', this.showPopoverEvent);
   }
-  getBsPopoverInstance() {
+  /**
+   * دریافت اینستنس پاپ آور بوت استرپ
+   */
+  getBsPopoverInstance(): Popover {
     return this.bsPopover;
   }
+  /**
+   * بروز کردن تنظیمات تقویم
+   * @param optionName نام آپشن مورد نظر
+   * @param value مقدار
+   */
+  updateOption(optionName: string, value: any): void {
+    (<any>this.setting)[optionName] = value;
+    MdsPersianDateTimePickerData.set(this.guid, this);
+    // const element = document.querySelector(`[mds-dtp-guid="${this.guid}"]`);
+    // this.updateCalendarHtml1(element, this.setting);
+  }
 
+  /**
+   * دریافت اینستنس تقویم از روی المانی که تقویم روی آن فعال شده است
+   * @param element المانی که تقویم روی آن فعال شده
+   * @returns اینستنس تقویم
+   */
   static getInstance(element: Element): MdsPersianDateTimePicker {
     let elementGuid = element.getAttribute('mds-dtp-guid');
     if (!elementGuid) {
