@@ -40,14 +40,17 @@
       targetTextSelector: '[data-name="basic-dtp-simple"]',
       targetDateSelector: '[data-name="basic-dtp-simple-hidden"]',
     });
-    simpleMdsDtp.updateOption('disableAfterToday', true);
     simpleMdsDtp.show();
+    setTimeout(() => {
+      simpleMdsDtp.updateOption('disableAfterToday', true);
+    }, 2000);
 
-    new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-time'), {
-      enableTimePicker: true,
-      targetTextSelector: '[data-name="basic-dtp-time"]',
-      targetDateSelector: '[data-name="basic-dtp-time-hidden"]',
-    });
+
+    // new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-time'), {
+    //   enableTimePicker: true,
+    //   targetTextSelector: '[data-name="basic-dtp-time"]',
+    //   targetDateSelector: '[data-name="basic-dtp-time-hidden"]',
+    // });
   </script>
 </body>
 
