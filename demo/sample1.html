@@ -32,23 +32,34 @@
           <input type="hidden" data-name="basic-dtp-time-hidden">
         </div>
       </div>
+      <div class="col-md-3">
+        <h3>Gregorian</h3>
+        <div class="input-group mb-3">
+          <span class="input-group-text cursor-pointer" id="basic-gregorian">📅</span>
+          <input type="text" class="form-control" placeholder="Date Time Picker" data-name="basic-gregorian-text">
+          <input type="hidden" data-name="basic-gregorian-date">
+        </div>
+      </div>
     </div>
   </div>
   <script>
     const simpleMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-simple'), {
-      // selectedDate: new Date('2021-08-08'),
       targetTextSelector: '[data-name="basic-dtp-simple"]',
       targetDateSelector: '[data-name="basic-dtp-simple-hidden"]',
-      // disableBeforeToday: true,
-      disableAfterToday: true
+      disableBeforeDate: new Date('2021-07-08')
     });
-    simpleMdsDtp.show();
 
-    // new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-time'), {
-    //   enableTimePicker: true,
-    //   targetTextSelector: '[data-name="basic-dtp-time"]',
-    //   targetDateSelector: '[data-name="basic-dtp-time-hidden"]',
-    // });
+    new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-time'), {
+      enableTimePicker: true,
+      targetTextSelector: '[data-name="basic-dtp-time"]',
+      targetDateSelector: '[data-name="basic-dtp-time-hidden"]',
+    });
+
+    new mds.MdsPersianDateTimePicker(document.getElementById('basic-gregorian'), {
+      isGregorian: true,
+      targetTextSelector: '[data-name="basic-gregorian-text"]',
+      targetDateSelector: '[data-name="basic-gregorian-date"]',
+    });
   </script>
 </body>
 

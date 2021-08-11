@@ -956,7 +956,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     html = html.replace(/\{\{latestPreviousYear\}\}/img, yearStart > yearEnd ? yearEnd.toString() : yearStart.toString());
     html = html.replace(/\{\{latestNextYear\}\}/img, yearStart > yearEnd ? yearStart.toString() : yearEnd.toString());
     html = html.replace(/\{\{prevYearButtonAttr\}\}/img, disabledDateObj[0] != null && yearStart - 1 < disabledDateObj[0].year ? 'disabled' : '');
-    html = html.replace(/\{\{latestNextYear\}\}/img, disabledDateObj[1] != null && yearEnd + 1 > disabledDateObj[1].year ? 'disabled' : '');
+    html = html.replace(/\{\{nextYearButtonAttr\}\}/img, disabledDateObj[1] != null && yearEnd + 1 > disabledDateObj[1].year ? 'disabled' : '');
     return html;
   }
   private getDateTimePickerMonthHtml(setting: MdsPersianDateTimePickerSetting, isNextMonth: boolean, isPrevMonth: boolean): string {
@@ -995,15 +995,14 @@ data-bs-toggle="dropdown" aria-expanded="false">
     html = html.replace(/\{\{weekDayShortName6\}\}/img, this.getWeekDayShortName(5, setting.isGregorian));
     html = html.replace(/\{\{weekDayShortName7\}\}/img, this.getWeekDayShortName(6, setting.isGregorian));
 
+    const disabledDateObj = this.getDisabledDateObject(setting);
     let i = 0,
       j = 0,
       firstWeekDayNumber,
       cellNumber = 0,
       tdNumber = 0,
-      selectedYear = '',
       selectedDateNumber = 0,
       selectedMonthName = '',
-      todayDateNumber = 0,
       todayDateTimeJson: GetDateTimeJson1, // year, month, day, hour, minute, second
       dateTimeToShowJson: GetDateTimeJson1, // year, month, day, hour, minute, second
       numberOfDaysInCurrentMonth = 0,
@@ -1012,13 +1011,10 @@ data-bs-toggle="dropdown" aria-expanded="false">
       td = document.createElement("TD"),
       daysHtml = '',
       currentDateNumber = 0,
-      currentMonthInfo = '',
       previousMonthDateNumber = 0,
       nextMonthDateNumber = 0,
       previousYearDateNumber = 0,
       nextYearDateNumber = 0,
-      disableBeforeDateTimeNumber = 0,
-      disableAfterDateTimeNumber = 0,
       rangeSelectorStartDate = !setting.rangeSelector || setting.rangeSelectorStartDate == undefined ? undefined : this.getClonedDate(setting.rangeSelectorStartDate),
       rangeSelectorEndDate = !setting.rangeSelector || setting.rangeSelectorEndDate == undefined ? undefined : this.getClonedDate(setting.rangeSelectorEndDate),
       rangeSelectorStartDateNumber = 0,
@@ -1054,8 +1050,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
       holidaysDateNumbers: number[] = [],
       disabledDatesNumber: number[] = [],
       specialDatesNumber: number[] = [],
-      disableBeforeDateTimeJson: GetDateTimeJson1,
-      disableAfterDateTimeJson: GetDateTimeJson1,
+      disableBeforeDateTimeJson = disabledDateObj[0],
+      disableAfterDateTimeJson = disabledDateObj[1],
       previousYearButtonDisabledAttribute = '',
       previousMonthButtonDisabledAttribute = '',
       selectYearButtonDisabledAttribute = '',
@@ -1066,8 +1062,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
     if (setting.isGregorian) {
       dateTimeToShowJson = this.getDateTimeJson1(selectedDateToShowTemp);
       todayDateTimeJson = this.getDateTimeJson1(new Date());
-      disableBeforeDateTimeJson = !setting.disableBeforeDate ? undefined : this.getDateTimeJson1(setting.disableBeforeDate);
-      disableAfterDateTimeJson = !setting.disableAfterDate ? undefined : this.getDateTimeJson1(setting.disableAfterDate);
       firstWeekDayNumber = new Date(dateTimeToShowJson.year, dateTimeToShowJson.month - 1, 1).getDay();
       selectedDateNumber = !selectedDateTime ? 0 : this.convertToNumber1(this.getDateTimeJson1(selectedDateTime));
       numberOfDaysInCurrentMonth = this.getDaysInMonth(dateTimeToShowJson.year, dateTimeToShowJson.month - 1);
@@ -1085,8 +1079,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
         monthsDateNumberAndAttr['month' + i.toString() + 'DateNumber'] = this.convertToNumber1(this.getDateTimeJson1(new Date(selectedDateToShowTemp.setMonth(i - 1))));
         selectedDateToShowTemp = this.getClonedDate(selectedDateToShow);
       }
-      for (i = 0; i < setting.holiDays.length; i++) {
-        holidaysDateNumbers.push(this.convertToNumber1(this.getDateTimeJson1(setting.holiDays[i])));
+      for (i = 0; i < setting.holidays.length; i++) {
+        holidaysDateNumbers.push(this.convertToNumber1(this.getDateTimeJson1(setting.holidays[i])));
       }
       for (i = 0; i < setting.disabledDates.length; i++) {
         disabledDatesNumber.push(this.convertToNumber1(this.getDateTimeJson1(setting.disabledDates[i])));
@@ -1097,8 +1091,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
     } else {
       dateTimeToShowJson = this.getDateTimeJsonPersian1(selectedDateToShowTemp);
       todayDateTimeJson = this.getDateTimeJsonPersian1(new Date());
-      disableBeforeDateTimeJson = !setting.disableBeforeDate ? undefined : this.getDateTimeJsonPersian1(setting.disableBeforeDate);
-      disableAfterDateTimeJson = !setting.disableAfterDate ? undefined : this.getDateTimeJsonPersian1(setting.disableAfterDate);
       firstWeekDayNumber = this.getDateTimeJsonPersian2(dateTimeToShowJson.year, dateTimeToShowJson.month, 1, 0, 0, 0).dayOfWeek;
       selectedDateNumber = !selectedDateTime ? 0 : this.convertToNumber1(this.getDateTimeJsonPersian1(selectedDateTime));
       numberOfDaysInCurrentMonth = this.getDaysInMonthPersian(dateTimeToShowJson.year, dateTimeToShowJson.month);
@@ -1116,8 +1108,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
         monthsDateNumberAndAttr['month' + i.toString() + 'DateNumber'] = this.convertToNumber2(dateTimeToShowJson.year, i, this.getDaysInMonthPersian(dateTimeToShowJson.year, i));
         selectedDateToShowTemp = this.getClonedDate(selectedDateToShow);
       }
-      for (i = 0; i < setting.holiDays.length; i++) {
-        holidaysDateNumbers.push(this.convertToNumber1(this.getDateTimeJsonPersian1(setting.holiDays[i])));
+      for (i = 0; i < setting.holidays.length; i++) {
+        holidaysDateNumbers.push(this.convertToNumber1(this.getDateTimeJsonPersian1(setting.holidays[i])));
       }
       for (i = 0; i < setting.disabledDates.length; i++) {
         disabledDatesNumber.push(this.convertToNumber1(this.getDateTimeJsonPersian1(setting.disabledDates[i])));
@@ -1127,31 +1119,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
       }
     }
 
-    // بررسی پراپرتی های از تاریخ، تا تاریخ
-    if ((setting.fromDate || setting.toDate) && setting.groupId) {
-      const toDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-toDate]');
-      const fromDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-fromDate]');
-      if (setting.fromDate && toDateElement != null) {
-        const toDateMdsInstance = MdsPersianDateTimePicker.getInstance(toDateElement);
-        if (toDateMdsInstance != null) {
-          const toDateSelectedDate = toDateMdsInstance.setting.selectedDate;
-          disableAfterDateTimeJson = !toDateSelectedDate ? undefined : setting.isGregorian ? this.getDateTimeJson1(toDateSelectedDate) : this.getDateTimeJsonPersian1(toDateSelectedDate);
-        }
-      } else if (setting.toDate && fromDateElement != null) {
-        const fromDateInstance = MdsPersianDateTimePicker.getInstance(fromDateElement);
-        if (fromDateInstance != null) {
-          const fromDateSelectedDate = fromDateInstance.setting.selectedDate;
-          disableBeforeDateTimeJson = !fromDateSelectedDate ? undefined : setting.isGregorian ? this.getDateTimeJson1(fromDateSelectedDate) : this.getDateTimeJsonPersian1(fromDateSelectedDate);
-        }
-      }
-    }
-
-    todayDateNumber = this.convertToNumber1(todayDateTimeJson);
-    selectedYear = setting.isGregorian ? dateTimeToShowJson.year.toString() : this.toPersianNumber(dateTimeToShowJson.year);
-    disableBeforeDateTimeNumber = !disableBeforeDateTimeJson ? undefined : this.convertToNumber1(disableBeforeDateTimeJson);
-    disableAfterDateTimeNumber = !disableAfterDateTimeJson ? undefined : this.convertToNumber1(disableAfterDateTimeJson);
-    currentMonthInfo = this.getMonthName(dateTimeToShowJson.month - 1, setting.isGregorian) + ' ' + dateTimeToShowJson.year.toString();
-    if (!setting.isGregorian) currentMonthInfo = this.toPersianNumber(currentMonthInfo);
+    let todayDateNumber = this.convertToNumber1(todayDateTimeJson);
+    let selectedYear = setting.isGregorian ? dateTimeToShowJson.year.toString() : this.toPersianNumber(dateTimeToShowJson.year);
+    let disableBeforeDateTimeNumber = !disableBeforeDateTimeJson ? undefined : this.convertToNumber1(disableBeforeDateTimeJson);
+    let disableAfterDateTimeNumber = !disableAfterDateTimeJson ? undefined : this.convertToNumber1(disableAfterDateTimeJson);
+    let currentMonthInfo = this.getMonthName(dateTimeToShowJson.month - 1, setting.isGregorian) + ' ' + dateTimeToShowJson.year.toString();
+    if (!setting.isGregorian)
+      currentMonthInfo = this.toPersianNumber(currentMonthInfo);
     selectedMonthName = this.getMonthName(dateTimeToShowJson.month - 1, setting.isGregorian);
 
     if (setting.yearOffset <= 0) {
@@ -1871,38 +1845,140 @@ interface MdsPersianDateTimePickerYearToSelect {
   html: string
 }
 
-class MdsPersianDateTimePickerSetting {
+export class MdsPersianDateTimePickerSetting {
+  /**
+   * محل قرار گرفتن تقویم
+   */
   placement: "auto" | "top" | "bottom" | "left" | "right" | (() => void) = 'bottom';
+  /**
+   * رویداد نمایش تقویم
+   */
   trigger = 'click';
+  /**
+   * فعال بودن تایم پیکر
+   */
   enableTimePicker = false;
+  /**
+   * سلکتور نمایش روز انتخاب شده
+   */
   targetTextSelector = '';
+  /**
+   * سلکتور ذخیره تاریخ میلادی، برای روز انتخاب شده
+   */
   targetDateSelector = '';
+  /**
+   * آیا تقویم برای کنترل روز پایانی تاریخ است
+   */
   toDate = false;
+  /**
+   * آیا تقویم برای کنترل روز شروع تاریخ است
+   */
   fromDate = false;
+  /**
+   * شناسه گروه در حالتی که از 
+   * toDate
+   * و
+   * fromDate
+   * استفاده شده است
+   */
   groupId = '';
+  /**
+   * آیا تقویم غیر فعال است؟
+   */
   disabled = false;
+  /**
+   * فرمت نمایش روز انتخاب شده تقویم
+   */
   textFormat = '';
+  /**
+   * فرمت ذخیره تاریخ میلادی انتخاب شده
+   */
   dateFormat = '';
+  /**
+   * آیا تقویم میلادی استفاده شود؟
+   */
   isGregorian = false;
+  /**
+   * آیا تقویم به صورت این لاین نمایش داده شود؟
+   */
   inLine = false;
-  selectedDate: Date = null; // Date initial value
+  /**
+   * تاریخ انتخاب شده
+   */
+  selectedDate: Date = null;
+  /**
+   * تاریخی که نمایش تقویم از آن شروع می شود
+   */
   selectedDateToShow = new Date();
-  monthsToShow = [0, 0];
+  /**
+   * تعداد سال های قابل نمایش در لیست سال های قابل انتخاب
+   */
   yearOffset = 15;
-  holiDays: Date[] = [];
-  disabledDates: Date[] = []; // تاریخ هایی که غیر فعال هستند
-  disabledDays: number[] = []; // روزهایی از هفته که غیر فعال هستند
+  /**
+   * تاریخ میلادی روزهای تعطیل
+   */
+  holidays: Date[] = [];
+  /**
+   * تاریخ میلادی روزهای غیر فعال
+   */
+  disabledDates: Date[] = [];
+  /**
+   * عدد روزهایی از هفته که غیر فعال هستند
+   */
+  disabledDays: number[] = [];
+  /**
+   * تاریخ میلادی روزهای خاص
+   */
   specialDates: Date[] = [];
+  /**
+   * آیا روزهای قبل از امروز غیر فعال شوند؟
+   */
   disableBeforeToday = false;
+  /**
+   * آیا روزهای بعد از امروز غیر فعال شوند؟
+   */
   disableAfterToday = false;
+  /**
+   * روزهای قبل از این تاریخ غیر فعال شود
+   */
   disableBeforeDate: Date = null;
+  /**
+   * روزهای بعد از این تاریخ غیر فعال شود
+   */
   disableAfterDate: Date = null;
+  /**
+   * آیا تقویم به صورت انتخاب بازه نمایش داده شود؟
+   */
   rangeSelector = false;
+  /**
+   * تاریخ شروع تقویم در مد انتخاب بازه تاریخی برای نمایش
+   */
   rangeSelectorStartDate: Date = null;
+  /**
+   * تاریخ پایان تقویم در مد انتخاب بازه تاریخی برای نمایش
+   */
   rangeSelectorEndDate: Date = null;
+  /**
+   * تعداد ماه های قابل نمایش در قابلیت انتخاب بازه تاریخی
+   */
+  monthsToShow = [0, 0];
+  /**
+   * تاریخ های انتخاب شده در مد بازه انتخابی
+   */
   selectedRangeDate: Date[] = [];
+  /**
+   * آیا تقویم به صورت مدال نمایش داده شود
+   */
   modalMode = false;
+  /**
+   * رویداد عوض شدن ماه و تاریخ در دیت پیکر
+   * @param _ تاریخ ماه انتخابی
+   */
   calendarViewOnChange = (_: Date) => { };
+  /**
+   * رویداد انتخاب روز در دیت پیکر
+   * @param _ تمامی تنظیمات دیت پیکر
+   */
   onDayClick = (_: MdsPersianDateTimePickerSetting) => { }
 }
 
