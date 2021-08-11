@@ -434,20 +434,22 @@ data-bs-toggle="dropdown" aria-expanded="false">
   // #region Methods
 
   private initializeBsPopover(setting: MdsPersianDateTimePickerSetting): void {
-    this.dispose();
-    this.bsPopover = new Popover(this.element, {
-      container: 'body',
-      content: this.getDateTimePickerBodyHtml(this.setting),
-      title: this.getPopoverHeaderTitle(this.setting),
-      html: true,
-      placement: setting.placement,
-      trigger: 'manual',
-      template: this.popoverHtmlTemplate,
-      sanitize: false,
-    });
     setTimeout(() => {
+      this.dispose();
+      const title = this.getPopoverHeaderTitle(this.setting);
+      this.bsPopover = new Popover(this.element, {
+        container: 'body',
+        content: this.getDateTimePickerBodyHtml(this.setting),
+        title: title,
+        html: true,
+        placement: setting.placement,
+        trigger: 'manual',
+        template: this.popoverHtmlTemplate,
+        sanitize: false,
+      });
+      this.tempTitleString = title;
       this.enableMainEvents();
-    }, 100);
+    }, 500);
   }
   private newGuid(): string {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
@@ -1730,12 +1732,12 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private hidePopoverEvent = (e: PointerEvent): void => {
     const element = <Element>e.target;
     if (element.tagName == 'HTML') {
-      MdsPersianDateTimePickerData.getAll().forEach(i => { i.hide(); });
+      MdsPersianDateTimePickerData.getAll().forEach(i => i.hide());
       return;
     }
     const isWithinDatePicker = element.closest('[data-mds-dtp]') != null || element.getAttribute('mds-dtp-guid') != null || element.getAttribute('data-mds-dtp-go-today') != null;
     if (!isWithinDatePicker) {
-      MdsPersianDateTimePickerData.getAll().forEach(i => { i.hide(); });
+      MdsPersianDateTimePickerData.getAll().forEach(i => i.hide());
     }
   }
 
@@ -1749,6 +1751,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
    * مخفی کردن تقویم
    */
   hide(): void {
+    if (this.bsPopover == null) return;
     this.bsPopover.hide();
   }
   /**
@@ -1780,12 +1783,19 @@ data-bs-toggle="dropdown" aria-expanded="false">
     this.bsPopover.update();
   }
   /**
+   * به روز کردن متن نمایش تاریخ روز انتخاب شده
+   */
+  updateSelectedDateText(): void {
+    this.setSelectedData(this.setting);
+  }
+  /**
    * از بین بردن تقویم
    */
   dispose(): void {
     if (this.bsPopover == null) return;
     this.bsPopover.dispose();
     this.element.removeEventListener('click', this.showPopoverEvent);
+    this.bsPopover = null;
   }
   /**
    * دریافت اینستنس پاپ آور بوت استرپ

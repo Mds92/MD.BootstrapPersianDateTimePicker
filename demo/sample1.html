@@ -38,30 +38,34 @@
           <span class="input-group-text cursor-pointer" id="basic-gregorian">📅</span>
           <input type="text" class="form-control" placeholder="Gregorian Date Picker" data-name="basic-gregorian-text">
           <input type="hidden" data-name="basic-gregorian-date">
+          <span class="input-group-text cursor-pointer" id="basic-gregorian" onclick="changeGregorianMdsDtpCalendarType()">🗘</span>
         </div>
       </div>
     </div>
   </div>
   <script>
-    // const simpleMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-simple'), {
-    //   targetTextSelector: '[data-name="basic-dtp-simple"]',
-    //   targetDateSelector: '[data-name="basic-dtp-simple-hidden"]',
-    //   disableBeforeDate: new Date('2021-07-08')
-    // });
+    const simpleMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-simple'), {
+      targetTextSelector: '[data-name="basic-dtp-simple"]',
+      targetDateSelector: '[data-name="basic-dtp-simple-hidden"]',
+      disableBeforeDate: new Date('2021-07-08')
+    });
 
-    // new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-time'), {
-    //   enableTimePicker: true,
-    //   targetTextSelector: '[data-name="basic-dtp-time"]',
-    //   targetDateSelector: '[data-name="basic-dtp-time-hidden"]',
-    // });
+    new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-time'), {
+      enableTimePicker: true,
+      targetTextSelector: '[data-name="basic-dtp-time"]',
+      targetDateSelector: '[data-name="basic-dtp-time-hidden"]',
+    });
 
-    new mds.MdsPersianDateTimePicker(document.getElementById('basic-gregorian'), {
+    const gregorianMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-gregorian'), {
       isGregorian: true,
-      selectedDate: new Date(2020, 7, 1),
-      selectedDateToShow: new Date(2020, 7, 1),
+      textFormat: 'yyyy-MM-dd',
       targetTextSelector: '[data-name="basic-gregorian-text"]',
       targetDateSelector: '[data-name="basic-gregorian-date"]',
     });
+    var changeGregorianMdsDtpCalendarType = function() {
+      gregorianMdsDtp.updateOption('isGregorian', !gregorianMdsDtp.setting.isGregorian);
+      gregorianMdsDtp.updateSelectedDateText();
+    }
   </script>
 </body>
 
