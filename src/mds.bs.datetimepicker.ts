@@ -320,13 +320,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
 </thead>
 <tbody class="days">
 <tr>
-<td class="{{weekDayShortName1CssClass}}">{{weekDayShortName1}}</td>
-<td>{{weekDayShortName2}}</td>
-<td>{{weekDayShortName3}}</td>
-<td>{{weekDayShortName4}}</td>
-<td>{{weekDayShortName5}}</td>
-<td>{{weekDayShortName6}}</td>
-<td class="{{weekDayShortName7CssClass}}">{{weekDayShortName7}}</td>
+  <td class="{{weekDayShortName1CssClass}}">{{weekDayShortName1}}</td>
+  <td>{{weekDayShortName2}}</td>
+  <td>{{weekDayShortName3}}</td>
+  <td>{{weekDayShortName4}}</td>
+  <td>{{weekDayShortName5}}</td>
+  <td>{{weekDayShortName6}}</td>
+  <td class="{{weekDayShortName7CssClass}}">{{weekDayShortName7}}</td>
 </tr>
 {{daysHtml}}
 </tbody>
@@ -363,13 +363,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
     'ج',
   ];
   private shortDayNames = [
-    'SU',
-    'MO',
-    'TU',
-    'WE',
-    'TH',
-    'FR',
-    'SA',
+    'Su',
+    'Mo',
+    'Tu',
+    'We',
+    'Th',
+    'Fr',
+    'Sa',
   ];
   private monthNamesPersian = [
     'فروردین',
@@ -518,7 +518,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
     return this.monthNames[monthIndex];
   }
   private getWeekDayShortName(englishWeekDayIndex: number, isGregorian: boolean): string {
-    if (!isGregorian) return this.shortDayNamesPersian[englishWeekDayIndex];
+    if (!isGregorian)
+      return this.shortDayNamesPersian[englishWeekDayIndex];
     return this.shortDayNames[englishWeekDayIndex];
   }
   private isLeapYear(persianYear: number): boolean {
@@ -960,11 +961,11 @@ data-bs-toggle="dropdown" aria-expanded="false">
     return html;
   }
   private getDateTimePickerMonthHtml(setting: MdsPersianDateTimePickerSetting, isNextMonth: boolean, isPrevMonth: boolean): string {
-    let selectedDateToShow = this.getClonedDate(setting.selectedDateToShow),
-      selectedDateToShowTemp = this.getClonedDate(selectedDateToShow),
-      selectedDateTime = setting.selectedDate != undefined ? this.getClonedDate(setting.selectedDate) : undefined,
-      isNextOrPrevMonth = isNextMonth || isPrevMonth,
-      html = this.dateTimePickerMonthTableHtmlTemplate;
+    let selectedDateToShow = this.getClonedDate(setting.selectedDateToShow);
+    let selectedDateToShowTemp = this.getClonedDate(selectedDateToShow);
+    let selectedDateTime = setting.selectedDate != undefined ? this.getClonedDate(setting.selectedDate) : undefined;
+    let isNextOrPrevMonth = isNextMonth || isPrevMonth;
+    let html = this.dateTimePickerMonthTableHtmlTemplate;
 
     html = html.replace(/\{\{monthTdAttribute\}\}/img, isNextMonth ? 'data-next-month' : isPrevMonth ? 'data-prev-month' : '');
     html = html.replace(/\{\{monthNameAttribute\}\}/img, !isNextOrPrevMonth ? 'hidden' : '');
@@ -1135,8 +1136,9 @@ data-bs-toggle="dropdown" aria-expanded="false">
     }
 
     // روز های ماه قبل
-    if (firstWeekDayNumber != 6) {
-      if (setting.isGregorian) firstWeekDayNumber--;
+    if (!setting.isGregorian && firstWeekDayNumber != 6 || setting.isGregorian && firstWeekDayNumber != 0) {
+      if (setting.isGregorian)
+        firstWeekDayNumber--;
       let previousMonthDateTimeJson = this.addMonthToDateTimeJson(dateTimeToShowJson, -1, setting.isGregorian);
       for (i = numberOfDaysInPreviousMonth - firstWeekDayNumber; i <= numberOfDaysInPreviousMonth; i++) {
         currentDateNumber = this.convertToNumber2(previousMonthDateTimeJson.year, previousMonthDateTimeJson.month, i);
