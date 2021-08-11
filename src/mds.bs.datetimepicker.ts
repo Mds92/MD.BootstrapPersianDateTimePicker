@@ -184,7 +184,6 @@ export class MdsPersianDateTimePicker {
   private mdDatePickerFlag = 'data-md-persian-date-time-picker';
   private mdDatePickerFlagSelector = '[' + this.mdDatePickerFlag + ']';
   private mdPersianDateTimePickerFlag = 'data-mds-dtp';
-  private mdDatePickerGroupIdAttribute = 'data-mdpersiandatetimepicker-group';
   private modalHtmlTemplate = `<div class="modal fade mds-bs-persian-datetime-picker-modal" tabindex="-1" role="dialog" aria-labelledby="mdDateTimePickerModalLabel" aria-hidden="true" ${this.mdPersianDateTimePickerFlag}>
 <div class="modal-dialog modal-xl modal-dialog-centered" data-button-selector>
 <div class="modal-content">
@@ -200,20 +199,20 @@ MD DateTimePicker Html
 <h3 class="popover-header text-center p-1" mds-dtp-title="true"></h3>
 <div class="popover-body p-0" data-name="mds-dtp-body"></div>
 </div>`;
-  private popoverHeaderSelectYearHtmlTemplate = `<table class="table table-sm table-borderless text-center p-0 m-0 {{rtlCssClass}}">
+  private popoverHeaderSelectYearHtmlTemplate = `<table class="table table-sm table-borderless text-center p-0 m-0 {{rtlCssClass}}" dir="{{dirAttrValue}}">
 <tr>
 <th>
-<a href="javascript:void(0)" class="btn btn-sm btn-light" title="{{previousText}}" data-year="{{latestPreviousYear}}" data-year-range-button-change="-1"> &lt; </a>
+<button type="button" class="btn btn-sm btn-light" title="{{previousText}}" data-year="{{latestPreviousYear}}" data-year-range-button-change="-1" {{prevYearButtonAttr}}> &lt; </button>
 </th>
 <th class="pt-3">
 {{yearsRangeText}}
 </th>
 <th>
-<a href="javascript:void(0)" class="btn btn-sm btn-light" title="{{nextText}}" data-year="{{latestNextYear}}" data-year-range-button-change="1"> &gt; </a>
+<button type="button" class="btn btn-sm btn-light" title="{{nextText}}" data-year="{{latestNextYear}}" data-year-range-button-change="1" {{nextYearButtonAttr}}> &gt; </button>
 </th>
 </tr>
 </table>`;
-  private dateTimePickerYearsToSelectHtmlTemplate = `<table class="table table-sm text-center p-0 m-0" dir="ltr">
+  private dateTimePickerYearsToSelectHtmlTemplate = `<table class="table table-sm text-center p-0 m-0">
 <tbody>
 {{yearsBoxHtml}}
 <tr>
@@ -225,9 +224,9 @@ MD DateTimePicker Html
 </table>`;
 
   private dateTimePickerHtmlTemplate = `<div class="mds-bs-dtp-container {{rtlCssClass}}">
-<div class="select-year-inline-box w-0" data-name="dateTimePickerYearsButtonsContainer">
+<div class="select-year-inline-box w-0" data-name="dtp-years-container">
 </div>
-<div class="select-year-box w-0" data-mds-dtp-year-list-box="true" dir="ltr"></div>
+<div class="select-year-box w-0" data-mds-dtp-year-list-box="true"></div>
 <table class="table table-sm text-center p-0 m-0">
 <thead>
 <tr {{selectedDateStringAttribute}}>
@@ -439,7 +438,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     this.bsPopover = new Popover(this.element, {
       container: 'body',
       content: this.getDateTimePickerBodyHtml(this.setting),
-      title: this.getPopoverHeaderHtml(this.setting),
+      title: this.getPopoverHeaderTitle(this.setting),
       html: true,
       placement: setting.placement,
       trigger: 'manual',
@@ -449,46 +448,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
     setTimeout(() => {
       this.enableMainEvents();
     }, 100);
-  }
-  private getLesserDisableBeforeDate(setting: MdsPersianDateTimePickerSetting): GetDateTimeJson1 {
-    // دریافت تاریخ کوچکتر
-    // از بین تاریخ های غیر فعال شده در گذشته
-    let resultDate: Date = null;
-    const dateNow = new Date();
-    if (setting.disableBeforeToday && setting.disableBeforeDate) {
-      if (setting.disableBeforeDate.getTime() <= dateNow.getTime())
-        resultDate = this.getClonedDate(setting.disableBeforeDate);
-      else
-        resultDate = dateNow;
-    } else if (setting.disableBeforeDate)
-      resultDate = this.getClonedDate(setting.disableBeforeDate);
-    else if (setting.disableBeforeToday)
-      resultDate = dateNow;
-    if (resultDate == null)
-      return null;
-    if (setting.isGregorian)
-      return this.getDateTimeJson1(resultDate);
-    return this.getDateTimeJsonPersian1(resultDate);
-  }
-  private getBiggerDisableAfterDate(setting: MdsPersianDateTimePickerSetting): GetDateTimeJson1 {
-    // دریافت تاریخ بزرگتر
-    // از بین تاریخ های غیر فعال شده در آینده
-    let resultDate: Date = null;
-    const dateNow = new Date();
-    if (setting.disableAfterDate && setting.disableAfterToday) {
-      if (setting.disableAfterDate.getTime() >= dateNow.getTime())
-        resultDate = this.getClonedDate(setting.disableAfterDate);
-      else
-        resultDate = dateNow;
-    } else if (setting.disableAfterDate)
-      resultDate = this.getClonedDate(setting.disableAfterDate);
-    else if (setting.disableAfterToday)
-      resultDate = dateNow;
-    if (resultDate == null)
-      return null;
-    if (setting.isGregorian)
-      return this.getDateTimeJson1(resultDate);
-    return this.getDateTimeJsonPersian1(resultDate);
   }
   private newGuid(): string {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
@@ -641,6 +600,46 @@ data-bs-toggle="dropdown" aria-expanded="false">
       dateTime = new Date(dateTimeJson.year, dateTimeJson.month - 1, dateTimeJson.day,
         dateTime.getHours(), dateTime.getMinutes(), dateTime.getSeconds());
     return dateTime;
+  }
+  private getLesserDisableBeforeDate(setting: MdsPersianDateTimePickerSetting): GetDateTimeJson1 {
+    // دریافت تاریخ کوچکتر
+    // از بین تاریخ های غیر فعال شده در گذشته
+    let resultDate: Date = null;
+    const dateNow = new Date();
+    if (setting.disableBeforeToday && setting.disableBeforeDate) {
+      if (setting.disableBeforeDate.getTime() <= dateNow.getTime())
+        resultDate = this.getClonedDate(setting.disableBeforeDate);
+      else
+        resultDate = dateNow;
+    } else if (setting.disableBeforeDate)
+      resultDate = this.getClonedDate(setting.disableBeforeDate);
+    else if (setting.disableBeforeToday)
+      resultDate = dateNow;
+    if (resultDate == null)
+      return null;
+    if (setting.isGregorian)
+      return this.getDateTimeJson1(resultDate);
+    return this.getDateTimeJsonPersian1(resultDate);
+  }
+  private getBiggerDisableAfterDate(setting: MdsPersianDateTimePickerSetting): GetDateTimeJson1 {
+    // دریافت تاریخ بزرگتر
+    // از بین تاریخ های غیر فعال شده در آینده
+    let resultDate: Date = null;
+    const dateNow = new Date();
+    if (setting.disableAfterDate && setting.disableAfterToday) {
+      if (setting.disableAfterDate.getTime() >= dateNow.getTime())
+        resultDate = this.getClonedDate(setting.disableAfterDate);
+      else
+        resultDate = dateNow;
+    } else if (setting.disableAfterDate)
+      resultDate = this.getClonedDate(setting.disableAfterDate);
+    else if (setting.disableAfterToday)
+      resultDate = dateNow;
+    if (resultDate == null)
+      return null;
+    if (setting.isGregorian)
+      return this.getDateTimeJson1(resultDate);
+    return this.getDateTimeJsonPersian1(resultDate);
   }
   private addMonthToDateTimeJson(dateTimeJson: GetDateTimeJson1, addedMonth: number, isGregorian: boolean): GetDateTimeJson1 {
     // وقتی نیاز هست تا ماه یا روز به تاریخی اضافه کنم
@@ -829,6 +828,25 @@ data-bs-toggle="dropdown" aria-expanded="false">
         this.getDateTimeString(!setting.isGregorian ? this.getDateTimeJsonPersian1(setting.rangeSelectorEndDate) : this.getDateTimeJson1(setting.rangeSelectorEndDate), setting.textFormat, setting.isGregorian, setting.isGregorian);
     return this.getDateTimeString(!setting.isGregorian ? this.getDateTimeJsonPersian1(setting.selectedDate) : this.getDateTimeJson1(setting.selectedDate), setting.textFormat, setting.isGregorian, setting.isGregorian);
   }
+  private getDisabledDateObject(setting: MdsPersianDateTimePickerSetting): [GetDateTimeJson1 | undefined, GetDateTimeJson1 | undefined] {
+    let disableBeforeDateTimeJson = this.getLesserDisableBeforeDate(setting);
+    let disableAfterDateTimeJson = this.getBiggerDisableAfterDate(setting);
+    // بررسی پراپرتی های از تاریخ، تا تاریخ
+    if ((setting.fromDate || setting.toDate) && setting.groupId) {
+      const toDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-toDate]');
+      const fromDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-fromDate]');
+      if (toDateElement != null && setting.fromDate) {
+        const toDateSetting = MdsPersianDateTimePicker.getInstance(toDateElement).setting;
+        const toDateSelectedDate = toDateSetting.selectedDate;
+        disableAfterDateTimeJson = !toDateSelectedDate ? undefined : setting.isGregorian ? this.getDateTimeJson1(toDateSelectedDate) : this.getDateTimeJsonPersian1(toDateSelectedDate);
+      } else if (fromDateElement != null && setting.toDate) {
+        const fromDateSetting = MdsPersianDateTimePicker.getInstance(fromDateElement).setting;
+        const fromDateSelectedDate = fromDateSetting.selectedDate;
+        disableBeforeDateTimeJson = !fromDateSelectedDate ? undefined : setting.isGregorian ? this.getDateTimeJson1(fromDateSelectedDate) : this.getDateTimeJsonPersian1(fromDateSelectedDate);
+      }
+    }
+    return [disableBeforeDateTimeJson, disableAfterDateTimeJson];
+  }
   private setSelectedData(setting: MdsPersianDateTimePickerSetting): void {
     const targetTextElement = setting.targetTextSelector ? document.querySelector(setting.targetTextSelector) : undefined;
     const targetDateElement = setting.targetDateSelector ? document.querySelector(setting.targetDateSelector) : undefined;
@@ -870,12 +888,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
     // yearToStart سال شروع
 
     const selectedDateToShow = this.getClonedDate(setting.selectedDateToShow);
+    const disabledDateObj = this.getDisabledDateObject(setting);
+    const disableBeforeDateTimeJson = disabledDateObj[0];
+    const disableAfterDateTimeJson = disabledDateObj[1];
     let html = this.dateTimePickerYearsToSelectHtmlTemplate;
     let yearsBoxHtml = '';
     let todayDateTimeJson: GetDateTimeJson1;
     let selectedDateTimeToShowJson: GetDateTimeJson1;
-    let disableBeforeDateTimeJson = this.getLesserDisableBeforeDate(setting);
-    let disableAfterDateTimeJson = this.getBiggerDisableAfterDate(setting);
     let counter = 1;
 
     if (setting.isGregorian) {
@@ -885,30 +904,11 @@ data-bs-toggle="dropdown" aria-expanded="false">
       selectedDateTimeToShowJson = this.getDateTimeJsonPersian1(selectedDateToShow);
       todayDateTimeJson = this.getDateTimeJsonPersian1(new Date());
     }
-
-    // بررسی پراپرتی های از تاریخ، تا تاریخ
-    if ((setting.fromDate || setting.toDate) && setting.groupId) {
-      const toDateElement = document.querySelector('[' + this.mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]');
-      const fromDateElement = document.querySelector('[' + this.mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]');
-      if (setting.fromDate) {
-        const toDateSetting = MdsPersianDateTimePicker.getInstance(toDateElement).setting;
-        const toDateSelectedDate = toDateSetting.selectedDate;
-        disableAfterDateTimeJson = !toDateSelectedDate ? undefined : setting.isGregorian ? this.getDateTimeJson1(toDateSelectedDate) : this.getDateTimeJsonPersian1(toDateSelectedDate);
-      } else if (setting.toDate) {
-        const fromDateSetting = MdsPersianDateTimePicker.getInstance(fromDateElement).setting;
-        const fromDateSelectedDate = fromDateSetting.selectedDate;
-        disableBeforeDateTimeJson = !fromDateSelectedDate ? undefined : setting.isGregorian ? this.getDateTimeJson1(fromDateSelectedDate) : this.getDateTimeJsonPersian1(fromDateSelectedDate);
-      }
-    }
     counter = 1;
     const yearStart = yearToStart ? yearToStart : todayDateTimeJson.year - setting.yearOffset;
     const yearEnd = yearToStart ? yearToStart + setting.yearOffset * 2 : todayDateTimeJson.year + setting.yearOffset;
     for (let i = yearStart; i < yearEnd; i++) {
-      if (setting.disableBeforeToday && i < todayDateTimeJson.year) continue;
-      if (setting.disableAfterToday && i > todayDateTimeJson.year) continue;
-      if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year != undefined && i < disableBeforeDateTimeJson.year) continue;
-      if (disableAfterDateTimeJson != undefined && disableAfterDateTimeJson.year != undefined && i > disableAfterDateTimeJson.year) continue;
-
+      const disabledAttr = i < disableBeforeDateTimeJson?.year || i > disableAfterDateTimeJson?.year ? 'disabled' : '';
       let currentYearDateTimeJson = this.getDateTimeJson2(this.convertToNumber2(i, selectedDateTimeToShowJson.month, this.getDaysInMonthPersian(i, selectedDateTimeToShowJson.month)));
       let currentYearDisabledAttr = '';
       let yearText = setting.isGregorian ? i.toString() : this.toPersianNumber(i);
@@ -929,7 +929,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       if (counter == 1) yearsBoxHtml += '<tr>';
       yearsBoxHtml += `
 <td class="text-center" title="${selectedYearTitle}" ${todayAttr} ${selectedYearAttr}>
-    <button class="btn btn-sm btn-light" type="button" data-change-date-button="true" data-number="${yearDateNumber}" ${currentYearDisabledAttr}>${yearText}</button>        
+  <button class="btn btn-sm btn-light" type="button" data-change-date-button="true" data-number="${yearDateNumber}" ${currentYearDisabledAttr} ${disabledAttr}>${yearText}</button>
 </td>
 `;
       if (counter == 5) yearsBoxHtml += '</tr>';
@@ -944,7 +944,22 @@ data-bs-toggle="dropdown" aria-expanded="false">
       html
     };
   }
-  private getDateTimePickerMonthHtml1(setting: MdsPersianDateTimePickerSetting, isNextMonth: boolean, isPrevMonth: boolean): string {
+  private getYearsBoxHeaderHtml(setting: MdsPersianDateTimePickerSetting, yearStart: number, yearEnd: number): string {
+    const yearsRangeText = ` ${yearStart} - ${yearEnd - 1} `;
+    const disabledDateObj = this.getDisabledDateObject(setting);
+    let html = this.popoverHeaderSelectYearHtmlTemplate;
+    html = html.replace(/\{{rtlCssClass\}\}/img, setting.isGregorian ? '' : 'rtl');
+    html = html.replace(/\{{dirAttrValue\}\}/img, setting.isGregorian ? 'ltr' : 'rtl');
+    html = html.replace(/\{\{yearsRangeText\}\}/img, setting.isGregorian ? yearsRangeText : this.toPersianNumber(yearsRangeText));
+    html = html.replace(/\{\{previousText\}\}/img, setting.isGregorian ? this.previousText : this.previousTextPersian);
+    html = html.replace(/\{\{nextText\}\}/img, setting.isGregorian ? this.nextText : this.nextTextPersian);
+    html = html.replace(/\{\{latestPreviousYear\}\}/img, yearStart > yearEnd ? yearEnd.toString() : yearStart.toString());
+    html = html.replace(/\{\{latestNextYear\}\}/img, yearStart > yearEnd ? yearStart.toString() : yearEnd.toString());
+    html = html.replace(/\{\{prevYearButtonAttr\}\}/img, disabledDateObj[0] != null && yearStart - 1 < disabledDateObj[0].year ? 'disabled' : '');
+    html = html.replace(/\{\{latestNextYear\}\}/img, disabledDateObj[1] != null && yearEnd + 1 > disabledDateObj[1].year ? 'disabled' : '');
+    return html;
+  }
+  private getDateTimePickerMonthHtml(setting: MdsPersianDateTimePickerSetting, isNextMonth: boolean, isPrevMonth: boolean): string {
     let selectedDateToShow = this.getClonedDate(setting.selectedDateToShow),
       selectedDateToShowTemp = this.getClonedDate(selectedDateToShow),
       selectedDateTime = setting.selectedDate != undefined ? this.getClonedDate(setting.selectedDate) : undefined,
@@ -1114,8 +1129,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
 
     // بررسی پراپرتی های از تاریخ، تا تاریخ
     if ((setting.fromDate || setting.toDate) && setting.groupId) {
-      const toDateElement = document.querySelector('[' + this.mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]');
-      const fromDateElement = document.querySelector('[' + this.mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]');
+      const toDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-toDate]');
+      const fromDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-fromDate]');
       if (setting.fromDate && toDateElement != null) {
         const toDateMdsInstance = MdsPersianDateTimePicker.getInstance(toDateElement);
         if (toDateMdsInstance != null) {
@@ -1402,7 +1417,40 @@ data-bs-toggle="dropdown" aria-expanded="false">
 
     return html;
   }
-  private getPopoverHeaderHtml(setting: MdsPersianDateTimePickerSetting): string {
+  private hideYearsBox = (): void => {
+    if (this.tempTitleString)
+      document.querySelector('[mds-dtp-title]').innerHTML = this.tempTitleString;
+    const yearListBox = this.getPopover(this.element).querySelector('[data-mds-dtp-year-list-box]');
+    yearListBox.classList.add('w-0');
+    yearListBox.innerHTML = '';
+  };
+  private changeYearList = (element: Element): void => {
+    // کلیک روی دکمه های عوض کردن رنج سال انتخابی
+    const instance = MdsPersianDateTimePicker.getInstance(element);
+    const setting = instance.setting;
+    const isNext = element.getAttribute('data-year-range-button-change') == '1';
+    const yearStart = Number(element.getAttribute('data-year'));
+    const yearsToSelectObject = this.getYearsBoxBodyHtml(setting, isNext ? yearStart : yearStart - setting.yearOffset * 2);
+    element.closest('[data-mds-dtp]').querySelector('[data-mds-dtp-year-list-box]').innerHTML = yearsToSelectObject.html;
+    this.setPopoverHeaderHtml(element, setting.inLine, this.getYearsBoxHeaderHtml(setting, yearsToSelectObject.yearStart, yearsToSelectObject.yearEnd));
+  };
+  private showYearsBox = (element: Element): void => {
+    this.tempTitleString = document.querySelector('[mds-dtp-title]').textContent.trim();
+    const instance = MdsPersianDateTimePicker.getInstance(element);
+    const setting = instance.setting;
+    const yearsToSelectObject = this.getYearsBoxBodyHtml(setting, 0);
+    const dateTimePickerYearsToSelectHtml = yearsToSelectObject.html;
+    const mdDatePickerContainerSelector = element.closest('[data-mds-dtp]');
+    const dateTimePickerYearsToSelectContainer = mdDatePickerContainerSelector.querySelector('[data-mds-dtp-year-list-box]');
+    this.setPopoverHeaderHtml(element, setting.inLine, this.getYearsBoxHeaderHtml(setting, yearsToSelectObject.yearStart, yearsToSelectObject.yearEnd));
+    dateTimePickerYearsToSelectContainer.innerHTML = dateTimePickerYearsToSelectHtml;
+    dateTimePickerYearsToSelectContainer.classList.remove('w-0');
+    if (setting.inLine)
+      dateTimePickerYearsToSelectContainer.classList.add('inline');
+    else
+      dateTimePickerYearsToSelectContainer.classList.remove('inline');
+  }
+  private getPopoverHeaderTitle(setting: MdsPersianDateTimePickerSetting): string {
     let rangeSelectorStartDateJson: GetDateTimeJson1;
     let rangeSelectorEndDateJson: GetDateTimeJson1;
     let selectedDateTimeToShowJson: GetDateTimeJson1;
@@ -1430,62 +1478,11 @@ data-bs-toggle="dropdown" aria-expanded="false">
       const popoverElement = this.getPopover(element);
       popoverElement.querySelector('[mds-dtp-title]').innerHTML = htmlString;
     } else {
-      let inlineTitleBox = element.closest(this.mdDatePickerFlagSelector).querySelector('[data-name="dateTimePickerYearsButtonsContainer"]');
+      let inlineTitleBox = element.closest(this.mdDatePickerFlagSelector).querySelector('[data-name="dtp-years-container"]');
       inlineTitleBox.innerHTML = htmlString;
       inlineTitleBox.classList.remove('w-0');
     }
   }
-  private hideYearsBox = (): void => {
-    if (this.tempTitleString)
-      document.querySelector('[mds-dtp-title]').innerHTML = this.tempTitleString;
-    const yearListBox = this.getPopover(this.element).querySelector('[data-mds-dtp-year-list-box]');
-    yearListBox.classList.add('w-0');
-    yearListBox.innerHTML = '';
-  };
-  private changeYearList = (element: Element): void => {
-    // کلیک روی دکمه های عوض کردن رنج سال انتخابی
-    const instance = MdsPersianDateTimePicker.getInstance(element);
-    const setting = instance.setting;
-    const isNext = element.getAttribute('data-year-range-button-change') == '1';
-    const yearStart = Number(element.getAttribute('data-year'));
-    const yearsToSelectObject = this.getYearsBoxBodyHtml(setting, isNext ? yearStart : yearStart - setting.yearOffset * 2);
-    const yearsRangeText = ` ${yearsToSelectObject.yearStart} - ${yearsToSelectObject.yearEnd - 1} `;
-    let popoverHeaderHtml = this.popoverHeaderSelectYearHtmlTemplate;
-    const dateTimePickerYearsToSelectHtml = yearsToSelectObject.html;
-    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{rtlCssClass\}\}/img, setting.isGregorian ? '' : 'rtl');
-    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{yearsRangeText\}\}/img, setting.isGregorian ? yearsRangeText : this.toPersianNumber(yearsRangeText));
-    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{previousText\}\}/img, setting.isGregorian ? this.previousText : this.previousTextPersian);
-    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{nextText\}\}/img, setting.isGregorian ? this.nextText : this.nextTextPersian);
-    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{latestPreviousYear\}\}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearEnd.toString() : yearsToSelectObject.yearStart.toString());
-    popoverHeaderHtml = popoverHeaderHtml.replace(/\{\{latestNextYear\}\}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearStart.toString() : yearsToSelectObject.yearEnd.toString());
-    element.closest('[data-mds-dtp]').querySelector('[data-mds-dtp-year-list-box]').innerHTML = dateTimePickerYearsToSelectHtml;
-    this.setPopoverHeaderHtml(element, setting.inLine, popoverHeaderHtml);
-  };
-  private showYearsBox = (element: Element): void => {
-    this.tempTitleString = document.querySelector('[mds-dtp-title]').textContent.trim();
-    const instance = MdsPersianDateTimePicker.getInstance(element);
-    const setting = instance.setting;
-    const yearsToSelectObject = this.getYearsBoxBodyHtml(setting, 0);
-    const yearsRangeText = ` ${yearsToSelectObject.yearStart} - ${yearsToSelectObject.yearEnd} `;
-    let html = this.popoverHeaderSelectYearHtmlTemplate;
-    const dateTimePickerYearsToSelectHtml = yearsToSelectObject.html;
-    const mdDatePickerContainerSelector = element.closest('[data-mds-dtp]');
-    const dateTimePickerYearsToSelectContainer = mdDatePickerContainerSelector.querySelector('[data-mds-dtp-year-list-box]');
-    html = html.replace(/\{{rtlCssClass\}\}/img, setting.isGregorian ? '' : 'rtl');
-    html = html.replace(/\{\{yearsRangeText\}\}/img, setting.isGregorian ? yearsRangeText : this.toPersianNumber(yearsRangeText));
-    html = html.replace(/\{\{previousText\}\}/img, setting.isGregorian ? this.previousText : this.previousTextPersian);
-    html = html.replace(/\{\{nextText\}\}/img, setting.isGregorian ? this.nextText : this.nextTextPersian);
-    html = html.replace(/\{\{latestPreviousYear\}\}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearEnd.toString() : yearsToSelectObject.yearStart.toString());
-    html = html.replace(/\{\{latestNextYear\}\}/img, yearsToSelectObject.yearStart > yearsToSelectObject.yearEnd ? yearsToSelectObject.yearStart.toString() : yearsToSelectObject.yearEnd.toString());
-    this.setPopoverHeaderHtml(element, setting.inLine, html);
-    dateTimePickerYearsToSelectContainer.innerHTML = dateTimePickerYearsToSelectHtml;
-    dateTimePickerYearsToSelectContainer.classList.remove('w-0');
-    if (setting.inLine)
-      dateTimePickerYearsToSelectContainer.classList.add('inline');
-    else
-      dateTimePickerYearsToSelectContainer.classList.remove('inline');
-  }
-
   private getDateTimePickerBodyHtml(setting: MdsPersianDateTimePickerSetting): string {
     let selectedDateToShow = this.getClonedDate(setting.selectedDateToShow);
     let html = this.dateTimePickerHtmlTemplate;
@@ -1516,8 +1513,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
 
     // بررسی پراپرتی های از تاریخ، تا تاریخ
     if ((setting.fromDate || setting.toDate) && setting.groupId) {
-      const toDateElement = document.querySelector('[' + this.mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]');
-      const fromDateElement = document.querySelector('[' + this.mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]');
+      const toDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-toDate]');
+      const fromDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-fromDate]');
       if (setting.fromDate && toDateElement != null) {
         const toDateMdsInstance = MdsPersianDateTimePicker.getInstance(toDateElement);
         if (toDateMdsInstance != null) {
@@ -1533,7 +1530,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       }
     }
 
-    title = this.getPopoverHeaderHtml(setting);
+    title = this.getPopoverHeaderTitle(setting);
     todayDateString = `${setting.isGregorian ? 'Today,' : 'امروز،'} ${todayDateTimeJson.day} ${this.getMonthName(todayDateTimeJson.month - 1, setting.isGregorian)} ${todayDateTimeJson.year}`;
     if (!setting.isGregorian) {
       todayDateString = this.toPersianNumber(todayDateString);
@@ -1551,13 +1548,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
     numberOfPrevMonths *= -1;
     for (let i1 = numberOfPrevMonths; i1 < 0; i1++) {
       setting.selectedDateToShow = this.addMonthToDateTime(this.getClonedDate(selectedDateToShow), i1, false);
-      monthsTdHtml += this.getDateTimePickerMonthHtml1(setting, false, true);
+      monthsTdHtml += this.getDateTimePickerMonthHtml(setting, false, true);
     }
     setting.selectedDateToShow = this.getClonedDate(selectedDateToShow);
-    monthsTdHtml += this.getDateTimePickerMonthHtml1(setting, false, false);
+    monthsTdHtml += this.getDateTimePickerMonthHtml(setting, false, false);
     for (let i2 = 1; i2 <= numberOfNextMonths; i2++) {
       setting.selectedDateToShow = this.addMonthToDateTime(this.getClonedDate(selectedDateToShow), i2, false);
-      monthsTdHtml += this.getDateTimePickerMonthHtml1(setting, true, false);
+      monthsTdHtml += this.getDateTimePickerMonthHtml(setting, true, false);
     }
 
     let totalMonthNumberToShow = Math.abs(numberOfPrevMonths) + 1 + numberOfNextMonths;
@@ -1661,8 +1658,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
       // وقتی در حالت این لاین هستیم و ' ار تاریخ ' تا تاریخ ' داریم
       // وقتی روی روز یکی از تقویم ها کلیک می شود
       // باید تقویم دیگر نیز تغییر کند و روزهایی از آن غیر فعال شود
-      const toDateDayElement = document.querySelector('[' + this.mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]').querySelector('[data-day]');
-      const fromDateDayElement = document.querySelector('[' + this.mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]').querySelector('[data-day]');
+      const toDateDayElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-toDate]').querySelector('[data-day]');
+      const fromDateDayElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-fromDate]').querySelector('[data-day]');
       if (setting.fromDate && toDateDayElement != undefined) {
         this.updateCalendarBodyHtml(toDateDayElement, MdsPersianDateTimePicker.getInstance(toDateDayElement).setting);
       } else if (setting.toDate && fromDateDayElement != undefined) {
@@ -1743,7 +1740,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       this.hideYearsBox();
     } else if (element.getAttribute('data-change-date-button')) {
       this.changeMonth(element);
-    } else if (element.getAttribute('data-year-range-button-change')) {
+    } else if (element.getAttribute('data-year-range-button-change') != null && element.getAttribute('disabled') == null) {
       this.changeYearList(element);
     }
   }

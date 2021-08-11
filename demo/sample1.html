@@ -36,15 +36,13 @@
   </div>
   <script>
     const simpleMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-simple'), {
-      selectedDate: new Date('2021-08-08'),
+      // selectedDate: new Date('2021-08-08'),
       targetTextSelector: '[data-name="basic-dtp-simple"]',
       targetDateSelector: '[data-name="basic-dtp-simple-hidden"]',
+      // disableBeforeToday: true,
+      disableAfterToday: true
     });
     simpleMdsDtp.show();
-    setTimeout(() => {
-      simpleMdsDtp.updateOption('disableBeforeToday', true);
-    }, 2000);
-
 
     // new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-time'), {
     //   enableTimePicker: true,
