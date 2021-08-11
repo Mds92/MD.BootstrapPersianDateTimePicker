@@ -438,7 +438,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     this.dispose();
     this.bsPopover = new Popover(this.element, {
       container: 'body',
-      content: this.getDateTimePickerHtml(this.setting),
+      content: this.getDateTimePickerBodyHtml(this.setting),
       title: this.getPopoverHeaderHtml(this.setting),
       html: true,
       placement: setting.placement,
@@ -449,6 +449,46 @@ data-bs-toggle="dropdown" aria-expanded="false">
     setTimeout(() => {
       this.enableMainEvents();
     }, 100);
+  }
+  private getLesserDisableBeforeDate(setting: MdsPersianDateTimePickerSetting): GetDateTimeJson1 {
+    // دریافت تاریخ کوچکتر
+    // از بین تاریخ های غیر فعال شده در گذشته
+    let resultDate: Date = null;
+    const dateNow = new Date();
+    if (setting.disableBeforeToday && setting.disableBeforeDate) {
+      if (setting.disableBeforeDate.getTime() <= dateNow.getTime())
+        resultDate = this.getClonedDate(setting.disableBeforeDate);
+      else
+        resultDate = dateNow;
+    } else if (setting.disableBeforeDate)
+      resultDate = this.getClonedDate(setting.disableBeforeDate);
+    else if (setting.disableBeforeToday)
+      resultDate = dateNow;
+    if (resultDate == null)
+      return null;
+    if (setting.isGregorian)
+      return this.getDateTimeJson1(resultDate);
+    return this.getDateTimeJsonPersian1(resultDate);
+  }
+  private getBiggerDisableAfterDate(setting: MdsPersianDateTimePickerSetting): GetDateTimeJson1 {
+    // دریافت تاریخ بزرگتر
+    // از بین تاریخ های غیر فعال شده در آینده
+    let resultDate: Date = null;
+    const dateNow = new Date();
+    if (setting.disableAfterDate && setting.disableAfterToday) {
+      if (setting.disableAfterDate.getTime() >= dateNow.getTime())
+        resultDate = this.getClonedDate(setting.disableAfterDate);
+      else
+        resultDate = dateNow;
+    } else if (setting.disableAfterDate)
+      resultDate = this.getClonedDate(setting.disableAfterDate);
+    else if (setting.disableAfterToday)
+      resultDate = dateNow;
+    if (resultDate == null)
+      return null;
+    if (setting.isGregorian)
+      return this.getDateTimeJson1(resultDate);
+    return this.getDateTimeJsonPersian1(resultDate);
   }
   private newGuid(): string {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
@@ -1449,7 +1489,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       html
     };
   }
-  private getDateTimePickerHtml(setting: MdsPersianDateTimePickerSetting): string {
+  private getDateTimePickerBodyHtml(setting: MdsPersianDateTimePickerSetting): string {
     let selectedDateToShow = this.getClonedDate(setting.selectedDateToShow);
     let html = this.dateTimePickerHtmlTemplate;
 
@@ -1535,8 +1575,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
 
     return html;
   }
-  private updateCalendarHtml1 = (element: Element, setting: MdsPersianDateTimePickerSetting): void => {
-    const calendarHtml = this.getDateTimePickerHtml(setting);
+  private updateCalendarBodyHtml = (element: Element, setting: MdsPersianDateTimePickerSetting): void => {
+    const calendarHtml = this.getDateTimePickerBodyHtml(setting);
     const containerElement = element.closest('[data-name="mds-dtp-body"]');
     const dtpInlineHeader = calendarHtml.match(/<th mds-dtp-inline-header\b[^>]*>(.*?)<\/th>/img)[0];
     this.tempTitleString = dtpInlineHeader;
@@ -1553,7 +1593,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     selectedDateToShow = this.getDateTime4(dateNumber, selectedDateToShow, setting.isGregorian);
     setting.selectedDateToShow = this.getClonedDate(selectedDateToShow);
     MdsPersianDateTimePickerData.set(instance.guid, instance);
-    this.updateCalendarHtml1(element, setting);
+    this.updateCalendarBodyHtml(element, setting);
     if (setting.calendarViewOnChange != undefined)
       setting.calendarViewOnChange(selectedDateToShow);
   }
@@ -1600,7 +1640,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
         if (!setting.inLine) {
           instance.hide();
         } else
-          this.updateCalendarHtml1(element, setting);
+          this.updateCalendarBodyHtml(element, setting);
       }
       return;
     }
@@ -1627,13 +1667,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
       const toDateDayElement = document.querySelector('[' + this.mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-toDate]').querySelector('[data-day]');
       const fromDateDayElement = document.querySelector('[' + this.mdDatePickerGroupIdAttribute + '="' + setting.groupId + '"][data-fromDate]').querySelector('[data-day]');
       if (setting.fromDate && toDateDayElement != undefined) {
-        this.updateCalendarHtml1(toDateDayElement, MdsPersianDateTimePicker.getInstance(toDateDayElement).setting);
+        this.updateCalendarBodyHtml(toDateDayElement, MdsPersianDateTimePicker.getInstance(toDateDayElement).setting);
       } else if (setting.toDate && fromDateDayElement != undefined) {
-        this.updateCalendarHtml1(fromDateDayElement, MdsPersianDateTimePicker.getInstance(fromDateDayElement).setting);
+        this.updateCalendarBodyHtml(fromDateDayElement, MdsPersianDateTimePicker.getInstance(fromDateDayElement).setting);
       } else
-        this.updateCalendarHtml1(element, setting);
+        this.updateCalendarBodyHtml(element, setting);
     } else {
-      this.updateCalendarHtml1(element, setting);
+      this.updateCalendarBodyHtml(element, setting);
     }
     if (setting.onDayClick != undefined)
       setting.onDayClick(setting);
@@ -1644,7 +1684,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     const setting = instance.setting;
     setting.selectedDateToShow = new Date();
     MdsPersianDateTimePickerData.set(instance.guid, instance);
-    this.updateCalendarHtml1(element, setting);
+    this.updateCalendarBodyHtml(element, setting);
   };
   private timeChanged = (e: Event): void => {
     // عوض کردن ساعت
