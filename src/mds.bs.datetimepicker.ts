@@ -1396,8 +1396,10 @@ data-bs-toggle="dropdown" aria-expanded="false">
     return html;
   }
   private hideYearsBox = (): void => {
-    if (this.tempTitleString)
-      document.querySelector('[mds-dtp-title]').innerHTML = this.tempTitleString;
+    if (this.tempTitleString) {
+      const popoverElement = this.getPopover(document.querySelector(`[mds-dtp-guid="${this.guid}"]`));
+      popoverElement.querySelector('[mds-dtp-title]').innerHTML = this.tempTitleString;
+    }
     const yearListBox = this.getPopover(this.element).querySelector('[data-mds-dtp-year-list-box]');
     yearListBox.classList.add('w-0');
     yearListBox.innerHTML = '';
