@@ -43,29 +43,53 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-3">
+        <h3>Range</h3>
+        <div class="input-group mb-3">
+          <span class="input-group-text cursor-pointer" id="dtp-range">📅</span>
+          <input type="text" class="form-control" placeholder="Range Date Picker" data-name="dtp-range">
+          <input type="hidden" data-name="dtp-range-hidden">
+        </div>
+      </div>
+      <div class="col-md-3">
+        
+      </div>
+      <div class="col-md-3">
+        
+      </div>
+    </div>
   </div>
   <script>
-    const simpleMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-simple'), {
-      targetTextSelector: '[data-name="basic-dtp-simple"]',
-      targetDateSelector: '[data-name="basic-dtp-simple-hidden"]',
-      disableBeforeDate: new Date('2021-07-08')
-    });
+    // const simpleMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-simple'), {
+    //   targetTextSelector: '[data-name="basic-dtp-simple"]',
+    //   targetDateSelector: '[data-name="basic-dtp-simple-hidden"]',
+    //   disableBeforeDate: new Date('2021-07-08')
+    // });
 
-    new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-time'), {
-      enableTimePicker: true,
-      targetTextSelector: '[data-name="basic-dtp-time"]',
-      targetDateSelector: '[data-name="basic-dtp-time-hidden"]',
-    });
+    // new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-time'), {
+    //   enableTimePicker: true,
+    //   targetTextSelector: '[data-name="basic-dtp-time"]',
+    //   targetDateSelector: '[data-name="basic-dtp-time-hidden"]',
+    // });
 
-    const gregorianMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-gregorian'), {
-      isGregorian: true,
-      targetTextSelector: '[data-name="basic-gregorian-text"]',
-      targetDateSelector: '[data-name="basic-gregorian-date"]',
+    // const gregorianMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-gregorian'), {
+    //   isGregorian: true,
+    //   targetTextSelector: '[data-name="basic-gregorian-text"]',
+    //   targetDateSelector: '[data-name="basic-gregorian-date"]',
+    // });
+    // var changeGregorianMdsDtpCalendarType = function () {
+    //   gregorianMdsDtp.updateOption('isGregorian', !gregorianMdsDtp.setting.isGregorian);
+    //   gregorianMdsDtp.updateSelectedDateText();
+    // }
+
+    const dtpRange = new mds.MdsPersianDateTimePicker(document.getElementById('dtp-range'), {
+      rangeSelector: true,
+      targetTextSelector: '[data-name="dtp-range"]',
+      targetDateSelector: '[data-name="dtp-range-hidden"]',
+      rangeSelectorMonthsToShow: [1, 1]
     });
-    var changeGregorianMdsDtpCalendarType = function () {
-      gregorianMdsDtp.updateOption('isGregorian', !gregorianMdsDtp.setting.isGregorian);
-      gregorianMdsDtp.updateSelectedDateText();
-    }
   </script>
 </body>
 
