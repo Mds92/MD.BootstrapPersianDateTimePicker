@@ -7,11 +7,17 @@
  * mds.soft@gmail.com - @mdssoft
  *
  */
-[data-mdpersiandatetimepicker][disabled] {
+/*
+المان غیر فعال شده
+*/
+[data-mds-dtp-guid][disabled] {
   opacity: 0.5;
   cursor: default;
 }
 
+/*
+کانتینر بادی تقویم
+*/
 .mds-bs-dtp-container {
   min-width: 300px;
   font-size: 12px;
@@ -144,8 +150,18 @@
   background-color: #c9e1ff;
 }
 
+/*
+روزهایی که در رنج انتخابی دیت پیکر هستند
+*/
 .mds-bs-dtp-container table table tbody.days td.selected-range-days {
   background-color: #d9f2e6;
+}
+
+/*
+روزهایی که مربوط به ماه های قبل و بعد هستند و در رنج انتخابی دیت پیکر هستند
+*/
+.mds-bs-dtp-container table table tbody.days td.selected-range-days-nm {
+  background-color: #78ffbe;
 }
 
 .mds-bs-dtp-container table table tbody.days td[data-special-date] {

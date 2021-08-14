@@ -62,27 +62,28 @@
     </div>
   </div>
   <script>
-    // const simpleMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-simple'), {
-    //   targetTextSelector: '[data-name="basic-dtp-simple"]',
-    //   targetDateSelector: '[data-name="basic-dtp-simple-hidden"]',
-    //   disableBeforeDate: new Date('2021-07-08')
-    // });
+    const simpleMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-simple'), {
+      targetTextSelector: '[data-name="basic-dtp-simple"]',
+      targetDateSelector: '[data-name="basic-dtp-simple-hidden"]',
+      disabled: true,
+      disableBeforeDate: new Date('2021-07-08')
+    });
 
-    // new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-time'), {
-    //   enableTimePicker: true,
-    //   targetTextSelector: '[data-name="basic-dtp-time"]',
-    //   targetDateSelector: '[data-name="basic-dtp-time-hidden"]',
-    // });
+    new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-time'), {
+      enableTimePicker: true,
+      targetTextSelector: '[data-name="basic-dtp-time"]',
+      targetDateSelector: '[data-name="basic-dtp-time-hidden"]',
+    });
 
-    // const gregorianMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-gregorian'), {
-    //   isGregorian: true,
-    //   targetTextSelector: '[data-name="basic-gregorian-text"]',
-    //   targetDateSelector: '[data-name="basic-gregorian-date"]',
-    // });
-    // var changeGregorianMdsDtpCalendarType = function () {
-    //   gregorianMdsDtp.updateOption('isGregorian', !gregorianMdsDtp.setting.isGregorian);
-    //   gregorianMdsDtp.updateSelectedDateText();
-    // }
+    const gregorianMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-gregorian'), {
+      isGregorian: true,
+      targetTextSelector: '[data-name="basic-gregorian-text"]',
+      targetDateSelector: '[data-name="basic-gregorian-date"]',
+    });
+    var changeGregorianMdsDtpCalendarType = function () {
+      gregorianMdsDtp.updateOption('isGregorian', !gregorianMdsDtp.setting.isGregorian);
+      gregorianMdsDtp.updateSelectedDateText();
+    }
 
     const dtpRange = new mds.MdsPersianDateTimePicker(document.getElementById('dtp-range'), {
       rangeSelector: true,

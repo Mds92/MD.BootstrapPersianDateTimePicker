@@ -26,7 +26,9 @@ export class MdsPersianDateTimePicker {
 
     this.guid = this.newGuid();
     this.element = element;
-    this.element.setAttribute("mds-dtp-guid", this.guid);
+    this.element.setAttribute("data-mds-dtp-guid", this.guid);
+    if (setting.disabled)
+      this.element.setAttribute("disabled", '');
     MdsPersianDateTimePickerData.set(this.guid, this);
 
     this.initializeBsPopover(setting);
@@ -1167,7 +1169,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
           if (currentDateNumber == rangeSelectorStartDateNumber || currentDateNumber == rangeSelectorEndDateNumber)
             td.classList.add('selected-range-days-start-end');
           else if (rangeSelectorStartDateNumber > 0 && rangeSelectorEndDateNumber > 0 && currentDateNumber > rangeSelectorStartDateNumber && currentDateNumber < rangeSelectorEndDateNumber)
-            td.classList.add('selected-range-days');
+            td.classList.add('selected-range-days-nm');
         }
         // روز جمعه
         if (!setting.isGregorian && tdNumber == 6)
@@ -1346,7 +1348,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
         if (currentDateNumber == rangeSelectorStartDateNumber || currentDateNumber == rangeSelectorEndDateNumber)
           td.classList.add('selected-range-days-start-end');
         else if (rangeSelectorStartDateNumber > 0 && rangeSelectorEndDateNumber > 0 && currentDateNumber > rangeSelectorStartDateNumber && currentDateNumber < rangeSelectorEndDateNumber)
-          td.classList.add('selected-range-days');
+          td.classList.add('selected-range-days-nm');
       }
       // روز جمعه
       if (!setting.isGregorian && tdNumber == 6)
@@ -1411,7 +1413,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   }
   private hideYearsBox = (): void => {
     if (this.tempTitleString) {
-      const popoverElement = this.getPopover(document.querySelector(`[mds-dtp-guid="${this.guid}"]`));
+      const popoverElement = this.getPopover(document.querySelector(`[data-mds-dtp-guid="${this.guid}"]`));
       popoverElement.querySelector('[mds-dtp-title]').innerHTML = this.tempTitleString;
     }
     const yearListBox = this.getPopover(this.element).querySelector('[data-mds-dtp-year-list-box]');
@@ -1689,6 +1691,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
     const allDayElements: Element[] = [].slice.call(document.querySelectorAll('td[data-day]'));
     allDayElements.forEach(e => {
       e.classList.remove('selected-range-days');
+      e.classList.remove('selected-range-days-nm');
+    });
+
+    const allNextOrPrevMonthDayElements: Element[] = [].slice.call(document.querySelectorAll('td[data-nm]'));
+    allNextOrPrevMonthDayElements.forEach(e => {
+      e.classList.remove('selected-range-days');
+      e.classList.remove('selected-range-days-nm');
     });
 
     const rangeSelectorStartDate = !setting.rangeSelectorStartDate ? undefined : this.getClonedDate(setting.rangeSelectorStartDate);
@@ -1708,11 +1717,15 @@ data-bs-toggle="dropdown" aria-expanded="false">
       for (var i1 = rangeSelectorStartDateNumber; i1 <= dateNumber; i1++) {
         allDayElements.filter(e => e.getAttribute('data-number') == i1.toString() && e.classList.value.indexOf('selected-range-days-start-end') <= -1)
           .forEach(e => e.classList.add('selected-range-days'));
+        allNextOrPrevMonthDayElements.filter(e => e.getAttribute('data-number') == i1.toString() && e.classList.value.indexOf('selected-range-days-start-end') <= -1)
+          .forEach(e => e.classList.add('selected-range-days-nm'));
       }
     } else if (rangeSelectorEndDateNumber > 0 && dateNumber < rangeSelectorEndDateNumber) {
       for (var i2 = dateNumber; i2 <= rangeSelectorEndDateNumber; i2++) {
         allDayElements.filter(e => e.getAttribute('data-number') == i2.toString() && e.classList.value.indexOf('selected-range-days-start-end') <= -1)
           .forEach(e => e.classList.add('selected-range-days'));
+        allNextOrPrevMonthDayElements.filter(e => e.getAttribute('data-number') == i2.toString() && e.classList.value.indexOf('selected-range-days-start-end') <= -1)
+          .forEach(e => e.classList.add('selected-range-days-nm'));
       }
     }
 
@@ -1804,7 +1817,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       MdsPersianDateTimePickerData.getAll().forEach(i => i.hide());
       return;
     }
-    const isWithinDatePicker = element.closest('[data-mds-dtp]') != null || element.getAttribute('mds-dtp-guid') != null || element.getAttribute('data-mds-dtp-go-today') != null;
+    const isWithinDatePicker = element.closest('[data-mds-dtp]') != null || element.getAttribute('data-mds-dtp-guid') != null || element.getAttribute('data-mds-dtp-go-today') != null;
     if (!isWithinDatePicker) {
       MdsPersianDateTimePickerData.getAll().forEach(i => i.hide());
     }
@@ -1889,11 +1902,11 @@ data-bs-toggle="dropdown" aria-expanded="false">
    * @returns اینستنس تقویم
    */
   static getInstance(element: Element): MdsPersianDateTimePicker {
-    let elementGuid = element.getAttribute('mds-dtp-guid');
+    let elementGuid = element.getAttribute('data-mds-dtp-guid');
     if (!elementGuid) {
       const id = element.closest('[data-mds-dtp]')?.getAttribute('id');
       if (!id) return null;
-      elementGuid = document.querySelector('[aria-describedby="' + id + '"]').getAttribute('mds-dtp-guid');
+      elementGuid = document.querySelector('[aria-describedby="' + id + '"]').getAttribute('data-mds-dtp-guid');
       if (!elementGuid)
         return null;
     };
