@@ -54,42 +54,65 @@
         </div>
       </div>
       <div class="col-md-3">
-        
+        <h3>From Date</h3>
+        <div class="input-group mb-3">
+          <span class="input-group-text cursor-pointer" id="dtp-from-date">📅</span>
+          <input type="text" class="form-control" placeholder="From Date Picker" data-name="dtp-from-date">
+          <input type="hidden" data-name="dtp-from-date-hidden">
+        </div>
       </div>
       <div class="col-md-3">
-        
+        <h3>To Date</h3>
+        <div class="input-group mb-3">
+          <span class="input-group-text cursor-pointer" id="dtp-to-date">📅</span>
+          <input type="text" class="form-control" placeholder="To Date Picker" data-name="dtp-to-date">
+          <input type="hidden" data-name="dtp-to-date-hidden">
+        </div>
       </div>
     </div>
   </div>
-  <script>
-    const simpleMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-simple'), {
-      targetTextSelector: '[data-name="basic-dtp-simple"]',
-      targetDateSelector: '[data-name="basic-dtp-simple-hidden"]',
-      disabled: true,
-      disableBeforeDate: new Date('2021-07-08')
-    });
+  <script type="text/javascript">
+    // const simpleMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-simple'), {
+    //   targetTextSelector: '[data-name="basic-dtp-simple"]',
+    //   targetDateSelector: '[data-name="basic-dtp-simple-hidden"]',
+    //   disabled: true,
+    //   disableBeforeDate: new Date('2021-07-08')
+    // });
 
-    new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-time'), {
-      enableTimePicker: true,
-      targetTextSelector: '[data-name="basic-dtp-time"]',
-      targetDateSelector: '[data-name="basic-dtp-time-hidden"]',
-    });
+    // new mds.MdsPersianDateTimePicker(document.getElementById('basic-dtp-time'), {
+    //   enableTimePicker: true,
+    //   targetTextSelector: '[data-name="basic-dtp-time"]',
+    //   targetDateSelector: '[data-name="basic-dtp-time-hidden"]',
+    // });
 
-    const gregorianMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-gregorian'), {
-      isGregorian: true,
-      targetTextSelector: '[data-name="basic-gregorian-text"]',
-      targetDateSelector: '[data-name="basic-gregorian-date"]',
-    });
-    var changeGregorianMdsDtpCalendarType = function () {
-      gregorianMdsDtp.updateOption('isGregorian', !gregorianMdsDtp.setting.isGregorian);
-      gregorianMdsDtp.updateSelectedDateText();
-    }
+    // const gregorianMdsDtp = new mds.MdsPersianDateTimePicker(document.getElementById('basic-gregorian'), {
+    //   isGregorian: true,
+    //   targetTextSelector: '[data-name="basic-gregorian-text"]',
+    //   targetDateSelector: '[data-name="basic-gregorian-date"]',
+    // });
+    // var changeGregorianMdsDtpCalendarType = function () {
+    //   gregorianMdsDtp.updateOption('isGregorian', !gregorianMdsDtp.setting.isGregorian);
+    //   gregorianMdsDtp.updateSelectedDateText();
+    // }
 
-    const dtpRange = new mds.MdsPersianDateTimePicker(document.getElementById('dtp-range'), {
-      rangeSelector: true,
-      targetTextSelector: '[data-name="dtp-range"]',
-      targetDateSelector: '[data-name="dtp-range-hidden"]',
-      rangeSelectorMonthsToShow: [1, 1]
+    // const dtpRange = new mds.MdsPersianDateTimePicker(document.getElementById('dtp-range'), {
+    //   rangeSelector: true,
+    //   targetTextSelector: '[data-name="dtp-range"]',
+    //   targetDateSelector: '[data-name="dtp-range-hidden"]',
+    //   rangeSelectorMonthsToShow: [1, 1]
+    // });
+
+    const dtpFromDate = new mds.MdsPersianDateTimePicker(document.getElementById('dtp-from-date'), {
+      fromDate: true,
+      targetTextSelector: '[data-name="dtp-from-date"]',
+      targetDateSelector: '[data-name="dtp-from-date-hidden"]',
+      groupId: 'fromDateToDate1'
+    });
+    const dtpToDate = new mds.MdsPersianDateTimePicker(document.getElementById('dtp-to-date'), {
+      toDate: true,
+      targetTextSelector: '[data-name="dtp-to-date"]',
+      targetDateSelector: '[data-name="dtp-to-date-hidden"]',
+      groupId: 'fromDateToDate1'
     });
   </script>
 </body>

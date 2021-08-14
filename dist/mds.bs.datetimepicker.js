@@ -311,17 +311,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 if (!setting.inLine) {
                     instance.hide();
                 }
-                else if (setting.inLine && (setting.toDate || setting.fromDate)) {
-                    // وقتی در حالت این لاین هستیم و ' ار تاریخ ' تا تاریخ ' داریم
+                if (setting.inLine && (setting.toDate || setting.fromDate)) {
                     // وقتی روی روز یکی از تقویم ها کلیک می شود
                     // باید تقویم دیگر نیز تغییر کند و روزهایی از آن غیر فعال شود
-                    var toDateDayElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-toDate]').querySelector('[data-day]');
-                    var fromDateDayElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-fromDate]').querySelector('[data-day]');
-                    if (setting.fromDate && toDateDayElement != undefined) {
-                        _this.updateCalendarBodyHtml(toDateDayElement, MdsPersianDateTimePicker.getInstance(toDateDayElement).setting);
+                    var toDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-to-date]');
+                    var fromDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-from-date]');
+                    if (setting.fromDate && toDateElement != undefined) {
+                        _this.updateCalendarBodyHtml(toDateElement, MdsPersianDateTimePicker.getInstance(toDateElement).setting);
                     }
-                    else if (setting.toDate && fromDateDayElement != undefined) {
-                        _this.updateCalendarBodyHtml(fromDateDayElement, MdsPersianDateTimePicker.getInstance(fromDateDayElement).setting);
+                    else if (setting.toDate && fromDateElement != undefined) {
+                        _this.updateCalendarBodyHtml(fromDateElement, MdsPersianDateTimePicker.getInstance(fromDateElement).setting);
                     }
                     else
                         _this.updateCalendarBodyHtml(element, setting);
@@ -409,8 +408,26 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 MdsPersianDateTimePickerData.set(instance.guid, instance);
                 _this.setSelectedData(setting);
             };
-            this.popoverInsertedEvent = function () {
+            this.popoverInsertedEvent = function (e) {
                 _this.hideYearsBox();
+                var element = e.target;
+                var instance = MdsPersianDateTimePicker.getInstance(element);
+                var setting = instance.setting;
+                if (setting.toDate || setting.fromDate) {
+                    var disabledDates = _this.getDisabledDateObject(setting);
+                    var disableBeforeDateNumber_1 = disabledDates[0] != null ? Number(_this.zeroPad(disabledDates[0].year, '0000') + _this.zeroPad(disabledDates[0].month) + _this.zeroPad(disabledDates[0].day)) : 0;
+                    var disableAfterDateNumber_1 = disabledDates[1] != null ? Number(_this.zeroPad(disabledDates[1].year, '0000') + _this.zeroPad(disabledDates[1].month) + _this.zeroPad(disabledDates[1].day)) : 0;
+                    if (disableBeforeDateNumber_1 > 0 || disableAfterDateNumber_1 > 0) {
+                        var popoverElement = _this.getPopover(element);
+                        popoverElement.querySelectorAll('[data-day]').forEach(function (e) {
+                            var dateNumber = Number(e.getAttribute('data-number'));
+                            if (setting.fromDate && dateNumber >= disableAfterDateNumber_1 || setting.toDate && dateNumber <= disableBeforeDateNumber_1)
+                                e.setAttribute('disabled', '');
+                            else
+                                e.removeAttribute('disabled');
+                        });
+                    }
+                }
             };
             this.popoverShownEvent = function () {
                 _this.enableEvents();
@@ -459,6 +476,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             setting = this.extend(new MdsPersianDateTimePickerSetting(), setting);
             if (!element)
                 throw new Error("MdsPersianDateTimePicker => element is null!");
+            if (setting.rangeSelector && (setting.toDate || setting.fromDate))
+                throw new Error("MdsPersianDateTimePicker => You can not set true 'toDate' or 'fromDate' and 'rangeSelector' together");
             if (setting.toDate && setting.fromDate)
                 throw new Error("MdsPersianDateTimePicker => You can not set true 'toDate' and 'fromDate' together");
             if (!setting.groupId && (setting.toDate || setting.fromDate))
@@ -476,13 +495,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             if (setting.yearOffset > 15)
                 setting.yearOffset = 15;
             this.setting = setting;
-            this.setting.selectedDate = setting.selectedDate ? this.getClonedDate(setting.selectedDate) : new Date();
+            this.setting.selectedDate = setting.selectedDate ? this.getClonedDate(setting.selectedDate) : null;
             this.setting.selectedDateToShow = setting.selectedDateToShow ? this.getClonedDate(setting.selectedDateToShow) : this.getClonedDate(setting.selectedDate);
             this.guid = this.newGuid();
             this.element = element;
             this.element.setAttribute("data-mds-dtp-guid", this.guid);
-            if (setting.disabled)
-                this.element.setAttribute("disabled", '');
             MdsPersianDateTimePickerData.set(this.guid, this);
             this.initializeBsPopover(setting);
         }
@@ -617,12 +634,29 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         // #region Methods
         MdsPersianDateTimePicker.prototype.initializeBsPopover = function (setting) {
             var _this = this;
+            // Validation
+            if (setting.rangeSelector && (setting.toDate || setting.fromDate))
+                throw new Error("MdsPersianDateTimePicker => You can not set true 'toDate' or 'fromDate' and 'rangeSelector' together");
+            if (setting.toDate && setting.fromDate)
+                throw new Error("MdsPersianDateTimePicker => You can not set true 'toDate' and 'fromDate' together");
+            if (!setting.groupId && (setting.toDate || setting.fromDate))
+                throw new Error("MdsPersianDateTimePicker => When you set 'toDate' or 'fromDate' true, you have to set 'groupId'");
+            // \\
+            if (setting.disabled)
+                this.element.setAttribute("disabled", '');
+            if (setting.toDate || setting.fromDate) {
+                this.element.setAttribute("data-mds-dtp-group", setting.groupId);
+                if (setting.toDate)
+                    this.element.setAttribute("data-to-date", 'true');
+                else if (setting.fromDate)
+                    this.element.setAttribute("data-from-date", 'true');
+            }
             setTimeout(function () {
                 _this.dispose();
-                var title = _this.getPopoverHeaderTitle(_this.setting);
+                var title = _this.getPopoverHeaderTitle(setting);
                 _this.bsPopover = new bootstrap_1.Popover(_this.element, {
                     container: 'body',
-                    content: _this.getDateTimePickerBodyHtml(_this.setting),
+                    content: _this.getDateTimePickerBodyHtml(setting),
                     title: title,
                     html: true,
                     placement: setting.placement,
@@ -1055,8 +1089,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             var disableAfterDateTimeJson = this.getBiggerDisableAfterDate(setting);
             // بررسی پراپرتی های از تاریخ، تا تاریخ
             if ((setting.fromDate || setting.toDate) && setting.groupId) {
-                var toDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-toDate]');
-                var fromDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-fromDate]');
+                var toDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-to-date]');
+                var fromDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-from-date]');
                 if (toDateElement != null && setting.fromDate) {
                     var toDateSetting = MdsPersianDateTimePicker.getInstance(toDateElement).setting;
                     var toDateSelectedDate = toDateSetting.selectedDate;
@@ -1603,38 +1637,20 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             html = html.replace(/\{\{selectedDateStringAttribute\}\}/img, setting.inLine ? '' : 'hidden');
             html = html.replace(/\{\{goTodayText\}\}/img, setting.isGregorian ? this.goTodayText : this.goTodayTextPersian);
             html = html.replace(/\{\{timePickerAttribute\}\}/img, setting.enableTimePicker ? '' : 'hidden');
-            var title = '', todayDateString = '', todayDateTimeJson, // year, month, day, hour, minute, second
-            selectedDateTimeToShowJson, disableBeforeDateTimeJson, disableAfterDateTimeJson;
+            var disabledDays = this.getDisabledDateObject(setting);
+            var title = '';
+            var todayDateString = '';
+            var todayDateTimeJson;
+            var selectedDateTimeToShowJson;
+            var disableBeforeDateTimeJson = disabledDays[0];
+            var disableAfterDateTimeJson = disabledDays[1];
             if (setting.isGregorian) {
                 selectedDateTimeToShowJson = this.getDateTimeJson1(selectedDateToShow);
                 todayDateTimeJson = this.getDateTimeJson1(new Date());
-                disableBeforeDateTimeJson = !setting.disableBeforeDate ? undefined : this.getDateTimeJson1(setting.disableBeforeDate);
-                disableAfterDateTimeJson = !setting.disableAfterDate ? undefined : this.getDateTimeJson1(setting.disableAfterDate);
             }
             else {
                 selectedDateTimeToShowJson = this.getDateTimeJsonPersian1(selectedDateToShow);
                 todayDateTimeJson = this.getDateTimeJsonPersian1(new Date());
-                disableBeforeDateTimeJson = !setting.disableBeforeDate ? undefined : this.getDateTimeJsonPersian1(setting.disableBeforeDate);
-                disableAfterDateTimeJson = !setting.disableAfterDate ? undefined : this.getDateTimeJsonPersian1(setting.disableAfterDate);
-            }
-            // بررسی پراپرتی های از تاریخ، تا تاریخ
-            if ((setting.fromDate || setting.toDate) && setting.groupId) {
-                var toDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-toDate]');
-                var fromDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-fromDate]');
-                if (setting.fromDate && toDateElement != null) {
-                    var toDateMdsInstance = MdsPersianDateTimePicker.getInstance(toDateElement);
-                    if (toDateMdsInstance != null) {
-                        var toDateSelectedDate = toDateMdsInstance.setting.selectedDate;
-                        disableAfterDateTimeJson = !toDateSelectedDate ? undefined : setting.isGregorian ? this.getDateTimeJson1(toDateSelectedDate) : this.getDateTimeJsonPersian1(toDateSelectedDate);
-                    }
-                }
-                else if (setting.toDate && fromDateElement != null) {
-                    var fromDateInstance = MdsPersianDateTimePicker.getInstance(fromDateElement);
-                    if (fromDateInstance != null) {
-                        var fromDateSelectedDate = fromDateInstance.setting.selectedDate;
-                        disableBeforeDateTimeJson = !fromDateSelectedDate ? undefined : setting.isGregorian ? this.getDateTimeJson1(fromDateSelectedDate) : this.getDateTimeJsonPersian1(fromDateSelectedDate);
-                    }
-                }
             }
             title = this.getPopoverHeaderTitle(setting);
             todayDateString = (setting.isGregorian ? 'Today,' : 'امروز،') + " " + todayDateTimeJson.day + " " + this.getMonthName(todayDateTimeJson.month - 1, setting.isGregorian) + " " + todayDateTimeJson.year;
@@ -1697,6 +1713,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
          * نمایش تقویم
          */
         MdsPersianDateTimePicker.prototype.show = function () {
+            if (this.bsPopover == null)
+                return;
             this.bsPopover.show();
         };
         /**
@@ -1711,6 +1729,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
          * مخفی یا نمایش تقویم
          */
         MdsPersianDateTimePicker.prototype.toggle = function () {
+            if (this.bsPopover == null)
+                return;
             this.bsPopover.toggle();
         };
         /**
@@ -1718,6 +1738,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
          */
         MdsPersianDateTimePicker.prototype.enable = function () {
             this.setting.disabled = false;
+            this.element.removeAttribute("disabled");
             MdsPersianDateTimePickerData.set(this.guid, this);
             this.bsPopover.enable();
         };
@@ -1726,6 +1747,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
          */
         MdsPersianDateTimePicker.prototype.disable = function () {
             this.setting.disabled = true;
+            this.element.setAttribute("disabled", '');
             MdsPersianDateTimePickerData.set(this.guid, this);
             this.bsPopover.disable();
         };
