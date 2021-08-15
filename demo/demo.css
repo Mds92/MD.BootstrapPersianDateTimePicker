@@ -7,3 +7,11 @@ table {
 .cursor-pointer {
   cursor: pointer;
 }
+
+label {
+  font-size: 16px !important;
+}
+
+hr{
+  margin: 2px 0 !important;
+}

@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Persian DateTime</title>
+  <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="../src/mds.bs.datetimepicker.style.css" />
+  <script src="../dist/mds.bs.datetimepicker.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="demo.css" />
+</head>
+
+<body class="bg-light">
+  <div class="container-fluid">
+    <h1 class="h2">MD BootstrapPersianDateTimePicker Demo</h1>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="container-fluid bg-white">
+          <div class="row">
+            <div class="col-12">
+              <h2>Options</h2>
+              <hr>
+              <!-- inLine -->
+              <div class="row">
+                <label for="enableTimePicker" class="col-4 col-form-label">inLine</label>
+                <div class="col-7 pt-2">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inLineRadioOptions" id="inLineRadioOptionsId1"
+                      value="true" onchange="optionOnChange('inLine', this.value)">
+                    <label class="form-check-label" for="inLineRadioOptionsId1">true</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inLineRadioOptions" id="inLineRadioOptionsId2"
+                      value="false" onchange="optionOnChange('inLine', this.value)" checked>
+                    <label class="form-check-label" for="inLineRadioOptionsId2">false</label>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <!-- enableTimePicker -->
+              <div class="row">
+                <label for="enableTimePicker" class="col-4 col-form-label">enableTimePicker</label>
+                <div class="col-7 pt-2">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="enableTimePickerInlineRadioOptions"
+                      id="enableTimePickerInlineRadioOptionsId1" value="true"
+                      onchange="optionOnChange('enableTimePicker', this.value)">
+                    <label class="form-check-label" for="enableTimePickerInlineRadioOptionsId1">true</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="enableTimePickerInlineRadioOptions"
+                      id="enableTimePickerInlineRadioOptionsId2" value="false"
+                      onchange="optionOnChange('enableTimePicker', this.value)" checked>
+                    <label class="form-check-label" for="enableTimePickerInlineRadioOptionsId2">false</label>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <!-- placement -->
+              <div class="row">
+                <label for="placement" class="col-4 col-form-label">placement</label>
+                <div class="col-7">
+                  <select class="form-select form-select-sm" onchange="optionOnChange('placement', this.value)">
+                    <option value="auto">auto</option>
+                    <option value="top">top</option>
+                    <option value="bottom" selected>bottom</option>
+                    <option value="left">left</option>
+                    <option value="right">right</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="container-fluid mt-5">
+          <div class="row">
+            <!-- Normal -->
+            <div class="col-12" data-name="normal-dtp-container">
+              <div class="input-group mb-3">
+                <span class="input-group-text cursor-pointer" id="dtp1">📅</span>
+                <input type="text" class="form-control" placeholder="Date Picker Text" data-name="dtp1-text">
+                <input type="text" class="form-control" placeholder="Date Picker Date" data-name="dtp1-date">
+              </div>
+              <div class="input-group mb-3" data-name="dtp2-container" hidden>
+                <span class="input-group-text cursor-pointer" id="dtp2">📅</span>
+                <input type="text" class="form-control" placeholder="Date Picker Text" data-name="dtp2-text">
+                <input type="text" class="form-control" placeholder="Date Picker Date" data-name="dtp2-date">
+              </div>
+            </div>
+            <!-- In Line -->
+            <div class="col-12" data-name="in-line-dtp-container" hidden>
+              <div class="row justify-content-md-center">
+                <div class="col-5 border mb-3" data-name="in-line-dtp1"> </div>
+                <div class="col-12">
+                  <div class="container-fluid">
+                    <div class="row g-0">
+                      <div class="col-6">
+                        <input type="text" class="form-control" placeholder="Text"
+                          data-name="in-line-dtp1-text">
+                      </div>
+                      <div class="col-6">
+                        <input type="text" class="form-control" placeholder="Date Value"
+                          data-name="in-line-dtp1-date">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" hidden data-name="in-line-dtp2-container">
+                <div class="col-12" data-name="in-line-dtp2"> </div>
+                <div class="col-12">
+                  <div class="container-fluid">
+                    <div class="row g-0">
+                      <div class="col-6">
+                        <input type="text" class="form-control" placeholder="Text"
+                          data-name="in-line-dtp2-text">
+                      </div>
+                      <div class="col-6">
+                        <input type="text" class="form-control" placeholder="Date Value"
+                          data-name="in-line-dtp2-date">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="demo.js" type="text/javascript"></script>
+</body>
+
+</html>

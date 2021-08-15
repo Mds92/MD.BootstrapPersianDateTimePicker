@@ -22,7 +22,14 @@
   min-width: 300px;
   font-size: 12px;
   position: relative;
-  overflow: visible;
+  overflow: hidden;
+}
+
+/*
+عنوان تقویم در حالت in line
+*/
+.mds-bs-dtp-container [mds-dtp-inline-header]{
+  border-bottom: solid 1px #ccc !important;
 }
 
 .mds-bs-dtp-container.rtl {
@@ -43,8 +50,11 @@
   z-index: 9999999;
 }
 
+/*
+  برای نمایش لیست سال های قابل انتخاب در مد inline
+*/
 .mds-bs-dtp-container .select-year-box.inline {
-  top: 23px !important;
+  top: 27px !important;
   overflow: hidden;
 }
 
