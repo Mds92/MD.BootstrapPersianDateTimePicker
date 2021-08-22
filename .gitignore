@@ -20,6 +20,10 @@ bld/
 *.ide/
 *.vs/
 
+# cache directories
+*.ide/
+*.vscode/
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*

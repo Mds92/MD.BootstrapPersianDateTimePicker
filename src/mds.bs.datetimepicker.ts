@@ -221,7 +221,7 @@ MD DateTimePicker Html
 </tbody>
 </table>`;
 
-  private dateTimePickerHtmlTemplate = `<div class="mds-bs-dtp-container {{rtlCssClass}}">
+  private dateTimePickerHtmlTemplate = `<div class="mds-bs-dtp-container {{rtlCssClass}}" {{inlineAttr}}>
 <div class="select-year-inline-box w-0" data-name="dtp-years-container">
 </div>
 <div class="select-year-box w-0" data-mds-dtp-year-list-box="true"></div>
@@ -1527,6 +1527,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     let selectedDateToShow = this.getClonedDate(setting.selectedDateToShow);
     let html = this.dateTimePickerHtmlTemplate;
 
+    html = html.replace(/\{\{inlineAttr\}\}/img, setting.inLine ? 'data-inline' : '');
     html = html.replace(/\{\{rtlCssClass\}\}/img, setting.isGregorian ? '' : 'rtl');
     html = html.replace(/\{\{selectedDateStringAttribute\}\}/img, setting.inLine ? '' : 'hidden');
     html = html.replace(/\{\{goTodayText\}\}/img, setting.isGregorian ? this.goTodayText : this.goTodayTextPersian);
@@ -1659,7 +1660,12 @@ data-bs-toggle="dropdown" aria-expanded="false">
       }
       return;
     }
-    this.getPopover(element).querySelectorAll('[data-day]').forEach(e => e.removeAttribute('data-mds-dtp-selected-day'));
+    let daysElements: Element[] = [];
+    if (setting.inLine) {
+      daysElements = [].slice.call(element.closest('[data-mds-dtp-guid]').querySelectorAll('[data-day]'));
+    } else {
+      daysElements = [].slice.call(this.getPopover(element).querySelectorAll('[data-day]'));
+    }
     element.setAttribute('data-mds-dtp-selected-day', '');
     setting.selectedDate = this.getClonedDate(selectedDateToShow);
     setting.selectedDateToShow = this.getClonedDate(selectedDateToShow);

@@ -25,6 +25,10 @@
   overflow: hidden;
 }
 
+.mds-bs-dtp-container[data-inline] {
+  overflow: visible;
+}
+
 /*
 عنوان تقویم در حالت in line
 */
