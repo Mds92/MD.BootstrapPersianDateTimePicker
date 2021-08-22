@@ -24,7 +24,7 @@
               <hr>
               <!-- inLine -->
               <div class="row">
-                <label for="enableTimePicker" class="col-4 col-form-label">inLine</label>
+                <label for="enableTimePicker" class="col-5 col-form-label">inLine</label>
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inLineRadioOptions" id="inLineRadioOptionsId1"
@@ -41,7 +41,7 @@
               <hr>
               <!-- enableTimePicker -->
               <div class="row">
-                <label for="enableTimePicker" class="col-4 col-form-label">enableTimePicker</label>
+                <label for="enableTimePicker" class="col-5 col-form-label">enableTimePicker</label>
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="enableTimePickerInlineRadioOptions"
@@ -60,7 +60,7 @@
               <hr>
               <!-- placement -->
               <div class="row">
-                <label for="placement" class="col-4 col-form-label">placement</label>
+                <label for="placement" class="col-5 col-form-label">placement</label>
                 <div class="col-7">
                   <select class="form-select form-select-sm" onchange="optionOnChange('placement', this.value)">
                     <option value="auto">auto</option>
@@ -71,6 +71,30 @@
                   </select>
                 </div>
               </div>
+              <hr>
+              <!-- toDate, fromDate -->
+              <div class="row">
+                <label for="enableTimePicker" class="col-5 col-form-label">toDate, fromDate</label>
+                <div class="col-7 pt-2">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="toDateRadioOptions" id="toDateRadioOptionsId1"
+                      value="true" onchange="optionOnChange('toDate', this.value)">
+                    <label class="form-check-label" for="toDateRadioOptionsId1">true</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="toDateRadioOptions" id="toDateRadioOptionsId2"
+                      value="false" onchange="optionOnChange('toDate', this.value)" checked>
+                    <label class="form-check-label" for="toDateRadioOptionsId2">false</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <label for="enableTimePicker" class="col-5 col-form-label">groupId</label>
+                <div class="col-7 pt-2">
+                  <input class="form-control form-control-sm" type="text" value="group1">
+                </div>
+              </div>
+              <hr>
             </div>
           </div>
         </div>
@@ -94,35 +118,27 @@
             <!-- In Line -->
             <div class="col-12" data-name="in-line-dtp-container" hidden>
               <div class="row justify-content-md-center">
-                <div class="col-5 border mb-3" data-name="in-line-dtp1"> </div>
-                <div class="col-12">
-                  <div class="container-fluid">
-                    <div class="row g-0">
-                      <div class="col-6">
-                        <input type="text" class="form-control" placeholder="Text"
-                          data-name="in-line-dtp1-text">
-                      </div>
-                      <div class="col-6">
-                        <input type="text" class="form-control" placeholder="Date Value"
-                          data-name="in-line-dtp1-date">
-                      </div>
+                <div class="col-5">
+                  <h3>From Date</h3>
+                  <div class="border mb-3" data-name="in-line-dtp1"></div>
+                  <div class="row g-0">
+                    <div class="col-6">
+                      <input type="text" class="form-control" placeholder="Text" data-name="in-line-dtp1-text">
+                    </div>
+                    <div class="col-6">
+                      <input type="text" class="form-control" placeholder="Date Value" data-name="in-line-dtp1-date">
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="row" hidden data-name="in-line-dtp2-container">
-                <div class="col-12" data-name="in-line-dtp2"> </div>
-                <div class="col-12">
-                  <div class="container-fluid">
-                    <div class="row g-0">
-                      <div class="col-6">
-                        <input type="text" class="form-control" placeholder="Text"
-                          data-name="in-line-dtp2-text">
-                      </div>
-                      <div class="col-6">
-                        <input type="text" class="form-control" placeholder="Date Value"
-                          data-name="in-line-dtp2-date">
-                      </div>
+                <div class="col-5" hidden data-name="in-line-dtp2-container">
+                  <h3>To Date</h3>
+                  <div class="border mb-3" data-name="in-line-dtp2"></div>
+                  <div class="row g-0">
+                    <div class="col-6">
+                      <input type="text" class="form-control" placeholder="Text" data-name="in-line-dtp2-text">
+                    </div>
+                    <div class="col-6">
+                      <input type="text" class="form-control" placeholder="Date Value" data-name="in-line-dtp2-date">
                     </div>
                   </div>
                 </div>

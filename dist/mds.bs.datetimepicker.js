@@ -670,7 +670,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 _this.dispose();
                 var title = _this.getPopoverHeaderTitle(setting);
                 var html = _this.getDateTimePickerBodyHtml(setting);
-                if (setting.inLine) {
+                if (setting.inLine == true) {
                     _this.bsPopover = null;
                     _this.element.innerHTML = html;
                     _this.enableInLineEvents();
@@ -689,7 +689,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                     _this.enableMainEvents();
                 }
                 _this.tempTitleString = title;
-            }, 500);
+            }, setting.inLine ? 10 : 500);
         };
         MdsPersianDateTimePicker.prototype.newGuid = function () {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -1742,7 +1742,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         };
         MdsPersianDateTimePicker.prototype.disableEvents = function () {
             var _this = this;
-            var _a, _b;
+            var _a, _b, _c, _d, _e;
             document.removeEventListener('click', this.selectCorrectClickEvent);
             (_a = document.querySelector('[data-mds-dtp-time]')) === null || _a === void 0 ? void 0 : _a.removeEventListener('change', this.timeChanged);
             (_b = document.querySelector('[data-mds-dtp-go-today]')) === null || _b === void 0 ? void 0 : _b.removeEventListener('click', this.goToday);
@@ -1750,10 +1750,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             document.querySelectorAll('[data-mds-dtp] [data-day]').forEach(function (e) { return e.removeEventListener('mouseenter', _this.hoverOnDays); });
             var dtp = document.querySelector("[data-mds-dtp-guid=\"" + this.guid + "\"]");
             if (dtp != null) {
-                dtp.querySelector('[data-mds-dtp-time]').removeEventListener('change', this.timeChanged, false);
-                dtp.querySelector('[data-mds-dtp-go-today]').removeEventListener('click', this.goToday, false);
+                (_c = dtp.querySelector('[data-mds-dtp-time]')) === null || _c === void 0 ? void 0 : _c.removeEventListener('change', this.timeChanged, false);
+                (_d = dtp.querySelector('[data-mds-dtp-go-today]')) === null || _d === void 0 ? void 0 : _d.removeEventListener('click', this.goToday, false);
                 dtp.removeEventListener('click', this.selectCorrectClickEvent, false);
-                dtp.querySelectorAll('[data-mds-dtp] [data-day]').forEach(function (e) { return e.removeEventListener('mouseenter', _this.hoverOnDays, true); });
+                (_e = dtp.querySelectorAll('[data-mds-dtp] [data-day]')) === null || _e === void 0 ? void 0 : _e.forEach(function (e) { return e.removeEventListener('mouseenter', _this.hoverOnDays, true); });
             }
         };
         /**

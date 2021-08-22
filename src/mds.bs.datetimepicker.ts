@@ -452,7 +452,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       this.dispose();
       const title = this.getPopoverHeaderTitle(setting);
       const html = this.getDateTimePickerBodyHtml(setting);
-      if (setting.inLine) {
+      if (setting.inLine == true) {
         this.bsPopover = null;
         this.element.innerHTML = html;
         this.enableInLineEvents();
@@ -470,7 +470,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
         this.enableMainEvents();
       }
       this.tempTitleString = title;
-    }, 500);
+    }, setting.inLine ? 10 : 500);
   }
   private newGuid(): string {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
@@ -1834,10 +1834,10 @@ data-bs-toggle="dropdown" aria-expanded="false">
     document.querySelectorAll('[data-mds-dtp] [data-day]').forEach(e => e.removeEventListener('mouseenter', this.hoverOnDays));
     const dtp = document.querySelector(`[data-mds-dtp-guid="${this.guid}"]`);
     if (dtp != null) {
-      dtp.querySelector('[data-mds-dtp-time]').removeEventListener('change', this.timeChanged, false);
-      dtp.querySelector('[data-mds-dtp-go-today]').removeEventListener('click', this.goToday, false);
+      dtp.querySelector('[data-mds-dtp-time]')?.removeEventListener('change', this.timeChanged, false);
+      dtp.querySelector('[data-mds-dtp-go-today]')?.removeEventListener('click', this.goToday, false);
       dtp.removeEventListener('click', this.selectCorrectClickEvent, false);
-      dtp.querySelectorAll('[data-mds-dtp] [data-day]').forEach(e => e.removeEventListener('mouseenter', this.hoverOnDays, true));
+      dtp.querySelectorAll('[data-mds-dtp] [data-day]')?.forEach(e => e.removeEventListener('mouseenter', this.hoverOnDays, true));
     }
   }
   private selectCorrectClickEvent = (e: PointerEvent): void => {
