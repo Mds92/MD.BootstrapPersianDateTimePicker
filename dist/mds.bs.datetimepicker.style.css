@@ -22,10 +22,6 @@
   min-width: 300px;
   font-size: 12px;
   position: relative;
-  overflow: hidden;
-}
-
-.mds-bs-dtp-container[data-inline] {
   overflow: visible;
 }
 

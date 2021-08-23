@@ -279,11 +279,11 @@ MD DateTimePicker Html
 </th>
 <th style="width: 120px;">
 <div class="dropdown">
-<button type="button" class="btn btn-light btn-sm dropdown-toggle" id="mdsBootstrapPersianDatetimePickerMonthSelectorButon"
+<button type="button" class="btn btn-light btn-sm dropdown-toggle" id="mdtp-month-selector-button-{{guid}}"
 data-bs-toggle="dropdown" aria-expanded="false">
 {{selectedMonthName}}
 </button>
-<div class="dropdown-menu" aria-labelledby="mdsBootstrapPersianDatetimePickerMonthSelectorButon">
+<div class="dropdown-menu" aria-labelledby="mdtp-month-selector-button-{{guid}}">
 <a class="dropdown-item {{selectMonth1ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth1DateNumber}}">{{monthName1}}</a>
 <a class="dropdown-item {{selectMonth2ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth2DateNumber}}">{{monthName2}}</a>
 <a class="dropdown-item {{selectMonth3ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth3DateNumber}}">{{monthName3}}</a>
@@ -439,8 +439,12 @@ data-bs-toggle="dropdown" aria-expanded="false">
     if (!setting.groupId && (setting.toDate || setting.fromDate)) throw new Error(`MdsPersianDateTimePicker => When you set 'toDate' or 'fromDate' true, you have to set 'groupId'`);
     // \\
 
-    if (setting.disabled)
+    if (setting.disabled) {
       this.element.setAttribute("disabled", '');
+    }
+    else
+      this.element.removeAttribute("disabled");
+
     if (setting.toDate || setting.fromDate) {
       this.element.setAttribute("data-mds-dtp-group", setting.groupId);
       if (setting.toDate)
@@ -451,7 +455,21 @@ data-bs-toggle="dropdown" aria-expanded="false">
     setTimeout(() => {
       this.dispose();
       const title = this.getPopoverHeaderTitle(setting);
-      const html = this.getDateTimePickerBodyHtml(setting);
+      let html = this.getDateTimePickerBodyHtml(setting);
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = html;
+      const dropDowns = tempDiv.querySelectorAll('.dropdown>button');
+      dropDowns.forEach(e => {
+        if (setting.disabled) {
+          e.setAttribute('disabled', '');
+          e.classList.add('disabled');
+        }
+        else {
+          e.removeAttribute('disabled');
+          e.classList.remove('disabled');
+        }
+      });
+      html = tempDiv.innerHTML;
       if (setting.inLine == true) {
         this.bsPopover = null;
         this.element.innerHTML = html;
@@ -1004,6 +1022,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     let isNextOrPrevMonth = isNextMonth || isPrevMonth;
     let html = this.dateTimePickerMonthTableHtmlTemplate;
 
+    html = html.replace(/\{\{guid\}\}/img, this.guid);
     html = html.replace(/\{\{monthTdAttribute\}\}/img, isNextMonth ? 'data-next-month' : isPrevMonth ? 'data-prev-month' : '');
     html = html.replace(/\{\{monthNameAttribute\}\}/img, !isNextOrPrevMonth ? 'hidden' : '');
     html = html.replace(/\{\{theadSelectDateButtonTrAttribute\}\}/img, setting.inLine || !isNextOrPrevMonth ? '' : 'hidden');
@@ -1689,7 +1708,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       // وقتی روی روز یکی از تقویم ها کلیک می شود
       // باید تقویم دیگر نیز تغییر کند و روزهایی از آن غیر فعال شود
       const toDateElement = document.querySelector(`[data-mds-dtp-group="${setting.groupId}"][data-to-date]`);
-      const fromDateElement = document.querySelector(`[data-mds-dtp-group="${setting.groupId}"][data-from-date]`);
+      const fromDateElement = document.querySelector('[data-mds-dtp-group="${setting.groupId}"][data-from-date]');
       if (setting.fromDate && toDateElement != undefined) {
         const instance = MdsPersianDateTimePicker.getInstance(toDateElement);
         if (setting.inLine)
@@ -1846,6 +1865,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private selectCorrectClickEvent = (e: PointerEvent): void => {
     const element = <Element>e.target;
     const instance = MdsPersianDateTimePicker.getInstance(element);
+    if (instance.setting.disabled || instance.element.getAttribute('disabled') != undefined)
+      return;
     if (element.getAttribute('mds-pdtp-select-year-button') != null) {
       instance.showYearsBox(element);
     } else if (element.getAttribute('data-day') != null) {
