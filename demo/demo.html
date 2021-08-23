@@ -91,7 +91,7 @@
               <div class="row">
                 <label for="enableTimePicker" class="col-5 col-form-label">groupId</label>
                 <div class="col-7 pt-2">
-                  <input class="form-control form-control-sm" type="text" value="group1">
+                  <input class="form-control form-control-sm" type="text" value="group1" data-name="group-id" readonly>
                 </div>
               </div>
               <hr>
@@ -104,11 +104,13 @@
           <div class="row">
             <!-- Normal -->
             <div class="col-12" data-name="normal-dtp-container">
+              <h3 data-name="from-to-date-title" hidden>From Date</h3>
               <div class="input-group mb-3">
                 <span class="input-group-text cursor-pointer" id="dtp1">📅</span>
                 <input type="text" class="form-control" placeholder="Date Picker Text" data-name="dtp1-text">
                 <input type="text" class="form-control" placeholder="Date Picker Date" data-name="dtp1-date">
               </div>
+              <h3 data-name="from-to-date-title" hidden>To Date</h3>
               <div class="input-group mb-3" data-name="dtp2-container" hidden>
                 <span class="input-group-text cursor-pointer" id="dtp2">📅</span>
                 <input type="text" class="form-control" placeholder="Date Picker Text" data-name="dtp2-text">
@@ -119,7 +121,7 @@
             <div class="col-12" data-name="in-line-dtp-container" hidden>
               <div class="row justify-content-md-center">
                 <div class="col-5">
-                  <h3>From Date</h3>
+                  <h3 data-name="from-to-date-title" hidden>From Date</h3>
                   <div class="border mb-3" data-name="in-line-dtp1"></div>
                   <div class="row g-0">
                     <div class="col-6">
@@ -131,7 +133,7 @@
                   </div>
                 </div>
                 <div class="col-5" hidden data-name="in-line-dtp2-container">
-                  <h3>To Date</h3>
+                  <h3 data-name="from-to-date-title" hidden>To Date</h3>
                   <div class="border mb-3" data-name="in-line-dtp2"></div>
                   <div class="row g-0">
                     <div class="col-6">

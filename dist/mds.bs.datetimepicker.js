@@ -236,7 +236,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             };
             this.updateCalendarBodyHtml = function (element, setting) {
                 var calendarHtml = _this.getDateTimePickerBodyHtml(setting);
-                var containerElement = !setting.inLine ? element.closest('[data-name="mds-dtp-body"]') : element.closest('.mds-bs-dtp-container');
+                var containerElement = !setting.inLine
+                    ? element.closest('[data-name="mds-dtp-body"]')
+                    : element.closest('[data-mds-dtp-guid]');
                 var dtpInlineHeader = calendarHtml.match(/<th mds-dtp-inline-header\b[^>]*>(.*?)<\/th>/img)[0];
                 _this.tempTitleString = dtpInlineHeader;
                 _this.setPopoverHeaderHtml(element, setting.inLine, dtpInlineHeader.trim());
@@ -259,6 +261,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                     setting.calendarViewOnChange(selectedDateToShow);
             };
             this.selectDay = function (element) {
+                // کلیک روی روزها
                 // انتخاب روز
                 var instance = MdsPersianDateTimePicker.getInstance(element);
                 if (instance.setting.disabled || element.getAttribute('disabled') != undefined)
@@ -336,8 +339,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 if (setting.toDate || setting.fromDate) {
                     // وقتی روی روز یکی از تقویم ها کلیک می شود
                     // باید تقویم دیگر نیز تغییر کند و روزهایی از آن غیر فعال شود
-                    var toDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-to-date]');
-                    var fromDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-from-date]');
+                    var toDateElement = document.querySelector("[data-mds-dtp-group=\"" + setting.groupId + "\"][data-to-date]");
+                    var fromDateElement = document.querySelector("[data-mds-dtp-group=\"" + setting.groupId + "\"][data-from-date]");
                     if (setting.fromDate && toDateElement != undefined) {
                         var instance_1 = MdsPersianDateTimePicker.getInstance(toDateElement);
                         if (setting.inLine)

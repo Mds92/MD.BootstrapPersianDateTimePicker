@@ -1590,7 +1590,9 @@ data-bs-toggle="dropdown" aria-expanded="false">
   }
   private updateCalendarBodyHtml = (element: Element, setting: MdsPersianDateTimePickerSetting): void => {
     const calendarHtml = this.getDateTimePickerBodyHtml(setting);
-    const containerElement = !setting.inLine ? element.closest('[data-name="mds-dtp-body"]') : element.closest('.mds-bs-dtp-container');
+    const containerElement = !setting.inLine
+      ? element.closest('[data-name="mds-dtp-body"]')
+      : element.closest('[data-mds-dtp-guid]');
     const dtpInlineHeader = calendarHtml.match(/<th mds-dtp-inline-header\b[^>]*>(.*?)<\/th>/img)[0];
     this.tempTitleString = dtpInlineHeader;
     this.setPopoverHeaderHtml(element, setting.inLine, dtpInlineHeader.trim());
@@ -1612,6 +1614,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       setting.calendarViewOnChange(selectedDateToShow);
   }
   private selectDay = (element: Element): void => {
+    // کلیک روی روزها
     // انتخاب روز
     const instance = MdsPersianDateTimePicker.getInstance(element);
     if (instance.setting.disabled || element.getAttribute('disabled') != undefined)
@@ -1685,8 +1688,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
     if (setting.toDate || setting.fromDate) {
       // وقتی روی روز یکی از تقویم ها کلیک می شود
       // باید تقویم دیگر نیز تغییر کند و روزهایی از آن غیر فعال شود
-      const toDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-to-date]');
-      const fromDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-from-date]');
+      const toDateElement = document.querySelector(`[data-mds-dtp-group="${setting.groupId}"][data-to-date]`);
+      const fromDateElement = document.querySelector(`[data-mds-dtp-group="${setting.groupId}"][data-from-date]`);
       if (setting.fromDate && toDateElement != undefined) {
         const instance = MdsPersianDateTimePicker.getInstance(toDateElement);
         if (setting.inLine)
