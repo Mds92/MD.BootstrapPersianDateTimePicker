@@ -313,13 +313,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                     }
                     return;
                 }
-                var daysElements = [];
-                if (setting.inLine) {
-                    daysElements = [].slice.call(element.closest('[data-mds-dtp-guid]').querySelectorAll('[data-day]'));
-                }
-                else {
-                    daysElements = [].slice.call(_this.getPopover(element).querySelectorAll('[data-day]'));
-                }
+                // let daysElements: Element[] = [];
+                // if (setting.inLine) {
+                //   daysElements = [].slice.call(element.closest('[data-mds-dtp-guid]').querySelectorAll('[data-day]'));
+                // } else {
+                //   daysElements = [].slice.call(this.getPopover(element).querySelectorAll('[data-day]'));
+                // }
                 element.setAttribute('data-mds-dtp-selected-day', '');
                 setting.selectedDate = _this.getClonedDate(selectedDateToShow);
                 setting.selectedDateToShow = _this.getClonedDate(selectedDateToShow);
@@ -662,11 +661,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             if (!setting.groupId && (setting.toDate || setting.fromDate))
                 throw new Error("MdsPersianDateTimePicker => When you set 'toDate' or 'fromDate' true, you have to set 'groupId'");
             // \\
+            // آپشن هایی که باید همان لحظه تغییر اعمال شوند
             if (setting.disabled) {
                 this.element.setAttribute("disabled", '');
             }
-            else
+            else {
                 this.element.removeAttribute("disabled");
+            }
             if (setting.toDate || setting.fromDate) {
                 this.element.setAttribute("data-mds-dtp-group", setting.groupId);
                 if (setting.toDate)
@@ -674,6 +675,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 else if (setting.fromDate)
                     this.element.setAttribute("data-from-date", 'true');
             }
+            // this.setSelectedData(setting);
+            // \\
             setTimeout(function () {
                 _this.dispose();
                 var title = _this.getPopoverHeaderTitle(setting);
@@ -1121,8 +1124,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         };
         MdsPersianDateTimePicker.prototype.getSelectedDateFormatted = function (setting) {
             // دریافت رشته تاریخ انتخاب شده
-            if ((!setting.rangeSelector && !setting.selectedDate == undefined) ||
-                (setting.rangeSelector && setting.rangeSelectorStartDate == undefined && setting.rangeSelectorEndDate == undefined))
+            if ((!setting.rangeSelector && !setting.selectedDate) ||
+                (setting.rangeSelector && !setting.rangeSelectorStartDate && !setting.rangeSelectorEndDate))
                 return '';
             if (setting.rangeSelector)
                 return this.getDateTimeString(this.getDateTimeJson1(setting.rangeSelectorStartDate), setting.dateFormat, true, true) + ' - ' +

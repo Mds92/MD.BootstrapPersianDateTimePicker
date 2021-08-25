@@ -24,7 +24,7 @@
               <hr>
               <!-- inLine -->
               <div class="row">
-                <label for="enableTimePicker" class="col-5 col-form-label">inLine</label>
+                <label class="col-5 col-form-label">inLine</label>
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inLineRadioOptions" id="inLineRadioOptionsId1"
@@ -41,7 +41,7 @@
               <hr>
               <!-- enableTimePicker -->
               <div class="row">
-                <label for="enableTimePicker" class="col-5 col-form-label">enableTimePicker</label>
+                <label class="col-5 col-form-label">enableTimePicker</label>
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="enableTimePickerInlineRadioOptions"
@@ -60,7 +60,7 @@
               <hr>
               <!-- placement -->
               <div class="row">
-                <label for="placement" class="col-5 col-form-label">placement</label>
+                <label class="col-5 col-form-label">placement</label>
                 <div class="col-7">
                   <select class="form-select form-select-sm" onchange="optionOnChange('placement', this.value)">
                     <option value="auto">auto</option>
@@ -74,7 +74,7 @@
               <hr>
               <!-- toDate, fromDate -->
               <div class="row">
-                <label for="enableTimePicker" class="col-5 col-form-label">toDate, fromDate</label>
+                <label class="col-5 col-form-label">toDate, fromDate</label>
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="toDateRadioOptions" id="toDateRadioOptionsId1"
@@ -90,7 +90,7 @@
               </div>
               <!-- groupId -->
               <div class="row">
-                <label for="enableTimePicker" class="col-5 col-form-label">groupId</label>
+                <label class="col-5 col-form-label">groupId</label>
                 <div class="col-7 pt-2">
                   <input class="form-control form-control-sm" type="text" value="group1" data-name="group-id" readonly>
                 </div>
@@ -98,18 +98,35 @@
               <hr>
               <!-- disabled -->
               <div class="row">
-                <label for="enableTimePicker" class="col-5 col-form-label">disabled</label>
+                <label class="col-5 col-form-label">disabled</label>
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="disabledRadioOptions" id="disabledRadioOptionsId1"
-                      value="true" onchange="optionOnChange('disabled', this.value)">
+                    <input class="form-check-input" type="radio" name="disabledRadioOptions"
+                      id="disabledRadioOptionsId1" value="true" onchange="optionOnChange('disabled', this.value)">
                     <label class="form-check-label" for="disabledRadioOptionsId1">true</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="disabledRadioOptions" id="disabledRadioOptionsId2"
-                      value="false" onchange="optionOnChange('disabled', this.value)" checked>
+                    <input class="form-check-input" type="radio" name="disabledRadioOptions"
+                      id="disabledRadioOptionsId2" value="false" onchange="optionOnChange('disabled', this.value)"
+                      checked>
                     <label class="form-check-label" for="disabledRadioOptionsId2">false</label>
                   </div>
+                </div>
+              </div>
+              <hr>
+              <!-- textFormat -->
+              <div class="row">
+                <label class="col-5 col-form-label">textFormat</label>
+                <div class="col-7 pt-2">
+                  <input class="form-control form-control-sm" type="text" data-name="text-format" onchange="optionOnChange('textFormat', this.value)">
+                </div>
+              </div>
+              <hr>
+              <!-- dateFormat -->
+              <div class="row">
+                <label class="col-5 col-form-label">dateFormat</label>
+                <div class="col-7 pt-2">
+                  <input class="form-control form-control-sm" type="text" data-name="date-format" onchange="optionOnChange('dateFormat', this.value)">
                 </div>
               </div>
               <hr>

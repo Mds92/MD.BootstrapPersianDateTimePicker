@@ -5,13 +5,14 @@ const groupIdTextBoxElement = document.querySelector('[data-name="group-id"]');
 const dtp2ContainerElement = document.querySelector('[data-name="dtp2-container"]');
 const inLineDtp2ContainerElement = document.querySelector('[data-name="in-line-dtp2-container"]');
 const fromToDateTitleElements = document.querySelectorAll('[data-name="from-to-date-title"]');
+const textFormatElement = document.querySelector('[data-name="text-format"]');
+const dateFormatElement = document.querySelector('[data-name="date-format"]');
 
 const dtp1Element = document.getElementById('dtp1');
 const dtp1 = new mds.MdsPersianDateTimePicker(dtp1Element, {
   targetTextSelector: '[data-name="dtp1-text"]',
   targetDateSelector: '[data-name="dtp1-date"]',
 });
-// activeDatePicker = dtp1;
 
 const dtp2Element = document.getElementById('dtp2');
 const dtp2 = new mds.MdsPersianDateTimePicker(dtp2Element, {
@@ -86,6 +87,18 @@ function optionOnChange(optionName, value) {
       dtp2.updateOption('toDate', value);
       inLineDtp1.updateOption('fromDate', value);
       inLineDtp2.updateOption('toDate', value);
+      break;
+
+    case 'textFormat':
+    case 'dateFormat':
+      dtp1.updateOption(optionName, value);
+      dtp1.updateSelectedDateText();
+      dtp2.updateOption(optionName, value);
+      dtp2.updateSelectedDateText();
+      inLineDtp1.updateOption(optionName, value);
+      inLineDtp1.updateSelectedDateText();
+      inLineDtp2.updateOption(optionName, value);
+      inLineDtp2.updateSelectedDateText();
       break;
 
     case 'inLine':

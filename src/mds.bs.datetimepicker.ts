@@ -439,12 +439,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
     if (!setting.groupId && (setting.toDate || setting.fromDate)) throw new Error(`MdsPersianDateTimePicker => When you set 'toDate' or 'fromDate' true, you have to set 'groupId'`);
     // \\
 
+    // آپشن هایی که باید همان لحظه تغییر اعمال شوند
     if (setting.disabled) {
       this.element.setAttribute("disabled", '');
     }
-    else
+    else {
       this.element.removeAttribute("disabled");
-
+    }
     if (setting.toDate || setting.fromDate) {
       this.element.setAttribute("data-mds-dtp-group", setting.groupId);
       if (setting.toDate)
@@ -452,6 +453,9 @@ data-bs-toggle="dropdown" aria-expanded="false">
       else if (setting.fromDate)
         this.element.setAttribute("data-from-date", 'true');
     }
+    // this.setSelectedData(setting);
+    // \\
+
     setTimeout(() => {
       this.dispose();
       const title = this.getPopoverHeaderTitle(setting);
@@ -876,8 +880,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
   }
   private getSelectedDateFormatted(setting: MdsPersianDateTimePickerSetting): string {
     // دریافت رشته تاریخ انتخاب شده
-    if ((!setting.rangeSelector && !setting.selectedDate == undefined) ||
-      (setting.rangeSelector && setting.rangeSelectorStartDate == undefined && setting.rangeSelectorEndDate == undefined)) return '';
+    if ((!setting.rangeSelector && !setting.selectedDate) ||
+      (setting.rangeSelector && !setting.rangeSelectorStartDate && !setting.rangeSelectorEndDate)) return '';
     if (setting.rangeSelector)
       return this.getDateTimeString(this.getDateTimeJson1(setting.rangeSelectorStartDate), setting.dateFormat, true, true) + ' - ' +
         this.getDateTimeString(this.getDateTimeJson1(setting.rangeSelectorEndDate), setting.dateFormat, true, true);
@@ -1682,12 +1686,12 @@ data-bs-toggle="dropdown" aria-expanded="false">
       }
       return;
     }
-    let daysElements: Element[] = [];
-    if (setting.inLine) {
-      daysElements = [].slice.call(element.closest('[data-mds-dtp-guid]').querySelectorAll('[data-day]'));
-    } else {
-      daysElements = [].slice.call(this.getPopover(element).querySelectorAll('[data-day]'));
-    }
+    // let daysElements: Element[] = [];
+    // if (setting.inLine) {
+    //   daysElements = [].slice.call(element.closest('[data-mds-dtp-guid]').querySelectorAll('[data-day]'));
+    // } else {
+    //   daysElements = [].slice.call(this.getPopover(element).querySelectorAll('[data-day]'));
+    // }
     element.setAttribute('data-mds-dtp-selected-day', '');
     setting.selectedDate = this.getClonedDate(selectedDateToShow);
     setting.selectedDateToShow = this.getClonedDate(selectedDateToShow);
