@@ -22,6 +22,23 @@
             <div class="col-12">
               <h2>Options</h2>
               <hr>
+              <!-- isGregorian -->
+              <div class="row">
+                <label class="col-5 col-form-label">isGregorian</label>
+                <div class="col-7 pt-2">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="isGregorianRadioOptions" id="isGregorianRadioOptionsId1"
+                      value="true" onchange="optionOnChange('isGregorian', this.value)">
+                    <label class="form-check-label" for="isGregorianRadioOptionsId1">true</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="isGregorianRadioOptions" id="isGregorianRadioOptionsId2"
+                      value="false" onchange="optionOnChange('isGregorian', this.value)" checked>
+                    <label class="form-check-label" for="isGregorianRadioOptionsId2">false</label>
+                  </div>
+                </div>
+              </div>
+              <hr>
               <!-- inLine -->
               <div class="row">
                 <label class="col-5 col-form-label">inLine</label>
@@ -118,7 +135,10 @@
               <div class="row">
                 <label class="col-5 col-form-label">textFormat</label>
                 <div class="col-7 pt-2">
-                  <input class="form-control form-control-sm" type="text" data-name="text-format" onchange="optionOnChange('textFormat', this.value)">
+                  <div class="input-group input-group-sm">
+                    <input class="form-control form-control-sm" type="text" data-name="text-format" onchange="optionOnChange('textFormat', this.value)">
+                    <span class="input-group-text cursor-pointer" data-bs-toggle="modal" data-bs-target="#textDateFormatModal">Detail</span>
+                  </div>
                 </div>
               </div>
               <hr>
@@ -126,7 +146,10 @@
               <div class="row">
                 <label class="col-5 col-form-label">dateFormat</label>
                 <div class="col-7 pt-2">
-                  <input class="form-control form-control-sm" type="text" data-name="date-format" onchange="optionOnChange('dateFormat', this.value)">
+                  <div class="input-group input-group-sm">
+                    <input class="form-control form-control-sm" type="text" data-name="date-format" onchange="optionOnChange('dateFormat', this.value)">
+                    <span class="input-group-text cursor-pointer" data-bs-toggle="modal" data-bs-target="#textDateFormatModal">Detail</span>
+                  </div>
                 </div>
               </div>
               <hr>
@@ -182,6 +205,138 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Text/Date Format modal -->
+  <div class="modal fade" id="textDateFormatModal" tabindex="-1" aria-labelledby="textDateFormatModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="textDateFormatModalLabel">
+            Text/Date Format Detail
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-sm table-hover table-hover table-striped">
+            <thead>
+              <th> Format </th>
+              <th> Description </th>
+              <th> Persian Description </th>
+            </thead>
+            <tbody>
+              <tr>
+                <td> yyyy </td>
+                <td> Four digits year </td>
+                <td> سال چهار رقمی </td>
+              </tr>
+              <tr>
+                <td> yy </td>
+                <td> Two digits year </td>
+                <td> سال دو رقمی </td>
+              </tr>
+              <tr>
+                <td> MMMM </td>
+                <td> Month Name </td>
+                <td> نام ماه </td>
+              </tr>
+              <tr>
+                <td> MM </td>
+                <td> Two digits month number </td>
+                <td> شماره دو رقمی ماه </td>
+              </tr>
+              <tr>
+                <td> M </td>
+                <td> One digit year </td>
+                <td> شماره تک رقمی ماه </td>
+              </tr>
+              <tr>
+                <td> dddd </td>
+                <td> Week day name </td>
+                <td> نام روز هفته </td>
+              </tr>
+              <tr>
+                <td> dd </td>
+                <td> Two digits month day number </td>
+                <td> شماره دو رقمی روز ماه </td>
+              </tr>
+              <tr>
+                <td> d </td>
+                <td> One digit month day number </td>
+                <td> عدد یک رقمی روز ماه </td>
+              </tr>
+              <tr>
+                <td> HH </td>
+                <td> Two digits hour number </td>
+                <td> شماره ساعت دو رقمی با فرمت 00 تا 24 </td>
+              </tr>
+              <tr>
+                <td> H </td>
+                <td> One digit hour number </td>
+                <td> شماره ساعت تک رقمی با فرمت 00 تا 24 </td>
+              </tr>
+              <tr>
+                <td> hh </td>
+                <td> Two digits hour number </td>
+                <td> شماره ساعت دو رقمی با فرمت 0 تا 12 </td>
+              </tr>
+              <tr>
+                <td> h </td>
+                <td> One digit hour number </td>
+                <td> شماره ساعت تک رقمی با فرمت 0 تا 12 </td>
+              </tr>
+              <tr>
+                <td> mm </td>
+                <td> Two digits minute number </td>
+                <td> عدد دو رقمی دقیقه </td>
+              </tr>
+              <tr>
+                <td> m </td>
+                <td> One digit minute number </td>
+                <td> عدد تک رقمی دقیقه </td>
+              </tr>
+              <tr>
+                <td> ss </td>
+                <td> Two digits second number </td>
+                <td> عدد دو رقمی ثانیه </td>
+              </tr>
+              <tr>
+                <td> s </td>
+                <td> One digit second number </td>
+                <td> عدد تک رقمی ثانیه </td>
+              </tr>
+              <tr>
+                <td> fff </td>
+                <td> Three digits milliseconds number </td>
+                <td> عدد سه رقمی میلی ثانیه </td>
+              </tr>
+              <tr>
+                <td> ff </td>
+                <td> Two digits milliseconds number </td>
+                <td> عدد دو رقمی میلی ثانیه </td>
+              </tr>
+              <tr>
+                <td> f </td>
+                <td> One digit milliseconds number </td>
+                <td> عدد تک رقمی میلی ثانیه </td>
+              </tr>
+              <tr>
+                <td> tt </td>
+                <td> AM/PM </td>
+                <td> ب.ظ یا ق.ظ </td>
+              </tr>
+              <tr>
+                <td> t </td>
+                <td> First letter of AM/PM </td>
+                <td> اولین حرف از ب.ظ یا ق.ظ </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>

@@ -14,6 +14,9 @@ const dtp1 = new mds.MdsPersianDateTimePicker(dtp1Element, {
   targetDateSelector: '[data-name="dtp1-date"]',
 });
 
+textFormatElement.value = dtp1.setting.textFormat;
+dateFormatElement.value = dtp1.setting.dateFormat;
+
 const dtp2Element = document.getElementById('dtp2');
 const dtp2 = new mds.MdsPersianDateTimePicker(dtp2Element, {
   targetTextSelector: '[data-name="dtp2-text"]',
@@ -102,6 +105,31 @@ function optionOnChange(optionName, value) {
       break;
 
     case 'inLine':
+      break;
+
+    case 'disabled':
+      dtp1.updateOption(optionName, value);
+      dtp2.updateOption(optionName, value);
+      inLineDtp1.updateOption(optionName, value);
+      inLineDtp2.updateOption(optionName, value);
+      break;
+
+    case 'isGregorian':
+      dtp1.updateOption(optionName, value);
+      dtp2.updateOption(optionName, value);
+      dtp1.updateSelectedDateText();
+      dtp2.updateSelectedDateText();
+      inLineDtp1.updateOption(optionName, value);
+      inLineDtp2.updateOption(optionName, value);
+      inLineDtp1.updateSelectedDateText();
+      inLineDtp2.updateSelectedDateText();
+      break;
+
+    case 'enableTimePicker':
+      dtp1.updateOption(optionName, value);
+      dtp1.updateSelectedDateText();
+      inLineDtp1.updateOption(optionName, value);
+      inLineDtp1.updateSelectedDateText();
       break;
 
     default:

@@ -434,16 +434,18 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private initializeBsPopover(setting: MdsPersianDateTimePickerSetting): void {
 
     // Validation
+
     if (setting.rangeSelector && (setting.toDate || setting.fromDate)) throw new Error(`MdsPersianDateTimePicker => You can not set true 'toDate' or 'fromDate' and 'rangeSelector' together`);
     if (setting.toDate && setting.fromDate) throw new Error(`MdsPersianDateTimePicker => You can not set true 'toDate' and 'fromDate' together`);
     if (!setting.groupId && (setting.toDate || setting.fromDate)) throw new Error(`MdsPersianDateTimePicker => When you set 'toDate' or 'fromDate' true, you have to set 'groupId'`);
-    // \\
+
+    // ---------------------
 
     // آپشن هایی که باید همان لحظه تغییر اعمال شوند
+
     if (setting.disabled) {
       this.element.setAttribute("disabled", '');
-    }
-    else {
+    } else {
       this.element.removeAttribute("disabled");
     }
     if (setting.toDate || setting.fromDate) {
@@ -453,8 +455,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
       else if (setting.fromDate)
         this.element.setAttribute("data-from-date", 'true');
     }
-    // this.setSelectedData(setting);
-    // \\
+
+    // ---------------------
 
     setTimeout(() => {
       this.dispose();
@@ -808,13 +810,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
     /// <para />
     /// yy: سال دو رقمی
     /// <para />
-    /// MMMM: نام فارسی ماه
+    /// MMMM: نام ماه
     /// <para />
     /// MM: عدد دو رقمی ماه
     /// <para />
     /// M: عدد یک رقمی ماه
     /// <para />
-    /// dddd: نام فارسی روز هفته
+    /// dddd: نام روز هفته
     /// <para />
     /// dd: عدد دو رقمی روز ماه
     /// <para />
@@ -873,6 +875,11 @@ data-bs-toggle="dropdown" aria-expanded="false">
   }
   private getSelectedDateTimeTextFormatted(setting: MdsPersianDateTimePickerSetting): string {
     if (setting.selectedDate == undefined) return '';
+    if (!setting.enableTimePicker) {
+      setting.selectedDate.setHours(0);
+      setting.selectedDate.setMinutes(0);
+      setting.selectedDate.setSeconds(0);
+    }
     if (setting.rangeSelector && setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined)
       return this.getDateTimeString(!setting.isGregorian ? this.getDateTimeJsonPersian1(setting.rangeSelectorStartDate) : this.getDateTimeJson1(setting.rangeSelectorStartDate), setting.textFormat, setting.isGregorian, setting.isGregorian) + ' - ' +
         this.getDateTimeString(!setting.isGregorian ? this.getDateTimeJsonPersian1(setting.rangeSelectorEndDate) : this.getDateTimeJson1(setting.rangeSelectorEndDate), setting.textFormat, setting.isGregorian, setting.isGregorian);
@@ -892,8 +899,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
     let disableAfterDateTimeJson = this.getBiggerDisableAfterDate(setting);
     // بررسی پراپرتی های از تاریخ، تا تاریخ
     if ((setting.fromDate || setting.toDate) && setting.groupId) {
-      const toDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-to-date]');
-      const fromDateElement = document.querySelector('[data-mds-dtp-group="' + setting.groupId + '"][data-from-date]');
+      const toDateElement = document.querySelector(`[data-mds-dtp-group="${setting.groupId}"][data-to-date]`);
+      const fromDateElement = document.querySelector(`[data-mds-dtp-group="${setting.groupId}"][data-from-date]`);
       if (toDateElement != null && setting.fromDate) {
         const toDateSetting = MdsPersianDateTimePicker.getInstance(toDateElement).setting;
         const toDateSelectedDate = toDateSetting.selectedDate;
@@ -1645,8 +1652,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
     let dateNumber = Number(element.getAttribute('data-number'));
     const setting = instance.setting;
     const disabled = element.getAttribute('disabled') != undefined;
+    if (setting.selectedDate != undefined && !setting.enableTimePicker) {
+      setting.selectedDate.setHours(0);
+      setting.selectedDate.setMinutes(0);
+      setting.selectedDate.setSeconds(0);
+    }
     let selectedDateJson = setting.selectedDate == undefined ? undefined : this.getDateTimeJson1(setting.selectedDate);
-    let selectedDateToShow = this.getClonedDate(setting.selectedDateToShow);
+    let selectedDateToShow = setting.selectedDateToShow == undefined ? undefined : this.getClonedDate(setting.selectedDateToShow);
     let selectedDateToShowJson = selectedDateToShow == undefined ? undefined : this.getDateTimeJson1(selectedDateToShow);
     if (disabled) {
       if (setting.onDayClick != undefined) setting.onDayClick(setting);
@@ -1692,13 +1704,23 @@ data-bs-toggle="dropdown" aria-expanded="false">
     // } else {
     //   daysElements = [].slice.call(this.getPopover(element).querySelectorAll('[data-day]'));
     // }
-    element.setAttribute('data-mds-dtp-selected-day', '');
     setting.selectedDate = this.getClonedDate(selectedDateToShow);
+    if (setting.selectedDate != undefined && !setting.enableTimePicker) {
+      setting.selectedDate.setHours(0);
+      setting.selectedDate.setMinutes(0);
+      setting.selectedDate.setSeconds(0);
+    }
     setting.selectedDateToShow = this.getClonedDate(selectedDateToShow);
     if (selectedDateJson != undefined) {
-      selectedDateJson.hour = selectedDateToShowJson.hour;
-      selectedDateJson.minute = selectedDateToShowJson.minute;
-      selectedDateJson.second = selectedDateToShowJson.second;
+      if (setting.enableTimePicker) {
+        selectedDateJson.hour = selectedDateToShowJson.hour;
+        selectedDateJson.minute = selectedDateToShowJson.minute;
+        selectedDateJson.second = selectedDateToShowJson.second;
+      } else {
+        selectedDateJson.hour = 0;
+        selectedDateJson.minute = 0;
+        selectedDateJson.second = 0;
+      }
       setting.selectedDate.setHours(selectedDateJson.hour);
       setting.selectedDate.setMinutes(selectedDateJson.minute);
       setting.selectedDate.setSeconds(selectedDateJson.second);
@@ -1707,12 +1729,18 @@ data-bs-toggle="dropdown" aria-expanded="false">
     this.setSelectedData(setting);
     if (!setting.inLine) {
       instance.hide();
+    } else {
+      // حذف روزهای انتخاب شده در تقویم این لاین
+      element.closest(`[data-mds-dtp-guid="${this.guid}"]`)
+        .querySelectorAll('[data-day]')
+        .forEach(e => e.removeAttribute('data-mds-dtp-selected-day'));
     }
+    element.setAttribute('data-mds-dtp-selected-day', '');
     if (setting.toDate || setting.fromDate) {
       // وقتی روی روز یکی از تقویم ها کلیک می شود
       // باید تقویم دیگر نیز تغییر کند و روزهایی از آن غیر فعال شود
       const toDateElement = document.querySelector(`[data-mds-dtp-group="${setting.groupId}"][data-to-date]`);
-      const fromDateElement = document.querySelector('[data-mds-dtp-group="${setting.groupId}"][data-from-date]');
+      const fromDateElement = document.querySelector(`[data-mds-dtp-group="${setting.groupId}"][data-from-date]`);
       if (setting.fromDate && toDateElement != undefined) {
         const instance = MdsPersianDateTimePicker.getInstance(toDateElement);
         if (setting.inLine)
@@ -1837,7 +1865,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
     setTimeout(() => {
       const dtp = document.querySelector(`[data-mds-dtp-guid="${this.guid}"]`);
       dtp.querySelector('[data-mds-dtp-time]').addEventListener('change', this.timeChanged, false);
-      dtp.querySelector('[data-mds-dtp-go-today]').addEventListener('click', this.goToday, false);
       dtp.addEventListener('click', this.selectCorrectClickEvent);
       dtp.querySelectorAll('[data-mds-dtp] [data-day]').forEach(e => e.addEventListener('mouseenter', this.hoverOnDays, true));
     }, 100);
@@ -1845,23 +1872,19 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private enableEvents(): void {
     if (this.setting.inLine) return;
     setTimeout(() => {
-      document.querySelector('[data-mds-dtp-time]').addEventListener('change', this.timeChanged, false);
-      document.querySelector('[data-mds-dtp-go-today]').addEventListener('click', this.goToday, false);
       document.addEventListener('click', this.selectCorrectClickEvent, false);
       document.querySelector('html').addEventListener('click', this.hidePopoverEvent, true);
+      document.querySelectorAll('[data-mds-dtp-time]').forEach(e => e.addEventListener('change', this.timeChanged, false));
       document.querySelectorAll('[data-mds-dtp] [data-day]').forEach(e => e.addEventListener('mouseenter', this.hoverOnDays, true));
-    }, 100);
+    }, 500);
   }
   private disableEvents(): void {
     document.removeEventListener('click', this.selectCorrectClickEvent);
-    document.querySelector('[data-mds-dtp-time]')?.removeEventListener('change', this.timeChanged);
-    document.querySelector('[data-mds-dtp-go-today]')?.removeEventListener('click', this.goToday);
     document.querySelector('html').removeEventListener('click', this.hidePopoverEvent);
+    document.querySelectorAll('[data-mds-dtp-time]').forEach(e => e.removeEventListener('change', this.timeChanged));
     document.querySelectorAll('[data-mds-dtp] [data-day]').forEach(e => e.removeEventListener('mouseenter', this.hoverOnDays));
     const dtp = document.querySelector(`[data-mds-dtp-guid="${this.guid}"]`);
     if (dtp != null) {
-      dtp.querySelector('[data-mds-dtp-time]')?.removeEventListener('change', this.timeChanged, false);
-      dtp.querySelector('[data-mds-dtp-go-today]')?.removeEventListener('click', this.goToday, false);
       dtp.removeEventListener('click', this.selectCorrectClickEvent, false);
       dtp.querySelectorAll('[data-mds-dtp] [data-day]')?.forEach(e => e.removeEventListener('mouseenter', this.hoverOnDays, true));
     }
@@ -1869,10 +1892,12 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private selectCorrectClickEvent = (e: PointerEvent): void => {
     const element = <Element>e.target;
     const instance = MdsPersianDateTimePicker.getInstance(element);
-    if (instance.setting.disabled || instance.element.getAttribute('disabled') != undefined)
+    if (instance != null && (instance.setting.disabled || instance.element.getAttribute('disabled') != undefined))
       return;
     if (element.getAttribute('mds-pdtp-select-year-button') != null) {
       instance.showYearsBox(element);
+    } else if (element.getAttribute('data-mds-dtp-go-today') != null) {
+      this.goToday(e);
     } else if (element.getAttribute('data-day') != null) {
       this.selectDay(element);
     } else if (element.getAttribute('data-mds-hide-year-list-box')) {
