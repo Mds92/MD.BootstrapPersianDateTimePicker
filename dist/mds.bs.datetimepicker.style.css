@@ -50,6 +50,10 @@
   z-index: 9999999;
 }
 
+.mds-bs-dtp-container .select-year-inline-box {
+  height: 90%;
+}
+
 /*
 اسکرول بار ها
 */
@@ -63,14 +67,12 @@
   background-color: #cdcdcd;
 }
 
-
 /*
   برای نمایش لیست سال های قابل انتخاب در مد inline
 */
 .mds-bs-dtp-container .select-year-box.inline {
   top: 27px !important;
   overflow: auto;
-  padding-bottom: 30px;
 }
 
 .mds-bs-dtp-container .select-year-box.w-0,
@@ -172,7 +174,7 @@
 }
 
 .mds-bs-dtp-container table table tbody.days td.selected-range-days-start-end {
-  background-color: #c9e1ff;
+  background-color: #c9e1ff !important;
 }
 
 /*

@@ -22,6 +22,24 @@
             <div class="col-12">
               <h2>Options</h2>
               <hr>
+              <!-- disabled -->
+              <div class="row">
+                <label class="col-5 col-form-label">disabled</label>
+                <div class="col-7 pt-2">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="disabledRadioOptions"
+                      id="disabledRadioOptionsId1" value="true" onchange="optionOnChange('disabled', this.value)">
+                    <label class="form-check-label" for="disabledRadioOptionsId1">true</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="disabledRadioOptions"
+                      id="disabledRadioOptionsId2" value="false" onchange="optionOnChange('disabled', this.value)"
+                      checked>
+                    <label class="form-check-label" for="disabledRadioOptionsId2">false</label>
+                  </div>
+                </div>
+              </div>
+              <hr>
               <!-- isGregorian -->
               <div class="row">
                 <label class="col-5 col-form-label">isGregorian</label>
@@ -76,20 +94,6 @@
                 </div>
               </div>
               <hr>
-              <!-- placement -->
-              <div class="row">
-                <label class="col-5 col-form-label">placement</label>
-                <div class="col-7">
-                  <select class="form-select form-select-sm" onchange="optionOnChange('placement', this.value)">
-                    <option value="auto">auto</option>
-                    <option value="top">top</option>
-                    <option value="bottom" selected>bottom</option>
-                    <option value="left">left</option>
-                    <option value="right">right</option>
-                  </select>
-                </div>
-              </div>
-              <hr>
               <!-- toDate, fromDate -->
               <div class="row">
                 <label class="col-5 col-form-label">toDate, fromDate</label>
@@ -106,6 +110,7 @@
                   </div>
                 </div>
               </div>
+              <hr>
               <!-- groupId -->
               <div class="row">
                 <label class="col-5 col-form-label">groupId</label>
@@ -114,21 +119,36 @@
                 </div>
               </div>
               <hr>
-              <!-- disabled -->
+              <!-- rangeSelector -->
               <div class="row">
-                <label class="col-5 col-form-label">disabled</label>
+                <label class="col-5 col-form-label">rangeSelector</label>
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="disabledRadioOptions"
-                      id="disabledRadioOptionsId1" value="true" onchange="optionOnChange('disabled', this.value)">
-                    <label class="form-check-label" for="disabledRadioOptionsId1">true</label>
+                    <input class="form-check-input" type="radio" name="rangeSelectorRadioOptions"
+                      id="rangeSelectorRadioOptionsId1" value="true"
+                      onchange="optionOnChange('rangeSelector', this.value)">
+                    <label class="form-check-label" for="rangeSelectorRadioOptionsId1">true</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="disabledRadioOptions"
-                      id="disabledRadioOptionsId2" value="false" onchange="optionOnChange('disabled', this.value)"
-                      checked>
-                    <label class="form-check-label" for="disabledRadioOptionsId2">false</label>
+                    <input class="form-check-input" type="radio" name="rangeSelectorRadioOptions"
+                      id="rangeSelectorRadioOptionsId2" value="false"
+                      onchange="optionOnChange('rangeSelector', this.value)" checked>
+                    <label class="form-check-label" for="rangeSelectorRadioOptionsId2">false</label>
                   </div>
+                </div>
+              </div>
+              <hr>
+              <!-- rangeSelectorMonthsToShow -->
+              <div class="row">
+                <label class="col-5 col-form-label">rangeSelectorMonthsToShow</label>
+                <div class="col-2"></div>
+                <div class="col-2 pt-2">
+                  <input class="form-control form-control-sm" type="number" min="0" max="3" value="0"
+                    data-name="rangeSelectorMonthsToShow-start" readonly style="width: 50px;">
+                </div>
+                <div class="col-2 pt-2">
+                  <input class="form-control form-control-sm" type="number" min="0" max="3" value="0"
+                    data-name="rangeSelectorMonthsToShow-end" readonly style="width: 50px;">
                 </div>
               </div>
               <hr>
@@ -162,8 +182,22 @@
               <div class="row">
                 <label class="col-5 col-form-label">yearOffset</label>
                 <div class="col-7 pt-2">
-                  <input class="form-control form-control-sm" type="number" value="15" min="0"
-                    data-name="yearOffset" onchange="optionOnChange('yearOffset', this.value)">
+                  <input class="form-control form-control-sm" type="number" value="15" min="0" data-name="yearOffset"
+                    onchange="optionOnChange('yearOffset', this.value)">
+                </div>
+              </div>
+              <hr>
+              <!-- placement -->
+              <div class="row">
+                <label class="col-5 col-form-label">placement</label>
+                <div class="col-7 pt-2">
+                  <select class="form-select form-select-sm" onchange="optionOnChange('placement', this.value)">
+                    <option value="auto">auto</option>
+                    <option value="top">top</option>
+                    <option value="bottom" selected>bottom</option>
+                    <option value="left">left</option>
+                    <option value="right">right</option>
+                  </select>
                 </div>
               </div>
               <hr>
@@ -192,9 +226,9 @@
             <!-- In Line -->
             <div class="col-12" data-name="in-line-dtp-container" hidden>
               <div class="row justify-content-md-center">
-                <div class="col-5">
+                <div class="col-5" data-name="in-line-dtp1-column">
                   <h3 data-name="from-to-date-title" hidden>From Date</h3>
-                  <div class="border mb-3 overflow-hidden" data-name="in-line-dtp1"></div>
+                  <div class="border mb-3" data-name="in-line-dtp1"></div>
                   <div class="row g-0">
                     <div class="col-6">
                       <input type="text" class="form-control" placeholder="Text" data-name="in-line-dtp1-text">
@@ -206,7 +240,7 @@
                 </div>
                 <div class="col-5" hidden data-name="in-line-dtp2-container">
                   <h3 data-name="from-to-date-title" hidden>To Date</h3>
-                  <div class="border mb-3 overflow-hidden" data-name="in-line-dtp2"></div>
+                  <div class="border mb-3" data-name="in-line-dtp2"></div>
                   <div class="row g-0">
                     <div class="col-6">
                       <input type="text" class="form-control" placeholder="Text" data-name="in-line-dtp2-text">

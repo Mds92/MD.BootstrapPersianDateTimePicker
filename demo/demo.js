@@ -7,6 +7,10 @@ const inLineDtp2ContainerElement = document.querySelector('[data-name="in-line-d
 const fromToDateTitleElements = document.querySelectorAll('[data-name="from-to-date-title"]');
 const textFormatElement = document.querySelector('[data-name="text-format"]');
 const dateFormatElement = document.querySelector('[data-name="date-format"]');
+const rangeSelectorMonthsToShowStartInputElements = document.querySelector('[data-name="rangeSelectorMonthsToShow-start"]');
+const rangeSelectorMonthsToShowEndInputElements = document.querySelector('[data-name="rangeSelectorMonthsToShow-end"]');
+const rangeSelectorMonthsToShowInputElements = document.querySelectorAll('[data-name^="rangeSelectorMonthsToShow"]');
+rangeSelectorMonthsToShowInputElements.forEach(e => e.addEventListener('change', rangeSelectorMonthsToShowOnChange));
 
 const dtp1Element = document.getElementById('dtp1');
 const dtp1 = new mds.MdsPersianDateTimePicker(dtp1Element, {
@@ -23,6 +27,7 @@ const dtp2 = new mds.MdsPersianDateTimePicker(dtp2Element, {
   targetDateSelector: '[data-name="dtp2-date"]',
 });
 
+const inLineDtp1ColumnElement = document.querySelector('[data-name="in-line-dtp1-column"]');
 const inLineDtp1Element = document.querySelector('[data-name="in-line-dtp1"]');
 const inLineDtp1 = new mds.MdsPersianDateTimePicker(inLineDtp1Element, {
   inLine: true,
@@ -59,6 +64,22 @@ function optionOnChange(optionName, value) {
       }
       break;
     }
+
+    case 'rangeSelector': {
+      switch (value) {
+        case true:
+          rangeSelectorMonthsToShowInputElements.forEach(e => e.removeAttribute('readonly'));
+          break;
+        case false:
+          rangeSelectorMonthsToShowStartInputElements.value = 0;
+          rangeSelectorMonthsToShowEndInputElements.value = 0;
+          rangeSelectorMonthsToShowInputElements.forEach(e => e.setAttribute('readonly', ''));
+          rangeSelectorMonthsToShowOnChange();
+          break;
+      }
+      break;
+    }
+
     case 'fromDate':
     case 'toDate': {
       switch (value) {
@@ -137,4 +158,16 @@ function optionOnChange(optionName, value) {
       inLineDtp1.updateOption(optionName, value);
       break;
   }
+}
+
+function rangeSelectorMonthsToShowOnChange() {
+  const start = Number(rangeSelectorMonthsToShowStartInputElements.value);
+  const end = Number(rangeSelectorMonthsToShowEndInputElements.value);
+  if (start == 0 && end == 0)
+    inLineDtp1ColumnElement.setAttribute('class', 'col-5');
+  else
+    inLineDtp1ColumnElement.setAttribute('class', 'col-12');
+  inLineDtp1Element.style.width = ''
+  dtp1.updateOption('rangeSelectorMonthsToShow', [start, end]);
+  inLineDtp1.updateOption('rangeSelectorMonthsToShow', [start, end]);
 }

@@ -180,6 +180,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                     var inlineYearsContainer = dtpInLine.querySelector('[data-name="dtp-years-container"]');
                     inlineYearsContainer.classList.add('w-0');
                     inlineYearsContainer.innerHTML = '';
+                    dtpInLine.classList.remove('overflow-hidden');
                 }
                 else {
                     if (_this.tempTitleString)
@@ -188,19 +189,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                     yearListBox.classList.add('w-0');
                     yearListBox.innerHTML = '';
                 }
-            };
-            this.changeYearList = function (element) {
-                // کلیک روی دکمه های عوض کردن رنج سال انتخابی
-                var instance = MdsPersianDateTimePicker.getInstance(element);
-                var setting = instance.setting;
-                var isNext = element.getAttribute('data-year-range-button-change') == '1';
-                var yearStart = Number(element.getAttribute('data-year'));
-                var yearsToSelectObject = _this.getYearsBoxBodyHtml(setting, isNext ? yearStart : yearStart - setting.yearOffset * 2);
-                if (setting.inLine)
-                    element.closest('[data-mds-dtp-guid]').querySelector('[data-mds-dtp-year-list-box]').innerHTML = yearsToSelectObject.html;
-                else
-                    element.closest('[data-mds-dtp]').querySelector('[data-mds-dtp-year-list-box]').innerHTML = yearsToSelectObject.html;
-                _this.setPopoverHeaderHtml(element, setting.inLine, _this.getYearsBoxHeaderHtml(setting, yearsToSelectObject.yearStart, yearsToSelectObject.yearEnd));
             };
             this.showYearsBox = function (element) {
                 var instance = MdsPersianDateTimePicker.getInstance(element);
@@ -217,10 +205,26 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 _this.setPopoverHeaderHtml(element, setting.inLine, _this.getYearsBoxHeaderHtml(setting, yearsToSelectObject.yearStart, yearsToSelectObject.yearEnd));
                 dateTimePickerYearsToSelectContainer.innerHTML = dateTimePickerYearsToSelectHtml;
                 dateTimePickerYearsToSelectContainer.classList.remove('w-0');
-                if (setting.inLine)
+                if (setting.inLine) {
+                    mdDatePickerContainerSelector.classList.add('overflow-hidden');
                     dateTimePickerYearsToSelectContainer.classList.add('inline');
-                else
+                }
+                else {
                     dateTimePickerYearsToSelectContainer.classList.remove('inline');
+                }
+            };
+            this.changeYearList = function (element) {
+                // کلیک روی دکمه های عوض کردن رنج سال انتخابی
+                var instance = MdsPersianDateTimePicker.getInstance(element);
+                var setting = instance.setting;
+                var isNext = element.getAttribute('data-year-range-button-change') == '1';
+                var yearStart = Number(element.getAttribute('data-year'));
+                var yearsToSelectObject = _this.getYearsBoxBodyHtml(setting, isNext ? yearStart : yearStart - setting.yearOffset * 2);
+                if (setting.inLine)
+                    element.closest('[data-mds-dtp-guid]').querySelector('[data-mds-dtp-year-list-box]').innerHTML = yearsToSelectObject.html;
+                else
+                    element.closest('[data-mds-dtp]').querySelector('[data-mds-dtp-year-list-box]').innerHTML = yearsToSelectObject.html;
+                _this.setPopoverHeaderHtml(element, setting.inLine, _this.getYearsBoxHeaderHtml(setting, yearsToSelectObject.yearStart, yearsToSelectObject.yearEnd));
             };
             this.setPopoverHeaderHtml = function (element, isInLine, htmlString) {
                 // element = المانی که روی آن فعالیتی انجام شده و باید عنوان تقویم آن عوض شود    
@@ -288,7 +292,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                         setting.selectedRangeDate = [];
                         setting.rangeSelectorStartDate = undefined;
                         setting.rangeSelectorEndDate = undefined;
-                        element.closest('[data-mds-dtp]').querySelectorAll('td.selected-range-days-start-end,td.selected-range-days')
+                        var closestSelector = '[data-mds-dtp]';
+                        if (setting.inLine)
+                            closestSelector = '[data-mds-dtp-guid]';
+                        element.closest(closestSelector).querySelectorAll('td.selected-range-days-start-end,td.selected-range-days')
                             .forEach(function (e) {
                             e.classList.remove('selected-range-days');
                             e.classList.remove('selected-range-days-start-end');
@@ -318,12 +325,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                     }
                     return;
                 }
-                // let daysElements: Element[] = [];
-                // if (setting.inLine) {
-                //   daysElements = [].slice.call(element.closest('[data-mds-dtp-guid]').querySelectorAll('[data-day]'));
-                // } else {
-                //   daysElements = [].slice.call(this.getPopover(element).querySelectorAll('[data-day]'));
-                // }
                 setting.selectedDate = _this.getClonedDate(selectedDateToShow);
                 if (setting.selectedDate != undefined && !setting.enableTimePicker) {
                     setting.selectedDate.setHours(0);
@@ -700,6 +701,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                     this.element.setAttribute("data-to-date", 'true');
                 else if (setting.fromDate)
                     this.element.setAttribute("data-from-date", 'true');
+            }
+            if (!setting.rangeSelector) {
+                setting.rangeSelectorMonthsToShow = [0, 0];
             }
             // ---------------------
             setTimeout(function () {
@@ -1273,6 +1277,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             }
             html = html.replace(/\{\{yearsBoxHtml\}\}/img, yearsBoxHtml);
             html = html.replace(/\{\{cancelText\}\}/img, setting.isGregorian ? this.cancelText : this.cancelTextPersian);
+            if (setting.inLine && setting.yearOffset > 15)
+                html += '<div style="height: 30px;"></div>';
             return {
                 yearStart: yearStart,
                 yearEnd: yearEnd,
@@ -1781,7 +1787,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 var dtp = document.querySelector("[data-mds-dtp-guid=\"" + _this.guid + "\"]");
                 dtp.querySelector('[data-mds-dtp-time]').addEventListener('change', _this.timeChanged, false);
                 dtp.addEventListener('click', _this.selectCorrectClickEvent);
-                dtp.querySelectorAll('[data-mds-dtp] [data-day]').forEach(function (e) { return e.addEventListener('mouseenter', _this.hoverOnDays, true); });
+                dtp.querySelectorAll('[data-day]').forEach(function (e) { return e.addEventListener('mouseenter', _this.hoverOnDays, true); });
             }, 100);
         };
         MdsPersianDateTimePicker.prototype.enableEvents = function () {
@@ -1805,7 +1811,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             var dtp = document.querySelector("[data-mds-dtp-guid=\"" + this.guid + "\"]");
             if (dtp != null) {
                 dtp.removeEventListener('click', this.selectCorrectClickEvent, false);
-                (_a = dtp.querySelectorAll('[data-mds-dtp] [data-day]')) === null || _a === void 0 ? void 0 : _a.forEach(function (e) { return e.removeEventListener('mouseenter', _this.hoverOnDays, true); });
+                (_a = dtp.querySelectorAll('[data-day]')) === null || _a === void 0 ? void 0 : _a.forEach(function (e) { return e.removeEventListener('mouseenter', _this.hoverOnDays, true); });
             }
         };
         /**
