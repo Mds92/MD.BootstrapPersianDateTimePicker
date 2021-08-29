@@ -1222,6 +1222,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         MdsPersianDateTimePicker.prototype.getYearsBoxBodyHtml = function (setting, yearToStart) {
             // بدست آوردن اچ تی ام ال انتخاب سال
             // yearToStart سال شروع
+            setting.yearOffset = Number(setting.yearOffset);
             var selectedDateToShow = this.getClonedDate(setting.selectedDateToShow);
             var disabledDateObj = this.getDisabledDateObject(setting);
             var disableBeforeDateTimeJson = disabledDateObj[0];

@@ -27,13 +27,14 @@
                 <label class="col-5 col-form-label">isGregorian</label>
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="isGregorianRadioOptions" id="isGregorianRadioOptionsId1"
-                      value="true" onchange="optionOnChange('isGregorian', this.value)">
+                    <input class="form-check-input" type="radio" name="isGregorianRadioOptions"
+                      id="isGregorianRadioOptionsId1" value="true" onchange="optionOnChange('isGregorian', this.value)">
                     <label class="form-check-label" for="isGregorianRadioOptionsId1">true</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="isGregorianRadioOptions" id="isGregorianRadioOptionsId2"
-                      value="false" onchange="optionOnChange('isGregorian', this.value)" checked>
+                    <input class="form-check-input" type="radio" name="isGregorianRadioOptions"
+                      id="isGregorianRadioOptionsId2" value="false" onchange="optionOnChange('isGregorian', this.value)"
+                      checked>
                     <label class="form-check-label" for="isGregorianRadioOptionsId2">false</label>
                   </div>
                 </div>
@@ -136,8 +137,10 @@
                 <label class="col-5 col-form-label">textFormat</label>
                 <div class="col-7 pt-2">
                   <div class="input-group input-group-sm">
-                    <input class="form-control form-control-sm" type="text" data-name="text-format" onchange="optionOnChange('textFormat', this.value)">
-                    <span class="input-group-text cursor-pointer" data-bs-toggle="modal" data-bs-target="#textDateFormatModal">Detail</span>
+                    <input class="form-control form-control-sm" type="text" data-name="text-format"
+                      onchange="optionOnChange('textFormat', this.value)">
+                    <span class="input-group-text cursor-pointer" data-bs-toggle="modal"
+                      data-bs-target="#textDateFormatModal">Detail</span>
                   </div>
                 </div>
               </div>
@@ -147,9 +150,20 @@
                 <label class="col-5 col-form-label">dateFormat</label>
                 <div class="col-7 pt-2">
                   <div class="input-group input-group-sm">
-                    <input class="form-control form-control-sm" type="text" data-name="date-format" onchange="optionOnChange('dateFormat', this.value)">
-                    <span class="input-group-text cursor-pointer" data-bs-toggle="modal" data-bs-target="#textDateFormatModal">Detail</span>
+                    <input class="form-control form-control-sm" type="text" data-name="date-format"
+                      onchange="optionOnChange('dateFormat', this.value)">
+                    <span class="input-group-text cursor-pointer" data-bs-toggle="modal"
+                      data-bs-target="#textDateFormatModal">Detail</span>
                   </div>
+                </div>
+              </div>
+              <hr>
+              <!-- yearOffset -->
+              <div class="row">
+                <label class="col-5 col-form-label">yearOffset</label>
+                <div class="col-7 pt-2">
+                  <input class="form-control form-control-sm" type="number" value="15" min="0"
+                    data-name="yearOffset" onchange="optionOnChange('yearOffset', this.value)">
                 </div>
               </div>
               <hr>
@@ -180,7 +194,7 @@
               <div class="row justify-content-md-center">
                 <div class="col-5">
                   <h3 data-name="from-to-date-title" hidden>From Date</h3>
-                  <div class="border mb-3" data-name="in-line-dtp1"></div>
+                  <div class="border mb-3 overflow-hidden" data-name="in-line-dtp1"></div>
                   <div class="row g-0">
                     <div class="col-6">
                       <input type="text" class="form-control" placeholder="Text" data-name="in-line-dtp1-text">
@@ -192,7 +206,7 @@
                 </div>
                 <div class="col-5" hidden data-name="in-line-dtp2-container">
                   <h3 data-name="from-to-date-title" hidden>To Date</h3>
-                  <div class="border mb-3" data-name="in-line-dtp2"></div>
+                  <div class="border mb-3 overflow-hidden" data-name="in-line-dtp2"></div>
                   <div class="row g-0">
                     <div class="col-6">
                       <input type="text" class="form-control" placeholder="Text" data-name="in-line-dtp2-text">
@@ -210,7 +224,8 @@
     </div>
   </div>
   <!-- Text/Date Format modal -->
-  <div class="modal fade" id="textDateFormatModal" tabindex="-1" aria-labelledby="textDateFormatModalLabel" aria-hidden="true">
+  <div class="modal fade" id="textDateFormatModal" tabindex="-1" aria-labelledby="textDateFormatModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">

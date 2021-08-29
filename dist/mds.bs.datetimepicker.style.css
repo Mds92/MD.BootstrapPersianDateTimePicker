@@ -28,7 +28,7 @@
 /*
 عنوان تقویم در حالت in line
 */
-.mds-bs-dtp-container [mds-dtp-inline-header]{
+.mds-bs-dtp-container [mds-dtp-inline-header] {
   border-bottom: solid 1px #ccc !important;
 }
 
@@ -46,16 +46,31 @@
   background: #fff;
   text-align: center;
   transition: all 200ms ease;
-  overflow: hidden;
+  overflow: auto;
   z-index: 9999999;
 }
+
+/*
+اسکرول بار ها
+*/
+.select-year-box::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  background-color: #e4e4e4;
+}
+
+.select-year-box::-webkit-scrollbar-thumb {
+  background-color: #cdcdcd;
+}
+
 
 /*
   برای نمایش لیست سال های قابل انتخاب در مد inline
 */
 .mds-bs-dtp-container .select-year-box.inline {
   top: 27px !important;
-  overflow: hidden;
+  overflow: auto;
+  padding-bottom: 30px;
 }
 
 .mds-bs-dtp-container .select-year-box.w-0,

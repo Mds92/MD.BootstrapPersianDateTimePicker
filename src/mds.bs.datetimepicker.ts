@@ -954,6 +954,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
     // بدست آوردن اچ تی ام ال انتخاب سال
     // yearToStart سال شروع
 
+    setting.yearOffset = Number(setting.yearOffset);
+
     const selectedDateToShow = this.getClonedDate(setting.selectedDateToShow);
     const disabledDateObj = this.getDisabledDateObject(setting);
     const disableBeforeDateTimeJson = disabledDateObj[0];
