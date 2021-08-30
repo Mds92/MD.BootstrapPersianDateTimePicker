@@ -696,6 +696,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 this.element.removeAttribute("disabled");
             }
             if (setting.toDate || setting.fromDate) {
+                setting.rangeSelector = false;
                 this.element.setAttribute("data-mds-dtp-group", setting.groupId);
                 if (setting.toDate)
                     this.element.setAttribute("data-to-date", 'true');
@@ -1890,6 +1891,18 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
          */
         MdsPersianDateTimePicker.prototype.updateOption = function (optionName, value) {
             this.setting[optionName] = value;
+            MdsPersianDateTimePickerData.set(this.guid, this);
+            this.initializeBsPopover(this.setting);
+        };
+        /**
+         * بروز کردن تنظیمات تقویم
+         * @param options تنظیمات مورد نظر
+         */
+        MdsPersianDateTimePicker.prototype.updateOptions = function (options) {
+            var _this = this;
+            Object.keys(options).forEach(function (key) {
+                _this.setting[key] = options[key];
+            });
             MdsPersianDateTimePickerData.set(this.guid, this);
             this.initializeBsPopover(this.setting);
         };

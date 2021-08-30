@@ -3,10 +3,13 @@ const normalDtpContainer = document.querySelector('[data-name="normal-dtp-contai
 const inLineDtpContainer = document.querySelector('[data-name="in-line-dtp-container"]');
 const groupIdTextBoxElement = document.querySelector('[data-name="group-id"]');
 const dtp2ContainerElement = document.querySelector('[data-name="dtp2-container"]');
+const toDateFromDateRadioOptions = document.querySelectorAll('input[name="toDateFromDateRadioOptions"]');
 const inLineDtp2ContainerElement = document.querySelector('[data-name="in-line-dtp2-container"]');
 const fromToDateTitleElements = document.querySelectorAll('[data-name="from-to-date-title"]');
 const textFormatElement = document.querySelector('[data-name="text-format"]');
 const dateFormatElement = document.querySelector('[data-name="date-format"]');
+
+const rangeSelectorRadioOptions = document.querySelectorAll('input[name="rangeSelectorRadioOptions"]');
 const rangeSelectorMonthsToShowStartInputElements = document.querySelector('[data-name="rangeSelectorMonthsToShow-start"]');
 const rangeSelectorMonthsToShowEndInputElements = document.querySelector('[data-name="rangeSelectorMonthsToShow-end"]');
 const rangeSelectorMonthsToShowInputElements = document.querySelectorAll('[data-name^="rangeSelectorMonthsToShow"]');
@@ -68,7 +71,15 @@ function optionOnChange(optionName, value) {
     case 'rangeSelector': {
       switch (value) {
         case true:
+          // from/to date
+          dtp2ContainerElement.hidden = true;
+          inLineDtp2ContainerElement.hidden = true;
+          groupIdTextBoxElement.setAttribute('readonly', '');
+          fromToDateTitleElements.forEach(e => e.hidden = true);
+          // ----------
           rangeSelectorMonthsToShowInputElements.forEach(e => e.removeAttribute('readonly'));
+          toDateFromDateRadioOptions.forEach(e => e.checked = e.value == 'false');
+          groupIdTextBoxElement.setAttribute('readonly', '');
           break;
         case false:
           rangeSelectorMonthsToShowStartInputElements.value = 0;
@@ -84,6 +95,12 @@ function optionOnChange(optionName, value) {
     case 'toDate': {
       switch (value) {
         case true:
+          // rangeSelector
+          rangeSelectorMonthsToShowStartInputElements.value = 0;
+          rangeSelectorMonthsToShowEndInputElements.value = 0;
+          rangeSelectorMonthsToShowInputElements.forEach(e => e.setAttribute('readonly', ''));
+          rangeSelectorRadioOptions.forEach(e => e.checked = e.value == 'false');
+          // ----------
           dtp2ContainerElement.hidden = false;
           inLineDtp2ContainerElement.hidden = false;
           groupIdTextBoxElement.removeAttribute('readonly');
@@ -96,21 +113,57 @@ function optionOnChange(optionName, value) {
           fromToDateTitleElements.forEach(e => e.hidden = true);
           break;
       }
+      rangeSelectorMonthsToShowOnChange();
       break;
     }
   }
+
   console.log(`${optionName} => ${value}`);
+
   switch (optionName) {
+    case 'rangeSelector':
+      dtp1.updateOptions({
+        toDate: false,
+        fromDate: false,
+        rangeSelector: true,
+      });
+      dtp2.updateOptions({
+        toDate: false,
+        fromDate: false,
+      });
+      inLineDtp1.updateOptions({
+        toDate: false,
+        fromDate: false,
+        rangeSelector: true,
+      });
+      inLineDtp2.updateOptions({
+        toDate: false,
+        fromDate: false,
+      });
+      break;
+
     case 'toDate':
     case 'fromDate':
-      dtp1.updateOption('groupId', groupIdTextBoxElement.value);
-      dtp2.updateOption('groupId', groupIdTextBoxElement.value);
-      inLineDtp1.updateOption('groupId', "_" + groupIdTextBoxElement.value);
-      inLineDtp2.updateOption('groupId', "_" + groupIdTextBoxElement.value);
-      dtp1.updateOption('fromDate', value);
-      dtp2.updateOption('toDate', value);
-      inLineDtp1.updateOption('fromDate', value);
-      inLineDtp2.updateOption('toDate', value);
+      dtp1.updateOptions({
+        groupId: groupIdTextBoxElement.value,
+        fromDate: value,
+        rangeSelector: false,
+      });
+      dtp2.updateOptions({
+        groupId: groupIdTextBoxElement.value,
+        toDate: value,
+        rangeSelector: false,
+      });
+      inLineDtp1.updateOptions({
+        groupId: "_" + groupIdTextBoxElement.value,
+        fromDate: value,
+        rangeSelector: false,
+      });
+      inLineDtp2.updateOptions({
+        groupId: "_" + groupIdTextBoxElement.value,
+        toDate: value,
+        rangeSelector: false,
+      });
       break;
 
     case 'textFormat':

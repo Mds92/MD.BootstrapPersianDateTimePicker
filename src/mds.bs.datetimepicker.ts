@@ -449,6 +449,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       this.element.removeAttribute("disabled");
     }
     if (setting.toDate || setting.fromDate) {
+      setting.rangeSelector = false;
       this.element.setAttribute("data-mds-dtp-group", setting.groupId);
       if (setting.toDate)
         this.element.setAttribute("data-to-date", 'true');
@@ -2010,7 +2011,17 @@ data-bs-toggle="dropdown" aria-expanded="false">
     MdsPersianDateTimePickerData.set(this.guid, this);
     this.initializeBsPopover(this.setting);
   }
-
+  /**
+   * بروز کردن تنظیمات تقویم
+   * @param options تنظیمات مورد نظر
+   */
+  updateOptions(options: MdsPersianDateTimePickerSetting): void {
+    Object.keys(options).forEach((key) => {
+      (<any>this.setting)[key] = (<any>options)[key];
+    });
+    MdsPersianDateTimePickerData.set(this.guid, this);
+    this.initializeBsPopover(this.setting);
+  }
   /**
    * دریافت اینستنس تقویم از روی المانی که تقویم روی آن فعال شده است
    * @param element المانی که تقویم روی آن فعال شده
