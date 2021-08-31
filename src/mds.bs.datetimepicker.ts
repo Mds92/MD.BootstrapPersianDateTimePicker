@@ -318,13 +318,13 @@ data-bs-toggle="dropdown" aria-expanded="false">
 </thead>
 <tbody class="days">
 <tr>
-  <td class="{{weekDayShortName1CssClass}}">{{weekDayShortName1}}</td>
-  <td>{{weekDayShortName2}}</td>
-  <td>{{weekDayShortName3}}</td>
-  <td>{{weekDayShortName4}}</td>
-  <td>{{weekDayShortName5}}</td>
-  <td>{{weekDayShortName6}}</td>
-  <td class="{{weekDayShortName7CssClass}}">{{weekDayShortName7}}</td>
+<td class="{{weekDayShortName1CssClass}}">{{weekDayShortName1}}</td>
+<td>{{weekDayShortName2}}</td>
+<td>{{weekDayShortName3}}</td>
+<td>{{weekDayShortName4}}</td>
+<td>{{weekDayShortName5}}</td>
+<td>{{weekDayShortName6}}</td>
+<td class="{{weekDayShortName7CssClass}}">{{weekDayShortName7}}</td>
 </tr>
 {{daysHtml}}
 </tbody>
@@ -1044,7 +1044,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     html = html.replace(/\{\{guid\}\}/img, this.guid);
     html = html.replace(/\{\{monthTdAttribute\}\}/img, isNextMonth ? 'data-next-month' : isPrevMonth ? 'data-prev-month' : '');
     html = html.replace(/\{\{monthNameAttribute\}\}/img, !isNextOrPrevMonth ? 'hidden' : '');
-    html = html.replace(/\{\{theadSelectDateButtonTrAttribute\}\}/img, setting.inLine || !isNextOrPrevMonth ? '' : 'hidden');
+    html = html.replace(/\{\{theadSelectDateButtonTrAttribute\}\}/img, !isNextOrPrevMonth ? '' : 'hidden');
     html = html.replace(/\{\{weekDayShortName1CssClass\}\}/img, setting.isGregorian ? 'text-danger' : '');
     html = html.replace(/\{\{weekDayShortName7CssClass\}\}/img, !setting.isGregorian ? 'text-danger' : '');
     html = html.replace(/\{\{previousYearText\}\}/img, setting.isGregorian ? this.previousYearText : this.previousYearTextPersian);
