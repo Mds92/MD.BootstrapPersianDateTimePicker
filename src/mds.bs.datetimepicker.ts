@@ -1,4 +1,4 @@
-﻿﻿import { Popover } from "bootstrap";
+﻿﻿import { Modal, Popover } from "bootstrap";
 
 export class MdsPersianDateTimePicker {
   constructor(element: Element, setting: MdsPersianDateTimePickerSetting) {
@@ -182,14 +182,15 @@ export class MdsPersianDateTimePicker {
 
   // #region Template
 
-  private modalHtmlTemplate = `<div class="modal fade mds-bs-persian-datetime-picker-modal" tabindex="-1" role="dialog" aria-labelledby="mdDateTimePickerModalLabel" aria-hidden="true" data-mds-dtp>
-<div class="modal-dialog modal-xl modal-dialog-centered" data-button-selector>
-<div class="modal-content">
-<div class="modal-body" data-name="mds-dtp-body">
-MD DateTimePicker Html
-</div>
-</div>
-</div>
+  private modalHtmlTemplate = `
+<div class="modal fade mds-bs-persian-datetime-picker-modal" tabindex="-1" role="dialog" aria-labelledby="mdDateTimePickerModalLabel" aria-hidden="true" data-mds-dtp>
+  <div class="modal-dialog modal-dialog-centered" data-button-selector>
+    <div class="modal-content">
+      <div class="modal-body" data-name="mds-dtp-body">
+        MD DateTimePicker Html
+      </div>
+    </div>
+  </div>
 </div>
   `;
   private popoverHtmlTemplate = `<div class="popover mds-bs-persian-datetime-picker-popover" role="tooltip" data-mds-dtp>
@@ -423,6 +424,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   guid: string = '';
   setting: MdsPersianDateTimePickerSetting;
   private bsPopover: Popover;
+  private bsModal: Modal;
   private element: Element;
   private tempTitleString = '';
   private triggerChangeCalling = false;
@@ -465,6 +467,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     setTimeout(() => {
       this.dispose();
       const title = this.getPopoverHeaderTitle(setting);
+      // مدال مد اضافه شود
       let html = this.getDateTimePickerBodyHtml(setting);
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = html;
@@ -1941,15 +1944,15 @@ data-bs-toggle="dropdown" aria-expanded="false">
    * نمایش تقویم
    */
   show(): void {
-    if (this.bsPopover == null) return;
-    this.bsPopover.show();
+    this.bsModal?.show();
+    this.bsPopover?.show();
   }
   /**
    * مخفی کردن تقویم
    */
   hide(): void {
-    if (this.bsPopover == null) return;
-    this.bsPopover.hide();
+    this.bsModal?.hide();
+    this.bsPopover?.hide();
   }
   /**
    * مخفی یا نمایش تقویم 
@@ -1980,7 +1983,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
    * بروز کردن محل قرار گرفتن تقویم
    */
   updatePosition(): void {
-    this.bsPopover.update();
+    this.bsPopover?.update();
+    this.bsModal?.handleUpdate();
   }
   /**
    * به روز کردن متن نمایش تاریخ روز انتخاب شده
@@ -1994,14 +1998,24 @@ data-bs-toggle="dropdown" aria-expanded="false">
   dispose(): void {
     if (this.bsPopover != null)
       this.bsPopover.dispose();
+    if (this.bsModal != null)
+      this.bsModal.dispose();
     this.element.removeEventListener('click', this.showPopoverEvent);
     this.bsPopover = null;
+    this.bsModal = null;
   }
   /**
    * دریافت اینستنس پاپ آور بوت استرپ
    */
   getBsPopoverInstance(): Popover {
     return this.bsPopover;
+  }
+  /**
+   * دریافت اینستنس مدال بوت استرپ
+   * در صورتی که آپشن modalMode را صحیح کرده باشید
+   */
+   getBsModalInstance(): Modal {
+    return this.bsModal;
   }
   /**
    * بروز کردن تنظیمات تقویم

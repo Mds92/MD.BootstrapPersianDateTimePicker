@@ -74,7 +74,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             var _this = this;
             //#endregion jalali calendar
             // #region Template
-            this.modalHtmlTemplate = "<div class=\"modal fade mds-bs-persian-datetime-picker-modal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"mdDateTimePickerModalLabel\" aria-hidden=\"true\" data-mds-dtp>\n<div class=\"modal-dialog modal-xl modal-dialog-centered\" data-button-selector>\n<div class=\"modal-content\">\n<div class=\"modal-body\" data-name=\"mds-dtp-body\">\nMD DateTimePicker Html\n</div>\n</div>\n</div>\n</div>\n  ";
+            this.modalHtmlTemplate = "\n<div class=\"modal fade mds-bs-persian-datetime-picker-modal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"mdDateTimePickerModalLabel\" aria-hidden=\"true\" data-mds-dtp>\n  <div class=\"modal-dialog modal-dialog-centered\" data-button-selector>\n    <div class=\"modal-content\">\n      <div class=\"modal-body\" data-name=\"mds-dtp-body\">\n        MD DateTimePicker Html\n      </div>\n    </div>\n  </div>\n</div>\n  ";
             this.popoverHtmlTemplate = "<div class=\"popover mds-bs-persian-datetime-picker-popover\" role=\"tooltip\" data-mds-dtp>\n<div class=\"popover-arrow\"></div>\n<h3 class=\"popover-header text-center p-1\" mds-dtp-title=\"true\"></h3>\n<div class=\"popover-body p-0\" data-name=\"mds-dtp-body\"></div>\n</div>";
             this.popoverHeaderSelectYearHtmlTemplate = "<table class=\"table table-sm table-borderless text-center p-0 m-0 {{rtlCssClass}}\" dir=\"{{dirAttrValue}}\">\n<tr>\n<th>\n<button type=\"button\" class=\"btn btn-sm btn-light\" title=\"{{previousText}}\" data-year=\"{{latestPreviousYear}}\" data-year-range-button-change=\"-1\" {{prevYearButtonAttr}}> &lt; </button>\n</th>\n<th class=\"pt-1\">\n{{yearsRangeText}}\n</th>\n<th>\n<button type=\"button\" class=\"btn btn-sm btn-light\" title=\"{{nextText}}\" data-year=\"{{latestNextYear}}\" data-year-range-button-change=\"1\" {{nextYearButtonAttr}}> &gt; </button>\n</th>\n</tr>\n</table>";
             this.dateTimePickerYearsToSelectHtmlTemplate = "<table class=\"table table-sm text-center p-0 m-0\">\n<tbody>\n{{yearsBoxHtml}}\n<tr>\n<td colspan=\"100\" class=\"text-center\">\n<button class=\"btn btn-sm btn-light\" data-mds-hide-year-list-box=\"true\">{{cancelText}}</button>\n</td>\n</tr>\n</tbody>\n</table>";
@@ -710,6 +710,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             setTimeout(function () {
                 _this.dispose();
                 var title = _this.getPopoverHeaderTitle(setting);
+                // مدال مد اضافه شود
                 var html = _this.getDateTimePickerBodyHtml(setting);
                 var tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
@@ -1821,17 +1822,17 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
          * نمایش تقویم
          */
         MdsPersianDateTimePicker.prototype.show = function () {
-            if (this.bsPopover == null)
-                return;
-            this.bsPopover.show();
+            var _a, _b;
+            (_a = this.bsModal) === null || _a === void 0 ? void 0 : _a.show();
+            (_b = this.bsPopover) === null || _b === void 0 ? void 0 : _b.show();
         };
         /**
          * مخفی کردن تقویم
          */
         MdsPersianDateTimePicker.prototype.hide = function () {
-            if (this.bsPopover == null)
-                return;
-            this.bsPopover.hide();
+            var _a, _b;
+            (_a = this.bsModal) === null || _a === void 0 ? void 0 : _a.hide();
+            (_b = this.bsPopover) === null || _b === void 0 ? void 0 : _b.hide();
         };
         /**
          * مخفی یا نمایش تقویم
@@ -1863,7 +1864,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
          * بروز کردن محل قرار گرفتن تقویم
          */
         MdsPersianDateTimePicker.prototype.updatePosition = function () {
-            this.bsPopover.update();
+            var _a, _b;
+            (_a = this.bsPopover) === null || _a === void 0 ? void 0 : _a.update();
+            (_b = this.bsModal) === null || _b === void 0 ? void 0 : _b.handleUpdate();
         };
         /**
          * به روز کردن متن نمایش تاریخ روز انتخاب شده
@@ -1877,14 +1880,24 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         MdsPersianDateTimePicker.prototype.dispose = function () {
             if (this.bsPopover != null)
                 this.bsPopover.dispose();
+            if (this.bsModal != null)
+                this.bsModal.dispose();
             this.element.removeEventListener('click', this.showPopoverEvent);
             this.bsPopover = null;
+            this.bsModal = null;
         };
         /**
          * دریافت اینستنس پاپ آور بوت استرپ
          */
         MdsPersianDateTimePicker.prototype.getBsPopoverInstance = function () {
             return this.bsPopover;
+        };
+        /**
+         * دریافت اینستنس مدال بوت استرپ
+         * در صورتی که آپشن modalMode را صحیح کرده باشید
+         */
+        MdsPersianDateTimePicker.prototype.getBsModalInstance = function () {
+            return this.bsModal;
         };
         /**
          * بروز کردن تنظیمات تقویم
