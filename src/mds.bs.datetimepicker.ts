@@ -1603,19 +1603,21 @@ data-bs-toggle="dropdown" aria-expanded="false">
       selectedDateToShow = setting.isGregorian ? new Date(disableBeforeDateTimeJson.year, disableBeforeDateTimeJson.month - 1, 1) : this.getDateTime1(disableBeforeDateTimeJson.year, disableBeforeDateTimeJson.month, disableBeforeDateTimeJson.day);
 
     let monthsTdHtml = '';
+    // let tempSelectedDateToShow = this.getClonedDate(selectedDateToShow);
     let numberOfNextMonths = setting.rangeSelectorMonthsToShow[1] <= 0 ? 0 : setting.rangeSelectorMonthsToShow[1];
     let numberOfPrevMonths = setting.rangeSelectorMonthsToShow[0] <= 0 ? 0 : setting.rangeSelectorMonthsToShow[0];
     numberOfPrevMonths *= -1;
     for (let i1 = numberOfPrevMonths; i1 < 0; i1++) {
-      setting.selectedDateToShow = this.addMonthToDateTime(this.getClonedDate(selectedDateToShow), i1, false);
+      setting.selectedDateToShow = this.addMonthToDateTime(this.getClonedDate(selectedDateToShow), i1, setting.isGregorian);
       monthsTdHtml += this.getDateTimePickerMonthHtml(setting, false, true);
     }
     setting.selectedDateToShow = this.getClonedDate(selectedDateToShow);
     monthsTdHtml += this.getDateTimePickerMonthHtml(setting, false, false);
     for (let i2 = 1; i2 <= numberOfNextMonths; i2++) {
-      setting.selectedDateToShow = this.addMonthToDateTime(this.getClonedDate(selectedDateToShow), i2, false);
+      setting.selectedDateToShow = this.addMonthToDateTime(this.getClonedDate(selectedDateToShow), i2, setting.isGregorian);
       monthsTdHtml += this.getDateTimePickerMonthHtml(setting, true, false);
     }
+    // setting.selectedDateToShow = this.getClonedDate(selectedDateToShow);
 
     let totalMonthNumberToShow = Math.abs(numberOfPrevMonths) + 1 + numberOfNextMonths;
     let monthTdStyle = totalMonthNumberToShow > 1 ? 'width: ' + (100 / totalMonthNumberToShow).toString() + '%;' : '';

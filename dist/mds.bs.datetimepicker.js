@@ -1750,19 +1750,21 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year >= selectedDateTimeToShowJson.year && disableBeforeDateTimeJson.month > selectedDateTimeToShowJson.month)
                 selectedDateToShow = setting.isGregorian ? new Date(disableBeforeDateTimeJson.year, disableBeforeDateTimeJson.month - 1, 1) : this.getDateTime1(disableBeforeDateTimeJson.year, disableBeforeDateTimeJson.month, disableBeforeDateTimeJson.day);
             var monthsTdHtml = '';
+            // let tempSelectedDateToShow = this.getClonedDate(selectedDateToShow);
             var numberOfNextMonths = setting.rangeSelectorMonthsToShow[1] <= 0 ? 0 : setting.rangeSelectorMonthsToShow[1];
             var numberOfPrevMonths = setting.rangeSelectorMonthsToShow[0] <= 0 ? 0 : setting.rangeSelectorMonthsToShow[0];
             numberOfPrevMonths *= -1;
             for (var i1 = numberOfPrevMonths; i1 < 0; i1++) {
-                setting.selectedDateToShow = this.addMonthToDateTime(this.getClonedDate(selectedDateToShow), i1, false);
+                setting.selectedDateToShow = this.addMonthToDateTime(this.getClonedDate(selectedDateToShow), i1, setting.isGregorian);
                 monthsTdHtml += this.getDateTimePickerMonthHtml(setting, false, true);
             }
             setting.selectedDateToShow = this.getClonedDate(selectedDateToShow);
             monthsTdHtml += this.getDateTimePickerMonthHtml(setting, false, false);
             for (var i2 = 1; i2 <= numberOfNextMonths; i2++) {
-                setting.selectedDateToShow = this.addMonthToDateTime(this.getClonedDate(selectedDateToShow), i2, false);
+                setting.selectedDateToShow = this.addMonthToDateTime(this.getClonedDate(selectedDateToShow), i2, setting.isGregorian);
                 monthsTdHtml += this.getDateTimePickerMonthHtml(setting, true, false);
             }
+            // setting.selectedDateToShow = this.getClonedDate(selectedDateToShow);
             var totalMonthNumberToShow = Math.abs(numberOfPrevMonths) + 1 + numberOfNextMonths;
             var monthTdStyle = totalMonthNumberToShow > 1 ? 'width: ' + (100 / totalMonthNumberToShow).toString() + '%;' : '';
             monthsTdHtml = monthsTdHtml.replace(/\{\{monthTdStyle\}\}/img, monthTdStyle);
