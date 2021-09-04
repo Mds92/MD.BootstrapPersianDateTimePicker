@@ -278,3 +278,12 @@
 .mds-bs-persian-datetime-picker-modal * {
   font-size: 24px !important;
 }
+
+/*
+عنوان مدال نمایش تقویم
+*/
+[data-mds-dtp] .modal-title{
+  line-height: 0.5;
+  width: 100%;
+  text-align: center;
+}

@@ -183,9 +183,13 @@ export class MdsPersianDateTimePicker {
   // #region Template
 
   private modalHtmlTemplate = `
-<div class="modal fade mds-bs-persian-datetime-picker-modal" tabindex="-1" role="dialog" aria-labelledby="mdDateTimePickerModalLabel" aria-hidden="true" data-mds-dtp>
-  <div class="modal-dialog modal-dialog-centered" data-button-selector>
+<div data-mds-dtp class="modal fade mds-bs-persian-datetime-picker-modal" tabindex="-1" role="dialog" aria-hidden="true" 
+  data-mds-dtp-guid="{{guid}}">
+  <div class="modal-dialog modal-dialog-centered" data-button-selector>    
     <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" mds-dtp-title="true">Modal title</h5>
+      </div>
       <div class="modal-body" data-name="mds-dtp-body">
         MD DateTimePicker Html
       </div>
@@ -467,10 +471,9 @@ data-bs-toggle="dropdown" aria-expanded="false">
     setTimeout(() => {
       this.dispose();
       const title = this.getPopoverHeaderTitle(setting);
-      // مدال مد اضافه شود
-      let html = this.getDateTimePickerBodyHtml(setting);
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = html;
+      let datePickerBodyHtml = this.getDateTimePickerBodyHtml(setting);
+      let tempDiv = document.createElement('div');
+      tempDiv.innerHTML = datePickerBodyHtml;
       const dropDowns = tempDiv.querySelectorAll('.dropdown>button');
       dropDowns.forEach(e => {
         if (setting.disabled) {
@@ -482,15 +485,30 @@ data-bs-toggle="dropdown" aria-expanded="false">
           e.classList.remove('disabled');
         }
       });
-      html = tempDiv.innerHTML;
-      if (setting.inLine == true) {
+      datePickerBodyHtml = tempDiv.innerHTML;
+      if (setting.modalMode == true) {
+        const prevModalElement = this.getModal();
+        if (prevModalElement == null) {
+          let modalHtml = this.modalHtmlTemplate;
+          modalHtml = modalHtml.replace(/\{\{guid\}\}/img, this.guid);
+          tempDiv = document.createElement('div');
+          tempDiv.innerHTML = modalHtml;
+          tempDiv.querySelector('[data-name="mds-dtp-body"]').innerHTML = datePickerBodyHtml;
+          document.querySelector('body').appendChild(tempDiv);
+        }
         this.bsPopover = null;
-        this.element.innerHTML = html;
+        setTimeout(() => {
+          this.bsModal = new Modal(this.getModal());
+          this.enableMainEvents();
+        }, 200);
+      } else if (setting.inLine == true) {
+        this.bsPopover = null;
+        this.element.innerHTML = datePickerBodyHtml;
         this.enableInLineEvents();
       } else {
         this.bsPopover = new Popover(this.element, {
           container: 'body',
-          content: html,
+          content: datePickerBodyHtml,
           title: title,
           html: true,
           placement: setting.placement,
@@ -956,6 +974,9 @@ data-bs-toggle="dropdown" aria-expanded="false">
     if (popoverId == undefined || popoverId == '')
       return element.closest('[data-mds-dtp]');
     return document.getElementById(popoverId.toString());
+  }
+  private getModal(): Element {
+    return document.querySelector(`.modal[data-mds-dtp-guid="${this.guid}"]`);
   }
   private getYearsBoxBodyHtml(setting: MdsPersianDateTimePickerSetting, yearToStart: number): MdsPersianDateTimePickerYearToSelect {
     // بدست آوردن اچ تی ام ال انتخاب سال
@@ -1558,7 +1579,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   }
   private setPopoverHeaderHtml = (element: Element, isInLine: boolean, htmlString: string): void => {
     // element = المانی که روی آن فعالیتی انجام شده و باید عنوان تقویم آن عوض شود    
-    if (!isInLine) {
+    if (this.bsPopover != null) {
       const popoverElement = this.getPopover(element);
       popoverElement.querySelector('[mds-dtp-title]').innerHTML = htmlString;
     } else {
@@ -1856,10 +1877,16 @@ data-bs-toggle="dropdown" aria-expanded="false">
   }
   private enableMainEvents(): void {
     if (this.setting.inLine) return;
-    this.element.addEventListener('shown.bs.popover', this.popoverShownEvent);
-    this.element.addEventListener('hidden.bs.popover', this.popoverHiddenEvent);
-    this.element.addEventListener('inserted.bs.popover', this.popoverInsertedEvent);
-    this.element.addEventListener('click', this.showPopoverEvent, true);
+    if (this.bsPopover != null) {
+      this.element.addEventListener('shown.bs.popover', this.popoverOrModalShownEvent);
+      this.element.addEventListener('hidden.bs.popover', this.popoverOrModalHiddenEvent);
+      this.element.addEventListener('inserted.bs.popover', this.popoverInsertedEvent);
+      this.element.addEventListener('click', this.showPopoverEvent, true);
+    } else if (this.bsModal != null) {
+      const modalElement = this.getModal();
+      modalElement.addEventListener('shown.bs.modal', this.popoverOrModalShownEvent);
+      modalElement.addEventListener('hidden.bs.modal', this.popoverOrModalHiddenEvent);
+    }
   }
   private popoverInsertedEvent = (e: CustomEvent): void => {
     const element = <Element>e.target;
@@ -1867,17 +1894,17 @@ data-bs-toggle="dropdown" aria-expanded="false">
     const setting = instance.setting;
     this.hideYearsBox(element, setting);
   }
-  private popoverShownEvent = (): void => {
+  private popoverOrModalShownEvent = (): void => {
     this.enableEvents();
   }
-  private popoverHiddenEvent = (e: CustomEvent): void => {
+  private popoverOrModalHiddenEvent = (e: CustomEvent): void => {
     this.disableEvents();
   }
   private enableInLineEvents(): void {
     if (!this.setting.inLine) return;
     setTimeout(() => {
       const dtp = document.querySelector(`[data-mds-dtp-guid="${this.guid}"]`);
-      dtp.querySelector('[data-mds-dtp-time]').addEventListener('change', this.timeChanged, false);
+      dtp.querySelector('[data-mds-dtp-time]')?.addEventListener('change', this.timeChanged, false);
       dtp.addEventListener('click', this.selectCorrectClickEvent);
       dtp.querySelectorAll('[data-day]').forEach(e => e.addEventListener('mouseenter', this.hoverOnDays, true));
     }, 100);
@@ -1894,7 +1921,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private disableEvents(): void {
     document.removeEventListener('click', this.selectCorrectClickEvent);
     document.querySelector('html').removeEventListener('click', this.hidePopoverEvent);
-    document.querySelectorAll('[data-mds-dtp-time]').forEach(e => e.removeEventListener('change', this.timeChanged));
+    document.querySelectorAll('[data-mds-dtp-time]')?.forEach(e => e.removeEventListener('change', this.timeChanged));
     document.querySelectorAll('[data-mds-dtp] [data-day]').forEach(e => e.removeEventListener('mouseenter', this.hoverOnDays));
     const dtp = document.querySelector(`[data-mds-dtp-guid="${this.guid}"]`);
     if (dtp != null) {
@@ -1928,10 +1955,16 @@ data-bs-toggle="dropdown" aria-expanded="false">
     if (instance.setting.disabled) return;
     instance.show();
   }
+  private showModalEvent = (e: PointerEvent): void => {
+    const element = <Element>e.target;
+    const instance = MdsPersianDateTimePicker.getInstance(element);
+    if (instance.setting.disabled) return;
+    instance.show();
+  }
   private hidePopoverEvent = (e: PointerEvent): void => {
     const element = <Element>e.target;
     if (element.tagName == 'HTML') {
-      MdsPersianDateTimePickerData.getAll().forEach(i => i.hide());
+      MdsPersianDateTimePickerData.getAll().forEach(i => !i.setting.modalMode ? i.hide() : () => { });
       return;
     }
     const isWithinDatePicker = element.closest('[data-mds-dtp]') != null || element.getAttribute('data-mds-dtp-guid') != null || element.getAttribute('data-mds-dtp-go-today') != null;
@@ -2014,7 +2047,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
    * دریافت اینستنس مدال بوت استرپ
    * در صورتی که آپشن modalMode را صحیح کرده باشید
    */
-   getBsModalInstance(): Modal {
+  getBsModalInstance(): Modal {
     return this.bsModal;
   }
   /**

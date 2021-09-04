@@ -9,6 +9,7 @@ const fromToDateTitleElements = document.querySelectorAll('[data-name="from-to-d
 const textFormatElement = document.querySelector('[data-name="text-format"]');
 const dateFormatElement = document.querySelector('[data-name="date-format"]');
 
+const inLineRadioOptions = document.querySelectorAll('input[name="inLineRadioOptions"]');
 const rangeSelectorRadioOptions = document.querySelectorAll('input[name="rangeSelectorRadioOptions"]');
 const rangeSelectorMonthsToShowStartInputElements = document.querySelector('[data-name="rangeSelectorMonthsToShow-start"]');
 const rangeSelectorMonthsToShowEndInputElements = document.querySelector('[data-name="rangeSelectorMonthsToShow-end"]');
@@ -65,6 +66,14 @@ function optionOnChange(optionName, value) {
           inLine = false;
           break;
       }
+      break;
+    }
+
+    case 'modalMode': {
+      normalDtpContainer.hidden = false;
+      inLineDtpContainer.hidden = true;
+      inLineRadioOptions.forEach(e => e.checked = e.value == 'false');
+      inLine = false;
       break;
     }
 
@@ -179,6 +188,11 @@ function optionOnChange(optionName, value) {
       break;
 
     case 'inLine':
+      break;
+
+    case 'modalMode':
+      dtp1.updateOption(optionName, value);
+      dtp2.updateOption(optionName, value);
       break;
 
     case 'disabled':
