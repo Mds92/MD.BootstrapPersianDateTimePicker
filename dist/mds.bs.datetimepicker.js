@@ -74,12 +74,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             var _this = this;
             //#endregion jalali calendar
             // #region Template
-            this.modalHtmlTemplate = "\n<div data-mds-dtp class=\"modal fade mds-bs-persian-datetime-picker-modal\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\" \n  data-mds-dtp-guid=\"{{guid}}\">\n  <div class=\"modal-dialog modal-dialog-centered\" data-button-selector>    \n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <h5 class=\"modal-title\" mds-dtp-title=\"true\">Modal title</h5>\n      </div>\n      <div class=\"modal-body\" data-name=\"mds-dtp-body\">\n        MD DateTimePicker Html\n      </div>\n    </div>\n  </div>\n</div>\n  ";
-            this.popoverHtmlTemplate = "<div class=\"popover mds-bs-persian-datetime-picker-popover\" role=\"tooltip\" data-mds-dtp>\n<div class=\"popover-arrow\"></div>\n<h3 class=\"popover-header text-center p-1\" mds-dtp-title=\"true\"></h3>\n<div class=\"popover-body p-0\" data-name=\"mds-dtp-body\"></div>\n</div>";
-            this.popoverHeaderSelectYearHtmlTemplate = "<table class=\"table table-sm table-borderless text-center p-0 m-0 {{rtlCssClass}}\" dir=\"{{dirAttrValue}}\">\n<tr>\n<th>\n<button type=\"button\" class=\"btn btn-sm btn-light\" title=\"{{previousText}}\" data-year=\"{{latestPreviousYear}}\" data-year-range-button-change=\"-1\" {{prevYearButtonAttr}}> &lt; </button>\n</th>\n<th class=\"pt-1\">\n{{yearsRangeText}}\n</th>\n<th>\n<button type=\"button\" class=\"btn btn-sm btn-light\" title=\"{{nextText}}\" data-year=\"{{latestNextYear}}\" data-year-range-button-change=\"1\" {{nextYearButtonAttr}}> &gt; </button>\n</th>\n</tr>\n</table>";
-            this.dateTimePickerYearsToSelectHtmlTemplate = "<table class=\"table table-sm text-center p-0 m-0\">\n<tbody>\n{{yearsBoxHtml}}\n<tr>\n<td colspan=\"100\" class=\"text-center\">\n<button class=\"btn btn-sm btn-light\" data-mds-hide-year-list-box=\"true\">{{cancelText}}</button>\n</td>\n</tr>\n</tbody>\n</table>";
+            this.modalHtmlTemplate = "<div data-mds-dtp data-mds-dtp-guid=\"{{guid}}\" class=\"modal fade mds-bs-persian-datetime-picker-modal\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\">\n<div class=\"modal-dialog\" data-button-selector>    \n<div class=\"modal-content\">\n<div class=\"modal-header\" data-mds-dtp-title=\"true\">\n<h5 class=\"modal-title\">Modal title</h5>\n</div>\n<div class=\"modal-body\">\n  <div class=\"select-year-box w-0\" data-mds-dtp-year-list-box=\"true\"></div>\n  <div data-name=\"mds-dtp-body\"></div>\n</div>\n</div>\n</div>\n</div>";
+            this.popoverHtmlTemplate = "<div class=\"popover mds-bs-persian-datetime-picker-popover\" role=\"tooltip\" data-mds-dtp>\n<div class=\"popover-arrow\"></div>\n<h3 class=\"popover-header text-center p-1\" data-mds-dtp-title=\"true\"></h3>\n<div class=\"popover-body p-0\" data-name=\"mds-dtp-body\"></div>\n</div>";
+            this.popoverHeaderSelectYearHtmlTemplate = "<table class=\"table table-sm table-borderless text-center p-0 m-0 {{rtlCssClass}}\" dir=\"{{dirAttrValue}}\">\n<tr>\n<th>\n<button type=\"button\" class=\"btn btn-sm btn-light w-100\" title=\"{{previousText}}\" data-year=\"{{latestPreviousYear}}\" data-year-range-button-change=\"-1\" {{prevYearButtonAttr}}> &lt; </button>\n</th>\n<th class=\"pt-1\">\n{{yearsRangeText}}\n</th>\n<th>\n<button type=\"button\" class=\"btn btn-sm btn-light w-100\" title=\"{{nextText}}\" data-year=\"{{latestNextYear}}\" data-year-range-button-change=\"1\" {{nextYearButtonAttr}}> &gt; </button>\n</th>\n</tr>\n</table>";
+            this.dateTimePickerYearsToSelectHtmlTemplate = "<table class=\"table table-sm text-center p-0 m-0\">\n<tbody>\n{{yearsBoxHtml}}\n<tr>\n<td colspan=\"100\" class=\"text-center\">\n<button class=\"btn btn-sm btn-light w-100\" data-mds-hide-year-list-box=\"true\">{{cancelText}}</button>\n</td>\n</tr>\n</tbody>\n</table>";
             this.dateTimePickerHtmlTemplate = "<div class=\"mds-bs-dtp-container {{rtlCssClass}}\" {{inlineAttr}}>\n<div class=\"select-year-inline-box w-0\" data-name=\"dtp-years-container\">\n</div>\n<div class=\"select-year-box w-0\" data-mds-dtp-year-list-box=\"true\"></div>\n<table class=\"table table-sm text-center p-0 m-0\">\n<thead>\n<tr {{selectedDateStringAttribute}}>\n<th mds-dtp-inline-header colspan=\"100\">{{dtpInlineHeader}}</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n{{monthsTdHtml}}\n</tr>\n</tbody>\n<tfoot>\n<tr {{timePickerAttribute}}>\n<td colspan=\"100\" class=\"text-center border-0\">\n<input type=\"time\" value=\"{{time}}\" maxlength=\"2\" data-mds-dtp-time />\n</td>\n</tr>\n<tr>\n<td colspan=\"100\">\n<button type=\"button\" class=\"btn btn-light\" title=\"{{goTodayText}}\" data-mds-dtp-go-today>{{todayDateString}}</button>\n</td>\n</tr>\n</tfoot>\n</table>\n</div>";
-            this.dateTimePickerMonthTableHtmlTemplate = "<td class=\"border-0\" style=\"{{monthTdStyle}}\" {{monthTdAttribute}} data-td-month>\n<table class=\"table table-sm table-striped table-borderless\">\n<thead>\n<tr {{monthNameAttribute}}>\n<th colspan=\"100\" class=\"border-0\">\n<table class=\"table table-sm table-borderless\">\n<thead>\n<tr>\n<th>\n<button type=\"button\" class=\"btn btn-light\"> {{currentMonthInfo}} </button>\n</th>\n</tr>\n</thead>\n</table>\n</th>\n</tr>\n<tr {{theadSelectDateButtonTrAttribute}}>\n<td colspan=\"100\" class=\"border-0\">\n<table class=\"table table-sm table-borderless\">\n<tr>\n<th>\n<button type=\"button\" class=\"btn btn-light btn-sm\" title=\"{{previousYearText}}\" data-change-date-button=\"true\" data-number=\"{{previousYearButtonDateNumber}}\" {{previousYearButtonDisabledAttribute}}> &lt;&lt; </button>\n</th>\n<th>\n<button type=\"button\" class=\"btn btn-light btn-sm\" title=\"{{previousMonthText}}\" data-change-date-button=\"true\" data-number=\"{{previousMonthButtonDateNumber}}\" {{previousMonthButtonDisabledAttribute}}> &lt; </button>\n</th>\n<th style=\"width: 120px;\">\n<div class=\"dropdown\">\n<button type=\"button\" class=\"btn btn-light btn-sm dropdown-toggle\" id=\"mdtp-month-selector-button-{{guid}}\"\ndata-bs-toggle=\"dropdown\" aria-expanded=\"false\">\n{{selectedMonthName}}\n</button>\n<div class=\"dropdown-menu\" aria-labelledby=\"mdtp-month-selector-button-{{guid}}\">\n<a class=\"dropdown-item {{selectMonth1ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth1DateNumber}}\">{{monthName1}}</a>\n<a class=\"dropdown-item {{selectMonth2ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth2DateNumber}}\">{{monthName2}}</a>\n<a class=\"dropdown-item {{selectMonth3ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth3DateNumber}}\">{{monthName3}}</a>\n<div class=\"dropdown-divider\"></div>\n<a class=\"dropdown-item {{selectMonth4ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth4DateNumber}}\">{{monthName4}}</a>\n<a class=\"dropdown-item {{selectMonth5ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth5DateNumber}}\">{{monthName5}}</a>\n<a class=\"dropdown-item {{selectMonth6ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth6DateNumber}}\">{{monthName6}}</a>\n<div class=\"dropdown-divider\"></div>\n<a class=\"dropdown-item {{selectMonth7ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth7DateNumber}}\">{{monthName7}}</a>\n<a class=\"dropdown-item {{selectMonth8ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth8DateNumber}}\">{{monthName8}}</a>\n<a class=\"dropdown-item {{selectMonth9ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth9DateNumber}}\">{{monthName9}}</a>\n<div class=\"dropdown-divider\"></div>\n<a class=\"dropdown-item {{selectMonth10ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth10DateNumber}}\">{{monthName10}}</a>\n<a class=\"dropdown-item {{selectMonth11ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth11DateNumber}}\">{{monthName11}}</a>\n<a class=\"dropdown-item {{selectMonth12ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth12DateNumber}}\">{{monthName12}}</a>\n</div>\n</div>\n</th>\n<th style=\"width: 50px;\">\n<button type=\"button\" class=\"btn btn-light btn-sm\" mds-pdtp-select-year-button {{selectYearButtonDisabledAttribute}}>{{selectedYear}}</button>\n</th>\n<th>\n<button type=\"button\" class=\"btn btn-light btn-sm\" title=\"{{nextMonthText}}\" data-change-date-button=\"true\" data-number=\"{{nextMonthButtonDateNumber}}\" {{nextMonthButtonDisabledAttribute}}> &gt; </button>\n</th>\n<th>\n<button type=\"button\" class=\"btn btn-light btn-sm\" title=\"{{nextYearText}}\" data-change-date-button=\"true\" data-number=\"{{nextYearButtonDateNumber}}\" {{nextYearButtonDisabledAttribute}}> &gt;&gt; </button>\n</th>\n</tr>\n</table>\n</td>\n</tr>\n</thead>\n<tbody class=\"days\">\n<tr>\n<td class=\"{{weekDayShortName1CssClass}}\">{{weekDayShortName1}}</td>\n<td>{{weekDayShortName2}}</td>\n<td>{{weekDayShortName3}}</td>\n<td>{{weekDayShortName4}}</td>\n<td>{{weekDayShortName5}}</td>\n<td>{{weekDayShortName6}}</td>\n<td class=\"{{weekDayShortName7CssClass}}\">{{weekDayShortName7}}</td>\n</tr>\n{{daysHtml}}\n</tbody>\n</table>\n</td>";
+            this.dateTimePickerMonthTableHtmlTemplate = "<td class=\"border-0\" style=\"{{monthTdStyle}}\" {{monthTdAttribute}} data-td-month>\n<table class=\"table table-sm table-striped table-borderless\">\n<thead>\n<tr {{monthNameAttribute}}>\n<th colspan=\"100\" class=\"border-0\">\n<table class=\"table table-sm table-borderless\">\n<thead>\n<tr>\n<th>\n<button type=\"button\" class=\"btn btn-light\"> {{currentMonthInfo}} </button>\n</th>\n</tr>\n</thead>\n</table>\n</th>\n</tr>\n<tr {{theadSelectDateButtonTrAttribute}}>\n<td colspan=\"100\" class=\"border-0\">\n<table class=\"table table-sm table-borderless\">\n<tr>\n<th>\n<button type=\"button\" class=\"btn btn-light btn-sm w-100\" title=\"{{previousYearText}}\" data-change-date-button=\"true\" data-number=\"{{previousYearButtonDateNumber}}\" {{previousYearButtonDisabledAttribute}}> &lt;&lt; </button>\n</th>\n<th>\n<button type=\"button\" class=\"btn btn-light btn-sm w-100\" title=\"{{previousMonthText}}\" data-change-date-button=\"true\" data-number=\"{{previousMonthButtonDateNumber}}\" {{previousMonthButtonDisabledAttribute}}> &lt; </button>\n</th>\n<th style=\"width: 120px;\">\n<div class=\"dropdown\">\n<button type=\"button\" class=\"btn btn-light btn-sm dropdown-toggle w-100\" id=\"mdtp-month-selector-button-{{guid}}\"\ndata-bs-toggle=\"dropdown\" aria-expanded=\"false\">\n{{selectedMonthName}}\n</button>\n<div class=\"dropdown-menu\" aria-labelledby=\"mdtp-month-selector-button-{{guid}}\">\n<a class=\"dropdown-item {{selectMonth1ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth1DateNumber}}\">{{monthName1}}</a>\n<a class=\"dropdown-item {{selectMonth2ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth2DateNumber}}\">{{monthName2}}</a>\n<a class=\"dropdown-item {{selectMonth3ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth3DateNumber}}\">{{monthName3}}</a>\n<div class=\"dropdown-divider\"></div>\n<a class=\"dropdown-item {{selectMonth4ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth4DateNumber}}\">{{monthName4}}</a>\n<a class=\"dropdown-item {{selectMonth5ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth5DateNumber}}\">{{monthName5}}</a>\n<a class=\"dropdown-item {{selectMonth6ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth6DateNumber}}\">{{monthName6}}</a>\n<div class=\"dropdown-divider\"></div>\n<a class=\"dropdown-item {{selectMonth7ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth7DateNumber}}\">{{monthName7}}</a>\n<a class=\"dropdown-item {{selectMonth8ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth8DateNumber}}\">{{monthName8}}</a>\n<a class=\"dropdown-item {{selectMonth9ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth9DateNumber}}\">{{monthName9}}</a>\n<div class=\"dropdown-divider\"></div>\n<a class=\"dropdown-item {{selectMonth10ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth10DateNumber}}\">{{monthName10}}</a>\n<a class=\"dropdown-item {{selectMonth11ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth11DateNumber}}\">{{monthName11}}</a>\n<a class=\"dropdown-item {{selectMonth12ButtonCssClass}}\" data-change-date-button=\"true\" data-number=\"{{dropDownMenuMonth12DateNumber}}\">{{monthName12}}</a>\n</div>\n</div>\n</th>\n<th style=\"width: 50px;\">\n<button type=\"button\" class=\"btn btn-light btn-sm w-100\" mds-pdtp-select-year-button {{selectYearButtonDisabledAttribute}}>{{selectedYear}}</button>\n</th>\n<th>\n<button type=\"button\" class=\"btn btn-light btn-sm w-100\" title=\"{{nextMonthText}}\" data-change-date-button=\"true\" data-number=\"{{nextMonthButtonDateNumber}}\" {{nextMonthButtonDisabledAttribute}}> &gt; </button>\n</th>\n<th>\n<button type=\"button\" class=\"btn btn-light btn-sm w-100\" title=\"{{nextYearText}}\" data-change-date-button=\"true\" data-number=\"{{nextYearButtonDateNumber}}\" {{nextYearButtonDisabledAttribute}}> &gt;&gt; </button>\n</th>\n</tr>\n</table>\n</td>\n</tr>\n</thead>\n<tbody class=\"days\">\n<tr>\n<td class=\"{{weekDayShortName1CssClass}}\">{{weekDayShortName1}}</td>\n<td>{{weekDayShortName2}}</td>\n<td>{{weekDayShortName3}}</td>\n<td>{{weekDayShortName4}}</td>\n<td>{{weekDayShortName5}}</td>\n<td>{{weekDayShortName6}}</td>\n<td class=\"{{weekDayShortName7CssClass}}\">{{weekDayShortName7}}</td>\n</tr>\n{{daysHtml}}\n</tbody>\n</table>\n</td>";
             this.previousYearTextPersian = 'سال قبل';
             this.previousMonthTextPersian = 'ماه قبل';
             this.previousTextPersian = 'قبلی';
@@ -183,9 +183,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                     dtpInLine.classList.remove('overflow-hidden');
                 }
                 else {
-                    if (_this.tempTitleString)
-                        _this.getPopover(document.querySelector("[data-mds-dtp-guid=\"" + _this.guid + "\"]")).querySelector('[mds-dtp-title]').innerHTML = _this.tempTitleString;
-                    var yearListBox = _this.getPopover(_this.element).querySelector('[data-mds-dtp-year-list-box]');
+                    var popoverOrModalElement = setting.modalMode ? _this.getModal() : _this.getPopover(element);
+                    if (_this.tempTitleString) {
+                        if (setting.modalMode)
+                            popoverOrModalElement.querySelector('[data-mds-dtp-title] .modal-title').innerHTML = _this.tempTitleString;
+                        else {
+                            popoverOrModalElement.querySelector('[data-mds-dtp-title]').innerHTML = _this.tempTitleString;
+                        }
+                        popoverOrModalElement.querySelector('[data-name="mds-dtp-body"]').removeAttribute('hidden');
+                    }
+                    var yearListBox = popoverOrModalElement.querySelector('[data-mds-dtp-year-list-box]');
                     yearListBox.classList.add('w-0');
                     yearListBox.innerHTML = '';
                 }
@@ -193,21 +200,22 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             this.showYearsBox = function (element) {
                 var instance = MdsPersianDateTimePicker.getInstance(element);
                 var setting = instance.setting;
+                var mdDatePickerContainer = setting.inLine ? element.closest('[data-mds-dtp-guid]') : element.closest('[data-mds-dtp]');
                 _this.tempTitleString = setting.inLine
-                    ? document.querySelector('[mds-dtp-inline-header]').textContent.trim()
-                    : document.querySelector('[data-mds-dtp]').querySelector('[mds-dtp-title]').textContent.trim();
+                    ? mdDatePickerContainer.querySelector('[mds-dtp-inline-header]').textContent.trim()
+                    : mdDatePickerContainer.querySelector('[data-mds-dtp-title]').textContent.trim();
                 var yearsToSelectObject = _this.getYearsBoxBodyHtml(setting, 0);
                 var dateTimePickerYearsToSelectHtml = yearsToSelectObject.html;
-                var mdDatePickerContainerSelector = setting.inLine
-                    ? element.closest('[data-mds-dtp-guid]')
-                    : element.closest('[data-mds-dtp]');
-                var dateTimePickerYearsToSelectContainer = mdDatePickerContainerSelector.querySelector('[data-mds-dtp-year-list-box]');
-                _this.setPopoverHeaderHtml(element, setting.inLine, _this.getYearsBoxHeaderHtml(setting, yearsToSelectObject.yearStart, yearsToSelectObject.yearEnd));
+                var dateTimePickerYearsToSelectContainer = mdDatePickerContainer.querySelector('[data-mds-dtp-year-list-box]');
+                _this.setPopoverHeaderHtml(element, setting, _this.getYearsBoxHeaderHtml(setting, yearsToSelectObject.yearStart, yearsToSelectObject.yearEnd));
                 dateTimePickerYearsToSelectContainer.innerHTML = dateTimePickerYearsToSelectHtml;
                 dateTimePickerYearsToSelectContainer.classList.remove('w-0');
                 if (setting.inLine) {
-                    mdDatePickerContainerSelector.classList.add('overflow-hidden');
+                    mdDatePickerContainer.classList.add('overflow-hidden');
                     dateTimePickerYearsToSelectContainer.classList.add('inline');
+                }
+                else if (setting.modalMode) {
+                    mdDatePickerContainer.querySelector('[data-name="mds-dtp-body"]').setAttribute('hidden', '');
                 }
                 else {
                     dateTimePickerYearsToSelectContainer.classList.remove('inline');
@@ -224,29 +232,37 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                     element.closest('[data-mds-dtp-guid]').querySelector('[data-mds-dtp-year-list-box]').innerHTML = yearsToSelectObject.html;
                 else
                     element.closest('[data-mds-dtp]').querySelector('[data-mds-dtp-year-list-box]').innerHTML = yearsToSelectObject.html;
-                _this.setPopoverHeaderHtml(element, setting.inLine, _this.getYearsBoxHeaderHtml(setting, yearsToSelectObject.yearStart, yearsToSelectObject.yearEnd));
+                _this.setPopoverHeaderHtml(element, setting, _this.getYearsBoxHeaderHtml(setting, yearsToSelectObject.yearStart, yearsToSelectObject.yearEnd));
             };
-            this.setPopoverHeaderHtml = function (element, isInLine, htmlString) {
+            this.setPopoverHeaderHtml = function (element, setting, htmlString) {
                 // element = المانی که روی آن فعالیتی انجام شده و باید عنوان تقویم آن عوض شود    
                 if (_this.bsPopover != null) {
                     var popoverElement = _this.getPopover(element);
-                    popoverElement.querySelector('[mds-dtp-title]').innerHTML = htmlString;
+                    popoverElement.querySelector('[data-mds-dtp-title]').innerHTML = htmlString;
                 }
-                else {
+                else if (setting.inLine) {
                     var inlineTitleBox = element.closest('[data-mds-dtp-guid]').querySelector('[data-name="dtp-years-container"]');
                     inlineTitleBox.innerHTML = htmlString;
                     inlineTitleBox.classList.remove('w-0');
                 }
+                else if (setting.modalMode) {
+                    var inlineTitleBox = element.closest('[data-mds-dtp-guid]').querySelector('[data-mds-dtp-title] .modal-title');
+                    inlineTitleBox.innerHTML = htmlString;
+                }
             };
             this.updateCalendarBodyHtml = function (element, setting) {
                 var calendarHtml = _this.getDateTimePickerBodyHtml(setting);
-                var containerElement = !setting.inLine
-                    ? element.closest('[data-name="mds-dtp-body"]')
-                    : element.closest('[data-mds-dtp-guid]');
+                var containerElement = element.closest('[data-name="mds-dtp-body"]');
+                if (containerElement == null) {
+                    containerElement = element.closest('[data-mds-dtp-guid]');
+                    if (setting.modalMode)
+                        containerElement = containerElement.querySelector('[data-name="mds-dtp-body"]');
+                }
                 var dtpInlineHeader = calendarHtml.match(/<th mds-dtp-inline-header\b[^>]*>(.*?)<\/th>/img)[0];
                 _this.tempTitleString = dtpInlineHeader;
-                _this.setPopoverHeaderHtml(element, setting.inLine, dtpInlineHeader.trim());
+                _this.setPopoverHeaderHtml(element, setting, dtpInlineHeader.trim());
                 containerElement.innerHTML = calendarHtml;
+                _this.hideYearsBox(element, setting);
                 _this.enableEvents();
                 _this.enableInLineEvents();
             };
@@ -739,6 +755,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                         modalHtml = modalHtml.replace(/\{\{guid\}\}/img, _this.guid);
                         tempDiv = document.createElement('div');
                         tempDiv.innerHTML = modalHtml;
+                        tempDiv.querySelector('[data-mds-dtp-title] .modal-title').innerHTML = title;
                         tempDiv.querySelector('[data-name="mds-dtp-body"]').innerHTML = datePickerBodyHtml;
                         document.querySelector('body').appendChild(tempDiv);
                     }
@@ -1295,7 +1312,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                     currentYearDisabledAttr = 'disabled';
                 if (counter == 1)
                     yearsBoxHtml += '<tr>';
-                yearsBoxHtml += "\n<td class=\"text-center\" title=\"" + selectedYearTitle + "\" " + todayAttr + " " + selectedYearAttr + ">\n  <button class=\"btn btn-sm btn-light\" type=\"button\" data-change-date-button=\"true\" data-number=\"" + yearDateNumber + "\" " + currentYearDisabledAttr + " " + disabledAttr + ">" + yearText + "</button>\n</td>\n";
+                yearsBoxHtml += "\n<td class=\"text-center\" title=\"" + selectedYearTitle + "\" " + todayAttr + " " + selectedYearAttr + ">\n  <button class=\"btn btn-sm btn-light w-100\" type=\"button\" data-change-date-button=\"true\" data-number=\"" + yearDateNumber + "\" " + currentYearDisabledAttr + " " + disabledAttr + ">" + yearText + "</button>\n</td>\n";
                 if (counter == 5)
                     yearsBoxHtml += '</tr>';
                 counter++;
