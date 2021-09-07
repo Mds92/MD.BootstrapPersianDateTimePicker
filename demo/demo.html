@@ -9,6 +9,7 @@
   <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="../src/mds.bs.datetimepicker.style.css" />
   <script src="../dist/mds.bs.datetimepicker.js" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
   <link rel="stylesheet" href="demo.css" />
 </head>
 
@@ -16,7 +17,7 @@
   <div class="container-fluid">
     <h1 class="h2">MD BootstrapPersianDateTimePicker Demo</h1>
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-4" id="vueAppOptions">
         <div class="container-fluid bg-white">
           <div class="row">
             <div class="col-12">
@@ -80,13 +81,14 @@
                 <label class="col-5 col-form-label">modalMode</label>
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="modalModeRadioOptions" id="modalModeRadioOptionsId1"
-                      value="true" onchange="optionOnChange('modalMode', this.value)">
+                    <input class="form-check-input" type="radio" name="modalModeRadioOptions"
+                      id="modalModeRadioOptionsId1" value="true" onchange="optionOnChange('modalMode', this.value)">
                     <label class="form-check-label" for="modalModeRadioOptionsId1">true</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="modalModeRadioOptions" id="modalModeRadioOptionsId2"
-                      value="false" onchange="optionOnChange('modalMode', this.value)" checked>
+                    <input class="form-check-input" type="radio" name="modalModeRadioOptions"
+                      id="modalModeRadioOptionsId2" value="false" onchange="optionOnChange('modalMode', this.value)"
+                      checked>
                     <label class="form-check-label" for="modalModeRadioOptionsId2">false</label>
                   </div>
                 </div>
@@ -116,13 +118,13 @@
                 <label class="col-5 col-form-label">toDate, fromDate</label>
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="toDateFromDateRadioOptions" id="toDateRadioOptionsId1"
-                      value="true" onchange="optionOnChange('toDate', this.value)">
+                    <input class="form-check-input" type="radio" name="toDateFromDateRadioOptions"
+                      id="toDateRadioOptionsId1" value="true" onchange="optionOnChange('toDate', this.value)">
                     <label class="form-check-label" for="toDateRadioOptionsId1">true</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="toDateFromDateRadioOptions" id="toDateRadioOptionsId2"
-                      value="false" onchange="optionOnChange('toDate', this.value)" checked>
+                    <input class="form-check-input" type="radio" name="toDateFromDateRadioOptions"
+                      id="toDateRadioOptionsId2" value="false" onchange="optionOnChange('toDate', this.value)" checked>
                     <label class="form-check-label" for="toDateRadioOptionsId2">false</label>
                   </div>
                 </div>
@@ -218,12 +220,72 @@
                 </div>
               </div>
               <hr>
+              <!-- holidays -->
+              <div class="row">
+                <label class="col-5 col-form-label">holidays</label>
+                <div class="col-7 pt-2">
+                  <div v-for="(date, index) in holidays" :key="index">
+                    <input class="form-control form-control-sm" type="text" v-model="holidays[index]"
+                      v-on:change="dateChange('holidays', $event)" />
+                  </div>
+                  <button class="btn btn-sm btn-primary" type="button" v-on:click="addItem('holidays')"> + </button>
+                  &nbsp;
+                  <button class="btn btn-sm btn-danger" type="button" v-on:click="removeItem('holidays')"> - </button>
+                </div>
+              </div>
+              <hr>
+              <!-- specialDates -->
+              <div class="row">
+                <label class="col-5 col-form-label">specialDates</label>
+                <div class="col-7 pt-2">
+                  <div v-for="(date, index) in specialDates" :key="index">
+                    <input class="form-control form-control-sm" type="text" v-model="specialDates[index]"
+                      v-on:change="dateChange('specialDates', $event)" />
+                  </div>
+                  <button class="btn btn-sm btn-primary" type="button" v-on:click="addItem('specialDates')"> + </button>
+                  &nbsp;
+                  <button class="btn btn-sm btn-danger" type="button" v-on:click="removeItem('specialDates')"> -
+                  </button>
+                </div>
+              </div>
+              <hr>
+              <!-- disabledDates -->
+              <div class="row">
+                <label class="col-5 col-form-label">disabledDates</label>
+                <div class="col-7 pt-2">
+                  <div v-for="(date, index) in disabledDates" :key="index">
+                    <input class="form-control form-control-sm" type="text" v-model="disabledDates[index]"
+                      v-on:change="dateChange('disabledDates', $event)" />
+                  </div>
+                  <button class="btn btn-sm btn-primary" type="button" v-on:click="addItem('disabledDates')"> +
+                  </button>
+                  &nbsp;
+                  <button class="btn btn-sm btn-danger" type="button" v-on:click="removeItem('disabledDates')"> -
+                  </button>
+                </div>
+              </div>
+              <hr>
+              <!-- disabledDays -->
+              <div class="row">
+                <label class="col-5 col-form-label">disabledDays</label>
+                <div class="col-7 pt-2">
+                  <div v-for="(date, index) in disabledDays" :key="index">
+                    <input class="form-control form-control-sm" type="text" v-model="disabledDays[index]"
+                      v-on:change="dateChange('disabledDays', $event)" />
+                  </div>
+                  <button class="btn btn-sm btn-primary" type="button" v-on:click="addItem('disabledDays')"> + </button>
+                  &nbsp;
+                  <button class="btn btn-sm btn-danger" type="button" v-on:click="removeItem('disabledDays')"> -
+                  </button>
+                </div>
+              </div>
+              <hr>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-8 mt-5">
-        <div class="container-fluid mt-5">
+      <div class="col-md-8" style="margin-top: 150px;">
+        <div class="container-fluid">
           <div class="row">
             <!-- Normal -->
             <div class="col-12" data-name="normal-dtp-container">

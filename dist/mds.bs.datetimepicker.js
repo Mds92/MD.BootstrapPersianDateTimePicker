@@ -524,13 +524,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                     return;
                 instance.show();
             };
-            this.showModalEvent = function (e) {
-                var element = e.target;
-                var instance = MdsPersianDateTimePicker.getInstance(element);
-                if (instance.setting.disabled)
-                    return;
-                instance.show();
-            };
             this.hidePopoverEvent = function (e) {
                 var element = e.target;
                 if (element.tagName == 'HTML') {
@@ -541,6 +534,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 if (!isWithinDatePicker) {
                     MdsPersianDateTimePickerData.getAll().forEach(function (i) { return i.hide(); });
                 }
+            };
+            /**
+           * تبدیل آبجکت تاریخ به رشته
+           * @param date آبجکت تاریخ
+           * @param isGregorian آیا تاریخ تبدیل به شمسی شود و نمایش داده شود یا خیر
+           * @param format فرمت مورد نظر برای تبدیل تاریخ به رشته
+           */
+            this.convertDateToString = function (date, isGregorian, format) {
+                return _this.getDateTimeString(!isGregorian ? _this.getDateTimeJsonPersian1(date) : _this.getDateTimeJson1(date), format, isGregorian, isGregorian);
             };
             setting = this.extend(new MdsPersianDateTimePickerSetting(), setting);
             if (!element)
@@ -1023,6 +1025,46 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         MdsPersianDateTimePicker.prototype.convertToNumber4 = function (dateTime) {
             return Number(this.zeroPad(dateTime.getFullYear()) + this.zeroPad(dateTime.getMonth()) + this.zeroPad(dateTime.getDate()));
         };
+        MdsPersianDateTimePicker.prototype.correctOptionValue = function (optionName, value) {
+            var setting = new MdsPersianDateTimePickerSetting();
+            Object.keys(setting).filter(function (key) { return key === optionName; }).forEach(function (key) {
+                switch (typeof setting[key]) {
+                    case 'number':
+                        value = +value;
+                        break;
+                    case 'string':
+                        value = value.toString();
+                        break;
+                    case 'boolean':
+                        value = !!value;
+                        break;
+                    case 'object':
+                        if (setting[key] instanceof Date) {
+                            value = new Date(value);
+                        }
+                        else if (Array.isArray(setting[key])) {
+                            switch (optionName) {
+                                case 'holidays':
+                                case 'disabledDates':
+                                case 'specialDates':
+                                case 'selectedRangeDate':
+                                    value.forEach(function (item, i) {
+                                        value[i] = new Date(item);
+                                    });
+                                    break;
+                                case 'disabledDays':
+                                case 'rangeSelectorMonthsToShow':
+                                    value.forEach(function (item, i) {
+                                        value[i] = +item;
+                                    });
+                                    break;
+                            }
+                        }
+                        break;
+                }
+            });
+            return value;
+        };
         MdsPersianDateTimePicker.prototype.getShortHour = function (hour) {
             var shortHour;
             if (hour > 12)
@@ -1077,24 +1119,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             str1 = str1.replace(/8/img, '۸');
             str1 = str1.replace(/9/img, '۹');
             return str1;
-        };
-        MdsPersianDateTimePicker.prototype.toEnglishNumber = function (inputNumber2) {
-            if (!inputNumber2)
-                return '';
-            var str = inputNumber2.toString().trim();
-            if (!str)
-                return '';
-            str = str.replace(/۰/img, '0');
-            str = str.replace(/۱/img, '1');
-            str = str.replace(/۲/img, '2');
-            str = str.replace(/۳/img, '3');
-            str = str.replace(/۴/img, '4');
-            str = str.replace(/۵/img, '5');
-            str = str.replace(/۶/img, '6');
-            str = str.replace(/۷/img, '7');
-            str = str.replace(/۸/img, '8');
-            str = str.replace(/۹/img, '9');
-            return str;
         };
         MdsPersianDateTimePicker.prototype.zeroPad = function (nr, base) {
             if (nr == undefined || nr == '')
@@ -1969,6 +1993,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
          * @param value مقدار
          */
         MdsPersianDateTimePicker.prototype.updateOption = function (optionName, value) {
+            if (!optionName)
+                return;
+            value = this.correctOptionValue(optionName, value);
             this.setting[optionName] = value;
             MdsPersianDateTimePickerData.set(this.guid, this);
             this.initializeBsPopover(this.setting);
@@ -1980,7 +2007,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         MdsPersianDateTimePicker.prototype.updateOptions = function (options) {
             var _this = this;
             Object.keys(options).forEach(function (key) {
-                _this.setting[key] = options[key];
+                _this.setting[key] = _this.correctOptionValue(key, options[key]);
             });
             MdsPersianDateTimePickerData.set(this.guid, this);
             this.initializeBsPopover(this.setting);

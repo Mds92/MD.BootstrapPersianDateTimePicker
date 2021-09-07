@@ -61,7 +61,7 @@ function optionOnChange(optionName, value) {
           inLineDtpContainer.hidden = false;
           inLine = true;
           modalModeRadioOptions.forEach(e => e.checked = e.value == 'false');
-      break;
+          break;
         case false:
           normalDtpContainer.hidden = false;
           inLineDtpContainer.hidden = true;
@@ -248,3 +248,77 @@ function rangeSelectorMonthsToShowOnChange() {
   dtp1.updateOption('rangeSelectorMonthsToShow', [start, end]);
   inLineDtp1.updateOption('rangeSelectorMonthsToShow', [start, end]);
 }
+
+var vueApp = new Vue({
+  el: '#vueAppOptions',
+  data: {
+    holidays: [],
+    specialDates: [],
+    disabledDates: [],
+    disabledDays: [],
+  },
+  methods: {
+    dateChange: function (optionName) {
+      switch (optionName) {
+        case 'holidays':
+          dtp1.updateOption('holidays', [...this.holidays]);
+          dtp2.updateOption('holidays', [...this.holidays]);
+          inLineDtp1.updateOption('holidays', [...this.holidays]);
+          inLineDtp2.updateOption('holidays', [...this.holidays]);
+          break;
+        case 'specialDates':
+          dtp1.updateOption('specialDates', [...this.specialDates]);
+          dtp2.updateOption('specialDates', [...this.specialDates]);
+          inLineDtp1.updateOption('specialDates', [...this.specialDates]);
+          inLineDtp2.updateOption('specialDates', [...this.specialDates]);
+          break;
+        case 'disabledDates':
+          dtp1.updateOption('disabledDates', [...this.disabledDates]);
+          dtp2.updateOption('disabledDates', [...this.disabledDates]);
+          inLineDtp1.updateOption('disabledDates', [...this.disabledDates]);
+          inLineDtp2.updateOption('disabledDates', [...this.disabledDates]);
+          break;
+        case 'disabledDays':
+          dtp1.updateOption('disabledDays', [...this.disabledDays]);
+          dtp2.updateOption('disabledDays', [...this.disabledDays]);
+          inLineDtp1.updateOption('disabledDays', [...this.disabledDays]);
+          inLineDtp2.updateOption('disabledDays', [...this.disabledDays]);
+          break;
+      }
+    },
+    addItem: function (type) {
+      switch (type) {
+        case 'holidays':
+          this.holidays.push(dtp1.convertDateToString(new Date(), true, 'yyyy/MM/dd'));
+          break;
+        case 'specialDates':
+          this.specialDates.push(dtp1.convertDateToString(new Date(), true, 'yyyy/MM/dd'));
+          break;
+        case 'disabledDates':
+          this.disabledDates.push(dtp1.convertDateToString(new Date(), true, 'yyyy/MM/dd'));
+          break;
+        case 'disabledDays':
+          this.disabledDays.push(1);
+          break;
+      }
+      this.dateChange(type);
+    },
+    removeItem: function (type) {
+      switch (type) {
+        case 'holidays':
+          this.holidays.pop();
+          break;
+        case 'specialDates':
+          this.specialDates.pop();
+          break;
+        case 'disabledDates':
+          this.disabledDates.pop();
+          break;
+        case 'disabledDays':
+          this.disabledDays.pop();
+          break;
+      }
+      this.dateChange(type);
+    }
+  }
+})

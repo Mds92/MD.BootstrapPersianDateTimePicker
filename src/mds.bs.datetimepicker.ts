@@ -740,6 +740,45 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private convertToNumber4(dateTime: Date): number {
     return Number(this.zeroPad(dateTime.getFullYear()) + this.zeroPad(dateTime.getMonth()) + this.zeroPad(dateTime.getDate()));
   }
+  private correctOptionValue(optionName: string, value: any): any {
+    const setting = new MdsPersianDateTimePickerSetting();
+    Object.keys(setting).filter(key => key === optionName).forEach(key => {
+      switch (typeof (<any>setting)[key]) {
+        case 'number':
+          value = +value;
+          break;
+        case 'string':
+          value = value.toString();
+          break;
+        case 'boolean':
+          value = !!value;
+          break;
+        case 'object':
+          if ((<any>setting)[key] instanceof Date) {
+            value = new Date(value);
+          } else if (Array.isArray((<any>setting)[key])) {
+            switch (optionName) {
+              case 'holidays':
+              case 'disabledDates':
+              case 'specialDates':
+              case 'selectedRangeDate':
+                value.forEach((item: any, i: number) => {
+                  value[i] = new Date(item);
+                });
+                break;
+              case 'disabledDays':
+              case 'rangeSelectorMonthsToShow':
+                value.forEach((item: any, i: number) => {
+                  value[i] = +item;
+                });
+                break;
+            }
+          }
+          break;
+      }
+    });
+    return value;
+  }
   private getShortHour(hour: number): number {
     let shortHour;
     if (hour > 12)
@@ -792,22 +831,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
     str1 = str1.replace(/8/img, '۸');
     str1 = str1.replace(/9/img, '۹');
     return str1;
-  }
-  private toEnglishNumber(inputNumber2: number | string): string {
-    if (!inputNumber2) return '';
-    let str = inputNumber2.toString().trim();
-    if (!str) return '';
-    str = str.replace(/۰/img, '0');
-    str = str.replace(/۱/img, '1');
-    str = str.replace(/۲/img, '2');
-    str = str.replace(/۳/img, '3');
-    str = str.replace(/۴/img, '4');
-    str = str.replace(/۵/img, '5');
-    str = str.replace(/۶/img, '6');
-    str = str.replace(/۷/img, '7');
-    str = str.replace(/۸/img, '8');
-    str = str.replace(/۹/img, '9');
-    return str;
   }
   private zeroPad(nr: any, base?: string): string {
     if (nr == undefined || nr == '') return '00';
@@ -1982,12 +2005,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
     if (instance.setting.disabled) return;
     instance.show();
   }
-  private showModalEvent = (e: PointerEvent): void => {
-    const element = <Element>e.target;
-    const instance = MdsPersianDateTimePicker.getInstance(element);
-    if (instance.setting.disabled) return;
-    instance.show();
-  }
   private hidePopoverEvent = (e: PointerEvent): void => {
     const element = <Element>e.target;
     if (element.tagName == 'HTML') {
@@ -2083,6 +2100,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
    * @param value مقدار
    */
   updateOption(optionName: string, value: any): void {
+    if (!optionName) return;
+    value = this.correctOptionValue(optionName, value);
     (<any>this.setting)[optionName] = value;
     MdsPersianDateTimePickerData.set(this.guid, this);
     this.initializeBsPopover(this.setting);
@@ -2093,11 +2112,20 @@ data-bs-toggle="dropdown" aria-expanded="false">
    */
   updateOptions(options: MdsPersianDateTimePickerSetting): void {
     Object.keys(options).forEach((key) => {
-      (<any>this.setting)[key] = (<any>options)[key];
+      (<any>this.setting)[key] = this.correctOptionValue(key, (<any>options)[key]);
     });
     MdsPersianDateTimePickerData.set(this.guid, this);
     this.initializeBsPopover(this.setting);
   }
+  /**
+ * تبدیل آبجکت تاریخ به رشته
+ * @param date آبجکت تاریخ
+ * @param isGregorian آیا تاریخ تبدیل به شمسی شود و نمایش داده شود یا خیر
+ * @param format فرمت مورد نظر برای تبدیل تاریخ به رشته
+ */
+  convertDateToString = (date: Date, isGregorian: boolean, format: string): string => {
+    return this.getDateTimeString(!isGregorian ? this.getDateTimeJsonPersian1(date) : this.getDateTimeJson1(date), format, isGregorian, isGregorian);
+  };
   /**
    * دریافت اینستنس تقویم از روی المانی که تقویم روی آن فعال شده است
    * @param element المانی که تقویم روی آن فعال شده
