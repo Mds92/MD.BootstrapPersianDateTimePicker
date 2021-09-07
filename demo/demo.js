@@ -136,20 +136,22 @@ function optionOnChange(optionName, value) {
       dtp1.updateOptions({
         toDate: false,
         fromDate: false,
-        rangeSelector: true,
+        rangeSelector: value,
       });
       dtp2.updateOptions({
         toDate: false,
         fromDate: false,
+        rangeSelector: value,
       });
       inLineDtp1.updateOptions({
         toDate: false,
         fromDate: false,
-        rangeSelector: true,
+        rangeSelector: value,
       });
       inLineDtp2.updateOptions({
         toDate: false,
         fromDate: false,
+        rangeSelector: value,
       });
       break;
 

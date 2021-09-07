@@ -74,7 +74,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             var _this = this;
             //#endregion jalali calendar
             // #region Template
-            this.modalHtmlTemplate = "<div data-mds-dtp data-mds-dtp-guid=\"{{guid}}\" class=\"modal fade mds-bs-persian-datetime-picker-modal\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\">\n<div class=\"modal-dialog\" data-button-selector>    \n<div class=\"modal-content\">\n<div class=\"modal-header\" data-mds-dtp-title=\"true\">\n<h5 class=\"modal-title\">Modal title</h5>\n</div>\n<div class=\"modal-body\">\n  <div class=\"select-year-box w-0\" data-mds-dtp-year-list-box=\"true\"></div>\n  <div data-name=\"mds-dtp-body\"></div>\n</div>\n</div>\n</div>\n</div>";
+            this.modalHtmlTemplate = "<div data-mds-dtp data-mds-dtp-guid=\"{{guid}}\" class=\"modal fade mds-bs-persian-datetime-picker-modal\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\">\n<div class=\"modal-dialog\">\n<div class=\"modal-content\">\n<div class=\"modal-header\" data-mds-dtp-title=\"true\">\n<h5 class=\"modal-title\">Modal title</h5>\n</div>\n<div class=\"modal-body\">\n  <div class=\"select-year-box w-0\" data-mds-dtp-year-list-box=\"true\"></div>\n  <div data-name=\"mds-dtp-body\"></div>\n</div>\n</div>\n</div>\n</div>";
             this.popoverHtmlTemplate = "<div class=\"popover mds-bs-persian-datetime-picker-popover\" role=\"tooltip\" data-mds-dtp>\n<div class=\"popover-arrow\"></div>\n<h3 class=\"popover-header text-center p-1\" data-mds-dtp-title=\"true\"></h3>\n<div class=\"popover-body p-0\" data-name=\"mds-dtp-body\"></div>\n</div>";
             this.popoverHeaderSelectYearHtmlTemplate = "<table class=\"table table-sm table-borderless text-center p-0 m-0 {{rtlCssClass}}\" dir=\"{{dirAttrValue}}\">\n<tr>\n<th>\n<button type=\"button\" class=\"btn btn-sm btn-light w-100\" title=\"{{previousText}}\" data-year=\"{{latestPreviousYear}}\" data-year-range-button-change=\"-1\" {{prevYearButtonAttr}}> &lt; </button>\n</th>\n<th class=\"pt-1\">\n{{yearsRangeText}}\n</th>\n<th>\n<button type=\"button\" class=\"btn btn-sm btn-light w-100\" title=\"{{nextText}}\" data-year=\"{{latestNextYear}}\" data-year-range-button-change=\"1\" {{nextYearButtonAttr}}> &gt; </button>\n</th>\n</tr>\n</table>";
             this.dateTimePickerYearsToSelectHtmlTemplate = "<table class=\"table table-sm text-center p-0 m-0\">\n<tbody>\n{{yearsBoxHtml}}\n<tr>\n<td colspan=\"100\" class=\"text-center\">\n<button class=\"btn btn-sm btn-light w-100\" data-mds-hide-year-list-box=\"true\">{{cancelText}}</button>\n</td>\n</tr>\n</tbody>\n</table>";
@@ -749,16 +749,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 });
                 datePickerBodyHtml = tempDiv.innerHTML;
                 if (setting.modalMode == true) {
-                    var prevModalElement = _this.getModal();
-                    if (prevModalElement == null) {
-                        var modalHtml = _this.modalHtmlTemplate;
-                        modalHtml = modalHtml.replace(/\{\{guid\}\}/img, _this.guid);
-                        tempDiv = document.createElement('div');
-                        tempDiv.innerHTML = modalHtml;
-                        tempDiv.querySelector('[data-mds-dtp-title] .modal-title').innerHTML = title;
-                        tempDiv.querySelector('[data-name="mds-dtp-body"]').innerHTML = datePickerBodyHtml;
-                        document.querySelector('body').appendChild(tempDiv);
-                    }
+                    _this.setModalHtml(title, datePickerBodyHtml, setting);
                     _this.bsPopover = null;
                     setTimeout(function () {
                         _this.bsModal = new bootstrap_1.Modal(_this.getModal());
@@ -1266,6 +1257,29 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         };
         MdsPersianDateTimePicker.prototype.getModal = function () {
             return document.querySelector(".modal[data-mds-dtp-guid=\"" + this.guid + "\"]");
+        };
+        MdsPersianDateTimePicker.prototype.setModalHtml = function (title, datePickerBodyHtml, setting) {
+            var prevModalElement = this.getModal();
+            if (prevModalElement == null) {
+                var modalHtml = this.modalHtmlTemplate;
+                modalHtml = modalHtml.replace(/\{\{guid\}\}/img, this.guid);
+                var tempDiv = document.createElement('div');
+                tempDiv.innerHTML = modalHtml;
+                tempDiv.querySelector('[data-mds-dtp-title] .modal-title').innerHTML = title;
+                tempDiv.querySelector('[data-name="mds-dtp-body"]').innerHTML = datePickerBodyHtml;
+                document.querySelector('body').appendChild(tempDiv);
+            }
+            else {
+                prevModalElement.querySelector('[data-mds-dtp-title] .modal-title').innerHTML = title;
+                prevModalElement.querySelector('[data-name="mds-dtp-body"]').innerHTML = datePickerBodyHtml;
+            }
+            var modalDialogElement = document.querySelector("[data-mds-dtp-guid=\"" + this.guid + "\"] .modal-dialog");
+            if (setting.rangeSelector) {
+                if (setting.rangeSelectorMonthsToShow[0] > 0 || setting.rangeSelectorMonthsToShow[1] > 0)
+                    modalDialogElement.classList.add('modal-xl');
+                else
+                    modalDialogElement.classList.remove('modal-xl');
+            }
         };
         MdsPersianDateTimePicker.prototype.getYearsBoxBodyHtml = function (setting, yearToStart) {
             // بدست آوردن اچ تی ام ال انتخاب سال
@@ -1996,12 +2010,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         return MdsPersianDateTimePicker;
     }());
     exports.MdsPersianDateTimePicker = MdsPersianDateTimePicker;
-    var AmPmEnum;
-    (function (AmPmEnum) {
-        AmPmEnum[AmPmEnum["am"] = 0] = "am";
-        AmPmEnum[AmPmEnum["pm"] = 1] = "pm";
-        AmPmEnum[AmPmEnum["none"] = 2] = "none";
-    })(AmPmEnum || (AmPmEnum = {}));
     var MdsPersianDateTimePickerSetting = /** @class */ (function () {
         function MdsPersianDateTimePickerSetting() {
             /**

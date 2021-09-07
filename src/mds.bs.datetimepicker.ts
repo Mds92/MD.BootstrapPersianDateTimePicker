@@ -183,7 +183,7 @@ export class MdsPersianDateTimePicker {
   // #region Template
 
   private modalHtmlTemplate = `<div data-mds-dtp data-mds-dtp-guid="{{guid}}" class="modal fade mds-bs-persian-datetime-picker-modal" tabindex="-1" role="dialog" aria-hidden="true">
-<div class="modal-dialog" data-button-selector>    
+<div class="modal-dialog">
 <div class="modal-content">
 <div class="modal-header" data-mds-dtp-title="true">
 <h5 class="modal-title">Modal title</h5>
@@ -485,16 +485,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       });
       datePickerBodyHtml = tempDiv.innerHTML;
       if (setting.modalMode == true) {
-        const prevModalElement = this.getModal();
-        if (prevModalElement == null) {
-          let modalHtml = this.modalHtmlTemplate;
-          modalHtml = modalHtml.replace(/\{\{guid\}\}/img, this.guid);
-          tempDiv = document.createElement('div');
-          tempDiv.innerHTML = modalHtml;
-          tempDiv.querySelector('[data-mds-dtp-title] .modal-title').innerHTML = title;
-          tempDiv.querySelector('[data-name="mds-dtp-body"]').innerHTML = datePickerBodyHtml;
-          document.querySelector('body').appendChild(tempDiv);
-        }
+        this.setModalHtml(title, datePickerBodyHtml, setting);
         this.bsPopover = null;
         setTimeout(() => {
           this.bsModal = new Modal(this.getModal());
@@ -976,6 +967,28 @@ data-bs-toggle="dropdown" aria-expanded="false">
   }
   private getModal(): Element {
     return document.querySelector(`.modal[data-mds-dtp-guid="${this.guid}"]`);
+  }
+  private setModalHtml(title: string, datePickerBodyHtml: string, setting: MdsPersianDateTimePickerSetting): void {
+    const prevModalElement = this.getModal();
+    if (prevModalElement == null) {
+      let modalHtml = this.modalHtmlTemplate;
+      modalHtml = modalHtml.replace(/\{\{guid\}\}/img, this.guid);
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = modalHtml;
+      tempDiv.querySelector('[data-mds-dtp-title] .modal-title').innerHTML = title;
+      tempDiv.querySelector('[data-name="mds-dtp-body"]').innerHTML = datePickerBodyHtml;
+      document.querySelector('body').appendChild(tempDiv);
+    } else {
+      prevModalElement.querySelector('[data-mds-dtp-title] .modal-title').innerHTML = title;
+      prevModalElement.querySelector('[data-name="mds-dtp-body"]').innerHTML = datePickerBodyHtml;
+    }
+    const modalDialogElement = document.querySelector(`[data-mds-dtp-guid="${this.guid}"] .modal-dialog`);
+    if (setting.rangeSelector) {
+      if (setting.rangeSelectorMonthsToShow[0] > 0 || setting.rangeSelectorMonthsToShow[1] > 0)
+        modalDialogElement.classList.add('modal-xl');
+      else
+        modalDialogElement.classList.remove('modal-xl');
+    }
   }
   private getYearsBoxBodyHtml(setting: MdsPersianDateTimePickerSetting, yearToStart: number): MdsPersianDateTimePickerYearToSelect {
     // بدست آوردن اچ تی ام ال انتخاب سال
@@ -1517,7 +1530,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       yearListBox.classList.add('w-0');
       yearListBox.innerHTML = '';
     }
-  };
+  }
   private showYearsBox = (element: Element): void => {
     const instance = MdsPersianDateTimePicker.getInstance(element);
     const setting = instance.setting;
@@ -1552,7 +1565,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     else
       element.closest('[data-mds-dtp]').querySelector('[data-mds-dtp-year-list-box]').innerHTML = yearsToSelectObject.html;
     this.setPopoverHeaderHtml(element, setting, this.getYearsBoxHeaderHtml(setting, yearsToSelectObject.yearStart, yearsToSelectObject.yearEnd));
-  };
+  }
   private getPopoverHeaderTitle(setting: MdsPersianDateTimePickerSetting): string {
     let selectedDateToShowJson: GetDateTimeJson1;
     let title = '';
@@ -2108,12 +2121,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
   // #endregion
 }
 
-enum AmPmEnum {
-  am,
-  pm,
-  none
-}
-
 interface GetDateTimeJson1 {
   year: number,
   month: number,
@@ -2243,7 +2250,7 @@ export class MdsPersianDateTimePickerSetting {
   /**
    * تعداد ماه های قابل نمایش در قابلیت انتخاب بازه تاریخی
    */
-  rangeSelectorMonthsToShow = [0, 0];
+  rangeSelectorMonthsToShow: number[] = [0, 0];
   /**
    * تاریخ های انتخاب شده در مد بازه انتخابی
    */
