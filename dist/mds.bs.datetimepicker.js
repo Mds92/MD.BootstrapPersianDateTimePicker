@@ -91,6 +91,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 }
                 else {
                     var popoverOrModalElement = setting.modalMode ? _this.getModal() : _this.getPopover(element);
+                    if (popoverOrModalElement == null)
+                        return;
                     if (_this.tempTitleString) {
                         if (setting.modalMode)
                             popoverOrModalElement.querySelector('[data-mds-dtp-title] .modal-title').innerHTML = _this.tempTitleString;
@@ -1221,6 +1223,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                     modalDialogElement.classList.add('modal-xl');
                 else
                     modalDialogElement.classList.remove('modal-xl');
+            }
+            else {
+                modalDialogElement.classList.remove('modal-xl');
             }
         };
         MdsPersianDateTimePicker.prototype.getYearsBoxBodyHtml = function (setting, yearToStart) {

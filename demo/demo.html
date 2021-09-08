@@ -29,12 +29,14 @@
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="disabledRadioOptions"
-                      id="disabledRadioOptionsId1" value="1" v-model="disabled" v-on:change="optionChange('disabled', true)">
+                      id="disabledRadioOptionsId1" value="1" v-model="disabled"
+                      v-on:change="optionChange('disabled', true)">
                     <label class="form-check-label" for="disabledRadioOptionsId1">true</label>
                   </div>
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="disabledRadioOptions"
-                      id="disabledRadioOptionsId2" value="0" v-model="disabled" v-on:change="optionChange('disabled', false)">
+                      id="disabledRadioOptionsId2" value="0" v-model="disabled"
+                      v-on:change="optionChange('disabled', false)">
                     <label class="form-check-label" for="disabledRadioOptionsId2">false</label>
                   </div>
                 </div>
@@ -46,12 +48,14 @@
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="isGregorianRadioOptions"
-                      id="isGregorianRadioOptionsId1" value="1" v-model="isGregorian">
+                      id="isGregorianRadioOptionsId1" value="1" v-model="isGregorian"
+                      v-on:change="optionChange('isGregorian', true)">
                     <label class="form-check-label" for="isGregorianRadioOptionsId1">true</label>
                   </div>
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="isGregorianRadioOptions"
-                      id="isGregorianRadioOptionsId2" value="0" v-model="isGregorian" checked>
+                      id="isGregorianRadioOptionsId2" value="0" v-model="isGregorian"
+                      v-on:change="optionChange('isGregorian', false)">
                     <label class="form-check-label" for="isGregorianRadioOptionsId2">false</label>
                   </div>
                 </div>
@@ -63,12 +67,12 @@
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inLineRadioOptions" id="inLineRadioOptionsId1"
-                      value="1" v-model="inLine">
+                      value="1" v-model="inLine" v-on:change="optionChange('inLine', true)">
                     <label class="form-check-label" for="inLineRadioOptionsId1">true</label>
                   </div>
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inLineRadioOptions" id="inLineRadioOptionsId2"
-                      value="0" v-model="inLine">
+                      value="0" v-model="inLine" v-on:change="optionChange('inLine', false)">
                     <label class="form-check-label" for="inLineRadioOptionsId2">false</label>
                   </div>
                 </div>
@@ -80,12 +84,14 @@
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="modalModeRadioOptions"
-                      id="modalModeRadioOptionsId1" value="1" v-model="modalMode">
+                      id="modalModeRadioOptionsId1" value="1" v-model="modalMode"
+                      v-on:change="optionChange('modalMode', true)">
                     <label class="form-check-label" for="modalModeRadioOptionsId1">true</label>
                   </div>
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="modalModeRadioOptions"
-                      id="modalModeRadioOptionsId2" value="0" v-model="modalMode" checked>
+                      id="modalModeRadioOptionsId2" value="0" v-model="modalMode"
+                      v-on:change="optionChange('modalMode', false)">
                     <label class="form-check-label" for="modalModeRadioOptionsId2">false</label>
                   </div>
                 </div>
@@ -97,12 +103,14 @@
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="enableTimePickerInlineRadioOptions"
-                      id="enableTimePickerInlineRadioOptionsId1" value="1" v-model="enableTimePicker">
+                      id="enableTimePickerInlineRadioOptionsId1" value="1" v-model="enableTimePicker"
+                      v-on:change="optionChange('enableTimePicker', true)">
                     <label class="form-check-label" for="enableTimePickerInlineRadioOptionsId1">true</label>
                   </div>
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="enableTimePickerInlineRadioOptions"
-                      id="enableTimePickerInlineRadioOptionsId2" value="0" v-model="enableTimePicker">
+                      id="enableTimePickerInlineRadioOptionsId2" value="0" v-model="enableTimePicker"
+                      v-on:change="optionChange('enableTimePicker', false)">
                     <label class="form-check-label" for="enableTimePickerInlineRadioOptionsId2">false</label>
                   </div>
                 </div>
@@ -114,12 +122,14 @@
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="toDateFromDateRadioOptions"
-                      id="toDateRadioOptionsId1" value="1" v-model="toDateFromDate">
+                      id="toDateRadioOptionsId1" value="1" v-model="toDateFromDate"
+                      v-on:change="optionChange('toDateFromDate', true)">
                     <label class="form-check-label" for="toDateRadioOptionsId1">true</label>
                   </div>
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="toDateFromDateRadioOptions"
-                      id="toDateRadioOptionsId2" value="0" v-model="toDateFromDate">
+                      id="toDateRadioOptionsId2" value="0" v-model="toDateFromDate"
+                      v-on:change="optionChange('toDateFromDate', false)">
                     <label class="form-check-label" for="toDateRadioOptionsId2">false</label>
                   </div>
                 </div>
@@ -130,7 +140,7 @@
                 <label class="col-5 col-form-label">groupId</label>
                 <div class="col-7 pt-2">
                   <input class="form-control form-control-sm" type="text" value="group1"
-                    :readonly="toDateFromDate == '0'">
+                    :readonly="toDateFromDate == '0'" v-on:change="optionChange('groupId', $event.target.value)">
                 </div>
               </div>
               <hr>
@@ -140,12 +150,14 @@
                 <div class="col-7 pt-2">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="rangeSelectorRadioOptions"
-                      id="rangeSelectorRadioOptionsId1" value="1" v-model="rangeSelector">
+                      id="rangeSelectorRadioOptionsId1" value="1" v-model="rangeSelector"
+                      v-on:change="optionChange('rangeSelector', true)">
                     <label class="form-check-label" for="rangeSelectorRadioOptionsId1">true</label>
                   </div>
                   <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="rangeSelectorRadioOptions"
-                      id="rangeSelectorRadioOptionsId2" value="0" v-model="rangeSelector">
+                      id="rangeSelectorRadioOptionsId2" value="0" v-model="rangeSelector"
+                      v-on:change="optionChange('rangeSelector', false)">
                     <label class="form-check-label" for="rangeSelectorRadioOptionsId2">false</label>
                   </div>
                 </div>
@@ -157,11 +169,15 @@
                 <div class="col-2"></div>
                 <div class="col-2 pt-2">
                   <input class="form-control form-control-sm" type="number" min="0" max="3" value="0"
-                    :readonly="rangeSelector == '0'" v-model="rangeSelectorMonthsToShowStart" style="width: 50px;">
+                    :readonly="rangeSelector == '0'" v-model="rangeSelectorMonthsToShowStart"
+                    v-on:change="optionChange('rangeSelectorMonthsToShow', [$event.target.value, rangeSelectorMonthsToShowEnd])"
+                    style="width: 50px;">
                 </div>
                 <div class="col-2 pt-2">
                   <input class="form-control form-control-sm" type="number" min="0" max="3" value="0"
-                    :readonly="rangeSelector == '0'" v-model="rangeSelectorMonthsToShowEnd" style="width: 50px;">
+                    :readonly="rangeSelector == '0'" v-model="rangeSelectorMonthsToShowEnd"
+                    v-on:change="optionChange('rangeSelectorMonthsToShow', [rangeSelectorMonthsToShowStart, $event.target.value])"
+                    style="width: 50px;">
                 </div>
               </div>
               <hr>
@@ -170,7 +186,8 @@
                 <label class="col-5 col-form-label">textFormat</label>
                 <div class="col-7 pt-2">
                   <div class="input-group input-group-sm">
-                    <input class="form-control form-control-sm" type="text" v-model="textFormat">
+                    <input class="form-control form-control-sm" type="text" v-model="textFormat"
+                      v-on:change="optionChange('textFormat', $event.target.value)">
                     <span class="input-group-text cursor-pointer" data-bs-toggle="modal"
                       data-bs-target="#textDateFormatModal">Detail</span>
                   </div>
@@ -182,7 +199,8 @@
                 <label class="col-5 col-form-label">dateFormat</label>
                 <div class="col-7 pt-2">
                   <div class="input-group input-group-sm">
-                    <input class="form-control form-control-sm" type="text" v-model="dateFormat">
+                    <input class="form-control form-control-sm" type="text" v-model="dateFormat"
+                      v-on:change="optionChange('dateFormat', $event.target.value)">
                     <span class="input-group-text cursor-pointer" data-bs-toggle="modal"
                       data-bs-target="#textDateFormatModal">Detail</span>
                   </div>
@@ -193,7 +211,8 @@
               <div class="row">
                 <label class="col-5 col-form-label">yearOffset</label>
                 <div class="col-7 pt-2">
-                  <input class="form-control form-control-sm" type="number" value="15" min="0" v-model="yearOffset">
+                  <input class="form-control form-control-sm" type="number" value="15" min="0" v-model="yearOffset"
+                    v-on:change="optionChange('yearOffset', $event.target.value)">
                 </div>
               </div>
               <hr>
@@ -201,7 +220,8 @@
               <div class="row">
                 <label class="col-5 col-form-label">placement</label>
                 <div class="col-7 pt-2">
-                  <select class="form-select form-select-sm" v-model="placement">
+                  <select class="form-select form-select-sm" v-model="placement"
+                    v-on:change="optionChange('placement', $event.target.value)">
                     <option value="auto">auto</option>
                     <option value="top">top</option>
                     <option value="bottom" selected>bottom</option>
@@ -279,25 +299,25 @@
         <div class="container-fluid">
           <div class="row">
             <!-- Normal -->
-            <div class="col-12" data-name="normal-dtp-container">
-              <h3 data-name="from-to-date-title" hidden>From Date</h3>
+            <div class="col-12" :hidden="inLine == '1' && modalMode == '0'">
+              <h3 :hidden="toDateFromDate == '0'">From Date</h3>
               <div class="input-group mb-3">
                 <span class="input-group-text cursor-pointer" id="dtp1">📅</span>
                 <input type="text" class="form-control" placeholder="Date Picker Text" data-name="dtp1-text">
                 <input type="text" class="form-control" placeholder="Date Picker Date" data-name="dtp1-date">
               </div>
-              <h3 data-name="from-to-date-title" hidden>To Date</h3>
-              <div class="input-group mb-3" data-name="dtp2-container" hidden>
+              <h3 :hidden="toDateFromDate == '0'">To Date</h3>
+              <div class="input-group mb-3" :hidden="toDateFromDate == '0'">
                 <span class="input-group-text cursor-pointer" id="dtp2">📅</span>
                 <input type="text" class="form-control" placeholder="Date Picker Text" data-name="dtp2-text">
                 <input type="text" class="form-control" placeholder="Date Picker Date" data-name="dtp2-date">
               </div>
             </div>
             <!-- In Line -->
-            <div class="col-12" data-name="in-line-dtp-container" hidden>
+            <div class="col-12" :hidden="inLine == '0' || modalMode == '1'">
               <div class="row justify-content-md-center">
-                <div class="col-5" data-name="in-line-dtp1-column">
-                  <h3 data-name="from-to-date-title" hidden>From Date</h3>
+                <div class="col-5">
+                  <h3 :hidden="toDateFromDate == '0'" hidden>From Date</h3>
                   <div class="border mb-3" data-name="in-line-dtp1"></div>
                   <div class="row g-0">
                     <div class="col-6">
@@ -308,8 +328,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-5" hidden data-name="in-line-dtp2-container">
-                  <h3 data-name="from-to-date-title" hidden>To Date</h3>
+                <div class="col-5" :hidden="toDateFromDate == '0'">
+                  <h3>To Date</h3>
                   <div class="border mb-3" data-name="in-line-dtp2"></div>
                   <div class="row g-0">
                     <div class="col-6">

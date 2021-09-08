@@ -22,12 +22,43 @@ var vueApp = new Vue({
   },
   methods: {
     optionChange: function (optionName, value) {
+      console.log(`${optionName} => ${value}`);
       switch (optionName) {
-        case 'disabled':
-          dtp1.updateOption(optionName, value);
-          inLineDtp1.updateOption(optionName, value);
+        case 'inLine':
+          this.modalMode = '0';
+          return;
+        case 'modalMode':
+          this.inLine = '0';
           break;
+        case 'rangeSelector':
+          this.toDateFromDate = '0';
+          break;
+        case 'toDateFromDate':
+          this.rangeSelector = '0';
+          dtp1.updateOptions({
+            fromDate: value,
+            toDate: false,
+            groupId: this.groupId
+          });
+          dtp2.updateOptions({
+            fromDate: false,
+            toDate: value,
+            groupId: this.groupId
+          });
+          inLineDtp1.updateOptions({
+            fromDate: value,
+            toDate: false,
+            groupId: this.groupId
+          });
+          inLineDtp2.updateOptions({
+            fromDate: false,
+            toDate: value,
+            groupId: this.groupId
+          });
+          return;
       }
+      dtp1.updateOption(optionName, value);
+      inLineDtp1.updateOption(optionName, value);
     },
     dateChange: function (optionName) {
       switch (optionName) {

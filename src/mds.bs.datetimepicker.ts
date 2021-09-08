@@ -1008,6 +1008,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
         modalDialogElement.classList.add('modal-xl');
       else
         modalDialogElement.classList.remove('modal-xl');
+    } else {
+      modalDialogElement.classList.remove('modal-xl');
     }
   }
   private getYearsBoxBodyHtml(setting: MdsPersianDateTimePickerSetting, yearToStart: number): MdsPersianDateTimePickerYearToSelect {
@@ -1538,6 +1540,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       dtpInLine.classList.remove('overflow-hidden');
     } else {
       const popoverOrModalElement = setting.modalMode ? this.getModal() : this.getPopover(element);
+      if (popoverOrModalElement == null) return;
       if (this.tempTitleString) {
         if (setting.modalMode)
           popoverOrModalElement.querySelector('[data-mds-dtp-title] .modal-title').innerHTML = this.tempTitleString;
