@@ -1,47 +1,113 @@
-let inLine = false;
-const normalDtpContainer = document.querySelector('[data-name="normal-dtp-container"]');
-const inLineDtpContainer = document.querySelector('[data-name="in-line-dtp-container"]');
-const groupIdTextBoxElement = document.querySelector('[data-name="group-id"]');
-const dtp2ContainerElement = document.querySelector('[data-name="dtp2-container"]');
-const toDateFromDateRadioOptions = document.querySelectorAll('input[name="toDateFromDateRadioOptions"]');
-const inLineDtp2ContainerElement = document.querySelector('[data-name="in-line-dtp2-container"]');
-const fromToDateTitleElements = document.querySelectorAll('[data-name="from-to-date-title"]');
-const textFormatElement = document.querySelector('[data-name="text-format"]');
-const dateFormatElement = document.querySelector('[data-name="date-format"]');
+var vueApp = new Vue({
+  el: '#vueAppOptions',
+  data: {
+    disabled: '0',
+    isGregorian: '0',
+    inLine: '0',
+    modalMode: '0',
+    enableTimePicker: '0',
+    toDateFromDate: '0',
+    groupId: 'group1',
+    rangeSelector: '0',
+    rangeSelectorMonthsToShowStart: 0,
+    rangeSelectorMonthsToShowEnd: 0,
+    textFormat: 'yyyy/MM/dd',
+    dateFormat: 'yyyy/MM/dd',
+    yearOffset: 15,
+    placement: 'bottom',
+    holidays: [],
+    specialDates: [],
+    disabledDates: [],
+    disabledDays: [],
+  },
+  methods: {
+    optionChange: function (optionName, value) {
+      switch (optionName) {
+        case 'disabled':
+          dtp1.updateOption(optionName, value);
+          inLineDtp1.updateOption(optionName, value);
+          break;
+      }
+    },
+    dateChange: function (optionName) {
+      switch (optionName) {
+        case 'holidays':
+          dtp1.updateOption('holidays', [...this.holidays]);
+          dtp2.updateOption('holidays', [...this.holidays]);
+          inLineDtp1.updateOption('holidays', [...this.holidays]);
+          inLineDtp2.updateOption('holidays', [...this.holidays]);
+          break;
+        case 'specialDates':
+          dtp1.updateOption('specialDates', [...this.specialDates]);
+          dtp2.updateOption('specialDates', [...this.specialDates]);
+          inLineDtp1.updateOption('specialDates', [...this.specialDates]);
+          inLineDtp2.updateOption('specialDates', [...this.specialDates]);
+          break;
+        case 'disabledDates':
+          dtp1.updateOption('disabledDates', [...this.disabledDates]);
+          dtp2.updateOption('disabledDates', [...this.disabledDates]);
+          inLineDtp1.updateOption('disabledDates', [...this.disabledDates]);
+          inLineDtp2.updateOption('disabledDates', [...this.disabledDates]);
+          break;
+        case 'disabledDays':
+          dtp1.updateOption('disabledDays', [...this.disabledDays]);
+          dtp2.updateOption('disabledDays', [...this.disabledDays]);
+          inLineDtp1.updateOption('disabledDays', [...this.disabledDays]);
+          inLineDtp2.updateOption('disabledDays', [...this.disabledDays]);
+          break;
+      }
+    },
+    addDateItem: function (optionName) {
+      switch (optionName) {
+        case 'holidays':
+          this.holidays.push(dtp1.convertDateToString(new Date(), true, 'yyyy/MM/dd'));
+          break;
+        case 'specialDates':
+          this.specialDates.push(dtp1.convertDateToString(new Date(), true, 'yyyy/MM/dd'));
+          break;
+        case 'disabledDates':
+          this.disabledDates.push(dtp1.convertDateToString(new Date(), true, 'yyyy/MM/dd'));
+          break;
+        case 'disabledDays':
+          this.disabledDays.push(1);
+          break;
+      }
+      this.dateChange(type);
+    },
+    removeDateItem: function (optionName) {
+      switch (optionName) {
+        case 'holidays':
+          this.holidays.pop();
+          break;
+        case 'specialDates':
+          this.specialDates.pop();
+          break;
+        case 'disabledDates':
+          this.disabledDates.pop();
+          break;
+        case 'disabledDays':
+          this.disabledDays.pop();
+          break;
+      }
+      this.dateChange(type);
+    },
+  }
+});
 
-const modalModeRadioOptions = document.querySelectorAll('input[name="modalModeRadioOptions"]');
-const inLineRadioOptions = document.querySelectorAll('input[name="inLineRadioOptions"]');
-const rangeSelectorRadioOptions = document.querySelectorAll('input[name="rangeSelectorRadioOptions"]');
-const rangeSelectorMonthsToShowStartInputElements = document.querySelector('[data-name="rangeSelectorMonthsToShow-start"]');
-const rangeSelectorMonthsToShowEndInputElements = document.querySelector('[data-name="rangeSelectorMonthsToShow-end"]');
-const rangeSelectorMonthsToShowInputElements = document.querySelectorAll('[data-name^="rangeSelectorMonthsToShow"]');
-rangeSelectorMonthsToShowInputElements.forEach(e => e.addEventListener('change', rangeSelectorMonthsToShowOnChange));
-
-const dtp1Element = document.getElementById('dtp1');
-const dtp1 = new mds.MdsPersianDateTimePicker(dtp1Element, {
+const dtp1 = new mds.MdsPersianDateTimePicker(document.getElementById('dtp1'), {
   targetTextSelector: '[data-name="dtp1-text"]',
   targetDateSelector: '[data-name="dtp1-date"]',
 });
-
-textFormatElement.value = dtp1.setting.textFormat;
-dateFormatElement.value = dtp1.setting.dateFormat;
-
-const dtp2Element = document.getElementById('dtp2');
-const dtp2 = new mds.MdsPersianDateTimePicker(dtp2Element, {
+const dtp2 = new mds.MdsPersianDateTimePicker(document.getElementById('dtp2'), {
   targetTextSelector: '[data-name="dtp2-text"]',
   targetDateSelector: '[data-name="dtp2-date"]',
 });
-
-const inLineDtp1ColumnElement = document.querySelector('[data-name="in-line-dtp1-column"]');
-const inLineDtp1Element = document.querySelector('[data-name="in-line-dtp1"]');
-const inLineDtp1 = new mds.MdsPersianDateTimePicker(inLineDtp1Element, {
+const inLineDtp1 = new mds.MdsPersianDateTimePicker(document.querySelector('[data-name="in-line-dtp1"]'), {
   inLine: true,
   targetTextSelector: '[data-name="in-line-dtp1-text"]',
   targetDateSelector: '[data-name="in-line-dtp1-date"]',
 });
-
-const inLineDtp2Element = document.querySelector('[data-name="in-line-dtp2"]');
-const inLineDtp2 = new mds.MdsPersianDateTimePicker(inLineDtp2Element, {
+const inLineDtp2 = new mds.MdsPersianDateTimePicker(document.querySelector('[data-name="in-line-dtp2"]'), {
   inLine: true,
   targetTextSelector: '[data-name="in-line-dtp2-text"]',
   targetDateSelector: '[data-name="in-line-dtp2-date"]',
@@ -248,77 +314,3 @@ function rangeSelectorMonthsToShowOnChange() {
   dtp1.updateOption('rangeSelectorMonthsToShow', [start, end]);
   inLineDtp1.updateOption('rangeSelectorMonthsToShow', [start, end]);
 }
-
-var vueApp = new Vue({
-  el: '#vueAppOptions',
-  data: {
-    holidays: [],
-    specialDates: [],
-    disabledDates: [],
-    disabledDays: [],
-  },
-  methods: {
-    dateChange: function (optionName) {
-      switch (optionName) {
-        case 'holidays':
-          dtp1.updateOption('holidays', [...this.holidays]);
-          dtp2.updateOption('holidays', [...this.holidays]);
-          inLineDtp1.updateOption('holidays', [...this.holidays]);
-          inLineDtp2.updateOption('holidays', [...this.holidays]);
-          break;
-        case 'specialDates':
-          dtp1.updateOption('specialDates', [...this.specialDates]);
-          dtp2.updateOption('specialDates', [...this.specialDates]);
-          inLineDtp1.updateOption('specialDates', [...this.specialDates]);
-          inLineDtp2.updateOption('specialDates', [...this.specialDates]);
-          break;
-        case 'disabledDates':
-          dtp1.updateOption('disabledDates', [...this.disabledDates]);
-          dtp2.updateOption('disabledDates', [...this.disabledDates]);
-          inLineDtp1.updateOption('disabledDates', [...this.disabledDates]);
-          inLineDtp2.updateOption('disabledDates', [...this.disabledDates]);
-          break;
-        case 'disabledDays':
-          dtp1.updateOption('disabledDays', [...this.disabledDays]);
-          dtp2.updateOption('disabledDays', [...this.disabledDays]);
-          inLineDtp1.updateOption('disabledDays', [...this.disabledDays]);
-          inLineDtp2.updateOption('disabledDays', [...this.disabledDays]);
-          break;
-      }
-    },
-    addItem: function (type) {
-      switch (type) {
-        case 'holidays':
-          this.holidays.push(dtp1.convertDateToString(new Date(), true, 'yyyy/MM/dd'));
-          break;
-        case 'specialDates':
-          this.specialDates.push(dtp1.convertDateToString(new Date(), true, 'yyyy/MM/dd'));
-          break;
-        case 'disabledDates':
-          this.disabledDates.push(dtp1.convertDateToString(new Date(), true, 'yyyy/MM/dd'));
-          break;
-        case 'disabledDays':
-          this.disabledDays.push(1);
-          break;
-      }
-      this.dateChange(type);
-    },
-    removeItem: function (type) {
-      switch (type) {
-        case 'holidays':
-          this.holidays.pop();
-          break;
-        case 'specialDates':
-          this.specialDates.pop();
-          break;
-        case 'disabledDates':
-          this.disabledDates.pop();
-          break;
-        case 'disabledDays':
-          this.disabledDays.pop();
-          break;
-      }
-      this.dateChange(type);
-    }
-  }
-})
