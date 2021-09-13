@@ -1529,6 +1529,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private hideYearsBox = (element: Element, setting: MdsPersianDateTimePickerSetting): void => {
     if (setting.inLine) {
       const dtpInLine = element.closest('[data-mds-dtp-guid]');
+      if (dtpInLine == null) return;
       if (this.tempTitleString)
         dtpInLine.querySelector('[mds-dtp-inline-header]').innerHTML = this.tempTitleString;
       const yearListBox = dtpInLine.querySelector('[data-mds-dtp-year-list-box]');

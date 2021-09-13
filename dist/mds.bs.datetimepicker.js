@@ -79,6 +79,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             this.hideYearsBox = function (element, setting) {
                 if (setting.inLine) {
                     var dtpInLine = element.closest('[data-mds-dtp-guid]');
+                    if (dtpInLine == null)
+                        return;
                     if (_this.tempTitleString)
                         dtpInLine.querySelector('[mds-dtp-inline-header]').innerHTML = _this.tempTitleString;
                     var yearListBox = dtpInLine.querySelector('[data-mds-dtp-year-list-box]');

@@ -139,7 +139,7 @@
               <div class="row">
                 <label class="col-5 col-form-label">groupId</label>
                 <div class="col-7 pt-2">
-                  <input class="form-control form-control-sm" type="text" value="group1"
+                  <input class="form-control form-control-sm" type="text" value="group1" v-model="groupId"
                     :readonly="toDateFromDate == '0'" v-on:change="optionChange('groupId', $event.target.value)">
                 </div>
               </div>
@@ -239,9 +239,9 @@
                     <input class="form-control form-control-sm" type="text" v-model="holidays[index]"
                       v-on:change="dateChange('holidays', $event)" />
                   </div>
-                  <button class="btn btn-sm btn-primary" type="button" v-on:click="addItem('holidays')"> + </button>
+                  <button class="btn btn-sm btn-primary" type="button" v-on:click="addDateItem('holidays')"> + </button>
                   &nbsp;
-                  <button class="btn btn-sm btn-danger" type="button" v-on:click="removeItem('holidays')"> - </button>
+                  <button class="btn btn-sm btn-danger" type="button" v-on:click="removeDateItem('holidays')"> - </button>
                 </div>
               </div>
               <hr>
@@ -253,9 +253,9 @@
                     <input class="form-control form-control-sm" type="text" v-model="specialDates[index]"
                       v-on:change="dateChange('specialDates', $event)" />
                   </div>
-                  <button class="btn btn-sm btn-primary" type="button" v-on:click="addItem('specialDates')"> + </button>
+                  <button class="btn btn-sm btn-primary" type="button" v-on:click="addDateItem('specialDates')"> + </button>
                   &nbsp;
-                  <button class="btn btn-sm btn-danger" type="button" v-on:click="removeItem('specialDates')"> -
+                  <button class="btn btn-sm btn-danger" type="button" v-on:click="removeDateItem('specialDates')"> -
                   </button>
                 </div>
               </div>
@@ -268,10 +268,10 @@
                     <input class="form-control form-control-sm" type="text" v-model="disabledDates[index]"
                       v-on:change="dateChange('disabledDates', $event)" />
                   </div>
-                  <button class="btn btn-sm btn-primary" type="button" v-on:click="addItem('disabledDates')"> +
+                  <button class="btn btn-sm btn-primary" type="button" v-on:click="addDateItem('disabledDates')"> +
                   </button>
                   &nbsp;
-                  <button class="btn btn-sm btn-danger" type="button" v-on:click="removeItem('disabledDates')"> -
+                  <button class="btn btn-sm btn-danger" type="button" v-on:click="removeDateItem('disabledDates')"> -
                   </button>
                 </div>
               </div>
@@ -284,9 +284,9 @@
                     <input class="form-control form-control-sm" type="text" v-model="disabledDays[index]"
                       v-on:change="dateChange('disabledDays', $event)" />
                   </div>
-                  <button class="btn btn-sm btn-primary" type="button" v-on:click="addItem('disabledDays')"> + </button>
+                  <button class="btn btn-sm btn-primary" type="button" v-on:click="addDateItem('disabledDays')"> + </button>
                   &nbsp;
-                  <button class="btn btn-sm btn-danger" type="button" v-on:click="removeItem('disabledDays')"> -
+                  <button class="btn btn-sm btn-danger" type="button" v-on:click="removeDateItem('disabledDays')"> -
                   </button>
                 </div>
               </div>
@@ -317,7 +317,7 @@
             <div class="col-12" :hidden="inLine == '0' || modalMode == '1'">
               <div class="row justify-content-md-center">
                 <div class="col-5">
-                  <h3 :hidden="toDateFromDate == '0'" hidden>From Date</h3>
+                  <h3 :hidden="toDateFromDate == '0'">From Date</h3>
                   <div class="border mb-3" data-name="in-line-dtp1"></div>
                   <div class="row g-0">
                     <div class="col-6">

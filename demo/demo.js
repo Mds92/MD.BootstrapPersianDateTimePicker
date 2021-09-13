@@ -21,39 +21,95 @@ var vueApp = new Vue({
     disabledDays: [],
   },
   methods: {
+    fromDateToDateChange: function (value) {
+      if (value) {
+        dtp1.updateOptions({
+          rangeSelector: false,
+        });
+        dtp2.updateOptions({
+          rangeSelector: false,
+        });
+        inLineDtp1.updateOptions({
+          rangeSelector: false,
+        });
+        inLineDtp2.updateOptions({
+          rangeSelector: false,
+        });
+      }
+      dtp1.updateOptions({
+        fromDate: value,
+        toDate: false,
+        groupId: this.groupId
+      });
+      dtp2.updateOptions({
+        fromDate: false,
+        toDate: value,
+        groupId: this.groupId
+      });
+      inLineDtp1.updateOptions({
+        fromDate: value,
+        toDate: false,
+        groupId: this.groupId + '_'
+      });
+      inLineDtp2.updateOptions({
+        fromDate: false,
+        toDate: value,
+        groupId: this.groupId + '_'
+      });
+    },
     optionChange: function (optionName, value) {
       console.log(`${optionName} => ${value}`);
       switch (optionName) {
         case 'inLine':
           this.modalMode = '0';
+          dtp1.updateOptions({
+            modalMode: false,
+          });
+          dtp2.updateOptions({
+            modalMode: false,
+          });
+          inLineDtp1.updateOptions({
+            modalMode: false,
+          });
+          inLineDtp2.updateOptions({
+            modalMode: false,
+          });
           return;
         case 'modalMode':
           this.inLine = '0';
+          dtp1.updateOptions({
+            inLine: false,
+          });
+          dtp2.updateOptions({
+            inLine: false,
+          });
+          inLineDtp1.updateOptions({
+            inLine: false,
+          });
+          inLineDtp2.updateOptions({
+            inLine: false,
+          });
           break;
         case 'rangeSelector':
           this.toDateFromDate = '0';
+          this.fromDateToDateChange(false);
           break;
         case 'toDateFromDate':
           this.rangeSelector = '0';
+          this.fromDateToDateChange(value);
+          return;
+        case 'groupId':
           dtp1.updateOptions({
-            fromDate: value,
-            toDate: false,
             groupId: this.groupId
           });
           dtp2.updateOptions({
-            fromDate: false,
-            toDate: value,
             groupId: this.groupId
           });
           inLineDtp1.updateOptions({
-            fromDate: value,
-            toDate: false,
-            groupId: this.groupId
+            groupId: this.groupId + '_'
           });
           inLineDtp2.updateOptions({
-            fromDate: false,
-            toDate: value,
-            groupId: this.groupId
+            groupId: this.groupId + '_'
           });
           return;
       }
@@ -103,7 +159,7 @@ var vueApp = new Vue({
           this.disabledDays.push(1);
           break;
       }
-      this.dateChange(type);
+      this.dateChange(optionName);
     },
     removeDateItem: function (optionName) {
       switch (optionName) {
@@ -120,7 +176,7 @@ var vueApp = new Vue({
           this.disabledDays.pop();
           break;
       }
-      this.dateChange(type);
+      this.dateChange(optionName);
     },
   }
 });
