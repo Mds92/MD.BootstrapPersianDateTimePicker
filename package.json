@@ -41,6 +41,7 @@
     "compile": "tsc",
     "webpack": "webpack",
     "webpackserver": "webpack serve --mode development --env development",
+    "dev": "start npm run webpack && start npm run webpackserver",
     "start": "npx http-server"
   }
 }
