@@ -2,6 +2,9 @@
 #### Bootstrap 5+ Persian And Gregorian Date Time Picker
 
 Major Changes:
+1. Using Bootstrap 5
+2. jQuery Removed
+
 
 
 ![MD.BootstrapPersianDateTimePicker](https://mds92.github.io/MD.BootstrapPersianDateTimePicker/images/date-picker-white.png) 
