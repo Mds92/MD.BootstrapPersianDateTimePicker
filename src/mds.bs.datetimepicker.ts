@@ -2096,6 +2096,63 @@ data-bs-toggle="dropdown" aria-expanded="false">
     return this.bsModal;
   }
   /**
+   * دریافت متن تاریخ انتخاب شده
+   */
+  getText(): string {
+    return MdsPersianDateTimePicker.getSelectedDateFormatted(this.setting);
+  }
+  /**
+   * دریافت آبجکت تاریخ انتخاب شده
+   */
+  getDate(): Date {
+    return this.setting.selectedDate;
+  }
+  /**
+   * دریافت آبجکت های تاریخ های انتخاب شده در مد رنج سلکتور
+   */
+  getDateRange(): Date[] {
+    return this.setting.selectedRangeDate;
+  }
+  /**
+  * بروز کردن تاریخ انتخاب شده
+  */
+  setDate(date: Date): void {
+    this.updateOptions({
+      selectedDate: date,
+      selectedDateToShow: date
+    });
+  }
+  /**
+  * بروز کردن تاریخ انتخاب شده با استفاده از تاریخ شمسی
+  */
+  setDatePersian(yearPersian: number, monthPersian: number, dayPersian: number): void {
+    const gregorianDateJson = MdsPersianDateTimePicker.toGregorian(yearPersian, monthPersian, dayPersian);
+    const date = new Date(gregorianDateJson.gy, gregorianDateJson.gm, gregorianDateJson.gd);
+    this.updateOptions({
+      selectedDate: date,
+      selectedDateToShow: date
+    });
+  }
+  /**
+  * بروز کردن رنج تاریخی انتخاب شده
+  */
+  setDateRange(startDate: Date, endDate: Date): void {
+    this.updateOptions({
+      selectedDate: startDate,
+      selectedDateToShow: startDate,
+      selectedRangeDate: [startDate, endDate]
+    });
+  }
+  /**
+  * حذف تاریخ انتخاب شده
+  */
+  clearDate(): void {
+    this.updateOptions({
+      selectedDate: null,
+      selectedDateToShow: new Date(),
+    });
+  }
+  /**
    * بروز کردن تنظیمات تقویم
    * @param optionName نام آپشن مورد نظر
    * @param value مقدار
@@ -2111,7 +2168,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
    * بروز کردن تنظیمات تقویم
    * @param options تنظیمات مورد نظر
    */
-  updateOptions(options: MdsPersianDateTimePickerSetting): void {
+  updateOptions(options: any): void {
     Object.keys(options).forEach((key) => {
       (<any>this.setting)[key] = MdsPersianDateTimePicker.correctOptionValue(key, (<any>options)[key]);
     });
@@ -2128,7 +2185,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     return MdsPersianDateTimePicker.getDateTimeString(!isGregorian ? MdsPersianDateTimePicker.getDateTimeJsonPersian1(date) : MdsPersianDateTimePicker.getDateTimeJson1(date), format, isGregorian, isGregorian);
   };
   /**
- * تبدیل آبجکت تاریخ به رشته
+ * تبدیل آبجکت تاریخ به شمسی
  * @param date آبجکت تاریخ
  */
   convertDateToJalali = (date: Date): MdsPersianDateTimePickerConvertedDateModel => {
