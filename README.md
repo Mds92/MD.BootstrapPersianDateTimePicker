@@ -115,7 +115,7 @@ Name | Return Value | Description | Sample
 **getBsModalInstance** | bootstrap.Modal | return instance of bootstrap modal | const bsModal = dtp1Instance.getBsModalInstance()
 **updateOption** | void | update one option of date picker | dtp1Instance.updateOption('isGregorian', false)
 **updateOptions** | void | update one option of date picker | dtp1Instance.updateOptions({ isGregorian: false, inLine: false, ... })
-**getInstance** | MdsPersianDateTimePicker | static method, get instance of MdsDatePicker by element | const jalaliObj = mds.MdsPersianDateTimePicker.dtp1Instance.getInstance(document.getELementById('IdOElement'));
+**getInstance** | MdsPersianDateTimePicker | static method, get instance of MdsDatePicker by an element obj | const jalaliObj = mds.MdsPersianDateTimePicker.getInstance(document.getELementById('IdOElement'));
 **getText** | string | Get selected date text | const txt = dtp1Instance.getText()
 **getDate** | Date | Get selected date | const dateObj = dtp1Instance.getDate()
 **getDateRange** | [fromDate, toDate]: Date[] | Get selected date range | dtp1Instance.getDateRange();
@@ -124,22 +124,16 @@ Name | Return Value | Description | Sample
 **setDateRange** | void | Set selected datetime range with Date object argument | dtp1Instance.setDateRange(new Date('2021/09/04'), new Date('2021/09/22'));
 **clearDate** | void | clear selected date | dtp1Instance.clearDate();
 **convertDateToString** | string | utility method, convert date object to string | const dateStr = dtp1Instance.convertDateToString(date: new Date(), isGregorian: false, format: 'yyyy/MM/dd');
-**convertDateToJalali** | MdsPersianDateTimePickerConvertedDateModel | utility method, convert date object to Jalali | const jalaliObj = dtp1Instance.convertDateToJalali(new Date());
+**convertDateToJalali** | json | utility method, convert date object to Jalali | const jalaliObj = dtp1Instance.convertDateToJalali(new Date());
 
 <hr>
 
 ### Events:
 
-`MD.BootstrapPersianDateTimePicker` uses Bootstrap's popover, and Bootstrap's modals. so you can use `popover` or `modal` events.
+`MD.BootstrapPersianDateTimePicker` uses Bootstrap's popover and modals. so you can use `popover` or `modal` events.
 
-https://getbootstrap.com/docs/4.5/components/popovers/#events
-https://getbootstrap.com/docs/4.5/components/modal/#events
-
-```javascript
-$('#date1').on('hidden.bs.popover', function () {
-  // do something…
-})
-```
+https://getbootstrap.com/docs/5.1/components/popovers/#events
+https://getbootstrap.com/docs/5.1/components/modal/#events
 
 <hr>
 
