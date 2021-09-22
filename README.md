@@ -18,7 +18,7 @@ Bootstrap 3 version `https://github.com/Mds92/MD.BootstrapPersianDateTimePicker/
 Bootstrap 4 version `https://github.com/Mds92/MD.BootstrapPersianDateTimePicker/tree/master-bs4`
 
 ### Installing:
-First you have to install `Bootstrap 5` and link them to your html file.
+First you have to install `Bootstrap 5` and link it to your html file.
 
 Now add these files to you html:
 ```html
@@ -123,8 +123,8 @@ Name | Return Value | Description | Sample
 **setDatePersian** | void | Set selected datetime with Date object argument | dtp1Instance.setDatePersian(1400, 06, 31);
 **setDateRange** | void | Set selected datetime range with Date object argument | dtp1Instance.setDateRange(new Date('2021/09/04'), new Date('2021/09/22'));
 **clearDate** | void | clear selected date | dtp1Instance.clearDate();
-**convertDateToString** | string | utility method, convert date object to string | const dateStr = dtp1Instance.convertDateToString(date: new Date(), isGregorian: false, format: 'yyyy/MM/dd');
-**convertDateToJalali** | json | utility method, convert date object to Jalali | const jalaliObj = dtp1Instance.convertDateToJalali(new Date());
+**convertDateToString** | string | utility & static method, convert date object to string | const dateStr = mds.MdsPersianDateTimePicker.convertDateToString(date: new Date(), isGregorian: false, format: 'yyyy/MM/dd');
+**convertDateToJalali** | json | utility & static method, convert date object to Jalali | const jalaliObj = mds.MdsPersianDateTimePicker.convertDateToJalali(new Date());
 
 <hr>
 

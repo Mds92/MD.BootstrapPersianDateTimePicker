@@ -2181,14 +2181,14 @@ data-bs-toggle="dropdown" aria-expanded="false">
  * @param isGregorian آیا تاریخ تبدیل به شمسی شود و نمایش داده شود یا خیر
  * @param format فرمت مورد نظر برای تبدیل تاریخ به رشته
  */
-  convertDateToString = (date: Date, isGregorian: boolean, format: string): string => {
+  static convertDateToString = (date: Date, isGregorian: boolean, format: string): string => {
     return MdsPersianDateTimePicker.getDateTimeString(!isGregorian ? MdsPersianDateTimePicker.getDateTimeJsonPersian1(date) : MdsPersianDateTimePicker.getDateTimeJson1(date), format, isGregorian, isGregorian);
   };
   /**
  * تبدیل آبجکت تاریخ به شمسی
  * @param date آبجکت تاریخ
  */
-  convertDateToJalali = (date: Date): MdsPersianDateTimePickerConvertedDateModel => {
+   static convertDateToJalali = (date: Date): MdsPersianDateTimePickerConvertedDateModel => {
     const dateTimeJson1 = MdsPersianDateTimePicker.getDateTimeJson1(date);
     const jalaliJsonModel = MdsPersianDateTimePicker.toJalali(dateTimeJson1.year, dateTimeJson1.month, dateTimeJson1.day);
     return {
