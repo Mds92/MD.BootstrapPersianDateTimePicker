@@ -2178,7 +2178,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   /**
  * تبدیل آبجکت تاریخ به رشته
  * @param date آبجکت تاریخ
- * @param isGregorian آیا تاریخ تبدیل به شمسی شود و نمایش داده شود یا خیر
+ * @param isGregorian آیا تاریخ میلادی مد نظر است یا تبدیل به شمسی شود
  * @param format فرمت مورد نظر برای تبدیل تاریخ به رشته
  */
   static convertDateToString = (date: Date, isGregorian: boolean, format: string): string => {
@@ -2188,7 +2188,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
  * تبدیل آبجکت تاریخ به شمسی
  * @param date آبجکت تاریخ
  */
-   static convertDateToJalali = (date: Date): MdsPersianDateTimePickerConvertedDateModel => {
+  static convertDateToJalali = (date: Date): MdsPersianDateTimePickerConvertedDateModel => {
     const dateTimeJson1 = MdsPersianDateTimePicker.getDateTimeJson1(date);
     const jalaliJsonModel = MdsPersianDateTimePicker.toJalali(dateTimeJson1.year, dateTimeJson1.month, dateTimeJson1.day);
     return {

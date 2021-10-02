@@ -59,7 +59,7 @@ Name | Values | Description | Sample
 **selectedDateToShow** | [new Date()], Date | Selected date to start calendar from it as JavaScript Date object | new Date('2018/9/30')
 **selectedRangeDate** | Array: Date[] | Selected range date as JavaScript Date object | [new Date('2020/8/5'), new Date('2020/8/15')]
 **yearOffset** | Number | Number of years to select in year selector | 30
-**holiDays** | Array: Date[] | Array of holidays to show in date time picker as holiday | [new Date(), new Date(2017, 3, 2)]
+**holidays** | Array: Date[] | Array of holidays to show in date time picker as holiday | [new Date(), new Date(2017, 3, 2)]
 **disabledDates** | Array: Date[] | Array of disabled dates to prevent user to select them | [new Date(2017, 1, 1), new Date(2017, 1, 2)] 
 **specialDates** | Array: Date[] | Array of dates to mark some dates as special | [new Date(2017, 2, 1), new Date(2017, 3, 2)] 
 **disabledDays** | Array: number[] | Array of disabled week days to prevent user to select them | Disable all "Thursday", "Friday" in persian [ 5, 6 ]
@@ -115,7 +115,7 @@ Name | Return Value | Description | Sample
 **getBsModalInstance** | bootstrap.Modal | return instance of bootstrap modal | const bsModal = dtp1Instance.getBsModalInstance()
 **updateOption** | void | update one option of date picker | dtp1Instance.updateOption('isGregorian', false)
 **updateOptions** | void | update one option of date picker | dtp1Instance.updateOptions({ isGregorian: false, inLine: false, ... })
-**getInstance** | MdsPersianDateTimePicker | static method, get instance of MdsDatePicker by an element obj | const jalaliObj = mds.MdsPersianDateTimePicker.getInstance(document.getELementById('IdOElement'));
+**getInstance** | MdsPersianDateTimePicker | static method, get instance of MdsDatePicker by an element obj | const jalaliObj = mds.MdsPersianDateTimePicker.getInstance(document.getELementById('IdOfElement'));
 **getText** | string | Get selected date text | const txt = dtp1Instance.getText()
 **getDate** | Date | Get selected date | const dateObj = dtp1Instance.getDate()
 **getDateRange** | [fromDate, toDate]: Date[] | Get selected date range | dtp1Instance.getDateRange();
