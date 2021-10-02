@@ -10,8 +10,8 @@ Major changes:
 ![MD.BootstrapPersianDateTimePicker](https://mds92.github.io/MD.BootstrapPersianDateTimePicker/images/date-picker-white.png) 
 [Demo](https://mds92.github.io/MD.BootstrapPersianDateTimePicker/)
 
-![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master-bs5/src/MdPersianDateTimePicker.jpg)
-![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master-bs5/src/MdPersianDateTimePickerModalMode.jpg)
+![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master-bs5/images/MdPersianDateTimePickerModalMode.jpg)
+![MD.BootstrapPersianDateTimePicker](https://raw.githubusercontent.com/Mds92/MD.BootstrapPersianDateTimePicker/master-bs5/images/MdPersianDateTimePicker.jpg)
 
 ##### NOTE:
 Bootstrap 3 version `https://github.com/Mds92/MD.BootstrapPersianDateTimePicker/tree/master-bs3`<br>
