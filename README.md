@@ -21,6 +21,7 @@ Bootstrap 4 version `https://github.com/Mds92/MD.BootstrapPersianDateTimePicker/
 First you have to install `Bootstrap 5` and link it to your html file.
 
 Then you can install latest version of the plugin via npm:
+
 ***npm install md.bootstrappersiandatetimepicker@latest***
 
 Now add these files to you html:
