@@ -73,6 +73,7 @@ Name | Values | Description | Sample
 **disableAfterDate** | Date | Disable days after this Date | new Date(2018, 12, 11) 
 **rangeSelector** | [false], true | Enables rangeSelector feature on date time picker
 **monthsToShow** | Numeric array with 2 items, [0 ,0] | To show, number of month before and after selected date in date time picker, first item is for before month, second item is for after month | [1, 1]
+**persianNumber** | [false], true | Convert numbers to persian characters | 
 **calendarViewOnChange(date)** | function | Event fires on date picker's view change
 **onDayClick(event)** | function | Event fires on day cell click
 

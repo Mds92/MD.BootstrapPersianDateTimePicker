@@ -1,6 +1,7 @@
 var vueApp = new Vue({
   el: '#vueAppOptions',
   data: {
+    persianNumber: '0',
     disabled: '0',
     isGregorian: '0',
     inLine: '0',

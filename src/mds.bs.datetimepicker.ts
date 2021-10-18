@@ -831,15 +831,30 @@ data-bs-toggle="dropdown" aria-expanded="false">
     str1 = str1.replace(/9/img, '۹');
     return str1;
   }
+  private static toEnglishNumber(inputNumber1: number | string): string {
+    /* ۰ ۱ ۲ ۳ ۴ ۵ ۶ ۷ ۸ ۹ */
+    if (!inputNumber1) return '';
+    let str1 = inputNumber1.toString().trim();
+    if (!str1) return '';
+    str1 = str1.replace(/۰/img, '0');
+    str1 = str1.replace(/۱/img, '1');
+    str1 = str1.replace(/۲/img, '2');
+    str1 = str1.replace(/۳/img, '3');
+    str1 = str1.replace(/۴/img, '4');
+    str1 = str1.replace(/۵/img, '5');
+    str1 = str1.replace(/۶/img, '6');
+    str1 = str1.replace(/۷/img, '7');
+    str1 = str1.replace(/۸/img, '8');
+    str1 = str1.replace(/۹/img, '9');
+    return str1;
+  }
   private static zeroPad(nr: any, base?: string): string {
     if (nr == undefined || nr == '') return '00';
     if (base == undefined || base == '') base = '00';
     let len = (String(base).length - String(nr).length) + 1;
     return len > 0 ? new Array(len).join('0') + nr : nr;
   }
-  private static getDateTimeString(dateTimeJson: GetDateTimeJson1, format: string, isGregorian: boolean, englishNumber: boolean): string {
-
-    if (isGregorian) englishNumber = true;
+  private static getDateTimeString(dateTimeJson: GetDateTimeJson1, format: string, isGregorian: boolean, persianNumber: boolean): string {
 
     /// فرمت های که پشتیبانی می شوند
     /// <para />
@@ -907,7 +922,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
     format = format.replace(/tt/mg, this.getAmPm(dateTimeJson.hour, isGregorian));
     format = format.replace(/t/mg, this.getAmPm(dateTimeJson.hour, isGregorian)[0]);
 
-    if (!englishNumber) format = MdsPersianDateTimePicker.toPersianNumber(format);
+    if (persianNumber)
+      format = MdsPersianDateTimePicker.toPersianNumber(format);
     return format;
   }
   private static getSelectedDateTimeTextFormatted(setting: MdsPersianDateTimePickerSetting): string {
@@ -918,9 +934,9 @@ data-bs-toggle="dropdown" aria-expanded="false">
       setting.selectedDate.setSeconds(0);
     }
     if (setting.rangeSelector && setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined)
-      return MdsPersianDateTimePicker.getDateTimeString(!setting.isGregorian ? MdsPersianDateTimePicker.getDateTimeJsonPersian1(setting.rangeSelectorStartDate) : MdsPersianDateTimePicker.getDateTimeJson1(setting.rangeSelectorStartDate), setting.textFormat, setting.isGregorian, setting.isGregorian) + ' - ' +
-        MdsPersianDateTimePicker.getDateTimeString(!setting.isGregorian ? MdsPersianDateTimePicker.getDateTimeJsonPersian1(setting.rangeSelectorEndDate) : MdsPersianDateTimePicker.getDateTimeJson1(setting.rangeSelectorEndDate), setting.textFormat, setting.isGregorian, setting.isGregorian);
-    return MdsPersianDateTimePicker.getDateTimeString(!setting.isGregorian ? MdsPersianDateTimePicker.getDateTimeJsonPersian1(setting.selectedDate) : MdsPersianDateTimePicker.getDateTimeJson1(setting.selectedDate), setting.textFormat, setting.isGregorian, setting.isGregorian);
+      return MdsPersianDateTimePicker.getDateTimeString(!setting.isGregorian ? MdsPersianDateTimePicker.getDateTimeJsonPersian1(setting.rangeSelectorStartDate) : MdsPersianDateTimePicker.getDateTimeJson1(setting.rangeSelectorStartDate), setting.textFormat, setting.isGregorian, setting.persianNumber) + ' - ' +
+        MdsPersianDateTimePicker.getDateTimeString(!setting.isGregorian ? MdsPersianDateTimePicker.getDateTimeJsonPersian1(setting.rangeSelectorEndDate) : MdsPersianDateTimePicker.getDateTimeJson1(setting.rangeSelectorEndDate), setting.textFormat, setting.isGregorian, setting.persianNumber);
+    return MdsPersianDateTimePicker.getDateTimeString(!setting.isGregorian ? MdsPersianDateTimePicker.getDateTimeJsonPersian1(setting.selectedDate) : MdsPersianDateTimePicker.getDateTimeJson1(setting.selectedDate), setting.textFormat, setting.isGregorian, setting.persianNumber);
   }
   private static getSelectedDateFormatted(setting: MdsPersianDateTimePickerSetting): string {
     // دریافت رشته تاریخ انتخاب شده
@@ -967,7 +983,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       targetTextElement.dispatchEvent(changeEvent);
     }
     if (targetDateElement != undefined) {
-      const dateTimeFormat = this.getSelectedDateFormatted(setting);
+      const dateTimeFormat = this.toEnglishNumber(this.getSelectedDateFormatted(setting));
       switch (targetDateElement.tagName.toLowerCase()) {
         case 'input':
           (<any>targetDateElement).value = dateTimeFormat;
@@ -2376,6 +2392,10 @@ export class MdsPersianDateTimePickerSetting {
    * آیا تقویم به صورت مدال نمایش داده شود
    */
   modalMode = false;
+  /**
+   * تبدیل اعداد به فارسی
+   */
+  persianNumber = false;
   /**
    * رویداد عوض شدن ماه و تاریخ در دیت پیکر
    * @param _ تاریخ ماه انتخابی

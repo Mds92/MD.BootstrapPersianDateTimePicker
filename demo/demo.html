@@ -23,6 +23,25 @@
             <div class="col-12">
               <h2>Options</h2>
               <hr>
+              <!-- persianNumber -->
+              <div class="row">
+                <label class="col-5 col-form-label">persianNumber</label>
+                <div class="col-7 pt-2">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="persianNumberRadioOptions"
+                      id="persianNumberRadioOptionsId1" value="1" v-model="persianNumber"
+                      v-on:change="optionChange('persianNumber', true)">
+                    <label class="form-check-label" for="persianNumberRadioOptionsId1">true</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="persianNumberRadioOptions"
+                      id="persianNumberRadioOptionsId2" value="0" v-model="persianNumber"
+                      v-on:change="optionChange('persianNumber', false)">
+                    <label class="form-check-label" for="persianNumberRadioOptionsId2">false</label>
+                  </div>
+                </div>
+              </div>
+              <hr>
               <!-- disabled -->
               <div class="row">
                 <label class="col-5 col-form-label">disabled</label>
