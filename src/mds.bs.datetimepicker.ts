@@ -2253,6 +2253,7 @@ interface JalaliJsonModel {
   jd: number
 }
 
+
 interface GregorianJsonModel {
   gy: number,
   gm: number,

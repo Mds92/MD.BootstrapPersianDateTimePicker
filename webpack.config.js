@@ -85,7 +85,7 @@ module.exports = {
       banner: `
 Bootstrap 5+ Persian Date Time Picker jQuery Plugin
 https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
-version : 4.0.0
+version : 4.1.0
 Written By Mohammad Dayyan, Mordad 1397 - 1400
 mds.soft@gmail.com - @mdssoft
       `
