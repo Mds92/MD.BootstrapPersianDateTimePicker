@@ -600,9 +600,9 @@
 
     // بدست آوردن ب.ظ یا ق.ظ
     if (persianDateTimeInString.indexOf('ق.ظ') > -1)
-      amPmEnum = amPmEnum.AM;
+      amPmEnum = amPmEnumEnum.AM;
     else if (persianDateTimeInString.indexOf('ب.ظ') > -1)
-      amPmEnum = amPmEnum.PM;
+      amPmEnum = amPmEnumEnum.PM;
 
     if (persianDateTimeInString.indexOf(':') > -1) // رشته ورودی شامل ساعت نیز هست
     {
