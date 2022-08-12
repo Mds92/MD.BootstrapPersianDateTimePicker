@@ -148,13 +148,13 @@ var vueApp = new Vue({
     addDateItem: function (optionName) {
       switch (optionName) {
         case 'holidays':
-          this.holidays.push(dtp1.convertDateToString(new Date(), true, 'yyyy/MM/dd'));
+          this.holidays.push(mds.MdsPersianDateTimePicker.convertDateToString(new Date(), true, 'yyyy/MM/dd'));
           break;
         case 'specialDates':
-          this.specialDates.push(dtp1.convertDateToString(new Date(), true, 'yyyy/MM/dd'));
+          this.specialDates.push(mds.MdsPersianDateTimePicker.convertDateToString(new Date(), true, 'yyyy/MM/dd'));
           break;
         case 'disabledDates':
-          this.disabledDates.push(dtp1.convertDateToString(new Date(), true, 'yyyy/MM/dd'));
+          this.disabledDates.push(mds.MdsPersianDateTimePicker.convertDateToString(new Date(), true, 'yyyy/MM/dd'));
           break;
         case 'disabledDays':
           this.disabledDays.push(1);
