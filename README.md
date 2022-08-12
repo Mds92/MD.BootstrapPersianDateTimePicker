@@ -29,6 +29,9 @@ Now add these files to you html:
 <link href="/dist/mds.bs.datetimepicker.style.css" rel="stylesheet"/>
 <script src="/dist/mds.bs.datetimepicker.js"></script>
 ```
+##### NOTE:
+This library css file must be after bootstrap css file
+
 I suggest to add scripts at the end of  `body`  tag and after  `bootstrap` js file.
 ### How to use:
 ```javascript
