@@ -1745,8 +1745,22 @@ data-bs-toggle="dropdown" aria-expanded="false">
 
     return html;
   }
-  private updateCalendarBodyHtml = (element: Element, setting: MdsPersianDateTimePickerSetting): void => {
+  private updateCalendarBodyHtml = (element: Element, setting: MdsPersianDateTimePickerSetting, updatePopoverContent = false): void => {
     const calendarHtml = this.getDateTimePickerBodyHtml(setting);
+    const dtpInlineHeader = calendarHtml.match(/<th mds-dtp-inline-header\b[^>]*>(.*?)<\/th>/img)![0];
+    this.tempTitleString = dtpInlineHeader;
+    if (!setting.inLine && updatePopoverContent) {
+      const popover = this.getBsPopoverInstance();
+      if (!popover) {
+        console.error("mds.bs.datetimepicker: `BsPopoverInstance` is null!");
+        return;
+      }
+      popover.setContent({
+        '.popover-header': dtpInlineHeader,
+        '.popover-body': calendarHtml
+      });
+      return;
+    }
     let containerElement = element.closest('[data-name="mds-dtp-body"]');
     if (containerElement == null) {
       containerElement = element.closest('[data-mds-dtp-guid]');
@@ -1758,11 +1772,9 @@ data-bs-toggle="dropdown" aria-expanded="false">
         containerElement = containerElement.querySelector('[data-name="mds-dtp-body"]');
     }
     if (containerElement == null) {
-      console.error("mds.bs.datetimepicker: `data-mds-dtp-guid` element not found !")
+      console.error("mds.bs.datetimepicker: `data-mds-dtp-guid` element not found!")
       return;
     }
-    const dtpInlineHeader = calendarHtml.match(/<th mds-dtp-inline-header\b[^>]*>(.*?)<\/th>/img)![0];
-    this.tempTitleString = dtpInlineHeader;
     this.setPopoverHeaderHtml(element, setting, dtpInlineHeader.trim());
     containerElement.innerHTML = calendarHtml;
     this.hideYearsBox(element, setting);
@@ -1789,9 +1801,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     // کلیک روی روزها
     // انتخاب روز
     const instance = MdsPersianDateTimePicker.getInstance(element);
-    if (!instance) {
-      return;
-    }
+    if (!instance) return;
     if (instance.setting.disabled || element.getAttribute('disabled') != undefined)
       return;
     let dateNumber = Number(element.getAttribute('data-number'));
@@ -1869,14 +1879,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
     }
     MdsPersianDateTimePickerData.set(instance.guid, instance);
     MdsPersianDateTimePicker.setSelectedData(setting);
-    if (!setting.inLine) {
-      instance.hide();
-    } else {
-      // حذف روزهای انتخاب شده در تقویم این لاین
-      element.closest(`[data-mds-dtp-guid="${this.guid}"]`)!
-        .querySelectorAll('[data-day]')
-        .forEach(e => e.removeAttribute('data-mds-dtp-selected-day'));
-    }
     element.setAttribute('data-mds-dtp-selected-day', '');
     if (setting.toDate || setting.fromDate) {
       // وقتی روی روز یکی از تقویم ها کلیک می شود
@@ -1902,10 +1904,18 @@ data-bs-toggle="dropdown" aria-expanded="false">
       } else
         this.updateCalendarBodyHtml(element, setting);
     } else {
-      this.updateCalendarBodyHtml(element, setting);
+      this.updateCalendarBodyHtml(element, setting, true);
     }
     if (setting.onDayClick != undefined)
       setting.onDayClick(setting);
+    if (!setting.inLine) {
+      instance.hide();
+    } else {
+      // حذف روزهای انتخاب شده در تقویم این لاین
+      element.closest(`[data-mds-dtp-guid="${this.guid}"]`)!
+        .querySelectorAll('[data-day]')
+        .forEach(e => e.removeAttribute('data-mds-dtp-selected-day'));
+    }
   }
   private hoverOnDays = (e: Event): void => {
     // هاور روی روزها

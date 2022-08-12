@@ -55,16 +55,12 @@ module.exports = {
   target: 'web',
   watch: true,
   devServer: {
-    lazy: false,
     hot: true,
-    inline: true,
-    watchContentBase: true,
-    contentBase: './',
-    watchOptions: {
-      aggregateTimeout: 200,
-      poll: 1000,
-      followSymlinks: true,
-    }
+    static: {
+      directory: path.join(__dirname),
+    },
+    compress: false,
+    port: 9000,
   },
   optimization: {
     minimize: true,
