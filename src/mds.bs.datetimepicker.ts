@@ -2341,11 +2341,13 @@ interface MdsPersianDateTimePickerYearToSelect {
   html: string
 }
 
+type PopoverPlacement = 'auto' | 'top' | 'bottom' | 'left' | 'right';
+
 export class MdsPersianDateTimePickerSetting {
   /**
    * محل قرار گرفتن تقویم
    */
-  placement: "auto" | "top" | "bottom" | "left" | "right" | (() => void) = 'bottom';
+  placement: PopoverPlacement | (() => PopoverPlacement) | undefined = 'bottom';
   /**
    * فعال بودن تایم پیکر
    */
