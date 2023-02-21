@@ -1,10 +1,2131 @@
-/*!
- * 
- * Bootstrap 5+ Persian Date Time Picker
- * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
- * version : 4.2.1
- * Written By Mohammad Dayyan, Mordad 1397 - 1400
- * mds.soft@gmail.com - @mdssoft
- *
- */(()=>{var e={348:(e,t,a)=>{var n=a(155),r=a(672);void 0===r.mds&&(r.mds=n),e.exports=n},672:(e,t,a)=>{"use strict";e.exports=function(){if("object"==typeof globalThis)return globalThis;var e;try{e=this||new Function("return this")()}catch(e){if("object"==typeof window)return window;if("object"==typeof self)return self;if(void 0!==a.g)return a.g}return e}()},155:(e,t,a)=>{"use strict";a.r(t),a.d(t,{MdsPersianDateTimePicker:()=>r,MdsPersianDateTimePickerSetting:()=>s});const n=bootstrap;class r{constructor(e,t){var a;if(this.guid="",this.bsPopover=null,this.bsModal=null,this.tempTitleString="",this.hideYearsBox=(e,t)=>{if(t.inLine){const t=e.closest("[data-mds-dtp-guid]");if(null==t)return;const a=t.querySelector("[mds-dtp-inline-header]");this.tempTitleString&&null!=a&&(a.innerHTML=this.tempTitleString);const n=t.querySelector("[data-mds-dtp-year-list-box]");null!=n&&(n.classList.add("w-0"),n.innerHTML="");const r=t.querySelector('[data-name="dtp-years-container"]');null!=r&&(r.classList.add("w-0"),r.innerHTML=""),t.classList.remove("overflow-hidden")}else{const a=t.modalMode?this.getModal():this.getPopover(e);if(null==a)return;this.tempTitleString&&(t.modalMode?a.querySelector("[data-mds-dtp-title] .modal-title").innerHTML=this.tempTitleString:a.querySelector("[data-mds-dtp-title]").innerHTML=this.tempTitleString,a.querySelector('[data-name="mds-dtp-body"]').removeAttribute("hidden"));const n=a.querySelector("[data-mds-dtp-year-list-box]");n.classList.add("w-0"),n.innerHTML=""}},this.showYearsBox=e=>{const t=r.getInstance(e);if(!t)return;const a=t.setting,n=a.inLine?e.closest("[data-mds-dtp-guid]"):e.closest("[data-mds-dtp]");if(null==n)return;this.tempTitleString=a.inLine?n.querySelector("[mds-dtp-inline-header]").textContent.trim():n.querySelector("[data-mds-dtp-title]").textContent.trim();const s=this.getYearsBoxBodyHtml(a,0),o=s.html,i=n.querySelector("[data-mds-dtp-year-list-box]");this.setPopoverHeaderHtml(e,a,this.getYearsBoxHeaderHtml(a,s.yearStart,s.yearEnd)),i.innerHTML=o,i.classList.remove("w-0"),a.inLine?(n.classList.add("overflow-hidden"),i.classList.add("inline")):a.modalMode?n.querySelector('[data-name="mds-dtp-body"]').setAttribute("hidden",""):i.classList.remove("inline")},this.changeYearList=e=>{const t=r.getInstance(e);if(!t)return;const a=t.setting,n="1"==e.getAttribute("data-year-range-button-change"),s=Number(e.getAttribute("data-year")),o=this.getYearsBoxBodyHtml(a,n?s:s-2*a.yearOffset);a.inLine?e.closest("[data-mds-dtp-guid]").querySelector("[data-mds-dtp-year-list-box]").innerHTML=o.html:e.closest("[data-mds-dtp]").querySelector("[data-mds-dtp-year-list-box]").innerHTML=o.html,this.setPopoverHeaderHtml(e,a,this.getYearsBoxHeaderHtml(a,o.yearStart,o.yearEnd))},this.setPopoverHeaderHtml=(e,t,a)=>{if(null!=this.bsPopover){const t=this.getPopover(e);if(null==t)return;t.querySelector("[data-mds-dtp-title]").innerHTML=a}else if(t.inLine){let t=e.closest("[data-mds-dtp-guid]").querySelector('[data-name="dtp-years-container"]');t.innerHTML=a,t.classList.remove("w-0")}else if(t.modalMode){e.closest("[data-mds-dtp-guid]").querySelector("[data-mds-dtp-title] .modal-title").innerHTML=a}},this.updateCalendarBodyHtml=(e,t,a=!1)=>{const n=this.getDateTimePickerBodyHtml(t),r=n.match(/<th mds-dtp-inline-header\b[^>]*>(.*?)<\/th>/gim)[0];if(this.tempTitleString=r,!t.inLine&&a){const e=this.getBsPopoverInstance();return e?void e.setContent({".popover-header":r,".popover-body":n}):void console.error("mds.bs.datetimepicker: `BsPopoverInstance` is null!")}let s=e.closest('[data-name="mds-dtp-body"]');if(null==s){if(s=e.closest("[data-mds-dtp-guid]"),null==s)return void console.error("mds.bs.datetimepicker: `data-mds-dtp-guid` element not found !");t.modalMode&&(s=s.querySelector('[data-name="mds-dtp-body"]'))}null!=s?(this.setPopoverHeaderHtml(e,t,r.trim()),s.innerHTML=n,this.hideYearsBox(e,t),this.enableEvents(),this.enableInLineEvents()):console.error("mds.bs.datetimepicker: `data-mds-dtp-guid` element not found!")},this.changeMonth=e=>{const t=r.getInstance(e);if(!t)return;if(t.setting.disabled)return;const a=Number(e.getAttribute("data-number")),n=t.setting;let s=r.getClonedDate(n.selectedDateToShow);s=r.getDateTime4(a,s,n.isGregorian),n.selectedDateToShow=r.getClonedDate(s),i.set(t.guid,t),this.updateCalendarBodyHtml(e,n),null!=n.calendarViewOnChange&&n.calendarViewOnChange(s)},this.selectDay=e=>{var t;const a=r.getInstance(e);if(!a)return;if(a.setting.disabled||null!=e.getAttribute("disabled"))return;let n=Number(e.getAttribute("data-number"));const s=a.setting,o=null!=e.getAttribute("disabled");null==s.selectedDate||s.enableTimePicker||(s.selectedDate.setHours(0),s.selectedDate.setMinutes(0),s.selectedDate.setSeconds(0));let l=s.selectedDate?r.getDateTimeJson1(s.selectedDate):null,d=s.selectedDateToShow?r.getClonedDate(s.selectedDateToShow):new Date,m=r.getDateTimeJson1(d);if(o)null!=s.onDayClick&&s.onDayClick(s);else{if(d=r.getDateTime4(n,d,s.isGregorian),s.rangeSelector){if(null!=s.rangeSelectorStartDate&&null!=s.rangeSelectorEndDate){s.selectedRangeDate=[],s.rangeSelectorStartDate=null,s.rangeSelectorEndDate=null;let a="[data-mds-dtp]";s.inLine&&(a="[data-mds-dtp-guid]"),null===(t=e.closest(a))||void 0===t||t.querySelectorAll("td.selected-range-days-start-end,td.selected-range-days").forEach((e=>{e.classList.remove("selected-range-days"),e.classList.remove("selected-range-days-start-end")}))}if(null==s.rangeSelectorStartDate)e.classList.add("selected-range-days-start-end"),s.rangeSelectorStartDate=r.getClonedDate(d),s.selectedDate=r.getClonedDate(d),s.selectedDateToShow=r.getClonedDate(d);else if(null!=s.rangeSelectorStartDate&&null==s.rangeSelectorEndDate){if(s.rangeSelectorStartDate.getTime()>=d.getTime())return;e.classList.add("selected-range-days-start-end"),s.rangeSelectorEndDate=r.getClonedDate(d),r.setSelectedData(s)}return i.set(a.guid,a),void(null!=s.rangeSelectorStartDate&&null!=s.rangeSelectorEndDate&&(s.selectedRangeDate=[r.getClonedDate(s.rangeSelectorStartDate),r.getClonedDate(s.rangeSelectorEndDate)],s.inLine?this.updateCalendarBodyHtml(e,s):a.hide()))}if(s.selectedDate=r.getClonedDate(d),null==s.selectedDate||s.enableTimePicker||(s.selectedDate.setHours(0),s.selectedDate.setMinutes(0),s.selectedDate.setSeconds(0)),s.selectedDateToShow=r.getClonedDate(d),null!=l&&(s.enableTimePicker?(l.hour=m.hour,l.minute=m.minute,l.second=m.second):(l.hour=0,l.minute=0,l.second=0),s.selectedDate.setHours(l.hour),s.selectedDate.setMinutes(l.minute),s.selectedDate.setSeconds(l.second)),i.set(a.guid,a),r.setSelectedData(s),e.setAttribute("data-mds-dtp-selected-day",""),s.toDate||s.fromDate){const t=document.querySelector(`[data-mds-dtp-group="${s.groupId}"][data-to-date]`),a=document.querySelector(`[data-mds-dtp-group="${s.groupId}"][data-from-date]`);if(s.fromDate&&null!=t){const e=r.getInstance(t);null!=e&&(s.inLine?this.updateCalendarBodyHtml(t,e.setting):e.initializeBsPopover(e.setting))}else if(s.toDate&&null!=a){const e=r.getInstance(a);null!=e&&(s.inLine?this.updateCalendarBodyHtml(a,e.setting):e.initializeBsPopover(e.setting))}else this.updateCalendarBodyHtml(e,s)}else this.updateCalendarBodyHtml(e,s,!0);null!=s.onDayClick&&s.onDayClick(s),s.inLine?e.closest(`[data-mds-dtp-guid="${this.guid}"]`).querySelectorAll("[data-day]").forEach((e=>e.removeAttribute("data-mds-dtp-selected-day"))):a.hide()}},this.hoverOnDays=e=>{const t=e.target,a=r.getInstance(t);if(!a)return;const n=a.setting;if(null!=t.getAttribute("disabled")||!n.rangeSelector||null!=n.rangeSelectorStartDate&&null!=n.rangeSelectorEndDate)return;const s=Number(t.getAttribute("data-number")),o=[].slice.call(document.querySelectorAll("td[data-day]"));o.forEach((e=>{e.classList.remove("selected-range-days"),e.classList.remove("selected-range-days-nm")}));const i=[].slice.call(document.querySelectorAll("td[data-nm]"));i.forEach((e=>{e.classList.remove("selected-range-days"),e.classList.remove("selected-range-days-nm")}));const l=n.rangeSelectorStartDate?r.getClonedDate(n.rangeSelectorStartDate):void 0,d=n.rangeSelectorEndDate?r.getClonedDate(n.rangeSelectorEndDate):void 0;let m=0,c=0;if(n.isGregorian?(m=l?r.convertToNumber3(l):0,c=d?r.convertToNumber3(d):0):(m=l?r.convertToNumber1(r.getDateTimeJsonPersian1(l)):0,c=d?r.convertToNumber1(r.getDateTimeJsonPersian1(d)):0),m>0&&s>m)for(var u=m;u<=s;u++)o.filter((e=>e.getAttribute("data-number")==u.toString()&&e.classList.value.indexOf("selected-range-days-start-end")<=-1)).forEach((e=>e.classList.add("selected-range-days"))),i.filter((e=>e.getAttribute("data-number")==u.toString()&&e.classList.value.indexOf("selected-range-days-start-end")<=-1)).forEach((e=>e.classList.add("selected-range-days-nm")));else if(c>0&&s<c)for(var g=s;g<=c;g++)o.filter((e=>e.getAttribute("data-number")==g.toString()&&e.classList.value.indexOf("selected-range-days-start-end")<=-1)).forEach((e=>e.classList.add("selected-range-days"))),i.filter((e=>e.getAttribute("data-number")==g.toString()&&e.classList.value.indexOf("selected-range-days-start-end")<=-1)).forEach((e=>e.classList.add("selected-range-days-nm")))},this.goToday=e=>{const t=e.target,a=r.getInstance(t);if(!a)return;const n=a.setting;n.selectedDateToShow=new Date,i.set(a.guid,a),this.updateCalendarBodyHtml(t,n)},this.timeChanged=e=>{const t=e.target,a=r.getInstance(t);if(!a)return;const n=a.setting,s=t.value;if(!n.enableTimePicker)return;null==n.selectedDateToShow&&(n.selectedDateToShow=new Date);let o=Number(s.substr(0,2)),l=Number(s.substr(3,2));n.selectedDateToShow=new Date(n.selectedDateToShow.setHours(o)),n.selectedDateToShow=new Date(n.selectedDateToShow.setMinutes(l)),null==n.selectedDate&&(n.selectedDate=new Date),n.selectedDate=new Date(n.selectedDate.setHours(o)),n.selectedDate=new Date(n.selectedDate.setMinutes(l)),i.set(a.guid,a),r.setSelectedData(n)},this.popoverInsertedEvent=e=>{const t=e.target,a=r.getInstance(t);if(!a)return;const n=a.setting;this.hideYearsBox(t,n)},this.popoverOrModalShownEvent=()=>{this.enableEvents()},this.popoverOrModalHiddenEvent=()=>{this.disableEvents()},this.selectCorrectClickEvent=e=>{const t=e.target,a=r.getInstance(t);a&&(null==a||!a.setting.disabled&&null==a.element.getAttribute("disabled"))&&(null!=t.getAttribute("mds-pdtp-select-year-button")?a.showYearsBox(t):null!=t.getAttribute("data-mds-dtp-go-today")?this.goToday(e):null!=t.getAttribute("data-day")?this.selectDay(t):t.getAttribute("data-mds-hide-year-list-box")?this.hideYearsBox(t,a.setting):t.getAttribute("data-change-date-button")?this.changeMonth(t):null!=t.getAttribute("data-year-range-button-change")&&null==t.getAttribute("disabled")&&this.changeYearList(t))},this.showPopoverEvent=e=>{i.getAll().forEach((e=>e.hide()));const t=e.target,a=r.getInstance(t);null==a||a.setting.disabled||a.show()},this.hidePopoverEvent=e=>{const t=e.target;if("HTML"==t.tagName)return void i.getAll().forEach((e=>e.setting.modalMode?()=>{}:e.hide()));null!=t.closest("[data-mds-dtp]")||null!=t.getAttribute("data-mds-dtp-guid")||null!=t.getAttribute("data-mds-dtp-go-today")||i.getAll().forEach((e=>e.hide()))},t=r.extend(new s,t),!e)throw new Error("MdsPersianDateTimePicker => element is null!");if(t.rangeSelector&&(t.toDate||t.fromDate))throw new Error("MdsPersianDateTimePicker => You can not set true 'toDate' or 'fromDate' and 'rangeSelector' together");if(t.toDate&&t.fromDate)throw new Error("MdsPersianDateTimePicker => You can not set true 'toDate' and 'fromDate' together");if(!t.groupId&&(t.toDate||t.fromDate))throw new Error("MdsPersianDateTimePicker => When you set 'toDate' or 'fromDate' true, you have to set 'groupId'");t.textFormat||(t.textFormat="yyyy/MM/dd",t.enableTimePicker&&(t.textFormat+=" HH:mm")),t.dateFormat||(t.dateFormat="yyyy/MM/dd",t.enableTimePicker&&(t.dateFormat+=" HH:mm")),t.yearOffset>15&&(t.yearOffset=15),this.setting=t,this.setting.selectedDate=t.selectedDate?r.getClonedDate(t.selectedDate):null,this.setting.selectedDateToShow=null!==(a=r.getClonedDate(t.selectedDateToShow))&&void 0!==a?a:new Date,this.guid=r.newGuid(),this.element=e,this.element.setAttribute("data-mds-dtp-guid",this.guid),i.set(this.guid,this),this.initializeBsPopover(t)}static toJalali(e,t,a){return this.d2j(this.g2d(e,t,a))}static toGregorian(e,t,a){return this.d2g(this.j2d(e,t,a))}static isLeapJalaliYear(e){return 0===this.jalCal(e).leap}static jalCal(e){let t,a,n,r,s=[-61,9,38,199,426,686,756,818,1111,1181,1210,1635,2060,2097,2192,2262,2324,2394,2456,3178],o=s.length,i=e+621,l=-14,d=s[0],m=1;if(e<d||e>=s[o-1])throw new Error("Invalid Jalali year "+e);for(r=1;r<o&&(t=s[r],m=t-d,!(e<t));r+=1)l=l+8*this.div(m,33)+this.div(this.mod(m,33),4),d=t;n=e-d,l=l+8*this.div(n,33)+this.div(this.mod(n,33)+3,4),4===this.mod(m,33)&&m-n==4&&(l+=1);let c=20+l-(this.div(i,4)-this.div(3*(this.div(i,100)+1),4)-150);return m-n<6&&(n=n-m+33*this.div(m+4,33)),a=this.mod(this.mod(n+1,33)-1,4),-1===a&&(a=4),{leap:a,gy:i,march:c}}static j2d(e,t,a){let n=this.jalCal(e);return this.g2d(n.gy,3,n.march)+31*(t-1)-this.div(t,7)*(t-7)+a-1}static d2j(e){let t,a,n,r=this.d2g(e).gy,s=r-621,o=this.jalCal(s);if(n=e-this.g2d(r,3,o.march),n>=0){if(n<=185)return a=1+this.div(n,31),t=this.mod(n,31)+1,{jy:s,jm:a,jd:t};n-=186}else s-=1,n+=179,1===o.leap&&(n+=1);return a=7+this.div(n,30),t=this.mod(n,30)+1,{jy:s,jm:a,jd:t}}static g2d(e,t,a){let n=this.div(1461*(e+this.div(t-8,6)+100100),4)+this.div(153*this.mod(t+9,12)+2,5)+a-34840408;return n=n-this.div(3*this.div(e+100100+this.div(t-8,6),100),4)+752,n}static d2g(e){let t;t=4*e+139361631,t=t+4*this.div(3*this.div(4*e+183187720,146097),4)-3908;let a=5*this.div(this.mod(t,1461),4)+308,n=this.div(this.mod(a,153),5)+1,r=this.mod(this.div(a,153),12)+1;return{gy:this.div(t,1461)-100100+this.div(8-r,6),gm:r,gd:n}}static div(e,t){return~~(e/t)}static mod(e,t){return e-~~(e/t)*t}initializeBsPopover(e){if(e.rangeSelector&&(e.toDate||e.fromDate))throw new Error("MdsPersianDateTimePicker => You can not set true 'toDate' or 'fromDate' and 'rangeSelector' together");if(e.toDate&&e.fromDate)throw new Error("MdsPersianDateTimePicker => You can not set true 'toDate' and 'fromDate' together");if(!e.groupId&&(e.toDate||e.fromDate))throw new Error("MdsPersianDateTimePicker => When you set 'toDate' or 'fromDate' true, you have to set 'groupId'");e.disabled?this.element.setAttribute("disabled",""):this.element.removeAttribute("disabled"),(e.toDate||e.fromDate)&&(e.rangeSelector=!1,this.element.setAttribute("data-mds-dtp-group",e.groupId),e.toDate?this.element.setAttribute("data-to-date","true"):e.fromDate&&this.element.setAttribute("data-from-date","true")),e.rangeSelector||(e.rangeSelectorMonthsToShow=[0,0]),setTimeout((()=>{this.dispose();const t=this.getPopoverHeaderTitle(e);let a=this.getDateTimePickerBodyHtml(e),s=document.createElement("div");s.innerHTML=a;s.querySelectorAll(".dropdown>button").forEach((t=>{e.disabled?(t.setAttribute("disabled",""),t.classList.add("disabled")):(t.removeAttribute("disabled"),t.classList.remove("disabled"))})),a=s.innerHTML,1==e.modalMode?(this.setModalHtml(t,a,e),this.bsPopover=null,setTimeout((()=>{const e=this.getModal();null!=e&&(this.bsModal=new n.Modal(e),this.enableMainEvents())}),200)):1==e.inLine?(this.bsPopover=null,this.element.innerHTML=a,this.enableInLineEvents()):(this.bsPopover=new n.Popover(this.element,{container:"body",content:a,title:t,html:!0,placement:e.placement,trigger:"manual",template:r.popoverHtmlTemplate,sanitize:!1}),this.enableMainEvents()),this.tempTitleString=t}),e.inLine?10:500)}static newGuid(){return"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,(e=>{let t=16*Math.random()|0;return("x"==e?t:3&t|8).toString(16)}))}static extend(...e){for(let t=1;t<e.length;t++)for(let a in e[t])e[t].hasOwnProperty(a)&&(e[0][a]=e[t][a]);return e[0]}static getClonedDate(e){return new Date(e.getTime())}static getDateTimeJson1(e){return{year:e.getFullYear(),month:e.getMonth()+1,day:e.getDate(),hour:e.getHours(),minute:e.getMinutes(),second:e.getSeconds(),millisecond:e.getMilliseconds(),dayOfWeek:e.getDay()}}static getDateTimeJson2(e){return{year:Math.floor(e/1e4),month:Math.floor(e/100)%100,day:e%100,hour:0,minute:0,second:0,millisecond:0,dayOfWeek:-1}}static getDateTimeJsonPersian1(e){let t=this.toJalali(e.getFullYear(),e.getMonth()+1,e.getDate());return{year:t.jy,month:t.jm,day:t.jd,hour:e.getHours(),minute:e.getMinutes(),second:e.getSeconds(),millisecond:e.getMilliseconds(),dayOfWeek:e.getDay()}}static getDateTimeJsonPersian2(e,t,a,n,s,o){this.isNumber(n)||(n=0),this.isNumber(s)||(s=0),this.isNumber(o)||(o=0);let i=this.toGregorian(e,t,a);return r.getDateTimeJsonPersian1(new Date(i.gy,i.gm-1,i.gd,n,s,o))}static getWeekDayName(e,t){return t?this.weekDayNames[e]:this.weekDayNamesPersian[e]}static getMonthName(e,t){return e<0?e=11:e>11&&(e=0),t?this.monthNames[e]:this.monthNamesPersian[e]}static getWeekDayShortName(e,t){return t?this.shortDayNames[e]:this.shortDayNamesPersian[e]}static isLeapYear(e){return this.isLeapJalaliYear(e)}static getDaysInMonthPersian(e,t){let a=31;return t>6&&t<12?a=30:12==t&&(a=this.isLeapYear(e)?30:29),a}static getDaysInMonth(e,t){return new Date(e,t+1,0).getDate()}static getLastDayDateOfPreviousMonth(e,t){let a=r.getClonedDate(e);if(t){let e=new Date(a.getFullYear(),a.getMonth()-1,1),t=r.getDaysInMonth(e.getFullYear(),e.getMonth());return new Date(e.getFullYear(),e.getMonth(),t)}let n=r.getDateTimeJsonPersian1(a);return n.month+=-1,n.month<=0?(n.month=12,n.year--):n.month>12&&(n.year++,n.month=1),r.getDateTime1(n.year,n.month,r.getDaysInMonthPersian(n.year,n.month))}static getFirstDayDateOfNextMonth(e,t){let a=r.getClonedDate(e);if(t){let e=new Date(a.getFullYear(),a.getMonth()+1,1);return new Date(e.getFullYear(),e.getMonth(),1)}let n=r.getDateTimeJsonPersian1(a);return n.month+=1,n.month<=0&&(n.month=12,n.year--),n.month>12&&(n.year++,n.month=1),r.getDateTime1(n.year,n.month,1)}static getDateTime1(e,t,a,n,r,s){this.isNumber(n)||(n=0),this.isNumber(r)||(r=0),this.isNumber(s)||(s=0);let o=this.toGregorian(e,t,a);return new Date(o.gy,o.gm-1,o.gd,n,r,s)}static getDateTime2(e){e.hour||(e.hour=0),e.minute||(e.minute=0),e.second||(e.second=0);let t=this.toGregorian(e.year,e.month,e.day);return new Date(t.gy,t.gm-1,t.gd,e.hour,e.minute,e.second)}static getDateTime3(e){return new Date(e.year,e.month-1,e.day,e.hour,e.minute,e.second)}static getDateTime4(e,t,a){let n=r.getDateTimeJson2(e);if(a)t=new Date(n.year,n.month-1,n.day,t.getHours(),t.getMinutes(),t.getSeconds());else{let e=r.getDateTimeJsonPersian1(t);e.year=n.year,e.month=n.month,e.day=n.day,t=this.getDateTime2(e)}return t}static getLesserDisableBeforeDate(e){let t=null;const a=new Date;return e.disableBeforeToday&&e.disableBeforeDate?t=e.disableBeforeDate.getTime()<=a.getTime()?r.getClonedDate(e.disableBeforeDate):a:e.disableBeforeDate?t=r.getClonedDate(e.disableBeforeDate):e.disableBeforeToday&&(t=a),null==t?null:e.isGregorian?r.getDateTimeJson1(t):r.getDateTimeJsonPersian1(t)}static getBiggerDisableAfterDate(e){let t=null;const a=new Date;return e.disableAfterDate&&e.disableAfterToday?t=e.disableAfterDate.getTime()>=a.getTime()?r.getClonedDate(e.disableAfterDate):a:e.disableAfterDate?t=r.getClonedDate(e.disableAfterDate):e.disableAfterToday&&(t=a),null==t?null:e.isGregorian?r.getDateTimeJson1(t):r.getDateTimeJsonPersian1(t)}static addMonthToDateTimeJson(e,t,a){const n=Object.assign({},e);return n.day=1,n.month+=t,a?r.getDateTimeJson1(this.getDateTime3(n)):(n.month<=0&&(n.month=12,n.year--),n.month>12&&(n.year++,n.month=1),n)}static convertToNumber1(e){return Number(r.zeroPad(e.year)+r.zeroPad(e.month)+r.zeroPad(e.day))}static convertToNumber2(e,t,a){return Number(r.zeroPad(e)+r.zeroPad(t)+r.zeroPad(a))}static convertToNumber3(e){return r.convertToNumber1(r.getDateTimeJson1(e))}static correctOptionValue(e,t){const a=new s;return Object.keys(a).filter((t=>t===e)).forEach((n=>{switch(typeof a[n]){case"number":t=+t;break;case"string":t=t.toString();break;case"boolean":t=!!t;break;case"object":if(a[n]instanceof Date)t=new Date(t);else if(Array.isArray(a[n]))switch(e){case"holidays":case"disabledDates":case"specialDates":case"selectedRangeDate":t.forEach(((e,a)=>{t[a]=new Date(e)}));break;case"disabledDays":case"rangeSelectorMonthsToShow":t.forEach(((e,a)=>{t[a]=+e}))}}})),t}static getShortHour(e){let t;return t=e>12?e-12:e,t}static getAmPm(e,t){let a;return a=e>12?t?"PM":"ب.ظ":t?"AM":"ق.ظ",a}static addMonthToDateTime(e,t,a){let n;return a?(n=r.getDateTimeJson1(e),n=r.addMonthToDateTimeJson(n,t,a),this.getDateTime3(n)):(n=r.getDateTimeJsonPersian1(e),n=r.addMonthToDateTimeJson(n,t,a),this.getDateTime2(n))}static isNumber(e){return!isNaN(parseFloat(e))&&isFinite(e)}static toPersianNumber(e){if(!e)return"";let t=e.toString().trim();return t?(t=t.replace(/0/gim,"۰"),t=t.replace(/1/gim,"۱"),t=t.replace(/2/gim,"۲"),t=t.replace(/3/gim,"۳"),t=t.replace(/4/gim,"۴"),t=t.replace(/5/gim,"۵"),t=t.replace(/6/gim,"۶"),t=t.replace(/7/gim,"۷"),t=t.replace(/8/gim,"۸"),t=t.replace(/9/gim,"۹"),t):""}static toEnglishNumber(e){if(!e)return"";let t=e.toString().trim();return t?(t=t.replace(/۰/gim,"0"),t=t.replace(/۱/gim,"1"),t=t.replace(/۲/gim,"2"),t=t.replace(/۳/gim,"3"),t=t.replace(/۴/gim,"4"),t=t.replace(/۵/gim,"5"),t=t.replace(/۶/gim,"6"),t=t.replace(/۷/gim,"7"),t=t.replace(/۸/gim,"8"),t=t.replace(/۹/gim,"9"),t):""}static zeroPad(e,t){if(null==e||""==e)return"00";null!=t&&""!=t||(t="00");let a=String(t).length-String(e).length+1;return a>0?new Array(a).join("0")+e:e}static getDateTimeString(e,t,a,n){return t=(t=(t=(t=(t=(t=(t=(t=(t=(t=(t=(t=(t=(t=(t=(t=(t=(t=(t=(t=(t=t.replace(/yyyy/gm,e.year.toString())).replace(/yy/gm,(e.year%100).toString())).replace(/MMMM/gm,r.getMonthName(e.month-1,a))).replace(/MM/gm,r.zeroPad(e.month))).replace(/M/gm,e.month.toString())).replace(/dddd/gm,r.getWeekDayName(e.dayOfWeek,a))).replace(/dd/gm,r.zeroPad(e.day))).replace(/d/gm,e.day.toString())).replace(/HH/gm,r.zeroPad(e.hour))).replace(/H/gm,e.hour.toString())).replace(/hh/gm,r.zeroPad(this.getShortHour(e.hour).toString()))).replace(/h/gm,r.zeroPad(e.hour))).replace(/mm/gm,r.zeroPad(e.minute))).replace(/m/gm,e.minute.toString())).replace(/ss/gm,r.zeroPad(e.second))).replace(/s/gm,e.second.toString())).replace(/fff/gm,r.zeroPad(e.millisecond,"000"))).replace(/ff/gm,r.zeroPad(e.millisecond/10))).replace(/f/gm,(e.millisecond/100).toString())).replace(/tt/gm,this.getAmPm(e.hour,a))).replace(/t/gm,this.getAmPm(e.hour,a)[0]),n&&(t=r.toPersianNumber(t)),t}static getSelectedDateTimeTextFormatted(e){return null==e.selectedDate?"":(e.enableTimePicker||(e.selectedDate.setHours(0),e.selectedDate.setMinutes(0),e.selectedDate.setSeconds(0)),e.rangeSelector&&null!=e.rangeSelectorStartDate&&null!=e.rangeSelectorEndDate?r.getDateTimeString(e.isGregorian?r.getDateTimeJson1(e.rangeSelectorStartDate):r.getDateTimeJsonPersian1(e.rangeSelectorStartDate),e.textFormat,e.isGregorian,e.persianNumber)+" - "+r.getDateTimeString(e.isGregorian?r.getDateTimeJson1(e.rangeSelectorEndDate):r.getDateTimeJsonPersian1(e.rangeSelectorEndDate),e.textFormat,e.isGregorian,e.persianNumber):r.getDateTimeString(e.isGregorian?r.getDateTimeJson1(e.selectedDate):r.getDateTimeJsonPersian1(e.selectedDate),e.textFormat,e.isGregorian,e.persianNumber))}static getSelectedDateFormatted(e){return!e.rangeSelector&&!e.selectedDate||e.rangeSelector&&!e.rangeSelectorStartDate&&!e.rangeSelectorEndDate?"":e.rangeSelector?r.getDateTimeString(r.getDateTimeJson1(e.rangeSelectorStartDate),e.dateFormat,!0,e.persianNumber)+" - "+r.getDateTimeString(r.getDateTimeJson1(e.rangeSelectorEndDate),e.dateFormat,!0,e.persianNumber):r.getDateTimeString(r.getDateTimeJson1(e.selectedDate),e.dateFormat,!0,e.persianNumber)}static getDisabledDateObject(e){var t,a;let n=this.getLesserDisableBeforeDate(e),s=this.getBiggerDisableAfterDate(e);if((e.fromDate||e.toDate)&&e.groupId){const o=document.querySelector(`[data-mds-dtp-group="${e.groupId}"][data-to-date]`),i=document.querySelector(`[data-mds-dtp-group="${e.groupId}"][data-from-date]`);if(null!=o&&e.fromDate){const a=null===(t=r.getInstance(o))||void 0===t?void 0:t.setting,n=a?a.selectedDate:null;s=n?e.isGregorian?r.getDateTimeJson1(n):r.getDateTimeJsonPersian1(n):null}else if(null!=i&&e.toDate){const t=null===(a=r.getInstance(i))||void 0===a?void 0:a.setting,s=t?t.selectedDate:null;n=s?e.isGregorian?r.getDateTimeJson1(s):r.getDateTimeJsonPersian1(s):null}}return[n,s]}static setSelectedData(e){const t=e.targetTextSelector?document.querySelector(e.targetTextSelector):void 0,a=e.targetDateSelector?document.querySelector(e.targetDateSelector):void 0,n=new Event("change");if(null!=t){const a=this.getSelectedDateTimeTextFormatted(e);if("input"===t.tagName.toLowerCase())t.value=a;else t.innerHTML=a;t.dispatchEvent(n)}if(null!=a){const t=this.toEnglishNumber(this.getSelectedDateFormatted(e));if("input"===a.tagName.toLowerCase())a.value=t;else a.innerHTML=t;a.dispatchEvent(n)}}getPopover(e){let t=e.getAttribute("aria-describedby");return null==t||""==t?e.closest("[data-mds-dtp]"):document.getElementById(t.toString())}getModal(){return document.querySelector(`.modal[data-mds-dtp-guid="${this.guid}"]`)}setModalHtml(e,t,a){const n=this.getModal();if(null==n){let a=r.modalHtmlTemplate;a=a.replace(/\{\{guid\}\}/gim,this.guid);const n=document.createElement("div");n.innerHTML=a,n.querySelector("[data-mds-dtp-title] .modal-title").innerHTML=e,n.querySelector('[data-name="mds-dtp-body"]').innerHTML=t,document.querySelector("body").appendChild(n)}else n.querySelector("[data-mds-dtp-title] .modal-title").innerHTML=e,n.querySelector('[data-name="mds-dtp-body"]').innerHTML=t;const s=document.querySelector(`[data-mds-dtp-guid="${this.guid}"] .modal-dialog`);null!=s?a.rangeSelector&&(a.rangeSelectorMonthsToShow[0]>0||a.rangeSelectorMonthsToShow[1]>0)?s.classList.add("modal-xl"):s.classList.remove("modal-xl"):console.warn("mds.bs.datetimepicker: element with `data-mds-dtp-guid` selector not found !")}getYearsBoxBodyHtml(e,t){e.yearOffset=Number(e.yearOffset);const a=r.getClonedDate(e.selectedDateToShow),n=r.getDisabledDateObject(e),s=n[0],o=n[1];let i,l,d=r.dateTimePickerYearsToSelectHtmlTemplate,m="",c=1;e.isGregorian?(l=r.getDateTimeJson1(a),i=r.getDateTimeJson1(new Date)):(l=r.getDateTimeJsonPersian1(a),i=r.getDateTimeJsonPersian1(new Date)),c=1;const u=t||i.year-e.yearOffset,g=t?t+2*e.yearOffset:i.year+e.yearOffset;for(let t=u;t<g;t++){let a="";null!=s&&(a=t<s.year?"disabled":""),a||null==o||(a=t>o.year?"disabled":"");let n=r.getDateTimeJson2(r.convertToNumber2(t,l.month,r.getDaysInMonthPersian(t,l.month))),d="",u=e.isGregorian?t.toString():r.toPersianNumber(t),g=r.convertToNumber2(t,l.month,1),h=i.year==t?'data-current-year="true"':"",b=l.year==t?"data-selected-year":"",D="";h&&(D=e.isGregorian?r.currentYearText:r.currentYearTextPersian),null!=s&&null!=s.year&&n.year<s.year&&(d="disabled"),null!=o&&null!=o.year&&n.year>o.year&&(d="disabled"),e.disableBeforeToday&&n.year<i.year&&(d="disabled"),e.disableAfterToday&&n.year>i.year&&(d="disabled"),1==c&&(m+="<tr>"),m+=`\n<td class="text-center" title="${D}" ${h} ${b}>\n  <button class="btn btn-sm btn-light w-100" type="button" data-change-date-button="true" data-number="${g}" ${d} ${a}>${u}</button>\n</td>\n`,5==c&&(m+="</tr>"),c++,c>5&&(c=1)}return d=d.replace(/\{\{yearsBoxHtml\}\}/gim,m),d=d.replace(/\{\{cancelText\}\}/gim,e.isGregorian?r.cancelText:r.cancelTextPersian),e.inLine&&e.yearOffset>15&&(d+='<div style="height: 30px;"></div>'),{yearStart:u,yearEnd:g,html:d}}getYearsBoxHeaderHtml(e,t,a){const n=` ${t} - ${a-1} `,s=r.getDisabledDateObject(e);let o=r.popoverHeaderSelectYearHtmlTemplate;return o=o.replace(/\{{rtlCssClass\}\}/gim,e.isGregorian?"":"rtl"),o=o.replace(/\{{dirAttrValue\}\}/gim,e.isGregorian?"ltr":"rtl"),o=o.replace(/\{\{yearsRangeText\}\}/gim,e.isGregorian?n:r.toPersianNumber(n)),o=o.replace(/\{\{previousText\}\}/gim,e.isGregorian?r.previousText:r.previousTextPersian),o=o.replace(/\{\{nextText\}\}/gim,e.isGregorian?r.nextText:r.nextTextPersian),o=o.replace(/\{\{latestPreviousYear\}\}/gim,t>a?a.toString():t.toString()),o=o.replace(/\{\{latestNextYear\}\}/gim,t>a?t.toString():a.toString()),o=o.replace(/\{\{prevYearButtonAttr\}\}/gim,null!=s[0]&&t-1<s[0].year?"disabled":""),o=o.replace(/\{\{nextYearButtonAttr\}\}/gim,null!=s[1]&&a+1>s[1].year?"disabled":""),o}getDateTimePickerMonthHtml(e,t,a){let n=r.getClonedDate(e.selectedDateToShow),s=r.getClonedDate(n),o=null!=e.selectedDate?r.getClonedDate(e.selectedDate):void 0,i=t||a,l=r.dateTimePickerMonthTableHtmlTemplate;l=l.replace(/\{\{guid\}\}/gim,this.guid),l=l.replace(/\{\{monthTdAttribute\}\}/gim,t?"data-next-month":a?"data-prev-month":""),l=l.replace(/\{\{monthNameAttribute\}\}/gim,i?"":"hidden"),l=l.replace(/\{\{theadSelectDateButtonTrAttribute\}\}/gim,i?"hidden":""),l=l.replace(/\{\{weekDayShortName1CssClass\}\}/gim,e.isGregorian?"text-danger":""),l=l.replace(/\{\{weekDayShortName7CssClass\}\}/gim,e.isGregorian?"":"text-danger"),l=l.replace(/\{\{previousYearText\}\}/gim,e.isGregorian?r.previousYearText:r.previousYearTextPersian),l=l.replace(/\{\{previousMonthText\}\}/gim,e.isGregorian?r.previousMonthText:r.previousMonthTextPersian),l=l.replace(/\{\{nextMonthText\}\}/gim,e.isGregorian?r.nextMonthText:r.nextMonthTextPersian),l=l.replace(/\{\{nextYearText\}\}/gim,e.isGregorian?r.nextYearText:r.nextYearTextPersian),l=l.replace(/\{\{monthName1\}\}/gim,r.getMonthName(0,e.isGregorian)),l=l.replace(/\{\{monthName2\}\}/gim,r.getMonthName(1,e.isGregorian)),l=l.replace(/\{\{monthName3\}\}/gim,r.getMonthName(2,e.isGregorian)),l=l.replace(/\{\{monthName4\}\}/gim,r.getMonthName(3,e.isGregorian)),l=l.replace(/\{\{monthName5\}\}/gim,r.getMonthName(4,e.isGregorian)),l=l.replace(/\{\{monthName6\}\}/gim,r.getMonthName(5,e.isGregorian)),l=l.replace(/\{\{monthName7\}\}/gim,r.getMonthName(6,e.isGregorian)),l=l.replace(/\{\{monthName8\}\}/gim,r.getMonthName(7,e.isGregorian)),l=l.replace(/\{\{monthName9\}\}/gim,r.getMonthName(8,e.isGregorian)),l=l.replace(/\{\{monthName10\}\}/gim,r.getMonthName(9,e.isGregorian)),l=l.replace(/\{\{monthName11\}\}/gim,r.getMonthName(10,e.isGregorian)),l=l.replace(/\{\{monthName12\}\}/gim,r.getMonthName(11,e.isGregorian)),l=l.replace(/\{\{weekDayShortName1\}\}/gim,r.getWeekDayShortName(0,e.isGregorian)),l=l.replace(/\{\{weekDayShortName2\}\}/gim,r.getWeekDayShortName(1,e.isGregorian)),l=l.replace(/\{\{weekDayShortName3\}\}/gim,r.getWeekDayShortName(2,e.isGregorian)),l=l.replace(/\{\{weekDayShortName4\}\}/gim,r.getWeekDayShortName(3,e.isGregorian)),l=l.replace(/\{\{weekDayShortName5\}\}/gim,r.getWeekDayShortName(4,e.isGregorian)),l=l.replace(/\{\{weekDayShortName6\}\}/gim,r.getWeekDayShortName(5,e.isGregorian)),l=l.replace(/\{\{weekDayShortName7\}\}/gim,r.getWeekDayShortName(6,e.isGregorian));const d=r.getDisabledDateObject(e);let m,c,u,g=0,h=0,b=0,D=0,p=0,y="",T=0,v=0,S=document.createElement("TR"),M=document.createElement("TD"),f="",N=0,w=0,P=0,x=0,C=0,L=e.rangeSelector&&null!=e.rangeSelectorStartDate?r.getClonedDate(e.rangeSelectorStartDate):void 0,B=e.rangeSelector&&null!=e.rangeSelectorEndDate?r.getClonedDate(e.rangeSelectorEndDate):void 0,A=0,E=0,H="0",k="",G={month1DateNumber:0,month2DateNumber:0,month3DateNumber:0,month4DateNumber:0,month5DateNumber:0,month6DateNumber:0,month7DateNumber:0,month8DateNumber:0,month9DateNumber:0,month10DateNumber:0,month11DateNumber:0,month12DateNumber:0,selectMonth1ButtonCssClass:"",selectMonth2ButtonCssClass:"",selectMonth3ButtonCssClass:"",selectMonth4ButtonCssClass:"",selectMonth5ButtonCssClass:"",selectMonth6ButtonCssClass:"",selectMonth7ButtonCssClass:"",selectMonth8ButtonCssClass:"",selectMonth9ButtonCssClass:"",selectMonth10ButtonCssClass:"",selectMonth11ButtonCssClass:"",selectMonth12ButtonCssClass:""},J=[],Y=[],O=[],I=d[0],q=d[1],F="",j="",z="",$="",W="",R=!1;if(e.isGregorian){for(u=r.getDateTimeJson1(s),c=r.getDateTimeJson1(new Date),m=new Date(u.year,u.month-1,1).getDay(),p=o?r.convertToNumber1(r.getDateTimeJson1(o)):0,T=r.getDaysInMonth(u.year,u.month-1),v=r.getDaysInMonth(u.year,u.month-2),w=r.convertToNumber1(r.getDateTimeJson1(r.getLastDayDateOfPreviousMonth(s,!0))),P=r.convertToNumber1(r.getDateTimeJson1(r.getFirstDayDateOfNextMonth(s,!0))),s=r.getClonedDate(n),x=r.convertToNumber1(r.getDateTimeJson1(new Date(s.setFullYear(s.getFullYear()-1)))),s=r.getClonedDate(n),C=r.convertToNumber1(r.getDateTimeJson1(new Date(s.setFullYear(s.getFullYear()+1)))),s=r.getClonedDate(n),A=e.rangeSelector&&L?r.convertToNumber3(L):0,E=e.rangeSelector&&B?r.convertToNumber3(B):0,g=1;g<=12;g++)G["month"+g.toString()+"DateNumber"]=r.convertToNumber1(r.getDateTimeJson1(new Date(s.setMonth(g-1)))),s=r.getClonedDate(n);for(g=0;g<e.holidays.length;g++)J.push(r.convertToNumber1(r.getDateTimeJson1(e.holidays[g])));for(g=0;g<e.disabledDates.length;g++)Y.push(r.convertToNumber1(r.getDateTimeJson1(e.disabledDates[g])));for(g=0;g<e.specialDates.length;g++)O.push(r.convertToNumber1(r.getDateTimeJson1(e.specialDates[g])))}else{for(u=r.getDateTimeJsonPersian1(s),c=r.getDateTimeJsonPersian1(new Date),m=r.getDateTimeJsonPersian2(u.year,u.month,1,0,0,0).dayOfWeek,p=o?r.convertToNumber1(r.getDateTimeJsonPersian1(o)):0,T=r.getDaysInMonthPersian(u.year,u.month),v=r.getDaysInMonthPersian(u.year-1,u.month-1),w=r.convertToNumber1(r.getDateTimeJsonPersian1(r.getLastDayDateOfPreviousMonth(s,!1))),s=r.getClonedDate(n),P=r.convertToNumber1(r.getDateTimeJsonPersian1(r.getFirstDayDateOfNextMonth(s,!1))),s=r.getClonedDate(n),x=r.convertToNumber2(u.year-1,u.month,u.day),C=r.convertToNumber2(u.year+1,u.month,u.day),s=r.getClonedDate(n),A=e.rangeSelector&&L?r.convertToNumber1(r.getDateTimeJsonPersian1(L)):0,E=e.rangeSelector&&B?r.convertToNumber1(r.getDateTimeJsonPersian1(B)):0,g=1;g<=12;g++)G["month"+g.toString()+"DateNumber"]=r.convertToNumber2(u.year,g,r.getDaysInMonthPersian(u.year,g)),s=r.getClonedDate(n);for(g=0;g<e.holidays.length;g++)J.push(r.convertToNumber1(r.getDateTimeJsonPersian1(e.holidays[g])));for(g=0;g<e.disabledDates.length;g++)Y.push(r.convertToNumber1(r.getDateTimeJsonPersian1(e.disabledDates[g])));for(g=0;g<e.specialDates.length;g++)O.push(r.convertToNumber1(r.getDateTimeJsonPersian1(e.specialDates[g])))}let V=r.convertToNumber1(c),_=e.isGregorian?u.year.toString():r.toPersianNumber(u.year),U=I?r.convertToNumber1(I):void 0,K=q?r.convertToNumber1(q):void 0,Q=r.getMonthName(u.month-1,e.isGregorian)+" "+u.year.toString();if(e.isGregorian||(Q=r.toPersianNumber(Q)),y=r.getMonthName(u.month-1,e.isGregorian),e.yearOffset<=0&&(F="disabled",W="disabled",z="disabled"),!e.isGregorian&&6!=m||e.isGregorian&&0!=m){e.isGregorian&&m--;let t=r.addMonthToDateTimeJson(u,-1,e.isGregorian);for(g=v-m;g<=v;g++)N=r.convertToNumber2(t.year,t.month,g),H=e.isGregorian?r.zeroPad(g):r.toPersianNumber(r.zeroPad(g)),M=document.createElement("TD"),M.setAttribute("data-nm",""),M.setAttribute("data-number",N.toString()),M.innerHTML=H,e.rangeSelector&&(N==A||N==E?M.classList.add("selected-range-days-start-end"):A>0&&E>0&&N>A&&N<E&&M.classList.add("selected-range-days-nm")),e.isGregorian||6!=D?e.isGregorian&&0==D&&M.classList.add("text-danger"):M.classList.add("text-danger"),S.appendChild(M),b++,D++,D>=7&&(D=0,f+=S.outerHTML,R=!0,S=document.createElement("TR"))}for(g=1;g<=T;g++){for(D>=7&&(D=0,f+=S.outerHTML,R=!0,S=document.createElement("TR")),N=r.convertToNumber2(u.year,u.month,g),H=e.isGregorian?r.zeroPad(g):r.toPersianNumber(r.zeroPad(g)),M=document.createElement("TD"),M.setAttribute("data-day",""),M.setAttribute("data-number",N.toString()),M.innerHTML=H,N==V&&(M.setAttribute("data-today",""),M.setAttribute("title",e.isGregorian?r.todayText:r.todayTextPersian),k||(k=r.getWeekDayName(D-1<0?0:D-1,e.isGregorian))),e.rangeSelector||p!=N||(M.setAttribute("data-mds-dtp-selected-day",""),k=r.getWeekDayName(D-1<0?0:D-1,e.isGregorian)),h=0;h<J.length;h++)if(J[h]==N){M.classList.add("text-danger");break}if(e.isGregorian||6!=D?e.isGregorian&&0==D&&M.classList.add("text-danger"):M.classList.add("text-danger"),e.disableBeforeToday)for(N<V&&M.setAttribute("disabled",""),P<V&&($="disabled"),C<V&&(W="disabled"),w<V&&(j="disabled"),x<V&&(F="disabled"),h=1;h<=12;h++)G["month"+h.toString()+"DateNumber"]<V&&(G["selectMonth"+h.toString()+"ButtonCssClass"]="disabled");if(e.disableAfterToday)for(N>V&&M.setAttribute("disabled",""),P>V&&($="disabled"),C>V&&(W="disabled"),w>V&&(j="disabled"),x>V&&(F="disabled"),h=1;h<=12;h++)G["month"+h.toString()+"DateNumber"]>V&&(G["selectMonth"+h.toString()+"ButtonCssClass"]="disabled");if(K)for(N>K&&M.setAttribute("disabled",""),P>K&&($="disabled"),C>K&&(W="disabled"),w>K&&(j="disabled"),x>K&&(F="disabled"),h=1;h<=12;h++)G["month"+h.toString()+"DateNumber"]>K&&(G["selectMonth"+h.toString()+"ButtonCssClass"]="disabled");if(U)for(N<U&&M.setAttribute("disabled",""),P<U&&($="disabled"),C<U&&(W="disabled"),w<U&&(j="disabled"),x<U&&(F="disabled"),h=1;h<=12;h++)G["month"+h.toString()+"DateNumber"]<U&&(G["selectMonth"+h.toString()+"ButtonCssClass"]="disabled");for(h=0;h<Y.length;h++)N==Y[h]&&M.setAttribute("disabled","");for(h=0;h<O.length;h++)N==O[h]&&M.setAttribute("data-special-date","");null!=e.disabledDays&&e.disabledDays.length>0&&e.disabledDays.indexOf(D)>=0&&M.setAttribute("disabled",""),e.rangeSelector&&(N==A||N==E?M.classList.add("selected-range-days-start-end"):A>0&&E>0&&N>A&&N<E&&M.classList.add("selected-range-days")),S.appendChild(M),R=!1,D++,b++}D>=7&&(D=0,f+=S.outerHTML,R=!0,S=document.createElement("TR"));let X=r.addMonthToDateTimeJson(u,1,e.isGregorian);for(g=1;g<=42-b;g++)H=e.isGregorian?r.zeroPad(g):r.toPersianNumber(r.zeroPad(g)),N=r.convertToNumber2(X.year,X.month,g),M=document.createElement("TD"),M.setAttribute("data-nm",""),M.setAttribute("data-number",N.toString()),M.innerHTML=H,e.rangeSelector&&(N==A||N==E?M.classList.add("selected-range-days-start-end"):A>0&&E>0&&N>A&&N<E&&M.classList.add("selected-range-days-nm")),e.isGregorian||6!=D?e.isGregorian&&0==D&&M.classList.add("text-danger"):M.classList.add("text-danger"),S.appendChild(M),D++,D>=7&&(D=0,f+=S.outerHTML,R=!0,S=document.createElement("TR"));return R||(f+=S.outerHTML,R=!0),l=l.replace(/\{\{currentMonthInfo\}\}/gim,Q),l=l.replace(/\{\{selectedYear\}\}/gim,_),l=l.replace(/\{\{selectedMonthName\}\}/gim,y),l=l.replace(/\{\{daysHtml\}\}/gim,f),l=l.replace(/\{\{previousYearButtonDisabledAttribute\}\}/gim,F),l=l.replace(/\{\{previousYearButtonDateNumber\}\}/gim,x.toString()),l=l.replace(/\{\{previousMonthButtonDisabledAttribute\}\}/gim,j),l=l.replace(/\{\{previousMonthButtonDateNumber\}\}/gim,w.toString()),l=l.replace(/\{\{selectYearButtonDisabledAttribute\}\}/gim,z),l=l.replace(/\{\{nextMonthButtonDisabledAttribute\}\}/gim,$),l=l.replace(/\{\{nextMonthButtonDateNumber\}\}/gim,P.toString()),l=l.replace(/\{\{nextYearButtonDisabledAttribute\}\}/gim,W),l=l.replace(/\{\{nextYearButtonDateNumber\}\}/gim,C.toString()),l=l.replace(/\{\{dropDownMenuMonth1DateNumber\}\}/gim,G.month1DateNumber),l=l.replace(/\{\{dropDownMenuMonth2DateNumber\}\}/gim,G.month2DateNumber),l=l.replace(/\{\{dropDownMenuMonth3DateNumber\}\}/gim,G.month3DateNumber),l=l.replace(/\{\{dropDownMenuMonth4DateNumber\}\}/gim,G.month4DateNumber),l=l.replace(/\{\{dropDownMenuMonth5DateNumber\}\}/gim,G.month5DateNumber),l=l.replace(/\{\{dropDownMenuMonth6DateNumber\}\}/gim,G.month6DateNumber),l=l.replace(/\{\{dropDownMenuMonth7DateNumber\}\}/gim,G.month7DateNumber),l=l.replace(/\{\{dropDownMenuMonth8DateNumber\}\}/gim,G.month8DateNumber),l=l.replace(/\{\{dropDownMenuMonth9DateNumber\}\}/gim,G.month9DateNumber),l=l.replace(/\{\{dropDownMenuMonth10DateNumber\}\}/gim,G.month10DateNumber),l=l.replace(/\{\{dropDownMenuMonth11DateNumber\}\}/gim,G.month11DateNumber),l=l.replace(/\{\{dropDownMenuMonth12DateNumber\}\}/gim,G.month12DateNumber),l=l.replace(/\{\{selectMonth1ButtonCssClass\}\}/gim,G.selectMonth1ButtonCssClass),l=l.replace(/\{\{selectMonth2ButtonCssClass\}\}/gim,G.selectMonth2ButtonCssClass),l=l.replace(/\{\{selectMonth3ButtonCssClass\}\}/gim,G.selectMonth3ButtonCssClass),l=l.replace(/\{\{selectMonth4ButtonCssClass\}\}/gim,G.selectMonth4ButtonCssClass),l=l.replace(/\{\{selectMonth5ButtonCssClass\}\}/gim,G.selectMonth5ButtonCssClass),l=l.replace(/\{\{selectMonth6ButtonCssClass\}\}/gim,G.selectMonth6ButtonCssClass),l=l.replace(/\{\{selectMonth7ButtonCssClass\}\}/gim,G.selectMonth7ButtonCssClass),l=l.replace(/\{\{selectMonth8ButtonCssClass\}\}/gim,G.selectMonth8ButtonCssClass),l=l.replace(/\{\{selectMonth9ButtonCssClass\}\}/gim,G.selectMonth9ButtonCssClass),l=l.replace(/\{\{selectMonth10ButtonCssClass\}\}/gim,G.selectMonth10ButtonCssClass),l=l.replace(/\{\{selectMonth11ButtonCssClass\}\}/gim,G.selectMonth11ButtonCssClass),l=l.replace(/\{\{selectMonth12ButtonCssClass\}\}/gim,G.selectMonth12ButtonCssClass),l}getPopoverHeaderTitle(e){let t,a="";if(t=e.isGregorian?r.getDateTimeJson1(e.selectedDateToShow):r.getDateTimeJsonPersian1(e.selectedDateToShow),e.rangeSelector){const t=r.addMonthToDateTime(e.selectedDateToShow,-e.rangeSelectorMonthsToShow[0],e.isGregorian),n=r.addMonthToDateTime(e.selectedDateToShow,e.rangeSelectorMonthsToShow[1],e.isGregorian);let s,o;e.isGregorian?(s=r.getDateTimeJson1(t),o=r.getDateTimeJson1(n)):(s=r.getDateTimeJsonPersian1(t),o=r.getDateTimeJsonPersian1(n));const i=r.getMonthName(s.month-1,e.isGregorian),l=r.getMonthName(o.month-1,e.isGregorian);a=`${i} ${s.year} - ${l} ${o.year}`}else a=`${r.getMonthName(t.month-1,e.isGregorian)} ${t.year}`;return e.isGregorian||(a=r.toPersianNumber(a)),a}getDateTimePickerBodyHtml(e){let t=r.getClonedDate(e.selectedDateToShow),a=r.dateTimePickerHtmlTemplate;a=a.replace(/\{\{inlineAttr\}\}/gim,e.inLine?"data-inline":""),a=a.replace(/\{\{rtlCssClass\}\}/gim,e.isGregorian?"":"rtl"),a=a.replace(/\{\{selectedDateStringAttribute\}\}/gim,e.inLine?"":"hidden"),a=a.replace(/\{\{goTodayText\}\}/gim,e.isGregorian?r.goTodayText:r.goTodayTextPersian),a=a.replace(/\{\{timePickerAttribute\}\}/gim,e.enableTimePicker?"":"hidden");const n=r.getDisabledDateObject(e);let s,o,i="",l="",d=n[0],m=n[1];e.isGregorian?(o=r.getDateTimeJson1(t),s=r.getDateTimeJson1(new Date)):(o=r.getDateTimeJsonPersian1(t),s=r.getDateTimeJsonPersian1(new Date)),i=this.getPopoverHeaderTitle(e),l=`${e.isGregorian?"Today,":"امروز،"} ${s.day} ${r.getMonthName(s.month-1,e.isGregorian)} ${s.year}`,e.isGregorian||(l=r.toPersianNumber(l)),null!=m&&m.year<=o.year&&m.month<o.month&&(t=e.isGregorian?new Date(m.year,m.month-1,1):r.getDateTime1(m.year,m.month,m.day)),null!=d&&d.year>=o.year&&d.month>o.month&&(t=e.isGregorian?new Date(d.year,d.month-1,1):r.getDateTime1(d.year,d.month,d.day));let c="",u=e.rangeSelectorMonthsToShow[1]<=0?0:e.rangeSelectorMonthsToShow[1],g=e.rangeSelectorMonthsToShow[0]<=0?0:e.rangeSelectorMonthsToShow[0];g*=-1;for(let a=g;a<0;a++)e.selectedDateToShow=r.addMonthToDateTime(r.getClonedDate(t),a,e.isGregorian),c+=this.getDateTimePickerMonthHtml(e,!1,!0);e.selectedDateToShow=r.getClonedDate(t),c+=this.getDateTimePickerMonthHtml(e,!1,!1);for(let a=1;a<=u;a++)e.selectedDateToShow=r.addMonthToDateTime(r.getClonedDate(t),a,e.isGregorian),c+=this.getDateTimePickerMonthHtml(e,!0,!1);let h=Math.abs(g)+1+u,b=h>1?"width: "+(100/h).toString()+"%;":"";return c=c.replace(/\{\{monthTdStyle\}\}/gim,b),a=a.replace(/\{\{dtpInlineHeader\}\}/gim,i),a=a.replace(/\{\{todayDateString\}\}/gim,l),a=a.replace(/\{\{time\}\}/gim,`${r.zeroPad(o.hour)}:${r.zeroPad(o.minute)}`),a=a.replace(/\{\{monthsTdHtml\}\}/gim,c),a}enableMainEvents(){if(!this.setting.inLine)if(null!=this.bsPopover)this.element.addEventListener("shown.bs.popover",this.popoverOrModalShownEvent),this.element.addEventListener("hidden.bs.popover",this.popoverOrModalHiddenEvent),this.element.addEventListener("inserted.bs.popover",this.popoverInsertedEvent),this.element.addEventListener("click",this.showPopoverEvent,!0);else if(null!=this.bsModal){const e=this.getModal();if(null==e)return void console.error("mds.bs.datetimepicker: `modalElement` not found!");e.addEventListener("shown.bs.modal",this.popoverOrModalShownEvent),e.addEventListener("hidden.bs.modal",this.popoverOrModalHiddenEvent)}}enableInLineEvents(){this.setting.inLine&&setTimeout((()=>{var e;const t=document.querySelector(`[data-mds-dtp-guid="${this.guid}"]`);null!=t&&(null===(e=t.querySelector("[data-mds-dtp-time]"))||void 0===e||e.addEventListener("change",this.timeChanged,!1),t.addEventListener("click",this.selectCorrectClickEvent),t.querySelectorAll("[data-day]").forEach((e=>e.addEventListener("mouseenter",this.hoverOnDays,!0))))}),100)}enableEvents(){this.setting.inLine||setTimeout((()=>{document.addEventListener("click",this.selectCorrectClickEvent,!1),document.querySelector("html").addEventListener("click",this.hidePopoverEvent,!0),document.querySelectorAll("[data-mds-dtp-time]").forEach((e=>e.addEventListener("change",this.timeChanged,!1))),document.querySelectorAll("[data-mds-dtp] [data-day]").forEach((e=>e.addEventListener("mouseenter",this.hoverOnDays,!0)))}),500)}disableEvents(){var e,t;document.removeEventListener("click",this.selectCorrectClickEvent),document.querySelector("html").removeEventListener("click",this.hidePopoverEvent),null===(e=document.querySelectorAll("[data-mds-dtp-time]"))||void 0===e||e.forEach((e=>e.removeEventListener("change",this.timeChanged))),document.querySelectorAll("[data-mds-dtp] [data-day]").forEach((e=>e.removeEventListener("mouseenter",this.hoverOnDays)));const a=document.querySelector(`[data-mds-dtp-guid="${this.guid}"]`);null!=a&&(a.removeEventListener("click",this.selectCorrectClickEvent,!1),null===(t=a.querySelectorAll("[data-day]"))||void 0===t||t.forEach((e=>e.removeEventListener("mouseenter",this.hoverOnDays,!0))))}show(){var e,t;null===(e=this.bsModal)||void 0===e||e.show(),null===(t=this.bsPopover)||void 0===t||t.show()}hide(){var e,t;null===(e=this.bsModal)||void 0===e||e.hide(),null===(t=this.bsPopover)||void 0===t||t.hide()}toggle(){null!=this.bsPopover&&this.bsPopover.toggle()}enable(){this.setting.disabled=!1,this.element.removeAttribute("disabled"),i.set(this.guid,this),null!=this.bsPopover&&this.bsPopover.enable()}disable(){this.setting.disabled=!0,this.element.setAttribute("disabled",""),i.set(this.guid,this),null!=this.bsPopover&&this.bsPopover.disable()}updatePosition(){var e,t;null===(e=this.bsPopover)||void 0===e||e.update(),null===(t=this.bsModal)||void 0===t||t.handleUpdate()}updateSelectedDateText(){r.setSelectedData(this.setting)}dispose(){null!=this.bsPopover&&this.bsPopover.dispose(),null!=this.bsModal&&this.bsModal.dispose(),this.element.removeEventListener("click",this.showPopoverEvent),this.bsPopover=null,this.bsModal=null}getBsPopoverInstance(){return this.bsPopover}getBsModalInstance(){return this.bsModal}getText(){return r.getSelectedDateFormatted(this.setting)}getSelectedDate(){return this.setting.selectedDate}getSelectedDateRange(){return this.setting.selectedRangeDate}setDate(e){this.updateOptions({selectedDate:e,selectedDateToShow:e})}setDatePersian(e,t,a){const n=r.toGregorian(e,t,a),s=new Date(n.gy,n.gm,n.gd);this.updateOptions({selectedDate:s,selectedDateToShow:s})}setDateRange(e,t){this.updateOptions({selectedDate:e,selectedDateToShow:e,selectedRangeDate:[e,t]})}clearDate(){this.updateOptions({selectedDate:null,selectedDateToShow:new Date})}updateOption(e,t){e&&(t=r.correctOptionValue(e,t),this.setting[e]=t,i.set(this.guid,this),this.initializeBsPopover(this.setting))}updateOptions(e){Object.keys(e).forEach((t=>{this.setting[t]=r.correctOptionValue(t,e[t])})),i.set(this.guid,this),this.initializeBsPopover(this.setting)}static getInstance(e){var t,a,n,r,s;let o=e.getAttribute("data-mds-dtp-guid");if(!o&&(o=null!==(a=null===(t=e.closest("[data-mds-dtp-guid]"))||void 0===t?void 0:t.getAttribute("data-mds-dtp-guid"))&&void 0!==a?a:null,!o)){const t=null===(n=e.closest("[data-mds-dtp]"))||void 0===n?void 0:n.getAttribute("id");if(!t)return null;if(o=null!==(s=null===(r=document.querySelector('[aria-describedby="'+t+'"]'))||void 0===r?void 0:r.getAttribute("data-mds-dtp-guid"))&&void 0!==s?s:null,!o)return null}return i.get(o)}}r.modalHtmlTemplate='<div data-mds-dtp data-mds-dtp-guid="{{guid}}" class="modal fade mds-bs-persian-datetime-picker-modal" tabindex="-1" role="dialog" aria-hidden="true">\n<div class="modal-dialog">\n<div class="modal-content">\n<div class="modal-header" data-mds-dtp-title="true">\n<h5 class="modal-title">Modal title</h5>\n</div>\n<div class="modal-body">\n  <div class="select-year-box w-0" data-mds-dtp-year-list-box="true"></div>\n  <div data-name="mds-dtp-body"></div>\n</div>\n</div>\n</div>\n</div>',r.popoverHtmlTemplate='<div class="popover mds-bs-persian-datetime-picker-popover" role="tooltip" data-mds-dtp>\n<div class="popover-arrow"></div>\n<h3 class="popover-header text-center p-1" data-mds-dtp-title="true"></h3>\n<div class="popover-body p-0" data-name="mds-dtp-body"></div>\n</div>',r.popoverHeaderSelectYearHtmlTemplate='<table class="table table-sm table-borderless text-center p-0 m-0 {{rtlCssClass}}" dir="{{dirAttrValue}}">\n<tr>\n<th>\n<button type="button" class="btn btn-sm btn-light w-100" title="{{previousText}}" data-year="{{latestPreviousYear}}" data-year-range-button-change="-1" {{prevYearButtonAttr}}> &lt; </button>\n</th>\n<th class="pt-1">\n{{yearsRangeText}}\n</th>\n<th>\n<button type="button" class="btn btn-sm btn-light w-100" title="{{nextText}}" data-year="{{latestNextYear}}" data-year-range-button-change="1" {{nextYearButtonAttr}}> &gt; </button>\n</th>\n</tr>\n</table>',r.dateTimePickerYearsToSelectHtmlTemplate='<table class="table table-sm text-center p-0 m-0">\n<tbody>\n{{yearsBoxHtml}}\n<tr>\n<td colspan="100" class="text-center">\n<button class="btn btn-sm btn-light w-100" data-mds-hide-year-list-box="true">{{cancelText}}</button>\n</td>\n</tr>\n</tbody>\n</table>',r.dateTimePickerHtmlTemplate='<div class="mds-bs-dtp-container {{rtlCssClass}}" {{inlineAttr}}>\n<div class="select-year-inline-box w-0" data-name="dtp-years-container">\n</div>\n<div class="select-year-box w-0" data-mds-dtp-year-list-box="true"></div>\n<table class="table table-sm text-center p-0 m-0">\n<thead>\n<tr {{selectedDateStringAttribute}}>\n<th mds-dtp-inline-header colspan="100">{{dtpInlineHeader}}</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n{{monthsTdHtml}}\n</tr>\n</tbody>\n<tfoot>\n<tr {{timePickerAttribute}}>\n<td colspan="100" class="text-center border-0">\n<input type="time" value="{{time}}" maxlength="2" data-mds-dtp-time />\n</td>\n</tr>\n<tr>\n<td colspan="100">\n<button type="button" class="btn btn-light" title="{{goTodayText}}" data-mds-dtp-go-today>{{todayDateString}}</button>\n</td>\n</tr>\n</tfoot>\n</table>\n</div>',r.dateTimePickerMonthTableHtmlTemplate='<td class="border-0" style="{{monthTdStyle}}" {{monthTdAttribute}} data-td-month>\n<table class="table table-sm table-striped table-borderless">\n<thead>\n<tr {{monthNameAttribute}}>\n<th colspan="100" class="border-0">\n<table class="table table-sm table-borderless">\n<thead>\n<tr>\n<th>\n<button type="button" class="btn btn-light"> {{currentMonthInfo}} </button>\n</th>\n</tr>\n</thead>\n</table>\n</th>\n</tr>\n<tr {{theadSelectDateButtonTrAttribute}}>\n<td colspan="100" class="border-0">\n<table class="table table-sm table-borderless">\n<tr>\n<th>\n<button type="button" class="btn btn-light btn-sm w-100" title="{{previousYearText}}" data-change-date-button="true" data-number="{{previousYearButtonDateNumber}}" {{previousYearButtonDisabledAttribute}}> &lt;&lt; </button>\n</th>\n<th>\n<button type="button" class="btn btn-light btn-sm w-100" title="{{previousMonthText}}" data-change-date-button="true" data-number="{{previousMonthButtonDateNumber}}" {{previousMonthButtonDisabledAttribute}}> &lt; </button>\n</th>\n<th style="width: 120px;">\n<div class="dropdown">\n<button type="button" class="btn btn-light btn-sm dropdown-toggle w-100" id="mdtp-month-selector-button-{{guid}}"\ndata-bs-toggle="dropdown" aria-expanded="false">\n{{selectedMonthName}}\n</button>\n<div class="dropdown-menu" aria-labelledby="mdtp-month-selector-button-{{guid}}">\n<a class="dropdown-item {{selectMonth1ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth1DateNumber}}">{{monthName1}}</a>\n<a class="dropdown-item {{selectMonth2ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth2DateNumber}}">{{monthName2}}</a>\n<a class="dropdown-item {{selectMonth3ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth3DateNumber}}">{{monthName3}}</a>\n<div class="dropdown-divider"></div>\n<a class="dropdown-item {{selectMonth4ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth4DateNumber}}">{{monthName4}}</a>\n<a class="dropdown-item {{selectMonth5ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth5DateNumber}}">{{monthName5}}</a>\n<a class="dropdown-item {{selectMonth6ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth6DateNumber}}">{{monthName6}}</a>\n<div class="dropdown-divider"></div>\n<a class="dropdown-item {{selectMonth7ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth7DateNumber}}">{{monthName7}}</a>\n<a class="dropdown-item {{selectMonth8ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth8DateNumber}}">{{monthName8}}</a>\n<a class="dropdown-item {{selectMonth9ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth9DateNumber}}">{{monthName9}}</a>\n<div class="dropdown-divider"></div>\n<a class="dropdown-item {{selectMonth10ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth10DateNumber}}">{{monthName10}}</a>\n<a class="dropdown-item {{selectMonth11ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth11DateNumber}}">{{monthName11}}</a>\n<a class="dropdown-item {{selectMonth12ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth12DateNumber}}">{{monthName12}}</a>\n</div>\n</div>\n</th>\n<th style="width: 50px;">\n<button type="button" class="btn btn-light btn-sm w-100" mds-pdtp-select-year-button {{selectYearButtonDisabledAttribute}}>{{selectedYear}}</button>\n</th>\n<th>\n<button type="button" class="btn btn-light btn-sm w-100" title="{{nextMonthText}}" data-change-date-button="true" data-number="{{nextMonthButtonDateNumber}}" {{nextMonthButtonDisabledAttribute}}> &gt; </button>\n</th>\n<th>\n<button type="button" class="btn btn-light btn-sm w-100" title="{{nextYearText}}" data-change-date-button="true" data-number="{{nextYearButtonDateNumber}}" {{nextYearButtonDisabledAttribute}}> &gt;&gt; </button>\n</th>\n</tr>\n</table>\n</td>\n</tr>\n</thead>\n<tbody class="days">\n<tr>\n<td class="{{weekDayShortName1CssClass}}">{{weekDayShortName1}}</td>\n<td>{{weekDayShortName2}}</td>\n<td>{{weekDayShortName3}}</td>\n<td>{{weekDayShortName4}}</td>\n<td>{{weekDayShortName5}}</td>\n<td>{{weekDayShortName6}}</td>\n<td class="{{weekDayShortName7CssClass}}">{{weekDayShortName7}}</td>\n</tr>\n{{daysHtml}}\n</tbody>\n</table>\n</td>',r.previousYearTextPersian="سال قبل",r.previousMonthTextPersian="ماه قبل",r.previousTextPersian="قبلی",r.nextYearTextPersian="سال بعد",r.nextMonthTextPersian="ماه بعد",r.nextTextPersian="بعدی",r.todayTextPersian="امروز",r.goTodayTextPersian="برو به امروز",r.cancelTextPersian="انصراف",r.currentYearTextPersian="سال جاری",r.previousText="Previous",r.previousYearText="Previous Year",r.previousMonthText="Previous Month",r.nextText="Next",r.nextYearText="Next Year",r.nextMonthText="Next Month",r.todayText="Today",r.goTodayText="Go Today",r.cancelText="Cancel",r.currentYearText="Current Year",r.shortDayNamesPersian=["ش","ی","د","س","چ","پ","ج"],r.shortDayNames=["Su","Mo","Tu","We","Th","Fr","Sa"],r.monthNamesPersian=["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"],r.monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"],r.weekDayNames=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],r.weekDayNamesPersian=["یک شنبه","دوشنبه","سه شنبه","چهارشنبه","پنج شنبه","جمعه","شنبه"],r.convertDateToString=(e,t,a)=>r.getDateTimeString(t?r.getDateTimeJson1(e):r.getDateTimeJsonPersian1(e),a,t,!t),r.convertDateToJalali=e=>{const t=r.getDateTimeJson1(e),a=r.toJalali(t.year,t.month,t.day);return{year:a.jy,month:a.jm,day:a.jd}};class s{constructor(){this.placement="bottom",this.enableTimePicker=!1,this.targetTextSelector="",this.targetDateSelector="",this.toDate=!1,this.fromDate=!1,this.groupId="",this.disabled=!1,this.textFormat="",this.dateFormat="",this.isGregorian=!1,this.inLine=!1,this.selectedDate=null,this.selectedDateToShow=new Date,this.yearOffset=15,this.holidays=[],this.disabledDates=[],this.disabledDays=[],this.specialDates=[],this.disableBeforeToday=!1,this.disableAfterToday=!1,this.disableBeforeDate=null,this.disableAfterDate=null,this.rangeSelector=!1,this.rangeSelectorStartDate=null,this.rangeSelectorEndDate=null,this.rangeSelectorMonthsToShow=[0,0],this.selectedRangeDate=[],this.modalMode=!1,this.persianNumber=!1,this.calendarViewOnChange=e=>{},this.onDayClick=e=>{}}}const o=new Map;var i={set(e,t){o.has(e),o.set(e,t)},get:e=>o.get(e)||null,getAll:()=>Array.from(o,(([e,t])=>t)),remove(e){o.has(e)&&o.delete(e)}}}},t={};function a(n){var r=t[n];if(void 0!==r)return r.exports;var s=t[n]={exports:{}};return e[n](s,s.exports,a),s.exports}a.d=(e,t)=>{for(var n in t)a.o(t,n)&&!a.o(e,n)&&Object.defineProperty(e,n,{enumerable:!0,get:t[n]})},a.g=function(){if("object"==typeof globalThis)return globalThis;try{return this||new Function("return this")()}catch(e){if("object"==typeof window)return window}}(),a.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),a.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})};a(348)})();
+import { Modal, Popover } from "bootstrap";
+export class MdsPersianDateTimePicker {
+    constructor(element, setting) {
+        var _a;
+        this.guid = '';
+        this.bsPopover = null;
+        this.bsModal = null;
+        this.tempTitleString = '';
+        this.hideYearsBox = (element, setting) => {
+            if (setting.inLine) {
+                const dtpInLine = element.closest('[data-mds-dtp-guid]');
+                if (dtpInLine == null)
+                    return;
+                const dtpInlineHeaderElement = dtpInLine.querySelector('[mds-dtp-inline-header]');
+                if (this.tempTitleString && dtpInlineHeaderElement != null)
+                    dtpInlineHeaderElement.innerHTML = this.tempTitleString;
+                const yearListBoxElement = dtpInLine.querySelector('[data-mds-dtp-year-list-box]');
+                if (yearListBoxElement != null) {
+                    yearListBoxElement.classList.add('w-0');
+                    yearListBoxElement.innerHTML = '';
+                }
+                const inlineYearsContainerElement = dtpInLine.querySelector('[data-name="dtp-years-container"]');
+                if (inlineYearsContainerElement != null) {
+                    inlineYearsContainerElement.classList.add('w-0');
+                    inlineYearsContainerElement.innerHTML = '';
+                }
+                dtpInLine.classList.remove('overflow-hidden');
+            }
+            else {
+                const popoverOrModalElement = setting.modalMode ? this.getModal() : this.getPopover(element);
+                if (popoverOrModalElement == null)
+                    return;
+                if (this.tempTitleString) {
+                    if (setting.modalMode)
+                        popoverOrModalElement.querySelector('[data-mds-dtp-title] .modal-title').innerHTML = this.tempTitleString;
+                    else {
+                        popoverOrModalElement.querySelector('[data-mds-dtp-title]').innerHTML = this.tempTitleString;
+                    }
+                    popoverOrModalElement.querySelector('[data-name="mds-dtp-body"]').removeAttribute('hidden');
+                }
+                const yearListBox = popoverOrModalElement.querySelector('[data-mds-dtp-year-list-box]');
+                yearListBox.classList.add('w-0');
+                yearListBox.innerHTML = '';
+            }
+        };
+        this.showYearsBox = (element) => {
+            const instance = MdsPersianDateTimePicker.getInstance(element);
+            if (!instance) {
+                return;
+            }
+            const setting = instance.setting;
+            const mdDatePickerContainer = setting.inLine ? element.closest('[data-mds-dtp-guid]') : element.closest('[data-mds-dtp]');
+            if (mdDatePickerContainer == null)
+                return;
+            this.tempTitleString = setting.inLine
+                ? mdDatePickerContainer.querySelector('[mds-dtp-inline-header]').textContent.trim()
+                : mdDatePickerContainer.querySelector('[data-mds-dtp-title]').textContent.trim();
+            const yearsToSelectObject = this.getYearsBoxBodyHtml(setting, 0);
+            const dateTimePickerYearsToSelectHtml = yearsToSelectObject.html;
+            const dateTimePickerYearsToSelectContainer = mdDatePickerContainer.querySelector('[data-mds-dtp-year-list-box]');
+            this.setPopoverHeaderHtml(element, setting, this.getYearsBoxHeaderHtml(setting, yearsToSelectObject.yearStart, yearsToSelectObject.yearEnd));
+            dateTimePickerYearsToSelectContainer.innerHTML = dateTimePickerYearsToSelectHtml;
+            dateTimePickerYearsToSelectContainer.classList.remove('w-0');
+            if (setting.inLine) {
+                mdDatePickerContainer.classList.add('overflow-hidden');
+                dateTimePickerYearsToSelectContainer.classList.add('inline');
+            }
+            else if (setting.modalMode) {
+                mdDatePickerContainer.querySelector('[data-name="mds-dtp-body"]').setAttribute('hidden', '');
+            }
+            else {
+                dateTimePickerYearsToSelectContainer.classList.remove('inline');
+            }
+        };
+        this.changeYearList = (element) => {
+            const instance = MdsPersianDateTimePicker.getInstance(element);
+            if (!instance) {
+                return;
+            }
+            const setting = instance.setting;
+            const isNext = element.getAttribute('data-year-range-button-change') == '1';
+            const yearStart = Number(element.getAttribute('data-year'));
+            const yearsToSelectObject = this.getYearsBoxBodyHtml(setting, isNext ? yearStart : yearStart - setting.yearOffset * 2);
+            if (setting.inLine)
+                element.closest('[data-mds-dtp-guid]').querySelector('[data-mds-dtp-year-list-box]').innerHTML = yearsToSelectObject.html;
+            else
+                element.closest('[data-mds-dtp]').querySelector('[data-mds-dtp-year-list-box]').innerHTML = yearsToSelectObject.html;
+            this.setPopoverHeaderHtml(element, setting, this.getYearsBoxHeaderHtml(setting, yearsToSelectObject.yearStart, yearsToSelectObject.yearEnd));
+        };
+        this.setPopoverHeaderHtml = (element, setting, htmlString) => {
+            if (this.bsPopover != null) {
+                const popoverElement = this.getPopover(element);
+                if (popoverElement == null)
+                    return;
+                popoverElement.querySelector('[data-mds-dtp-title]').innerHTML = htmlString;
+            }
+            else if (setting.inLine) {
+                let inlineTitleBox = element.closest('[data-mds-dtp-guid]').querySelector('[data-name="dtp-years-container"]');
+                inlineTitleBox.innerHTML = htmlString;
+                inlineTitleBox.classList.remove('w-0');
+            }
+            else if (setting.modalMode) {
+                let inlineTitleBox = element.closest('[data-mds-dtp-guid]').querySelector('[data-mds-dtp-title] .modal-title');
+                inlineTitleBox.innerHTML = htmlString;
+            }
+        };
+        this.updateCalendarBodyHtml = (element, setting, updatePopoverContent = false) => {
+            const calendarHtml = this.getDateTimePickerBodyHtml(setting);
+            const dtpInlineHeader = calendarHtml.match(/<th mds-dtp-inline-header\b[^>]*>(.*?)<\/th>/img)[0];
+            this.tempTitleString = dtpInlineHeader;
+            if (!setting.inLine && updatePopoverContent) {
+                const popover = this.getBsPopoverInstance();
+                if (!popover) {
+                    console.error("mds.bs.datetimepicker: `BsPopoverInstance` is null!");
+                    return;
+                }
+                popover.setContent({
+                    '.popover-header': dtpInlineHeader,
+                    '.popover-body': calendarHtml
+                });
+                return;
+            }
+            let containerElement = element.closest('[data-name="mds-dtp-body"]');
+            if (containerElement == null) {
+                containerElement = element.closest('[data-mds-dtp-guid]');
+                if (containerElement == null) {
+                    console.error("mds.bs.datetimepicker: `data-mds-dtp-guid` element not found !");
+                    return;
+                }
+                if (setting.modalMode)
+                    containerElement = containerElement.querySelector('[data-name="mds-dtp-body"]');
+            }
+            if (containerElement == null) {
+                console.error("mds.bs.datetimepicker: `data-mds-dtp-guid` element not found!");
+                return;
+            }
+            this.setPopoverHeaderHtml(element, setting, dtpInlineHeader.trim());
+            containerElement.innerHTML = calendarHtml;
+            this.hideYearsBox(element, setting);
+            this.enableEvents();
+            this.enableInLineEvents();
+        };
+        this.changeMonth = (element) => {
+            const instance = MdsPersianDateTimePicker.getInstance(element);
+            if (!instance) {
+                return;
+            }
+            if (instance.setting.disabled)
+                return;
+            const dateNumber = Number(element.getAttribute('data-number'));
+            const setting = instance.setting;
+            let selectedDateToShow = MdsPersianDateTimePicker.getClonedDate(setting.selectedDateToShow);
+            selectedDateToShow = MdsPersianDateTimePicker.getDateTime4(dateNumber, selectedDateToShow, setting.isGregorian);
+            setting.selectedDateToShow = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+            MdsPersianDateTimePickerData.set(instance.guid, instance);
+            this.updateCalendarBodyHtml(element, setting);
+            if (setting.calendarViewOnChange != undefined)
+                setting.calendarViewOnChange(selectedDateToShow);
+        };
+        this.selectDay = (element) => {
+            var _a;
+            const instance = MdsPersianDateTimePicker.getInstance(element);
+            if (!instance)
+                return;
+            if (instance.setting.disabled || element.getAttribute('disabled') != undefined)
+                return;
+            let dateNumber = Number(element.getAttribute('data-number'));
+            const setting = instance.setting;
+            const disabled = element.getAttribute('disabled') != undefined;
+            if (setting.selectedDate != undefined && !setting.enableTimePicker) {
+                setting.selectedDate.setHours(0);
+                setting.selectedDate.setMinutes(0);
+                setting.selectedDate.setSeconds(0);
+            }
+            let selectedDateJson = !setting.selectedDate ? null : MdsPersianDateTimePicker.getDateTimeJson1(setting.selectedDate);
+            let selectedDateToShow = !setting.selectedDateToShow ? new Date() : MdsPersianDateTimePicker.getClonedDate(setting.selectedDateToShow);
+            let selectedDateToShowJson = MdsPersianDateTimePicker.getDateTimeJson1(selectedDateToShow);
+            if (disabled) {
+                if (setting.onDayClick != undefined)
+                    setting.onDayClick(setting);
+                return;
+            }
+            selectedDateToShow = MdsPersianDateTimePicker.getDateTime4(dateNumber, selectedDateToShow, setting.isGregorian);
+            if (setting.rangeSelector) {
+                if (setting.rangeSelectorStartDate != null && setting.rangeSelectorEndDate != null) {
+                    setting.selectedRangeDate = [];
+                    setting.rangeSelectorStartDate = null;
+                    setting.rangeSelectorEndDate = null;
+                    let closestSelector = '[data-mds-dtp]';
+                    if (setting.inLine)
+                        closestSelector = '[data-mds-dtp-guid]';
+                    (_a = element.closest(closestSelector)) === null || _a === void 0 ? void 0 : _a.querySelectorAll('td.selected-range-days-start-end,td.selected-range-days').forEach(e => {
+                        e.classList.remove('selected-range-days');
+                        e.classList.remove('selected-range-days-start-end');
+                    });
+                }
+                if (setting.rangeSelectorStartDate == undefined) {
+                    element.classList.add('selected-range-days-start-end');
+                    setting.rangeSelectorStartDate = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+                    setting.selectedDate = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+                    setting.selectedDateToShow = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+                }
+                else if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate == undefined) {
+                    if (setting.rangeSelectorStartDate.getTime() >= selectedDateToShow.getTime())
+                        return;
+                    element.classList.add('selected-range-days-start-end');
+                    setting.rangeSelectorEndDate = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+                    MdsPersianDateTimePicker.setSelectedData(setting);
+                }
+                MdsPersianDateTimePickerData.set(instance.guid, instance);
+                if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined) {
+                    setting.selectedRangeDate = [MdsPersianDateTimePicker.getClonedDate(setting.rangeSelectorStartDate), MdsPersianDateTimePicker.getClonedDate(setting.rangeSelectorEndDate)];
+                    if (!setting.inLine) {
+                        instance.hide();
+                    }
+                    else
+                        this.updateCalendarBodyHtml(element, setting);
+                }
+                return;
+            }
+            setting.selectedDate = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+            if (setting.selectedDate != undefined && !setting.enableTimePicker) {
+                setting.selectedDate.setHours(0);
+                setting.selectedDate.setMinutes(0);
+                setting.selectedDate.setSeconds(0);
+            }
+            setting.selectedDateToShow = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+            if (selectedDateJson != undefined) {
+                if (setting.enableTimePicker) {
+                    selectedDateJson.hour = selectedDateToShowJson.hour;
+                    selectedDateJson.minute = selectedDateToShowJson.minute;
+                    selectedDateJson.second = selectedDateToShowJson.second;
+                }
+                else {
+                    selectedDateJson.hour = 0;
+                    selectedDateJson.minute = 0;
+                    selectedDateJson.second = 0;
+                }
+                setting.selectedDate.setHours(selectedDateJson.hour);
+                setting.selectedDate.setMinutes(selectedDateJson.minute);
+                setting.selectedDate.setSeconds(selectedDateJson.second);
+            }
+            MdsPersianDateTimePickerData.set(instance.guid, instance);
+            MdsPersianDateTimePicker.setSelectedData(setting);
+            element.setAttribute('data-mds-dtp-selected-day', '');
+            if (setting.toDate || setting.fromDate) {
+                const toDateElement = document.querySelector(`[data-mds-dtp-group="${setting.groupId}"][data-to-date]`);
+                const fromDateElement = document.querySelector(`[data-mds-dtp-group="${setting.groupId}"][data-from-date]`);
+                if (setting.fromDate && toDateElement != undefined) {
+                    const instance = MdsPersianDateTimePicker.getInstance(toDateElement);
+                    if (instance != null) {
+                        if (setting.inLine)
+                            this.updateCalendarBodyHtml(toDateElement, instance.setting);
+                        else
+                            instance.initializeBsPopover(instance.setting);
+                    }
+                }
+                else if (setting.toDate && fromDateElement != undefined) {
+                    const instance = MdsPersianDateTimePicker.getInstance(fromDateElement);
+                    if (instance != null) {
+                        if (setting.inLine)
+                            this.updateCalendarBodyHtml(fromDateElement, instance.setting);
+                        else
+                            instance.initializeBsPopover(instance.setting);
+                    }
+                }
+                else
+                    this.updateCalendarBodyHtml(element, setting);
+            }
+            else {
+                this.updateCalendarBodyHtml(element, setting, true);
+            }
+            if (setting.onDayClick != undefined)
+                setting.onDayClick(setting);
+            if (!setting.inLine) {
+                instance.hide();
+            }
+            else {
+                element.closest(`[data-mds-dtp-guid="${this.guid}"]`)
+                    .querySelectorAll('[data-day]')
+                    .forEach(e => e.removeAttribute('data-mds-dtp-selected-day'));
+            }
+        };
+        this.hoverOnDays = (e) => {
+            const element = e.target;
+            const instance = MdsPersianDateTimePicker.getInstance(element);
+            if (!instance)
+                return;
+            const setting = instance.setting;
+            if (element.getAttribute('disabled') != undefined || !setting.rangeSelector ||
+                (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined))
+                return;
+            const dateNumber = Number(element.getAttribute('data-number'));
+            const allDayElements = [].slice.call(document.querySelectorAll('td[data-day]'));
+            allDayElements.forEach(e => {
+                e.classList.remove('selected-range-days');
+                e.classList.remove('selected-range-days-nm');
+            });
+            const allNextOrPrevMonthDayElements = [].slice.call(document.querySelectorAll('td[data-nm]'));
+            allNextOrPrevMonthDayElements.forEach(e => {
+                e.classList.remove('selected-range-days');
+                e.classList.remove('selected-range-days-nm');
+            });
+            const rangeSelectorStartDate = !setting.rangeSelectorStartDate ? undefined : MdsPersianDateTimePicker.getClonedDate(setting.rangeSelectorStartDate);
+            const rangeSelectorEndDate = !setting.rangeSelectorEndDate ? undefined : MdsPersianDateTimePicker.getClonedDate(setting.rangeSelectorEndDate);
+            let rangeSelectorStartDateNumber = 0;
+            let rangeSelectorEndDateNumber = 0;
+            if (setting.isGregorian) {
+                rangeSelectorStartDateNumber = !rangeSelectorStartDate ? 0 : MdsPersianDateTimePicker.convertToNumber3(rangeSelectorStartDate);
+                rangeSelectorEndDateNumber = !rangeSelectorEndDate ? 0 : MdsPersianDateTimePicker.convertToNumber3(rangeSelectorEndDate);
+            }
+            else {
+                rangeSelectorStartDateNumber = !rangeSelectorStartDate ? 0 : MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJsonPersian1(rangeSelectorStartDate));
+                rangeSelectorEndDateNumber = !rangeSelectorEndDate ? 0 : MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJsonPersian1(rangeSelectorEndDate));
+            }
+            if (rangeSelectorStartDateNumber > 0 && dateNumber > rangeSelectorStartDateNumber) {
+                for (var i1 = rangeSelectorStartDateNumber; i1 <= dateNumber; i1++) {
+                    allDayElements.filter(e => e.getAttribute('data-number') == i1.toString() && e.classList.value.indexOf('selected-range-days-start-end') <= -1)
+                        .forEach(e => e.classList.add('selected-range-days'));
+                    allNextOrPrevMonthDayElements.filter(e => e.getAttribute('data-number') == i1.toString() && e.classList.value.indexOf('selected-range-days-start-end') <= -1)
+                        .forEach(e => e.classList.add('selected-range-days-nm'));
+                }
+            }
+            else if (rangeSelectorEndDateNumber > 0 && dateNumber < rangeSelectorEndDateNumber) {
+                for (var i2 = dateNumber; i2 <= rangeSelectorEndDateNumber; i2++) {
+                    allDayElements.filter(e => e.getAttribute('data-number') == i2.toString() && e.classList.value.indexOf('selected-range-days-start-end') <= -1)
+                        .forEach(e => e.classList.add('selected-range-days'));
+                    allNextOrPrevMonthDayElements.filter(e => e.getAttribute('data-number') == i2.toString() && e.classList.value.indexOf('selected-range-days-start-end') <= -1)
+                        .forEach(e => e.classList.add('selected-range-days-nm'));
+                }
+            }
+        };
+        this.goToday = (e) => {
+            const element = e.target;
+            const instance = MdsPersianDateTimePicker.getInstance(element);
+            if (!instance)
+                return;
+            const setting = instance.setting;
+            setting.selectedDateToShow = new Date();
+            MdsPersianDateTimePickerData.set(instance.guid, instance);
+            this.updateCalendarBodyHtml(element, setting);
+        };
+        this.timeChanged = (e) => {
+            const element = e.target;
+            const instance = MdsPersianDateTimePicker.getInstance(element);
+            if (!instance)
+                return;
+            const setting = instance.setting;
+            const value = element.value;
+            if (!setting.enableTimePicker)
+                return;
+            if (setting.selectedDateToShow == undefined)
+                setting.selectedDateToShow = new Date();
+            let hour = Number(value.substr(0, 2));
+            let minute = Number(value.substr(3, 2));
+            setting.selectedDateToShow = new Date(setting.selectedDateToShow.setHours(hour));
+            setting.selectedDateToShow = new Date(setting.selectedDateToShow.setMinutes(minute));
+            if (setting.selectedDate == undefined)
+                setting.selectedDate = new Date();
+            setting.selectedDate = new Date(setting.selectedDate.setHours(hour));
+            setting.selectedDate = new Date(setting.selectedDate.setMinutes(minute));
+            MdsPersianDateTimePickerData.set(instance.guid, instance);
+            MdsPersianDateTimePicker.setSelectedData(setting);
+        };
+        this.popoverInsertedEvent = (e) => {
+            const element = e.target;
+            const instance = MdsPersianDateTimePicker.getInstance(element);
+            if (!instance)
+                return;
+            const setting = instance.setting;
+            this.hideYearsBox(element, setting);
+        };
+        this.popoverOrModalShownEvent = () => {
+            this.enableEvents();
+        };
+        this.popoverOrModalHiddenEvent = () => {
+            this.disableEvents();
+        };
+        this.selectCorrectClickEvent = (e) => {
+            const element = e.target;
+            const instance = MdsPersianDateTimePicker.getInstance(element);
+            if (!instance)
+                return;
+            if (instance != null && (instance.setting.disabled || instance.element.getAttribute('disabled') != undefined))
+                return;
+            if (element.getAttribute('mds-pdtp-select-year-button') != null) {
+                instance.showYearsBox(element);
+            }
+            else if (element.getAttribute('data-mds-dtp-go-today') != null) {
+                this.goToday(e);
+            }
+            else if (element.getAttribute('data-day') != null) {
+                this.selectDay(element);
+            }
+            else if (element.getAttribute('data-mds-hide-year-list-box')) {
+                this.hideYearsBox(element, instance.setting);
+            }
+            else if (element.getAttribute('data-change-date-button')) {
+                this.changeMonth(element);
+            }
+            else if (element.getAttribute('data-year-range-button-change') != null && element.getAttribute('disabled') == null) {
+                this.changeYearList(element);
+            }
+        };
+        this.showPopoverEvent = (e) => {
+            MdsPersianDateTimePickerData.getAll().forEach(i => i.hide());
+            const element = e.target;
+            const instance = MdsPersianDateTimePicker.getInstance(element);
+            if (instance == null || instance.setting.disabled)
+                return;
+            instance.show();
+        };
+        this.hidePopoverEvent = (e) => {
+            const element = e.target;
+            if (element.tagName == 'HTML') {
+                MdsPersianDateTimePickerData.getAll().forEach(i => !i.setting.modalMode ? i.hide() : () => { });
+                return;
+            }
+            const isWithinDatePicker = element.closest('[data-mds-dtp]') != null || element.getAttribute('data-mds-dtp-guid') != null || element.getAttribute('data-mds-dtp-go-today') != null;
+            if (!isWithinDatePicker) {
+                MdsPersianDateTimePickerData.getAll().forEach(i => i.hide());
+            }
+        };
+        setting = MdsPersianDateTimePicker.extend(new MdsPersianDateTimePickerSetting(), setting);
+        if (!element)
+            throw new Error(`MdsPersianDateTimePicker => element is null!`);
+        if (setting.rangeSelector && (setting.toDate || setting.fromDate))
+            throw new Error(`MdsPersianDateTimePicker => You can not set true 'toDate' or 'fromDate' and 'rangeSelector' together`);
+        if (setting.toDate && setting.fromDate)
+            throw new Error(`MdsPersianDateTimePicker => You can not set true 'toDate' and 'fromDate' together`);
+        if (!setting.groupId && (setting.toDate || setting.fromDate))
+            throw new Error(`MdsPersianDateTimePicker => When you set 'toDate' or 'fromDate' true, you have to set 'groupId'`);
+        if (!setting.textFormat) {
+            setting.textFormat = 'yyyy/MM/dd';
+            if (setting.enableTimePicker)
+                setting.textFormat += ' HH:mm';
+        }
+        if (!setting.dateFormat) {
+            setting.dateFormat = 'yyyy/MM/dd';
+            if (setting.enableTimePicker)
+                setting.dateFormat += ' HH:mm';
+        }
+        if (setting.yearOffset > 15)
+            setting.yearOffset = 15;
+        this.setting = setting;
+        this.setting.selectedDate = setting.selectedDate ? MdsPersianDateTimePicker.getClonedDate(setting.selectedDate) : null;
+        this.setting.selectedDateToShow = (_a = MdsPersianDateTimePicker.getClonedDate(setting.selectedDateToShow)) !== null && _a !== void 0 ? _a : new Date();
+        this.guid = MdsPersianDateTimePicker.newGuid();
+        this.element = element;
+        this.element.setAttribute("data-mds-dtp-guid", this.guid);
+        MdsPersianDateTimePickerData.set(this.guid, this);
+        this.initializeBsPopover(setting);
+    }
+    static toJalali(gy, gm, gd) {
+        return this.d2j(this.g2d(gy, gm, gd));
+    }
+    static toGregorian(jy, jm, jd) {
+        return this.d2g(this.j2d(jy, jm, jd));
+    }
+    static isLeapJalaliYear(jy) {
+        return this.jalCal(jy).leap === 0;
+    }
+    static jalCal(jy) {
+        let breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178], bl = breaks.length, gy = jy + 621, leapJ = -14, jp = breaks[0], jm, jump = 1, leap, n, i;
+        if (jy < jp || jy >= breaks[bl - 1])
+            throw new Error('Invalid Jalali year ' + jy);
+        for (i = 1; i < bl; i += 1) {
+            jm = breaks[i];
+            jump = jm - jp;
+            if (jy < jm)
+                break;
+            leapJ = leapJ + this.div(jump, 33) * 8 + this.div(this.mod(jump, 33), 4);
+            jp = jm;
+        }
+        n = jy - jp;
+        leapJ = leapJ + this.div(n, 33) * 8 + this.div(this.mod(n, 33) + 3, 4);
+        if (this.mod(jump, 33) === 4 && jump - n === 4)
+            leapJ += 1;
+        let leapG = this.div(gy, 4) - this.div((this.div(gy, 100) + 1) * 3, 4) - 150;
+        let march = 20 + leapJ - leapG;
+        if (jump - n < 6)
+            n = n - jump + this.div(jump + 4, 33) * 33;
+        leap = this.mod(this.mod(n + 1, 33) - 1, 4);
+        if (leap === -1)
+            leap = 4;
+        return {
+            leap: leap,
+            gy: gy,
+            march: march
+        };
+    }
+    static j2d(jy, jm, jd) {
+        let r = this.jalCal(jy);
+        return this.g2d(r.gy, 3, r.march) + (jm - 1) * 31 - this.div(jm, 7) * (jm - 7) + jd - 1;
+    }
+    static d2j(jdn) {
+        let gy = this.d2g(jdn).gy, jy = gy - 621, r = this.jalCal(jy), jdn1F = this.g2d(gy, 3, r.march), jd, jm, k;
+        k = jdn - jdn1F;
+        if (k >= 0) {
+            if (k <= 185) {
+                jm = 1 + this.div(k, 31);
+                jd = this.mod(k, 31) + 1;
+                return {
+                    jy: jy,
+                    jm: jm,
+                    jd: jd
+                };
+            }
+            else {
+                k -= 186;
+            }
+        }
+        else {
+            jy -= 1;
+            k += 179;
+            if (r.leap === 1)
+                k += 1;
+        }
+        jm = 7 + this.div(k, 30);
+        jd = this.mod(k, 30) + 1;
+        return {
+            jy: jy,
+            jm: jm,
+            jd: jd
+        };
+    }
+    static g2d(gy, gm, gd) {
+        let d = this.div((gy + this.div(gm - 8, 6) + 100100) * 1461, 4) +
+            this.div(153 * this.mod(gm + 9, 12) + 2, 5) +
+            gd - 34840408;
+        d = d - this.div(this.div(gy + 100100 + this.div(gm - 8, 6), 100) * 3, 4) + 752;
+        return d;
+    }
+    static d2g(jdn) {
+        let j;
+        j = 4 * jdn + 139361631;
+        j = j + this.div(this.div(4 * jdn + 183187720, 146097) * 3, 4) * 4 - 3908;
+        let i = this.div(this.mod(j, 1461), 4) * 5 + 308;
+        let gd = this.div(this.mod(i, 153), 5) + 1;
+        let gm = this.mod(this.div(i, 153), 12) + 1;
+        let gy = this.div(j, 1461) - 100100 + this.div(8 - gm, 6);
+        return {
+            gy: gy,
+            gm: gm,
+            gd: gd
+        };
+    }
+    static div(a, b) {
+        return ~~(a / b);
+    }
+    static mod(a, b) {
+        return a - ~~(a / b) * b;
+    }
+    initializeBsPopover(setting) {
+        if (setting.rangeSelector && (setting.toDate || setting.fromDate))
+            throw new Error(`MdsPersianDateTimePicker => You can not set true 'toDate' or 'fromDate' and 'rangeSelector' together`);
+        if (setting.toDate && setting.fromDate)
+            throw new Error(`MdsPersianDateTimePicker => You can not set true 'toDate' and 'fromDate' together`);
+        if (!setting.groupId && (setting.toDate || setting.fromDate))
+            throw new Error(`MdsPersianDateTimePicker => When you set 'toDate' or 'fromDate' true, you have to set 'groupId'`);
+        if (setting.disabled) {
+            this.element.setAttribute("disabled", '');
+        }
+        else {
+            this.element.removeAttribute("disabled");
+        }
+        if (setting.toDate || setting.fromDate) {
+            setting.rangeSelector = false;
+            this.element.setAttribute("data-mds-dtp-group", setting.groupId);
+            if (setting.toDate)
+                this.element.setAttribute("data-to-date", 'true');
+            else if (setting.fromDate)
+                this.element.setAttribute("data-from-date", 'true');
+        }
+        if (!setting.rangeSelector) {
+            setting.rangeSelectorMonthsToShow = [0, 0];
+        }
+        setTimeout(() => {
+            this.dispose();
+            const title = this.getPopoverHeaderTitle(setting);
+            let datePickerBodyHtml = this.getDateTimePickerBodyHtml(setting);
+            let tempDiv = document.createElement('div');
+            tempDiv.innerHTML = datePickerBodyHtml;
+            const dropDowns = tempDiv.querySelectorAll('.dropdown>button');
+            dropDowns.forEach(e => {
+                if (setting.disabled) {
+                    e.setAttribute('disabled', '');
+                    e.classList.add('disabled');
+                }
+                else {
+                    e.removeAttribute('disabled');
+                    e.classList.remove('disabled');
+                }
+            });
+            datePickerBodyHtml = tempDiv.innerHTML;
+            if (setting.modalMode == true) {
+                this.setModalHtml(title, datePickerBodyHtml, setting);
+                this.bsPopover = null;
+                setTimeout(() => {
+                    const el = this.getModal();
+                    if (el != null) {
+                        this.bsModal = new Modal(el);
+                        this.enableMainEvents();
+                    }
+                }, 200);
+            }
+            else if (setting.inLine == true) {
+                this.bsPopover = null;
+                this.element.innerHTML = datePickerBodyHtml;
+                this.enableInLineEvents();
+            }
+            else {
+                this.bsPopover = new Popover(this.element, {
+                    container: 'body',
+                    content: datePickerBodyHtml,
+                    title: title,
+                    html: true,
+                    placement: setting.placement,
+                    trigger: 'manual',
+                    template: MdsPersianDateTimePicker.popoverHtmlTemplate,
+                    sanitize: false,
+                });
+                this.enableMainEvents();
+            }
+            this.tempTitleString = title;
+        }, setting.inLine ? 10 : 500);
+    }
+    static newGuid() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+            let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+    static extend(...args) {
+        for (let i = 1; i < args.length; i++)
+            for (let key in args[i])
+                if (args[i].hasOwnProperty(key))
+                    args[0][key] = args[i][key];
+        return args[0];
+    }
+    static getClonedDate(dateTime) {
+        return new Date(dateTime.getTime());
+    }
+    static getDateTimeJson1(dateTime) {
+        return {
+            year: dateTime.getFullYear(),
+            month: dateTime.getMonth() + 1,
+            day: dateTime.getDate(),
+            hour: dateTime.getHours(),
+            minute: dateTime.getMinutes(),
+            second: dateTime.getSeconds(),
+            millisecond: dateTime.getMilliseconds(),
+            dayOfWeek: dateTime.getDay()
+        };
+    }
+    static getDateTimeJson2(dateNumber) {
+        return {
+            year: Math.floor(dateNumber / 10000),
+            month: Math.floor(dateNumber / 100) % 100,
+            day: dateNumber % 100,
+            hour: 0,
+            minute: 0,
+            second: 0,
+            millisecond: 0,
+            dayOfWeek: -1
+        };
+    }
+    static getDateTimeJsonPersian1(dateTime) {
+        let persianDate = this.toJalali(dateTime.getFullYear(), dateTime.getMonth() + 1, dateTime.getDate());
+        return {
+            year: persianDate.jy,
+            month: persianDate.jm,
+            day: persianDate.jd,
+            hour: dateTime.getHours(),
+            minute: dateTime.getMinutes(),
+            second: dateTime.getSeconds(),
+            millisecond: dateTime.getMilliseconds(),
+            dayOfWeek: dateTime.getDay(),
+        };
+    }
+    static getDateTimeJsonPersian2(yearPersian, monthPersian, dayPersian, hour, minute, second) {
+        if (!this.isNumber(hour))
+            hour = 0;
+        if (!this.isNumber(minute))
+            minute = 0;
+        if (!this.isNumber(second))
+            second = 0;
+        let gregorian = this.toGregorian(yearPersian, monthPersian, dayPersian);
+        return MdsPersianDateTimePicker.getDateTimeJsonPersian1(new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, hour, minute, second));
+    }
+    static getWeekDayName(englishWeekDayIndex, isGregorian) {
+        if (!isGregorian)
+            return this.weekDayNamesPersian[englishWeekDayIndex];
+        return this.weekDayNames[englishWeekDayIndex];
+    }
+    static getMonthName(monthIndex, isGregorian) {
+        if (monthIndex < 0)
+            monthIndex = 11;
+        else if (monthIndex > 11)
+            monthIndex = 0;
+        if (!isGregorian)
+            return this.monthNamesPersian[monthIndex];
+        return this.monthNames[monthIndex];
+    }
+    static getWeekDayShortName(englishWeekDayIndex, isGregorian) {
+        if (!isGregorian)
+            return this.shortDayNamesPersian[englishWeekDayIndex];
+        return this.shortDayNames[englishWeekDayIndex];
+    }
+    static isLeapYear(persianYear) {
+        return this.isLeapJalaliYear(persianYear);
+    }
+    static getDaysInMonthPersian(year, month) {
+        let numberOfDaysInMonth = 31;
+        if (month > 6 && month < 12)
+            numberOfDaysInMonth = 30;
+        else if (month == 12)
+            numberOfDaysInMonth = this.isLeapYear(year) ? 30 : 29;
+        return numberOfDaysInMonth;
+    }
+    static getDaysInMonth(year, month) {
+        return new Date(year, month + 1, 0).getDate();
+    }
+    static getLastDayDateOfPreviousMonth(dateTime, isGregorian) {
+        let dateTimeLocal = MdsPersianDateTimePicker.getClonedDate(dateTime);
+        if (isGregorian) {
+            let previousMonth = new Date(dateTimeLocal.getFullYear(), dateTimeLocal.getMonth() - 1, 1), daysInMonth = MdsPersianDateTimePicker.getDaysInMonth(previousMonth.getFullYear(), previousMonth.getMonth());
+            return new Date(previousMonth.getFullYear(), previousMonth.getMonth(), daysInMonth);
+        }
+        let dateTimeJsonPersian = MdsPersianDateTimePicker.getDateTimeJsonPersian1(dateTimeLocal);
+        dateTimeJsonPersian.month += -1;
+        if (dateTimeJsonPersian.month <= 0) {
+            dateTimeJsonPersian.month = 12;
+            dateTimeJsonPersian.year--;
+        }
+        else if (dateTimeJsonPersian.month > 12) {
+            dateTimeJsonPersian.year++;
+            dateTimeJsonPersian.month = 1;
+        }
+        return MdsPersianDateTimePicker.getDateTime1(dateTimeJsonPersian.year, dateTimeJsonPersian.month, MdsPersianDateTimePicker.getDaysInMonthPersian(dateTimeJsonPersian.year, dateTimeJsonPersian.month));
+    }
+    static getFirstDayDateOfNextMonth(dateTime, isGregorian) {
+        let dateTimeLocal = MdsPersianDateTimePicker.getClonedDate(dateTime);
+        if (isGregorian) {
+            let nextMonth = new Date(dateTimeLocal.getFullYear(), dateTimeLocal.getMonth() + 1, 1);
+            return new Date(nextMonth.getFullYear(), nextMonth.getMonth(), 1);
+        }
+        let dateTimeJsonPersian = MdsPersianDateTimePicker.getDateTimeJsonPersian1(dateTimeLocal);
+        dateTimeJsonPersian.month += 1;
+        if (dateTimeJsonPersian.month <= 0) {
+            dateTimeJsonPersian.month = 12;
+            dateTimeJsonPersian.year--;
+        }
+        if (dateTimeJsonPersian.month > 12) {
+            dateTimeJsonPersian.year++;
+            dateTimeJsonPersian.month = 1;
+        }
+        return MdsPersianDateTimePicker.getDateTime1(dateTimeJsonPersian.year, dateTimeJsonPersian.month, 1);
+    }
+    static getDateTime1(yearPersian, monthPersian, dayPersian, hour, minute, second) {
+        if (!this.isNumber(hour))
+            hour = 0;
+        if (!this.isNumber(minute))
+            minute = 0;
+        if (!this.isNumber(second))
+            second = 0;
+        let gregorian = this.toGregorian(yearPersian, monthPersian, dayPersian);
+        return new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, hour, minute, second);
+    }
+    static getDateTime2(dateTimeJsonPersian) {
+        if (!dateTimeJsonPersian.hour)
+            dateTimeJsonPersian.hour = 0;
+        if (!dateTimeJsonPersian.minute)
+            dateTimeJsonPersian.minute = 0;
+        if (!dateTimeJsonPersian.second)
+            dateTimeJsonPersian.second = 0;
+        let gregorian = this.toGregorian(dateTimeJsonPersian.year, dateTimeJsonPersian.month, dateTimeJsonPersian.day);
+        return new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, dateTimeJsonPersian.hour, dateTimeJsonPersian.minute, dateTimeJsonPersian.second);
+    }
+    static getDateTime3(dateTimeJson) {
+        return new Date(dateTimeJson.year, dateTimeJson.month - 1, dateTimeJson.day, dateTimeJson.hour, dateTimeJson.minute, dateTimeJson.second);
+    }
+    static getDateTime4(dateNumber, dateTime, isGregorian) {
+        let dateTimeJson = MdsPersianDateTimePicker.getDateTimeJson2(dateNumber);
+        if (!isGregorian) {
+            let dateTimeJsonPersian = MdsPersianDateTimePicker.getDateTimeJsonPersian1(dateTime);
+            dateTimeJsonPersian.year = dateTimeJson.year;
+            dateTimeJsonPersian.month = dateTimeJson.month;
+            dateTimeJsonPersian.day = dateTimeJson.day;
+            dateTime = this.getDateTime2(dateTimeJsonPersian);
+        }
+        else
+            dateTime = new Date(dateTimeJson.year, dateTimeJson.month - 1, dateTimeJson.day, dateTime.getHours(), dateTime.getMinutes(), dateTime.getSeconds());
+        return dateTime;
+    }
+    static getLesserDisableBeforeDate(setting) {
+        let resultDate = null;
+        const dateNow = new Date();
+        if (setting.disableBeforeToday && setting.disableBeforeDate) {
+            if (setting.disableBeforeDate.getTime() <= dateNow.getTime())
+                resultDate = MdsPersianDateTimePicker.getClonedDate(setting.disableBeforeDate);
+            else
+                resultDate = dateNow;
+        }
+        else if (setting.disableBeforeDate)
+            resultDate = MdsPersianDateTimePicker.getClonedDate(setting.disableBeforeDate);
+        else if (setting.disableBeforeToday)
+            resultDate = dateNow;
+        if (resultDate == null)
+            return null;
+        if (setting.isGregorian)
+            return MdsPersianDateTimePicker.getDateTimeJson1(resultDate);
+        return MdsPersianDateTimePicker.getDateTimeJsonPersian1(resultDate);
+    }
+    static getBiggerDisableAfterDate(setting) {
+        let resultDate = null;
+        const dateNow = new Date();
+        if (setting.disableAfterDate && setting.disableAfterToday) {
+            if (setting.disableAfterDate.getTime() >= dateNow.getTime())
+                resultDate = MdsPersianDateTimePicker.getClonedDate(setting.disableAfterDate);
+            else
+                resultDate = dateNow;
+        }
+        else if (setting.disableAfterDate)
+            resultDate = MdsPersianDateTimePicker.getClonedDate(setting.disableAfterDate);
+        else if (setting.disableAfterToday)
+            resultDate = dateNow;
+        if (resultDate == null)
+            return null;
+        if (setting.isGregorian)
+            return MdsPersianDateTimePicker.getDateTimeJson1(resultDate);
+        return MdsPersianDateTimePicker.getDateTimeJsonPersian1(resultDate);
+    }
+    static addMonthToDateTimeJson(dateTimeJson, addedMonth, isGregorian) {
+        const dateTimeJson1 = Object.assign({}, dateTimeJson);
+        dateTimeJson1.day = 1;
+        dateTimeJson1.month += addedMonth;
+        if (!isGregorian) {
+            if (dateTimeJson1.month <= 0) {
+                dateTimeJson1.month = 12;
+                dateTimeJson1.year--;
+            }
+            if (dateTimeJson1.month > 12) {
+                dateTimeJson1.year++;
+                dateTimeJson1.month = 1;
+            }
+            return dateTimeJson1;
+        }
+        return MdsPersianDateTimePicker.getDateTimeJson1(this.getDateTime3(dateTimeJson1));
+    }
+    static convertToNumber1(dateTimeJson) {
+        return Number(MdsPersianDateTimePicker.zeroPad(dateTimeJson.year) + MdsPersianDateTimePicker.zeroPad(dateTimeJson.month) + MdsPersianDateTimePicker.zeroPad(dateTimeJson.day));
+    }
+    static convertToNumber2(year, month, day) {
+        return Number(MdsPersianDateTimePicker.zeroPad(year) + MdsPersianDateTimePicker.zeroPad(month) + MdsPersianDateTimePicker.zeroPad(day));
+    }
+    static convertToNumber3(dateTime) {
+        return MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJson1(dateTime));
+    }
+    static correctOptionValue(optionName, value) {
+        const setting = new MdsPersianDateTimePickerSetting();
+        Object.keys(setting).filter(key => key === optionName).forEach(key => {
+            switch (typeof setting[key]) {
+                case 'number':
+                    value = +value;
+                    break;
+                case 'string':
+                    value = value.toString();
+                    break;
+                case 'boolean':
+                    value = !!value;
+                    break;
+                case 'object':
+                    if (setting[key] instanceof Date) {
+                        value = new Date(value);
+                    }
+                    else if (Array.isArray(setting[key])) {
+                        switch (optionName) {
+                            case 'holidays':
+                            case 'disabledDates':
+                            case 'specialDates':
+                            case 'selectedRangeDate':
+                                value.forEach((item, i) => {
+                                    value[i] = new Date(item);
+                                });
+                                break;
+                            case 'disabledDays':
+                            case 'rangeSelectorMonthsToShow':
+                                value.forEach((item, i) => {
+                                    value[i] = +item;
+                                });
+                                break;
+                        }
+                    }
+                    break;
+            }
+        });
+        return value;
+    }
+    static getShortHour(hour) {
+        let shortHour;
+        if (hour > 12)
+            shortHour = hour - 12;
+        else
+            shortHour = hour;
+        return shortHour;
+    }
+    static getAmPm(hour, isGregorian) {
+        let amPm;
+        if (hour > 12) {
+            if (isGregorian)
+                amPm = 'PM';
+            else
+                amPm = 'ب.ظ';
+        }
+        else if (isGregorian)
+            amPm = 'AM';
+        else
+            amPm = 'ق.ظ';
+        return amPm;
+    }
+    static addMonthToDateTime(dateTime, addedMonth, isGregorian) {
+        let dateTimeJson;
+        if (!isGregorian) {
+            dateTimeJson = MdsPersianDateTimePicker.getDateTimeJsonPersian1(dateTime);
+            dateTimeJson = MdsPersianDateTimePicker.addMonthToDateTimeJson(dateTimeJson, addedMonth, isGregorian);
+            return this.getDateTime2(dateTimeJson);
+        }
+        dateTimeJson = MdsPersianDateTimePicker.getDateTimeJson1(dateTime);
+        dateTimeJson = MdsPersianDateTimePicker.addMonthToDateTimeJson(dateTimeJson, addedMonth, isGregorian);
+        return this.getDateTime3(dateTimeJson);
+    }
+    static isNumber(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+    static toPersianNumber(inputNumber1) {
+        if (!inputNumber1)
+            return '';
+        let str1 = inputNumber1.toString().trim();
+        if (!str1)
+            return '';
+        str1 = str1.replace(/0/img, '۰');
+        str1 = str1.replace(/1/img, '۱');
+        str1 = str1.replace(/2/img, '۲');
+        str1 = str1.replace(/3/img, '۳');
+        str1 = str1.replace(/4/img, '۴');
+        str1 = str1.replace(/5/img, '۵');
+        str1 = str1.replace(/6/img, '۶');
+        str1 = str1.replace(/7/img, '۷');
+        str1 = str1.replace(/8/img, '۸');
+        str1 = str1.replace(/9/img, '۹');
+        return str1;
+    }
+    static toEnglishNumber(inputNumber1) {
+        if (!inputNumber1)
+            return '';
+        let str1 = inputNumber1.toString().trim();
+        if (!str1)
+            return '';
+        str1 = str1.replace(/۰/img, '0');
+        str1 = str1.replace(/۱/img, '1');
+        str1 = str1.replace(/۲/img, '2');
+        str1 = str1.replace(/۳/img, '3');
+        str1 = str1.replace(/۴/img, '4');
+        str1 = str1.replace(/۵/img, '5');
+        str1 = str1.replace(/۶/img, '6');
+        str1 = str1.replace(/۷/img, '7');
+        str1 = str1.replace(/۸/img, '8');
+        str1 = str1.replace(/۹/img, '9');
+        return str1;
+    }
+    static zeroPad(nr, base) {
+        if (nr == undefined || nr == '')
+            return '00';
+        if (base == undefined || base == '')
+            base = '00';
+        let len = (String(base).length - String(nr).length) + 1;
+        return len > 0 ? new Array(len).join('0') + nr : nr;
+    }
+    static getDateTimeString(dateTimeJson, format, isGregorian, persianNumber) {
+        format = format.replace(/yyyy/mg, dateTimeJson.year.toString());
+        format = format.replace(/yy/mg, (dateTimeJson.year % 100).toString());
+        format = format.replace(/MMMM/mg, MdsPersianDateTimePicker.getMonthName(dateTimeJson.month - 1, isGregorian));
+        format = format.replace(/MM/mg, MdsPersianDateTimePicker.zeroPad(dateTimeJson.month));
+        format = format.replace(/M/mg, dateTimeJson.month.toString());
+        format = format.replace(/dddd/mg, MdsPersianDateTimePicker.getWeekDayName(dateTimeJson.dayOfWeek, isGregorian));
+        format = format.replace(/dd/mg, MdsPersianDateTimePicker.zeroPad(dateTimeJson.day));
+        format = format.replace(/d/mg, dateTimeJson.day.toString());
+        format = format.replace(/HH/mg, MdsPersianDateTimePicker.zeroPad(dateTimeJson.hour));
+        format = format.replace(/H/mg, dateTimeJson.hour.toString());
+        format = format.replace(/hh/mg, MdsPersianDateTimePicker.zeroPad(this.getShortHour(dateTimeJson.hour).toString()));
+        format = format.replace(/h/mg, MdsPersianDateTimePicker.zeroPad(dateTimeJson.hour));
+        format = format.replace(/mm/mg, MdsPersianDateTimePicker.zeroPad(dateTimeJson.minute));
+        format = format.replace(/m/mg, dateTimeJson.minute.toString());
+        format = format.replace(/ss/mg, MdsPersianDateTimePicker.zeroPad(dateTimeJson.second));
+        format = format.replace(/s/mg, dateTimeJson.second.toString());
+        format = format.replace(/fff/mg, MdsPersianDateTimePicker.zeroPad(dateTimeJson.millisecond, '000'));
+        format = format.replace(/ff/mg, MdsPersianDateTimePicker.zeroPad(dateTimeJson.millisecond / 10));
+        format = format.replace(/f/mg, (dateTimeJson.millisecond / 100).toString());
+        format = format.replace(/tt/mg, this.getAmPm(dateTimeJson.hour, isGregorian));
+        format = format.replace(/t/mg, this.getAmPm(dateTimeJson.hour, isGregorian)[0]);
+        if (persianNumber)
+            format = MdsPersianDateTimePicker.toPersianNumber(format);
+        return format;
+    }
+    static getSelectedDateTimeTextFormatted(setting) {
+        if (setting.selectedDate == undefined)
+            return '';
+        if (!setting.enableTimePicker) {
+            setting.selectedDate.setHours(0);
+            setting.selectedDate.setMinutes(0);
+            setting.selectedDate.setSeconds(0);
+        }
+        if (setting.rangeSelector && setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined)
+            return MdsPersianDateTimePicker.getDateTimeString(!setting.isGregorian ? MdsPersianDateTimePicker.getDateTimeJsonPersian1(setting.rangeSelectorStartDate) : MdsPersianDateTimePicker.getDateTimeJson1(setting.rangeSelectorStartDate), setting.textFormat, setting.isGregorian, setting.persianNumber) + ' - ' +
+                MdsPersianDateTimePicker.getDateTimeString(!setting.isGregorian ? MdsPersianDateTimePicker.getDateTimeJsonPersian1(setting.rangeSelectorEndDate) : MdsPersianDateTimePicker.getDateTimeJson1(setting.rangeSelectorEndDate), setting.textFormat, setting.isGregorian, setting.persianNumber);
+        return MdsPersianDateTimePicker.getDateTimeString(!setting.isGregorian ? MdsPersianDateTimePicker.getDateTimeJsonPersian1(setting.selectedDate) : MdsPersianDateTimePicker.getDateTimeJson1(setting.selectedDate), setting.textFormat, setting.isGregorian, setting.persianNumber);
+    }
+    static getSelectedDateFormatted(setting) {
+        if ((!setting.rangeSelector && !setting.selectedDate) ||
+            (setting.rangeSelector && !setting.rangeSelectorStartDate && !setting.rangeSelectorEndDate))
+            return '';
+        if (setting.rangeSelector)
+            return MdsPersianDateTimePicker.getDateTimeString(MdsPersianDateTimePicker.getDateTimeJson1(setting.rangeSelectorStartDate), setting.dateFormat, true, setting.persianNumber) + ' - ' +
+                MdsPersianDateTimePicker.getDateTimeString(MdsPersianDateTimePicker.getDateTimeJson1(setting.rangeSelectorEndDate), setting.dateFormat, true, setting.persianNumber);
+        return MdsPersianDateTimePicker.getDateTimeString(MdsPersianDateTimePicker.getDateTimeJson1(setting.selectedDate), setting.dateFormat, true, setting.persianNumber);
+    }
+    static getDisabledDateObject(setting) {
+        var _a, _b;
+        let disableBeforeDateTimeJson = this.getLesserDisableBeforeDate(setting);
+        let disableAfterDateTimeJson = this.getBiggerDisableAfterDate(setting);
+        if ((setting.fromDate || setting.toDate) && setting.groupId) {
+            const toDateElement = document.querySelector(`[data-mds-dtp-group="${setting.groupId}"][data-to-date]`);
+            const fromDateElement = document.querySelector(`[data-mds-dtp-group="${setting.groupId}"][data-from-date]`);
+            if (toDateElement != null && setting.fromDate) {
+                const toDateSetting = (_a = MdsPersianDateTimePicker.getInstance(toDateElement)) === null || _a === void 0 ? void 0 : _a.setting;
+                const toDateSelectedDate = !toDateSetting ? null : toDateSetting.selectedDate;
+                disableAfterDateTimeJson = !toDateSelectedDate ? null : setting.isGregorian ? MdsPersianDateTimePicker.getDateTimeJson1(toDateSelectedDate) : MdsPersianDateTimePicker.getDateTimeJsonPersian1(toDateSelectedDate);
+            }
+            else if (fromDateElement != null && setting.toDate) {
+                const fromDateSetting = (_b = MdsPersianDateTimePicker.getInstance(fromDateElement)) === null || _b === void 0 ? void 0 : _b.setting;
+                const fromDateSelectedDate = !fromDateSetting ? null : fromDateSetting.selectedDate;
+                disableBeforeDateTimeJson = !fromDateSelectedDate ? null : setting.isGregorian ? MdsPersianDateTimePicker.getDateTimeJson1(fromDateSelectedDate) : MdsPersianDateTimePicker.getDateTimeJsonPersian1(fromDateSelectedDate);
+            }
+        }
+        return [disableBeforeDateTimeJson, disableAfterDateTimeJson];
+    }
+    static setSelectedData(setting) {
+        const targetTextElement = setting.targetTextSelector ? document.querySelector(setting.targetTextSelector) : undefined;
+        const targetDateElement = setting.targetDateSelector ? document.querySelector(setting.targetDateSelector) : undefined;
+        const changeEvent = new Event('change');
+        if (targetTextElement != undefined) {
+            const dateTimeTextFormat = this.getSelectedDateTimeTextFormatted(setting);
+            switch (targetTextElement.tagName.toLowerCase()) {
+                case 'input':
+                    targetTextElement.value = dateTimeTextFormat;
+                    break;
+                default:
+                    targetTextElement.innerHTML = dateTimeTextFormat;
+                    break;
+            }
+            targetTextElement.dispatchEvent(changeEvent);
+        }
+        if (targetDateElement != undefined) {
+            const dateTimeFormat = this.toEnglishNumber(this.getSelectedDateFormatted(setting));
+            switch (targetDateElement.tagName.toLowerCase()) {
+                case 'input':
+                    targetDateElement.value = dateTimeFormat;
+                    break;
+                default:
+                    targetDateElement.innerHTML = dateTimeFormat;
+                    break;
+            }
+            targetDateElement.dispatchEvent(changeEvent);
+        }
+    }
+    getPopover(element) {
+        let popoverId = element.getAttribute('aria-describedby');
+        if (popoverId == undefined || popoverId == '')
+            return element.closest('[data-mds-dtp]');
+        return document.getElementById(popoverId.toString());
+    }
+    getModal() {
+        return document.querySelector(`.modal[data-mds-dtp-guid="${this.guid}"]`);
+    }
+    setModalHtml(title, datePickerBodyHtml, setting) {
+        const prevModalElement = this.getModal();
+        if (prevModalElement == null) {
+            let modalHtml = MdsPersianDateTimePicker.modalHtmlTemplate;
+            modalHtml = modalHtml.replace(/\{\{guid\}\}/img, this.guid);
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = modalHtml;
+            tempDiv.querySelector('[data-mds-dtp-title] .modal-title').innerHTML = title;
+            tempDiv.querySelector('[data-name="mds-dtp-body"]').innerHTML = datePickerBodyHtml;
+            document.querySelector('body').appendChild(tempDiv);
+        }
+        else {
+            prevModalElement.querySelector('[data-mds-dtp-title] .modal-title').innerHTML = title;
+            prevModalElement.querySelector('[data-name="mds-dtp-body"]').innerHTML = datePickerBodyHtml;
+        }
+        const modalDialogElement = document.querySelector(`[data-mds-dtp-guid="${this.guid}"] .modal-dialog`);
+        if (modalDialogElement != null) {
+            if (setting.rangeSelector) {
+                if (setting.rangeSelectorMonthsToShow[0] > 0 || setting.rangeSelectorMonthsToShow[1] > 0)
+                    modalDialogElement.classList.add('modal-xl');
+                else
+                    modalDialogElement.classList.remove('modal-xl');
+            }
+            else {
+                modalDialogElement.classList.remove('modal-xl');
+            }
+        }
+        else {
+            console.warn("mds.bs.datetimepicker: element with `data-mds-dtp-guid` selector not found !");
+        }
+    }
+    getYearsBoxBodyHtml(setting, yearToStart) {
+        setting.yearOffset = Number(setting.yearOffset);
+        const selectedDateToShow = MdsPersianDateTimePicker.getClonedDate(setting.selectedDateToShow);
+        const disabledDateObj = MdsPersianDateTimePicker.getDisabledDateObject(setting);
+        const disableBeforeDateTimeJson = disabledDateObj[0];
+        const disableAfterDateTimeJson = disabledDateObj[1];
+        let html = MdsPersianDateTimePicker.dateTimePickerYearsToSelectHtmlTemplate;
+        let yearsBoxHtml = '';
+        let todayDateTimeJson;
+        let selectedDateTimeToShowJson;
+        let counter = 1;
+        if (setting.isGregorian) {
+            selectedDateTimeToShowJson = MdsPersianDateTimePicker.getDateTimeJson1(selectedDateToShow);
+            todayDateTimeJson = MdsPersianDateTimePicker.getDateTimeJson1(new Date());
+        }
+        else {
+            selectedDateTimeToShowJson = MdsPersianDateTimePicker.getDateTimeJsonPersian1(selectedDateToShow);
+            todayDateTimeJson = MdsPersianDateTimePicker.getDateTimeJsonPersian1(new Date());
+        }
+        counter = 1;
+        const yearStart = yearToStart ? yearToStart : todayDateTimeJson.year - setting.yearOffset;
+        const yearEnd = yearToStart ? yearToStart + setting.yearOffset * 2 : todayDateTimeJson.year + setting.yearOffset;
+        for (let i = yearStart; i < yearEnd; i++) {
+            let disabledAttr = '';
+            if (disableBeforeDateTimeJson != null) {
+                disabledAttr = i < disableBeforeDateTimeJson.year ? 'disabled' : '';
+            }
+            if (!disabledAttr && disableAfterDateTimeJson != null) {
+                disabledAttr = i > disableAfterDateTimeJson.year ? 'disabled' : '';
+            }
+            let currentYearDateTimeJson = MdsPersianDateTimePicker.getDateTimeJson2(MdsPersianDateTimePicker.convertToNumber2(i, selectedDateTimeToShowJson.month, MdsPersianDateTimePicker.getDaysInMonthPersian(i, selectedDateTimeToShowJson.month)));
+            let currentYearDisabledAttr = '';
+            let yearText = setting.isGregorian ? i.toString() : MdsPersianDateTimePicker.toPersianNumber(i);
+            let yearDateNumber = MdsPersianDateTimePicker.convertToNumber2(i, selectedDateTimeToShowJson.month, 1);
+            let todayAttr = todayDateTimeJson.year == i ? 'data-current-year="true"' : '';
+            let selectedYearAttr = selectedDateTimeToShowJson.year == i ? 'data-selected-year' : '';
+            let selectedYearTitle = '';
+            if (todayAttr)
+                selectedYearTitle = setting.isGregorian ? MdsPersianDateTimePicker.currentYearText : MdsPersianDateTimePicker.currentYearTextPersian;
+            if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year != undefined && currentYearDateTimeJson.year < disableBeforeDateTimeJson.year)
+                currentYearDisabledAttr = 'disabled';
+            if (disableAfterDateTimeJson != undefined && disableAfterDateTimeJson.year != undefined && currentYearDateTimeJson.year > disableAfterDateTimeJson.year)
+                currentYearDisabledAttr = 'disabled';
+            if (setting.disableBeforeToday && currentYearDateTimeJson.year < todayDateTimeJson.year)
+                currentYearDisabledAttr = 'disabled';
+            if (setting.disableAfterToday && currentYearDateTimeJson.year > todayDateTimeJson.year)
+                currentYearDisabledAttr = 'disabled';
+            if (counter == 1)
+                yearsBoxHtml += '<tr>';
+            yearsBoxHtml += `
+<td class="text-center" title="${selectedYearTitle}" ${todayAttr} ${selectedYearAttr}>
+  <button class="btn btn-sm btn-light w-100" type="button" data-change-date-button="true" data-number="${yearDateNumber}" ${currentYearDisabledAttr} ${disabledAttr}>${yearText}</button>
+</td>
+`;
+            if (counter == 5)
+                yearsBoxHtml += '</tr>';
+            counter++;
+            if (counter > 5)
+                counter = 1;
+        }
+        html = html.replace(/\{\{yearsBoxHtml\}\}/img, yearsBoxHtml);
+        html = html.replace(/\{\{cancelText\}\}/img, setting.isGregorian ? MdsPersianDateTimePicker.cancelText : MdsPersianDateTimePicker.cancelTextPersian);
+        if (setting.inLine && setting.yearOffset > 15)
+            html += '<div style="height: 30px;"></div>';
+        return {
+            yearStart,
+            yearEnd,
+            html
+        };
+    }
+    getYearsBoxHeaderHtml(setting, yearStart, yearEnd) {
+        const yearsRangeText = ` ${yearStart} - ${yearEnd - 1} `;
+        const disabledDateObj = MdsPersianDateTimePicker.getDisabledDateObject(setting);
+        let html = MdsPersianDateTimePicker.popoverHeaderSelectYearHtmlTemplate;
+        html = html.replace(/\{{rtlCssClass\}\}/img, setting.isGregorian ? '' : 'rtl');
+        html = html.replace(/\{{dirAttrValue\}\}/img, setting.isGregorian ? 'ltr' : 'rtl');
+        html = html.replace(/\{\{yearsRangeText\}\}/img, setting.isGregorian ? yearsRangeText : MdsPersianDateTimePicker.toPersianNumber(yearsRangeText));
+        html = html.replace(/\{\{previousText\}\}/img, setting.isGregorian ? MdsPersianDateTimePicker.previousText : MdsPersianDateTimePicker.previousTextPersian);
+        html = html.replace(/\{\{nextText\}\}/img, setting.isGregorian ? MdsPersianDateTimePicker.nextText : MdsPersianDateTimePicker.nextTextPersian);
+        html = html.replace(/\{\{latestPreviousYear\}\}/img, yearStart > yearEnd ? yearEnd.toString() : yearStart.toString());
+        html = html.replace(/\{\{latestNextYear\}\}/img, yearStart > yearEnd ? yearStart.toString() : yearEnd.toString());
+        html = html.replace(/\{\{prevYearButtonAttr\}\}/img, disabledDateObj[0] != null && yearStart - 1 < disabledDateObj[0].year ? 'disabled' : '');
+        html = html.replace(/\{\{nextYearButtonAttr\}\}/img, disabledDateObj[1] != null && yearEnd + 1 > disabledDateObj[1].year ? 'disabled' : '');
+        return html;
+    }
+    getDateTimePickerMonthHtml(setting, isNextMonth, isPrevMonth) {
+        let selectedDateToShow = MdsPersianDateTimePicker.getClonedDate(setting.selectedDateToShow);
+        let selectedDateToShowTemp = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+        let selectedDateTime = setting.selectedDate != undefined ? MdsPersianDateTimePicker.getClonedDate(setting.selectedDate) : undefined;
+        let isNextOrPrevMonth = isNextMonth || isPrevMonth;
+        let html = MdsPersianDateTimePicker.dateTimePickerMonthTableHtmlTemplate;
+        html = html.replace(/\{\{guid\}\}/img, this.guid);
+        html = html.replace(/\{\{monthTdAttribute\}\}/img, isNextMonth ? 'data-next-month' : isPrevMonth ? 'data-prev-month' : '');
+        html = html.replace(/\{\{monthNameAttribute\}\}/img, !isNextOrPrevMonth ? 'hidden' : '');
+        html = html.replace(/\{\{theadSelectDateButtonTrAttribute\}\}/img, !isNextOrPrevMonth ? '' : 'hidden');
+        html = html.replace(/\{\{weekDayShortName1CssClass\}\}/img, setting.isGregorian ? 'text-danger' : '');
+        html = html.replace(/\{\{weekDayShortName7CssClass\}\}/img, !setting.isGregorian ? 'text-danger' : '');
+        html = html.replace(/\{\{previousYearText\}\}/img, setting.isGregorian ? MdsPersianDateTimePicker.previousYearText : MdsPersianDateTimePicker.previousYearTextPersian);
+        html = html.replace(/\{\{previousMonthText\}\}/img, setting.isGregorian ? MdsPersianDateTimePicker.previousMonthText : MdsPersianDateTimePicker.previousMonthTextPersian);
+        html = html.replace(/\{\{nextMonthText\}\}/img, setting.isGregorian ? MdsPersianDateTimePicker.nextMonthText : MdsPersianDateTimePicker.nextMonthTextPersian);
+        html = html.replace(/\{\{nextYearText\}\}/img, setting.isGregorian ? MdsPersianDateTimePicker.nextYearText : MdsPersianDateTimePicker.nextYearTextPersian);
+        html = html.replace(/\{\{monthName1\}\}/img, MdsPersianDateTimePicker.getMonthName(0, setting.isGregorian));
+        html = html.replace(/\{\{monthName2\}\}/img, MdsPersianDateTimePicker.getMonthName(1, setting.isGregorian));
+        html = html.replace(/\{\{monthName3\}\}/img, MdsPersianDateTimePicker.getMonthName(2, setting.isGregorian));
+        html = html.replace(/\{\{monthName4\}\}/img, MdsPersianDateTimePicker.getMonthName(3, setting.isGregorian));
+        html = html.replace(/\{\{monthName5\}\}/img, MdsPersianDateTimePicker.getMonthName(4, setting.isGregorian));
+        html = html.replace(/\{\{monthName6\}\}/img, MdsPersianDateTimePicker.getMonthName(5, setting.isGregorian));
+        html = html.replace(/\{\{monthName7\}\}/img, MdsPersianDateTimePicker.getMonthName(6, setting.isGregorian));
+        html = html.replace(/\{\{monthName8\}\}/img, MdsPersianDateTimePicker.getMonthName(7, setting.isGregorian));
+        html = html.replace(/\{\{monthName9\}\}/img, MdsPersianDateTimePicker.getMonthName(8, setting.isGregorian));
+        html = html.replace(/\{\{monthName10\}\}/img, MdsPersianDateTimePicker.getMonthName(9, setting.isGregorian));
+        html = html.replace(/\{\{monthName11\}\}/img, MdsPersianDateTimePicker.getMonthName(10, setting.isGregorian));
+        html = html.replace(/\{\{monthName12\}\}/img, MdsPersianDateTimePicker.getMonthName(11, setting.isGregorian));
+        html = html.replace(/\{\{weekDayShortName1\}\}/img, MdsPersianDateTimePicker.getWeekDayShortName(0, setting.isGregorian));
+        html = html.replace(/\{\{weekDayShortName2\}\}/img, MdsPersianDateTimePicker.getWeekDayShortName(1, setting.isGregorian));
+        html = html.replace(/\{\{weekDayShortName3\}\}/img, MdsPersianDateTimePicker.getWeekDayShortName(2, setting.isGregorian));
+        html = html.replace(/\{\{weekDayShortName4\}\}/img, MdsPersianDateTimePicker.getWeekDayShortName(3, setting.isGregorian));
+        html = html.replace(/\{\{weekDayShortName5\}\}/img, MdsPersianDateTimePicker.getWeekDayShortName(4, setting.isGregorian));
+        html = html.replace(/\{\{weekDayShortName6\}\}/img, MdsPersianDateTimePicker.getWeekDayShortName(5, setting.isGregorian));
+        html = html.replace(/\{\{weekDayShortName7\}\}/img, MdsPersianDateTimePicker.getWeekDayShortName(6, setting.isGregorian));
+        const disabledDateObj = MdsPersianDateTimePicker.getDisabledDateObject(setting);
+        let i = 0, j = 0, firstWeekDayNumber, cellNumber = 0, tdNumber = 0, selectedDateNumber = 0, selectedMonthName = '', todayDateTimeJson, dateTimeToShowJson, numberOfDaysInCurrentMonth = 0, numberOfDaysInPreviousMonth = 0, tr = document.createElement('TR'), td = document.createElement("TD"), daysHtml = '', currentDateNumber = 0, previousMonthDateNumber = 0, nextMonthDateNumber = 0, previousYearDateNumber = 0, nextYearDateNumber = 0, rangeSelectorStartDate = !setting.rangeSelector || setting.rangeSelectorStartDate == undefined ? undefined : MdsPersianDateTimePicker.getClonedDate(setting.rangeSelectorStartDate), rangeSelectorEndDate = !setting.rangeSelector || setting.rangeSelectorEndDate == undefined ? undefined : MdsPersianDateTimePicker.getClonedDate(setting.rangeSelectorEndDate), rangeSelectorStartDateNumber = 0, rangeSelectorEndDateNumber = 0, dayNumberInString = '0', dayOfWeek = '', monthsDateNumberAndAttr = {
+            month1DateNumber: 0,
+            month2DateNumber: 0,
+            month3DateNumber: 0,
+            month4DateNumber: 0,
+            month5DateNumber: 0,
+            month6DateNumber: 0,
+            month7DateNumber: 0,
+            month8DateNumber: 0,
+            month9DateNumber: 0,
+            month10DateNumber: 0,
+            month11DateNumber: 0,
+            month12DateNumber: 0,
+            selectMonth1ButtonCssClass: '',
+            selectMonth2ButtonCssClass: '',
+            selectMonth3ButtonCssClass: '',
+            selectMonth4ButtonCssClass: '',
+            selectMonth5ButtonCssClass: '',
+            selectMonth6ButtonCssClass: '',
+            selectMonth7ButtonCssClass: '',
+            selectMonth8ButtonCssClass: '',
+            selectMonth9ButtonCssClass: '',
+            selectMonth10ButtonCssClass: '',
+            selectMonth11ButtonCssClass: '',
+            selectMonth12ButtonCssClass: '',
+        }, holidaysDateNumbers = [], disabledDatesNumber = [], specialDatesNumber = [], disableBeforeDateTimeJson = disabledDateObj[0], disableAfterDateTimeJson = disabledDateObj[1], previousYearButtonDisabledAttribute = '', previousMonthButtonDisabledAttribute = '', selectYearButtonDisabledAttribute = '', nextMonthButtonDisabledAttribute = '', nextYearButtonDisabledAttribute = '', isTrAppended = false;
+        if (setting.isGregorian) {
+            dateTimeToShowJson = MdsPersianDateTimePicker.getDateTimeJson1(selectedDateToShowTemp);
+            todayDateTimeJson = MdsPersianDateTimePicker.getDateTimeJson1(new Date());
+            firstWeekDayNumber = new Date(dateTimeToShowJson.year, dateTimeToShowJson.month - 1, 1).getDay();
+            selectedDateNumber = !selectedDateTime ? 0 : MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJson1(selectedDateTime));
+            numberOfDaysInCurrentMonth = MdsPersianDateTimePicker.getDaysInMonth(dateTimeToShowJson.year, dateTimeToShowJson.month - 1);
+            numberOfDaysInPreviousMonth = MdsPersianDateTimePicker.getDaysInMonth(dateTimeToShowJson.year, dateTimeToShowJson.month - 2);
+            previousMonthDateNumber = MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJson1(MdsPersianDateTimePicker.getLastDayDateOfPreviousMonth(selectedDateToShowTemp, true)));
+            nextMonthDateNumber = MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJson1(MdsPersianDateTimePicker.getFirstDayDateOfNextMonth(selectedDateToShowTemp, true)));
+            selectedDateToShowTemp = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+            previousYearDateNumber = MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJson1(new Date(selectedDateToShowTemp.setFullYear(selectedDateToShowTemp.getFullYear() - 1))));
+            selectedDateToShowTemp = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+            nextYearDateNumber = MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJson1(new Date(selectedDateToShowTemp.setFullYear(selectedDateToShowTemp.getFullYear() + 1))));
+            selectedDateToShowTemp = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+            rangeSelectorStartDateNumber = !setting.rangeSelector || !rangeSelectorStartDate ? 0 : MdsPersianDateTimePicker.convertToNumber3(rangeSelectorStartDate);
+            rangeSelectorEndDateNumber = !setting.rangeSelector || !rangeSelectorEndDate ? 0 : MdsPersianDateTimePicker.convertToNumber3(rangeSelectorEndDate);
+            for (i = 1; i <= 12; i++) {
+                monthsDateNumberAndAttr['month' + i.toString() + 'DateNumber'] = MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJson1(new Date(selectedDateToShowTemp.setMonth(i - 1))));
+                selectedDateToShowTemp = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+            }
+            for (i = 0; i < setting.holidays.length; i++) {
+                holidaysDateNumbers.push(MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJson1(setting.holidays[i])));
+            }
+            for (i = 0; i < setting.disabledDates.length; i++) {
+                disabledDatesNumber.push(MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJson1(setting.disabledDates[i])));
+            }
+            for (i = 0; i < setting.specialDates.length; i++) {
+                specialDatesNumber.push(MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJson1(setting.specialDates[i])));
+            }
+        }
+        else {
+            dateTimeToShowJson = MdsPersianDateTimePicker.getDateTimeJsonPersian1(selectedDateToShowTemp);
+            todayDateTimeJson = MdsPersianDateTimePicker.getDateTimeJsonPersian1(new Date());
+            firstWeekDayNumber = MdsPersianDateTimePicker.getDateTimeJsonPersian2(dateTimeToShowJson.year, dateTimeToShowJson.month, 1, 0, 0, 0).dayOfWeek;
+            selectedDateNumber = !selectedDateTime ? 0 : MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJsonPersian1(selectedDateTime));
+            numberOfDaysInCurrentMonth = MdsPersianDateTimePicker.getDaysInMonthPersian(dateTimeToShowJson.year, dateTimeToShowJson.month);
+            numberOfDaysInPreviousMonth = MdsPersianDateTimePicker.getDaysInMonthPersian(dateTimeToShowJson.year - 1, dateTimeToShowJson.month - 1);
+            previousMonthDateNumber = MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJsonPersian1(MdsPersianDateTimePicker.getLastDayDateOfPreviousMonth(selectedDateToShowTemp, false)));
+            selectedDateToShowTemp = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+            nextMonthDateNumber = MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJsonPersian1(MdsPersianDateTimePicker.getFirstDayDateOfNextMonth(selectedDateToShowTemp, false)));
+            selectedDateToShowTemp = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+            previousYearDateNumber = MdsPersianDateTimePicker.convertToNumber2(dateTimeToShowJson.year - 1, dateTimeToShowJson.month, dateTimeToShowJson.day);
+            nextYearDateNumber = MdsPersianDateTimePicker.convertToNumber2(dateTimeToShowJson.year + 1, dateTimeToShowJson.month, dateTimeToShowJson.day);
+            selectedDateToShowTemp = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+            rangeSelectorStartDateNumber = !setting.rangeSelector || !rangeSelectorStartDate ? 0 : MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJsonPersian1(rangeSelectorStartDate));
+            rangeSelectorEndDateNumber = !setting.rangeSelector || !rangeSelectorEndDate ? 0 : MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJsonPersian1(rangeSelectorEndDate));
+            for (i = 1; i <= 12; i++) {
+                monthsDateNumberAndAttr['month' + i.toString() + 'DateNumber'] = MdsPersianDateTimePicker.convertToNumber2(dateTimeToShowJson.year, i, MdsPersianDateTimePicker.getDaysInMonthPersian(dateTimeToShowJson.year, i));
+                selectedDateToShowTemp = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+            }
+            for (i = 0; i < setting.holidays.length; i++) {
+                holidaysDateNumbers.push(MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJsonPersian1(setting.holidays[i])));
+            }
+            for (i = 0; i < setting.disabledDates.length; i++) {
+                disabledDatesNumber.push(MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJsonPersian1(setting.disabledDates[i])));
+            }
+            for (i = 0; i < setting.specialDates.length; i++) {
+                specialDatesNumber.push(MdsPersianDateTimePicker.convertToNumber1(MdsPersianDateTimePicker.getDateTimeJsonPersian1(setting.specialDates[i])));
+            }
+        }
+        let todayDateNumber = MdsPersianDateTimePicker.convertToNumber1(todayDateTimeJson);
+        let selectedYear = setting.isGregorian ? dateTimeToShowJson.year.toString() : MdsPersianDateTimePicker.toPersianNumber(dateTimeToShowJson.year);
+        let disableBeforeDateTimeNumber = !disableBeforeDateTimeJson ? undefined : MdsPersianDateTimePicker.convertToNumber1(disableBeforeDateTimeJson);
+        let disableAfterDateTimeNumber = !disableAfterDateTimeJson ? undefined : MdsPersianDateTimePicker.convertToNumber1(disableAfterDateTimeJson);
+        let currentMonthInfo = MdsPersianDateTimePicker.getMonthName(dateTimeToShowJson.month - 1, setting.isGregorian) + ' ' + dateTimeToShowJson.year.toString();
+        if (!setting.isGregorian)
+            currentMonthInfo = MdsPersianDateTimePicker.toPersianNumber(currentMonthInfo);
+        selectedMonthName = MdsPersianDateTimePicker.getMonthName(dateTimeToShowJson.month - 1, setting.isGregorian);
+        if (setting.yearOffset <= 0) {
+            previousYearButtonDisabledAttribute = 'disabled';
+            nextYearButtonDisabledAttribute = 'disabled';
+            selectYearButtonDisabledAttribute = 'disabled';
+        }
+        if (!setting.isGregorian && firstWeekDayNumber != 6 || setting.isGregorian && firstWeekDayNumber != 0) {
+            if (setting.isGregorian)
+                firstWeekDayNumber--;
+            let previousMonthDateTimeJson = MdsPersianDateTimePicker.addMonthToDateTimeJson(dateTimeToShowJson, -1, setting.isGregorian);
+            for (i = numberOfDaysInPreviousMonth - firstWeekDayNumber; i <= numberOfDaysInPreviousMonth; i++) {
+                currentDateNumber = MdsPersianDateTimePicker.convertToNumber2(previousMonthDateTimeJson.year, previousMonthDateTimeJson.month, i);
+                dayNumberInString = setting.isGregorian ? MdsPersianDateTimePicker.zeroPad(i) : MdsPersianDateTimePicker.toPersianNumber(MdsPersianDateTimePicker.zeroPad(i));
+                td = document.createElement('TD');
+                td.setAttribute('data-nm', '');
+                td.setAttribute('data-number', currentDateNumber.toString());
+                td.innerHTML = dayNumberInString;
+                if (setting.rangeSelector) {
+                    if (currentDateNumber == rangeSelectorStartDateNumber || currentDateNumber == rangeSelectorEndDateNumber)
+                        td.classList.add('selected-range-days-start-end');
+                    else if (rangeSelectorStartDateNumber > 0 && rangeSelectorEndDateNumber > 0 && currentDateNumber > rangeSelectorStartDateNumber && currentDateNumber < rangeSelectorEndDateNumber)
+                        td.classList.add('selected-range-days-nm');
+                }
+                if (!setting.isGregorian && tdNumber == 6)
+                    td.classList.add('text-danger');
+                else if (setting.isGregorian && tdNumber == 0)
+                    td.classList.add('text-danger');
+                tr.appendChild(td);
+                cellNumber++;
+                tdNumber++;
+                if (tdNumber >= 7) {
+                    tdNumber = 0;
+                    daysHtml += tr.outerHTML;
+                    isTrAppended = true;
+                    tr = document.createElement('TR');
+                }
+            }
+        }
+        for (i = 1; i <= numberOfDaysInCurrentMonth; i++) {
+            if (tdNumber >= 7) {
+                tdNumber = 0;
+                daysHtml += tr.outerHTML;
+                isTrAppended = true;
+                tr = document.createElement('TR');
+            }
+            currentDateNumber = MdsPersianDateTimePicker.convertToNumber2(dateTimeToShowJson.year, dateTimeToShowJson.month, i);
+            dayNumberInString = setting.isGregorian ? MdsPersianDateTimePicker.zeroPad(i) : MdsPersianDateTimePicker.toPersianNumber(MdsPersianDateTimePicker.zeroPad(i));
+            td = document.createElement('TD');
+            td.setAttribute('data-day', '');
+            td.setAttribute('data-number', currentDateNumber.toString());
+            td.innerHTML = dayNumberInString;
+            if (currentDateNumber == todayDateNumber) {
+                td.setAttribute('data-today', '');
+                td.setAttribute('title', setting.isGregorian ? MdsPersianDateTimePicker.todayText : MdsPersianDateTimePicker.todayTextPersian);
+                if (!dayOfWeek)
+                    dayOfWeek = MdsPersianDateTimePicker.getWeekDayName(tdNumber - 1 < 0 ? 0 : tdNumber - 1, setting.isGregorian);
+            }
+            if (!setting.rangeSelector && selectedDateNumber == currentDateNumber) {
+                td.setAttribute('data-mds-dtp-selected-day', '');
+                dayOfWeek = MdsPersianDateTimePicker.getWeekDayName(tdNumber - 1 < 0 ? 0 : tdNumber - 1, setting.isGregorian);
+            }
+            for (j = 0; j < holidaysDateNumbers.length; j++) {
+                if (holidaysDateNumbers[j] != currentDateNumber)
+                    continue;
+                td.classList.add('text-danger');
+                break;
+            }
+            if (!setting.isGregorian && tdNumber == 6) {
+                td.classList.add('text-danger');
+            }
+            else if (setting.isGregorian && tdNumber == 0) {
+                td.classList.add('text-danger');
+            }
+            if (setting.disableBeforeToday) {
+                if (currentDateNumber < todayDateNumber)
+                    td.setAttribute('disabled', '');
+                if (nextMonthDateNumber < todayDateNumber)
+                    nextMonthButtonDisabledAttribute = 'disabled';
+                if (nextYearDateNumber < todayDateNumber)
+                    nextYearButtonDisabledAttribute = 'disabled';
+                if (previousMonthDateNumber < todayDateNumber)
+                    previousMonthButtonDisabledAttribute = 'disabled';
+                if (previousYearDateNumber < todayDateNumber)
+                    previousYearButtonDisabledAttribute = 'disabled';
+                for (j = 1; j <= 12; j++) {
+                    if (monthsDateNumberAndAttr['month' + j.toString() + 'DateNumber'] < todayDateNumber)
+                        monthsDateNumberAndAttr['selectMonth' + j.toString() + 'ButtonCssClass'] = 'disabled';
+                }
+            }
+            if (setting.disableAfterToday) {
+                if (currentDateNumber > todayDateNumber)
+                    td.setAttribute('disabled', '');
+                if (nextMonthDateNumber > todayDateNumber)
+                    nextMonthButtonDisabledAttribute = 'disabled';
+                if (nextYearDateNumber > todayDateNumber)
+                    nextYearButtonDisabledAttribute = 'disabled';
+                if (previousMonthDateNumber > todayDateNumber)
+                    previousMonthButtonDisabledAttribute = 'disabled';
+                if (previousYearDateNumber > todayDateNumber)
+                    previousYearButtonDisabledAttribute = 'disabled';
+                for (j = 1; j <= 12; j++) {
+                    if (monthsDateNumberAndAttr['month' + j.toString() + 'DateNumber'] > todayDateNumber)
+                        monthsDateNumberAndAttr['selectMonth' + j.toString() + 'ButtonCssClass'] = 'disabled';
+                }
+            }
+            if (disableAfterDateTimeNumber) {
+                if (currentDateNumber > disableAfterDateTimeNumber)
+                    td.setAttribute('disabled', '');
+                if (nextMonthDateNumber > disableAfterDateTimeNumber)
+                    nextMonthButtonDisabledAttribute = 'disabled';
+                if (nextYearDateNumber > disableAfterDateTimeNumber)
+                    nextYearButtonDisabledAttribute = 'disabled';
+                if (previousMonthDateNumber > disableAfterDateTimeNumber)
+                    previousMonthButtonDisabledAttribute = 'disabled';
+                if (previousYearDateNumber > disableAfterDateTimeNumber)
+                    previousYearButtonDisabledAttribute = 'disabled';
+                for (j = 1; j <= 12; j++) {
+                    if (monthsDateNumberAndAttr['month' + j.toString() + 'DateNumber'] > disableAfterDateTimeNumber)
+                        monthsDateNumberAndAttr['selectMonth' + j.toString() + 'ButtonCssClass'] = 'disabled';
+                }
+            }
+            if (disableBeforeDateTimeNumber) {
+                if (currentDateNumber < disableBeforeDateTimeNumber)
+                    td.setAttribute('disabled', '');
+                if (nextMonthDateNumber < disableBeforeDateTimeNumber)
+                    nextMonthButtonDisabledAttribute = 'disabled';
+                if (nextYearDateNumber < disableBeforeDateTimeNumber)
+                    nextYearButtonDisabledAttribute = 'disabled';
+                if (previousMonthDateNumber < disableBeforeDateTimeNumber)
+                    previousMonthButtonDisabledAttribute = 'disabled';
+                if (previousYearDateNumber < disableBeforeDateTimeNumber)
+                    previousYearButtonDisabledAttribute = 'disabled';
+                for (j = 1; j <= 12; j++) {
+                    if (monthsDateNumberAndAttr['month' + j.toString() + 'DateNumber'] < disableBeforeDateTimeNumber)
+                        monthsDateNumberAndAttr['selectMonth' + j.toString() + 'ButtonCssClass'] = 'disabled';
+                }
+            }
+            for (j = 0; j < disabledDatesNumber.length; j++) {
+                if (currentDateNumber == disabledDatesNumber[j])
+                    td.setAttribute('disabled', '');
+            }
+            for (j = 0; j < specialDatesNumber.length; j++) {
+                if (currentDateNumber == specialDatesNumber[j])
+                    td.setAttribute('data-special-date', '');
+            }
+            if (setting.disabledDays != null && setting.disabledDays.length > 0 && setting.disabledDays.indexOf(tdNumber) >= 0) {
+                td.setAttribute('disabled', '');
+            }
+            if (setting.rangeSelector) {
+                if (currentDateNumber == rangeSelectorStartDateNumber || currentDateNumber == rangeSelectorEndDateNumber)
+                    td.classList.add('selected-range-days-start-end');
+                else if (rangeSelectorStartDateNumber > 0 && rangeSelectorEndDateNumber > 0 && currentDateNumber > rangeSelectorStartDateNumber && currentDateNumber < rangeSelectorEndDateNumber)
+                    td.classList.add('selected-range-days');
+            }
+            tr.appendChild(td);
+            isTrAppended = false;
+            tdNumber++;
+            cellNumber++;
+        }
+        if (tdNumber >= 7) {
+            tdNumber = 0;
+            daysHtml += tr.outerHTML;
+            isTrAppended = true;
+            tr = document.createElement('TR');
+        }
+        let nextMonthDateTimeJson = MdsPersianDateTimePicker.addMonthToDateTimeJson(dateTimeToShowJson, 1, setting.isGregorian);
+        for (i = 1; i <= 42 - cellNumber; i++) {
+            dayNumberInString = setting.isGregorian ? MdsPersianDateTimePicker.zeroPad(i) : MdsPersianDateTimePicker.toPersianNumber(MdsPersianDateTimePicker.zeroPad(i));
+            currentDateNumber = MdsPersianDateTimePicker.convertToNumber2(nextMonthDateTimeJson.year, nextMonthDateTimeJson.month, i);
+            td = document.createElement('TD');
+            td.setAttribute('data-nm', '');
+            td.setAttribute('data-number', currentDateNumber.toString());
+            td.innerHTML = dayNumberInString;
+            if (setting.rangeSelector) {
+                if (currentDateNumber == rangeSelectorStartDateNumber || currentDateNumber == rangeSelectorEndDateNumber)
+                    td.classList.add('selected-range-days-start-end');
+                else if (rangeSelectorStartDateNumber > 0 && rangeSelectorEndDateNumber > 0 && currentDateNumber > rangeSelectorStartDateNumber && currentDateNumber < rangeSelectorEndDateNumber)
+                    td.classList.add('selected-range-days-nm');
+            }
+            if (!setting.isGregorian && tdNumber == 6)
+                td.classList.add('text-danger');
+            else if (setting.isGregorian && tdNumber == 0)
+                td.classList.add('text-danger');
+            tr.appendChild(td);
+            tdNumber++;
+            if (tdNumber >= 7) {
+                tdNumber = 0;
+                daysHtml += tr.outerHTML;
+                isTrAppended = true;
+                tr = document.createElement('TR');
+            }
+        }
+        if (!isTrAppended) {
+            daysHtml += tr.outerHTML;
+            isTrAppended = true;
+        }
+        html = html.replace(/\{\{currentMonthInfo\}\}/img, currentMonthInfo);
+        html = html.replace(/\{\{selectedYear\}\}/img, selectedYear);
+        html = html.replace(/\{\{selectedMonthName\}\}/img, selectedMonthName);
+        html = html.replace(/\{\{daysHtml\}\}/img, daysHtml);
+        html = html.replace(/\{\{previousYearButtonDisabledAttribute\}\}/img, previousYearButtonDisabledAttribute);
+        html = html.replace(/\{\{previousYearButtonDateNumber\}\}/img, previousYearDateNumber.toString());
+        html = html.replace(/\{\{previousMonthButtonDisabledAttribute\}\}/img, previousMonthButtonDisabledAttribute);
+        html = html.replace(/\{\{previousMonthButtonDateNumber\}\}/img, previousMonthDateNumber.toString());
+        html = html.replace(/\{\{selectYearButtonDisabledAttribute\}\}/img, selectYearButtonDisabledAttribute);
+        html = html.replace(/\{\{nextMonthButtonDisabledAttribute\}\}/img, nextMonthButtonDisabledAttribute);
+        html = html.replace(/\{\{nextMonthButtonDateNumber\}\}/img, nextMonthDateNumber.toString());
+        html = html.replace(/\{\{nextYearButtonDisabledAttribute\}\}/img, nextYearButtonDisabledAttribute);
+        html = html.replace(/\{\{nextYearButtonDateNumber\}\}/img, nextYearDateNumber.toString());
+        html = html.replace(/\{\{dropDownMenuMonth1DateNumber\}\}/img, monthsDateNumberAndAttr.month1DateNumber);
+        html = html.replace(/\{\{dropDownMenuMonth2DateNumber\}\}/img, monthsDateNumberAndAttr.month2DateNumber);
+        html = html.replace(/\{\{dropDownMenuMonth3DateNumber\}\}/img, monthsDateNumberAndAttr.month3DateNumber);
+        html = html.replace(/\{\{dropDownMenuMonth4DateNumber\}\}/img, monthsDateNumberAndAttr.month4DateNumber);
+        html = html.replace(/\{\{dropDownMenuMonth5DateNumber\}\}/img, monthsDateNumberAndAttr.month5DateNumber);
+        html = html.replace(/\{\{dropDownMenuMonth6DateNumber\}\}/img, monthsDateNumberAndAttr.month6DateNumber);
+        html = html.replace(/\{\{dropDownMenuMonth7DateNumber\}\}/img, monthsDateNumberAndAttr.month7DateNumber);
+        html = html.replace(/\{\{dropDownMenuMonth8DateNumber\}\}/img, monthsDateNumberAndAttr.month8DateNumber);
+        html = html.replace(/\{\{dropDownMenuMonth9DateNumber\}\}/img, monthsDateNumberAndAttr.month9DateNumber);
+        html = html.replace(/\{\{dropDownMenuMonth10DateNumber\}\}/img, monthsDateNumberAndAttr.month10DateNumber);
+        html = html.replace(/\{\{dropDownMenuMonth11DateNumber\}\}/img, monthsDateNumberAndAttr.month11DateNumber);
+        html = html.replace(/\{\{dropDownMenuMonth12DateNumber\}\}/img, monthsDateNumberAndAttr.month12DateNumber);
+        html = html.replace(/\{\{selectMonth1ButtonCssClass\}\}/img, monthsDateNumberAndAttr.selectMonth1ButtonCssClass);
+        html = html.replace(/\{\{selectMonth2ButtonCssClass\}\}/img, monthsDateNumberAndAttr.selectMonth2ButtonCssClass);
+        html = html.replace(/\{\{selectMonth3ButtonCssClass\}\}/img, monthsDateNumberAndAttr.selectMonth3ButtonCssClass);
+        html = html.replace(/\{\{selectMonth4ButtonCssClass\}\}/img, monthsDateNumberAndAttr.selectMonth4ButtonCssClass);
+        html = html.replace(/\{\{selectMonth5ButtonCssClass\}\}/img, monthsDateNumberAndAttr.selectMonth5ButtonCssClass);
+        html = html.replace(/\{\{selectMonth6ButtonCssClass\}\}/img, monthsDateNumberAndAttr.selectMonth6ButtonCssClass);
+        html = html.replace(/\{\{selectMonth7ButtonCssClass\}\}/img, monthsDateNumberAndAttr.selectMonth7ButtonCssClass);
+        html = html.replace(/\{\{selectMonth8ButtonCssClass\}\}/img, monthsDateNumberAndAttr.selectMonth8ButtonCssClass);
+        html = html.replace(/\{\{selectMonth9ButtonCssClass\}\}/img, monthsDateNumberAndAttr.selectMonth9ButtonCssClass);
+        html = html.replace(/\{\{selectMonth10ButtonCssClass\}\}/img, monthsDateNumberAndAttr.selectMonth10ButtonCssClass);
+        html = html.replace(/\{\{selectMonth11ButtonCssClass\}\}/img, monthsDateNumberAndAttr.selectMonth11ButtonCssClass);
+        html = html.replace(/\{\{selectMonth12ButtonCssClass\}\}/img, monthsDateNumberAndAttr.selectMonth12ButtonCssClass);
+        return html;
+    }
+    getPopoverHeaderTitle(setting) {
+        let selectedDateToShowJson;
+        let title = '';
+        if (setting.isGregorian) {
+            selectedDateToShowJson = MdsPersianDateTimePicker.getDateTimeJson1(setting.selectedDateToShow);
+        }
+        else {
+            selectedDateToShowJson = MdsPersianDateTimePicker.getDateTimeJsonPersian1(setting.selectedDateToShow);
+        }
+        if (setting.rangeSelector) {
+            const startDate = MdsPersianDateTimePicker.addMonthToDateTime(setting.selectedDateToShow, -setting.rangeSelectorMonthsToShow[0], setting.isGregorian);
+            const endDate = MdsPersianDateTimePicker.addMonthToDateTime(setting.selectedDateToShow, setting.rangeSelectorMonthsToShow[1], setting.isGregorian);
+            let statDateJson;
+            let endDateJson;
+            if (setting.isGregorian) {
+                statDateJson = MdsPersianDateTimePicker.getDateTimeJson1(startDate);
+                endDateJson = MdsPersianDateTimePicker.getDateTimeJson1(endDate);
+            }
+            else {
+                statDateJson = MdsPersianDateTimePicker.getDateTimeJsonPersian1(startDate);
+                endDateJson = MdsPersianDateTimePicker.getDateTimeJsonPersian1(endDate);
+            }
+            const startMonthName = MdsPersianDateTimePicker.getMonthName(statDateJson.month - 1, setting.isGregorian);
+            const endMonthName = MdsPersianDateTimePicker.getMonthName(endDateJson.month - 1, setting.isGregorian);
+            title = `${startMonthName} ${statDateJson.year} - ${endMonthName} ${endDateJson.year}`;
+        }
+        else
+            title = `${MdsPersianDateTimePicker.getMonthName(selectedDateToShowJson.month - 1, setting.isGregorian)} ${selectedDateToShowJson.year}`;
+        if (!setting.isGregorian)
+            title = MdsPersianDateTimePicker.toPersianNumber(title);
+        return title;
+    }
+    getDateTimePickerBodyHtml(setting) {
+        let selectedDateToShow = MdsPersianDateTimePicker.getClonedDate(setting.selectedDateToShow);
+        let html = MdsPersianDateTimePicker.dateTimePickerHtmlTemplate;
+        html = html.replace(/\{\{inlineAttr\}\}/img, setting.inLine ? 'data-inline' : '');
+        html = html.replace(/\{\{rtlCssClass\}\}/img, setting.isGregorian ? '' : 'rtl');
+        html = html.replace(/\{\{selectedDateStringAttribute\}\}/img, setting.inLine ? '' : 'hidden');
+        html = html.replace(/\{\{goTodayText\}\}/img, setting.isGregorian ? MdsPersianDateTimePicker.goTodayText : MdsPersianDateTimePicker.goTodayTextPersian);
+        html = html.replace(/\{\{timePickerAttribute\}\}/img, setting.enableTimePicker ? '' : 'hidden');
+        const disabledDays = MdsPersianDateTimePicker.getDisabledDateObject(setting);
+        let title = '';
+        let todayDateString = '';
+        let todayDateTimeJson;
+        let selectedDateTimeToShowJson;
+        let disableBeforeDateTimeJson = disabledDays[0];
+        let disableAfterDateTimeJson = disabledDays[1];
+        if (setting.isGregorian) {
+            selectedDateTimeToShowJson = MdsPersianDateTimePicker.getDateTimeJson1(selectedDateToShow);
+            todayDateTimeJson = MdsPersianDateTimePicker.getDateTimeJson1(new Date());
+        }
+        else {
+            selectedDateTimeToShowJson = MdsPersianDateTimePicker.getDateTimeJsonPersian1(selectedDateToShow);
+            todayDateTimeJson = MdsPersianDateTimePicker.getDateTimeJsonPersian1(new Date());
+        }
+        title = this.getPopoverHeaderTitle(setting);
+        todayDateString = `${setting.isGregorian ? 'Today,' : 'امروز،'} ${todayDateTimeJson.day} ${MdsPersianDateTimePicker.getMonthName(todayDateTimeJson.month - 1, setting.isGregorian)} ${todayDateTimeJson.year}`;
+        if (!setting.isGregorian) {
+            todayDateString = MdsPersianDateTimePicker.toPersianNumber(todayDateString);
+        }
+        if (disableAfterDateTimeJson != undefined && disableAfterDateTimeJson.year <= selectedDateTimeToShowJson.year && disableAfterDateTimeJson.month < selectedDateTimeToShowJson.month)
+            selectedDateToShow = setting.isGregorian ? new Date(disableAfterDateTimeJson.year, disableAfterDateTimeJson.month - 1, 1) : MdsPersianDateTimePicker.getDateTime1(disableAfterDateTimeJson.year, disableAfterDateTimeJson.month, disableAfterDateTimeJson.day);
+        if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year >= selectedDateTimeToShowJson.year && disableBeforeDateTimeJson.month > selectedDateTimeToShowJson.month)
+            selectedDateToShow = setting.isGregorian ? new Date(disableBeforeDateTimeJson.year, disableBeforeDateTimeJson.month - 1, 1) : MdsPersianDateTimePicker.getDateTime1(disableBeforeDateTimeJson.year, disableBeforeDateTimeJson.month, disableBeforeDateTimeJson.day);
+        let monthsTdHtml = '';
+        let numberOfNextMonths = setting.rangeSelectorMonthsToShow[1] <= 0 ? 0 : setting.rangeSelectorMonthsToShow[1];
+        let numberOfPrevMonths = setting.rangeSelectorMonthsToShow[0] <= 0 ? 0 : setting.rangeSelectorMonthsToShow[0];
+        numberOfPrevMonths *= -1;
+        for (let i1 = numberOfPrevMonths; i1 < 0; i1++) {
+            setting.selectedDateToShow = MdsPersianDateTimePicker.addMonthToDateTime(MdsPersianDateTimePicker.getClonedDate(selectedDateToShow), i1, setting.isGregorian);
+            monthsTdHtml += this.getDateTimePickerMonthHtml(setting, false, true);
+        }
+        setting.selectedDateToShow = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+        monthsTdHtml += this.getDateTimePickerMonthHtml(setting, false, false);
+        for (let i2 = 1; i2 <= numberOfNextMonths; i2++) {
+            setting.selectedDateToShow = MdsPersianDateTimePicker.addMonthToDateTime(MdsPersianDateTimePicker.getClonedDate(selectedDateToShow), i2, setting.isGregorian);
+            monthsTdHtml += this.getDateTimePickerMonthHtml(setting, true, false);
+        }
+        let totalMonthNumberToShow = Math.abs(numberOfPrevMonths) + 1 + numberOfNextMonths;
+        let monthTdStyle = totalMonthNumberToShow > 1 ? 'width: ' + (100 / totalMonthNumberToShow).toString() + '%;' : '';
+        monthsTdHtml = monthsTdHtml.replace(/\{\{monthTdStyle\}\}/img, monthTdStyle);
+        html = html.replace(/\{\{dtpInlineHeader\}\}/img, title);
+        html = html.replace(/\{\{todayDateString\}\}/img, todayDateString);
+        html = html.replace(/\{\{time\}\}/img, `${MdsPersianDateTimePicker.zeroPad(selectedDateTimeToShowJson.hour)}:${MdsPersianDateTimePicker.zeroPad(selectedDateTimeToShowJson.minute)}`);
+        html = html.replace(/\{\{monthsTdHtml\}\}/img, monthsTdHtml);
+        return html;
+    }
+    enableMainEvents() {
+        if (this.setting.inLine)
+            return;
+        if (this.bsPopover != null) {
+            this.element.addEventListener('shown.bs.popover', this.popoverOrModalShownEvent);
+            this.element.addEventListener('hidden.bs.popover', this.popoverOrModalHiddenEvent);
+            this.element.addEventListener('inserted.bs.popover', this.popoverInsertedEvent);
+            this.element.addEventListener('click', this.showPopoverEvent, true);
+        }
+        else if (this.bsModal != null) {
+            const modalElement = this.getModal();
+            if (modalElement == null) {
+                console.error("mds.bs.datetimepicker: `modalElement` not found!");
+                return;
+            }
+            modalElement.addEventListener('shown.bs.modal', this.popoverOrModalShownEvent);
+            modalElement.addEventListener('hidden.bs.modal', this.popoverOrModalHiddenEvent);
+        }
+    }
+    enableInLineEvents() {
+        if (!this.setting.inLine)
+            return;
+        setTimeout(() => {
+            var _a;
+            const dtp = document.querySelector(`[data-mds-dtp-guid="${this.guid}"]`);
+            if (dtp != null) {
+                (_a = dtp.querySelector('[data-mds-dtp-time]')) === null || _a === void 0 ? void 0 : _a.addEventListener('change', this.timeChanged, false);
+                dtp.addEventListener('click', this.selectCorrectClickEvent);
+                dtp.querySelectorAll('[data-day]').forEach(e => e.addEventListener('mouseenter', this.hoverOnDays, true));
+            }
+        }, 100);
+    }
+    enableEvents() {
+        if (this.setting.inLine)
+            return;
+        setTimeout(() => {
+            document.addEventListener('click', this.selectCorrectClickEvent, false);
+            document.querySelector('html').addEventListener('click', this.hidePopoverEvent, true);
+            document.querySelectorAll('[data-mds-dtp-time]').forEach(e => e.addEventListener('change', this.timeChanged, false));
+            document.querySelectorAll('[data-mds-dtp] [data-day]').forEach(e => e.addEventListener('mouseenter', this.hoverOnDays, true));
+        }, 500);
+    }
+    disableEvents() {
+        var _a, _b;
+        document.removeEventListener('click', this.selectCorrectClickEvent);
+        document.querySelector('html').removeEventListener('click', this.hidePopoverEvent);
+        (_a = document.querySelectorAll('[data-mds-dtp-time]')) === null || _a === void 0 ? void 0 : _a.forEach(e => e.removeEventListener('change', this.timeChanged));
+        document.querySelectorAll('[data-mds-dtp] [data-day]').forEach(e => e.removeEventListener('mouseenter', this.hoverOnDays));
+        const dtp = document.querySelector(`[data-mds-dtp-guid="${this.guid}"]`);
+        if (dtp != null) {
+            dtp.removeEventListener('click', this.selectCorrectClickEvent, false);
+            (_b = dtp.querySelectorAll('[data-day]')) === null || _b === void 0 ? void 0 : _b.forEach(e => e.removeEventListener('mouseenter', this.hoverOnDays, true));
+        }
+    }
+    show() {
+        var _a, _b;
+        (_a = this.bsModal) === null || _a === void 0 ? void 0 : _a.show();
+        (_b = this.bsPopover) === null || _b === void 0 ? void 0 : _b.show();
+    }
+    hide() {
+        var _a, _b;
+        (_a = this.bsModal) === null || _a === void 0 ? void 0 : _a.hide();
+        (_b = this.bsPopover) === null || _b === void 0 ? void 0 : _b.hide();
+    }
+    toggle() {
+        if (this.bsPopover == null)
+            return;
+        this.bsPopover.toggle();
+    }
+    enable() {
+        this.setting.disabled = false;
+        this.element.removeAttribute("disabled");
+        MdsPersianDateTimePickerData.set(this.guid, this);
+        if (this.bsPopover != null)
+            this.bsPopover.enable();
+    }
+    disable() {
+        this.setting.disabled = true;
+        this.element.setAttribute("disabled", '');
+        MdsPersianDateTimePickerData.set(this.guid, this);
+        if (this.bsPopover != null)
+            this.bsPopover.disable();
+    }
+    updatePosition() {
+        var _a, _b;
+        (_a = this.bsPopover) === null || _a === void 0 ? void 0 : _a.update();
+        (_b = this.bsModal) === null || _b === void 0 ? void 0 : _b.handleUpdate();
+    }
+    updateSelectedDateText() {
+        MdsPersianDateTimePicker.setSelectedData(this.setting);
+    }
+    dispose() {
+        if (this.bsPopover != null)
+            this.bsPopover.dispose();
+        if (this.bsModal != null)
+            this.bsModal.dispose();
+        this.element.removeEventListener('click', this.showPopoverEvent);
+        this.bsPopover = null;
+        this.bsModal = null;
+    }
+    getBsPopoverInstance() {
+        return this.bsPopover;
+    }
+    getBsModalInstance() {
+        return this.bsModal;
+    }
+    getText() {
+        return MdsPersianDateTimePicker.getSelectedDateFormatted(this.setting);
+    }
+    getSelectedDate() {
+        return this.setting.selectedDate;
+    }
+    getSelectedDateRange() {
+        return this.setting.selectedRangeDate;
+    }
+    setDate(date) {
+        this.updateOptions({
+            selectedDate: date,
+            selectedDateToShow: date
+        });
+    }
+    setDatePersian(yearPersian, monthPersian, dayPersian) {
+        const gregorianDateJson = MdsPersianDateTimePicker.toGregorian(yearPersian, monthPersian, dayPersian);
+        const date = new Date(gregorianDateJson.gy, gregorianDateJson.gm, gregorianDateJson.gd);
+        this.updateOptions({
+            selectedDate: date,
+            selectedDateToShow: date
+        });
+    }
+    setDateRange(startDate, endDate) {
+        this.updateOptions({
+            selectedDate: startDate,
+            selectedDateToShow: startDate,
+            selectedRangeDate: [startDate, endDate]
+        });
+    }
+    clearDate() {
+        this.updateOptions({
+            selectedDate: null,
+            selectedDateToShow: new Date(),
+        });
+    }
+    updateOption(optionName, value) {
+        if (!optionName)
+            return;
+        value = MdsPersianDateTimePicker.correctOptionValue(optionName, value);
+        this.setting[optionName] = value;
+        MdsPersianDateTimePickerData.set(this.guid, this);
+        this.initializeBsPopover(this.setting);
+    }
+    updateOptions(options) {
+        Object.keys(options).forEach((key) => {
+            this.setting[key] = MdsPersianDateTimePicker.correctOptionValue(key, options[key]);
+        });
+        MdsPersianDateTimePickerData.set(this.guid, this);
+        this.initializeBsPopover(this.setting);
+    }
+    static getInstance(element) {
+        var _a, _b, _c, _d, _e;
+        let elementGuid = element.getAttribute('data-mds-dtp-guid');
+        if (!elementGuid) {
+            elementGuid = (_b = (_a = element.closest('[data-mds-dtp-guid]')) === null || _a === void 0 ? void 0 : _a.getAttribute('data-mds-dtp-guid')) !== null && _b !== void 0 ? _b : null;
+            if (!elementGuid) {
+                const id = (_c = element.closest('[data-mds-dtp]')) === null || _c === void 0 ? void 0 : _c.getAttribute('id');
+                if (!id)
+                    return null;
+                elementGuid = (_e = (_d = document.querySelector('[aria-describedby="' + id + '"]')) === null || _d === void 0 ? void 0 : _d.getAttribute('data-mds-dtp-guid')) !== null && _e !== void 0 ? _e : null;
+                if (!elementGuid)
+                    return null;
+            }
+        }
+        ;
+        return MdsPersianDateTimePickerData.get(elementGuid);
+    }
+}
+MdsPersianDateTimePicker.modalHtmlTemplate = `<div data-mds-dtp data-mds-dtp-guid="{{guid}}" class="modal fade mds-bs-persian-datetime-picker-modal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header" data-mds-dtp-title="true">
+<h5 class="modal-title">Modal title</h5>
+</div>
+<div class="modal-body">
+  <div class="select-year-box w-0" data-mds-dtp-year-list-box="true"></div>
+  <div data-name="mds-dtp-body"></div>
+</div>
+</div>
+</div>
+</div>`;
+MdsPersianDateTimePicker.popoverHtmlTemplate = `<div class="popover mds-bs-persian-datetime-picker-popover" role="tooltip" data-mds-dtp>
+<div class="popover-arrow"></div>
+<h3 class="popover-header text-center p-1" data-mds-dtp-title="true"></h3>
+<div class="popover-body p-0" data-name="mds-dtp-body"></div>
+</div>`;
+MdsPersianDateTimePicker.popoverHeaderSelectYearHtmlTemplate = `<table class="table table-sm table-borderless text-center p-0 m-0 {{rtlCssClass}}" dir="{{dirAttrValue}}">
+<tr>
+<th>
+<button type="button" class="btn btn-sm btn-light w-100" title="{{previousText}}" data-year="{{latestPreviousYear}}" data-year-range-button-change="-1" {{prevYearButtonAttr}}> &lt; </button>
+</th>
+<th class="pt-1">
+{{yearsRangeText}}
+</th>
+<th>
+<button type="button" class="btn btn-sm btn-light w-100" title="{{nextText}}" data-year="{{latestNextYear}}" data-year-range-button-change="1" {{nextYearButtonAttr}}> &gt; </button>
+</th>
+</tr>
+</table>`;
+MdsPersianDateTimePicker.dateTimePickerYearsToSelectHtmlTemplate = `<table class="table table-sm text-center p-0 m-0">
+<tbody>
+{{yearsBoxHtml}}
+<tr>
+<td colspan="100" class="text-center">
+<button class="btn btn-sm btn-light w-100" data-mds-hide-year-list-box="true">{{cancelText}}</button>
+</td>
+</tr>
+</tbody>
+</table>`;
+MdsPersianDateTimePicker.dateTimePickerHtmlTemplate = `<div class="mds-bs-dtp-container {{rtlCssClass}}" {{inlineAttr}}>
+<div class="select-year-inline-box w-0" data-name="dtp-years-container">
+</div>
+<div class="select-year-box w-0" data-mds-dtp-year-list-box="true"></div>
+<table class="table table-sm text-center p-0 m-0">
+<thead>
+<tr {{selectedDateStringAttribute}}>
+<th mds-dtp-inline-header colspan="100">{{dtpInlineHeader}}</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+{{monthsTdHtml}}
+</tr>
+</tbody>
+<tfoot>
+<tr {{timePickerAttribute}}>
+<td colspan="100" class="text-center border-0">
+<input type="time" value="{{time}}" maxlength="2" data-mds-dtp-time />
+</td>
+</tr>
+<tr>
+<td colspan="100">
+<button type="button" class="btn btn-light" title="{{goTodayText}}" data-mds-dtp-go-today>{{todayDateString}}</button>
+</td>
+</tr>
+</tfoot>
+</table>
+</div>`;
+MdsPersianDateTimePicker.dateTimePickerMonthTableHtmlTemplate = `<td class="border-0" style="{{monthTdStyle}}" {{monthTdAttribute}} data-td-month>
+<table class="table table-sm table-striped table-borderless">
+<thead>
+<tr {{monthNameAttribute}}>
+<th colspan="100" class="border-0">
+<table class="table table-sm table-borderless">
+<thead>
+<tr>
+<th>
+<button type="button" class="btn btn-light"> {{currentMonthInfo}} </button>
+</th>
+</tr>
+</thead>
+</table>
+</th>
+</tr>
+<tr {{theadSelectDateButtonTrAttribute}}>
+<td colspan="100" class="border-0">
+<table class="table table-sm table-borderless">
+<tr>
+<th>
+<button type="button" class="btn btn-light btn-sm w-100" title="{{previousYearText}}" data-change-date-button="true" data-number="{{previousYearButtonDateNumber}}" {{previousYearButtonDisabledAttribute}}> &lt;&lt; </button>
+</th>
+<th>
+<button type="button" class="btn btn-light btn-sm w-100" title="{{previousMonthText}}" data-change-date-button="true" data-number="{{previousMonthButtonDateNumber}}" {{previousMonthButtonDisabledAttribute}}> &lt; </button>
+</th>
+<th style="width: 120px;">
+<div class="dropdown">
+<button type="button" class="btn btn-light btn-sm dropdown-toggle w-100" id="mdtp-month-selector-button-{{guid}}"
+data-bs-toggle="dropdown" aria-expanded="false">
+{{selectedMonthName}}
+</button>
+<div class="dropdown-menu" aria-labelledby="mdtp-month-selector-button-{{guid}}">
+<a class="dropdown-item {{selectMonth1ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth1DateNumber}}">{{monthName1}}</a>
+<a class="dropdown-item {{selectMonth2ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth2DateNumber}}">{{monthName2}}</a>
+<a class="dropdown-item {{selectMonth3ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth3DateNumber}}">{{monthName3}}</a>
+<div class="dropdown-divider"></div>
+<a class="dropdown-item {{selectMonth4ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth4DateNumber}}">{{monthName4}}</a>
+<a class="dropdown-item {{selectMonth5ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth5DateNumber}}">{{monthName5}}</a>
+<a class="dropdown-item {{selectMonth6ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth6DateNumber}}">{{monthName6}}</a>
+<div class="dropdown-divider"></div>
+<a class="dropdown-item {{selectMonth7ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth7DateNumber}}">{{monthName7}}</a>
+<a class="dropdown-item {{selectMonth8ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth8DateNumber}}">{{monthName8}}</a>
+<a class="dropdown-item {{selectMonth9ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth9DateNumber}}">{{monthName9}}</a>
+<div class="dropdown-divider"></div>
+<a class="dropdown-item {{selectMonth10ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth10DateNumber}}">{{monthName10}}</a>
+<a class="dropdown-item {{selectMonth11ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth11DateNumber}}">{{monthName11}}</a>
+<a class="dropdown-item {{selectMonth12ButtonCssClass}}" data-change-date-button="true" data-number="{{dropDownMenuMonth12DateNumber}}">{{monthName12}}</a>
+</div>
+</div>
+</th>
+<th style="width: 50px;">
+<button type="button" class="btn btn-light btn-sm w-100" mds-pdtp-select-year-button {{selectYearButtonDisabledAttribute}}>{{selectedYear}}</button>
+</th>
+<th>
+<button type="button" class="btn btn-light btn-sm w-100" title="{{nextMonthText}}" data-change-date-button="true" data-number="{{nextMonthButtonDateNumber}}" {{nextMonthButtonDisabledAttribute}}> &gt; </button>
+</th>
+<th>
+<button type="button" class="btn btn-light btn-sm w-100" title="{{nextYearText}}" data-change-date-button="true" data-number="{{nextYearButtonDateNumber}}" {{nextYearButtonDisabledAttribute}}> &gt;&gt; </button>
+</th>
+</tr>
+</table>
+</td>
+</tr>
+</thead>
+<tbody class="days">
+<tr>
+<td class="{{weekDayShortName1CssClass}}">{{weekDayShortName1}}</td>
+<td>{{weekDayShortName2}}</td>
+<td>{{weekDayShortName3}}</td>
+<td>{{weekDayShortName4}}</td>
+<td>{{weekDayShortName5}}</td>
+<td>{{weekDayShortName6}}</td>
+<td class="{{weekDayShortName7CssClass}}">{{weekDayShortName7}}</td>
+</tr>
+{{daysHtml}}
+</tbody>
+</table>
+</td>`;
+MdsPersianDateTimePicker.previousYearTextPersian = 'سال قبل';
+MdsPersianDateTimePicker.previousMonthTextPersian = 'ماه قبل';
+MdsPersianDateTimePicker.previousTextPersian = 'قبلی';
+MdsPersianDateTimePicker.nextYearTextPersian = 'سال بعد';
+MdsPersianDateTimePicker.nextMonthTextPersian = 'ماه بعد';
+MdsPersianDateTimePicker.nextTextPersian = 'بعدی';
+MdsPersianDateTimePicker.todayTextPersian = 'امروز';
+MdsPersianDateTimePicker.goTodayTextPersian = 'برو به امروز';
+MdsPersianDateTimePicker.cancelTextPersian = 'انصراف';
+MdsPersianDateTimePicker.currentYearTextPersian = 'سال جاری';
+MdsPersianDateTimePicker.previousText = 'Previous';
+MdsPersianDateTimePicker.previousYearText = 'Previous Year';
+MdsPersianDateTimePicker.previousMonthText = 'Previous Month';
+MdsPersianDateTimePicker.nextText = 'Next';
+MdsPersianDateTimePicker.nextYearText = 'Next Year';
+MdsPersianDateTimePicker.nextMonthText = 'Next Month';
+MdsPersianDateTimePicker.todayText = 'Today';
+MdsPersianDateTimePicker.goTodayText = 'Go Today';
+MdsPersianDateTimePicker.cancelText = 'Cancel';
+MdsPersianDateTimePicker.currentYearText = 'Current Year';
+MdsPersianDateTimePicker.shortDayNamesPersian = [
+    'ش',
+    'ی',
+    'د',
+    'س',
+    'چ',
+    'پ',
+    'ج',
+];
+MdsPersianDateTimePicker.shortDayNames = [
+    'Su',
+    'Mo',
+    'Tu',
+    'We',
+    'Th',
+    'Fr',
+    'Sa',
+];
+MdsPersianDateTimePicker.monthNamesPersian = [
+    'فروردین',
+    'اردیبهشت',
+    'خرداد',
+    'تیر',
+    'مرداد',
+    'شهریور',
+    'مهر',
+    'آبان',
+    'آذر',
+    'دی',
+    'بهمن',
+    'اسفند'
+];
+MdsPersianDateTimePicker.monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+];
+MdsPersianDateTimePicker.weekDayNames = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday'
+];
+MdsPersianDateTimePicker.weekDayNamesPersian = [
+    'یک شنبه',
+    'دوشنبه',
+    'سه شنبه',
+    'چهارشنبه',
+    'پنج شنبه',
+    'جمعه',
+    'شنبه'
+];
+MdsPersianDateTimePicker.convertDateToString = (date, isGregorian, format) => {
+    return MdsPersianDateTimePicker.getDateTimeString(!isGregorian ? MdsPersianDateTimePicker.getDateTimeJsonPersian1(date) : MdsPersianDateTimePicker.getDateTimeJson1(date), format, isGregorian, !isGregorian);
+};
+MdsPersianDateTimePicker.convertDateToJalali = (date) => {
+    const dateTimeJson1 = MdsPersianDateTimePicker.getDateTimeJson1(date);
+    const jalaliJsonModel = MdsPersianDateTimePicker.toJalali(dateTimeJson1.year, dateTimeJson1.month, dateTimeJson1.day);
+    return {
+        year: jalaliJsonModel.jy,
+        month: jalaliJsonModel.jm,
+        day: jalaliJsonModel.jd,
+    };
+};
+export class MdsPersianDateTimePickerSetting {
+    constructor() {
+        this.placement = 'bottom';
+        this.enableTimePicker = false;
+        this.targetTextSelector = '';
+        this.targetDateSelector = '';
+        this.toDate = false;
+        this.fromDate = false;
+        this.groupId = '';
+        this.disabled = false;
+        this.textFormat = '';
+        this.dateFormat = '';
+        this.isGregorian = false;
+        this.inLine = false;
+        this.selectedDate = null;
+        this.selectedDateToShow = new Date();
+        this.yearOffset = 15;
+        this.holidays = [];
+        this.disabledDates = [];
+        this.disabledDays = [];
+        this.specialDates = [];
+        this.disableBeforeToday = false;
+        this.disableAfterToday = false;
+        this.disableBeforeDate = null;
+        this.disableAfterDate = null;
+        this.rangeSelector = false;
+        this.rangeSelectorStartDate = null;
+        this.rangeSelectorEndDate = null;
+        this.rangeSelectorMonthsToShow = [0, 0];
+        this.selectedRangeDate = [];
+        this.modalMode = false;
+        this.persianNumber = false;
+        this.calendarViewOnChange = (_) => { };
+        this.onDayClick = (_) => { };
+    }
+}
+const MdsPersianDateTimePickerElementMap = new Map();
+var MdsPersianDateTimePickerData = {
+    set(key, instance) {
+        if (!MdsPersianDateTimePickerElementMap.has(key)) {
+            MdsPersianDateTimePickerElementMap.set(key, instance);
+            return;
+        }
+        MdsPersianDateTimePickerElementMap.set(key, instance);
+    },
+    get(key) {
+        return MdsPersianDateTimePickerElementMap.get(key) || null;
+    },
+    getAll() {
+        return Array.from(MdsPersianDateTimePickerElementMap, ([_name, value]) => value);
+    },
+    remove(key) {
+        if (!MdsPersianDateTimePickerElementMap.has(key)) {
+            return;
+        }
+        MdsPersianDateTimePickerElementMap.delete(key);
+    }
+};
 //# sourceMappingURL=mds.bs.datetimepicker.js.map
