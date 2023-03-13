@@ -2,7 +2,7 @@
  * 
  * Bootstrap 5+ Persian Date Time Picker
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
- * version : 4.2.3
+ * version : 4.2.4
  * Written By Mohammad Dayyan, Mordad 1397 - 1402
  * mds.soft@gmail.com - @mdssoft
  *
