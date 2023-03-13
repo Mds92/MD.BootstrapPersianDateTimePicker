@@ -182,18 +182,19 @@ export class MdsPersianDateTimePicker {
 
   // #region Template
 
-  private static modalHtmlTemplate = `<div data-mds-dtp data-mds-dtp-guid="{{guid}}" class="modal fade mds-bs-persian-datetime-picker-modal" tabindex="-1" role="dialog" aria-hidden="true">
-<div class="modal-dialog">
-<div class="modal-content">
-<div class="modal-header" data-mds-dtp-title="true">
-<h5 class="modal-title">Modal title</h5>
-</div>
-<div class="modal-body">
-  <div class="select-year-box w-0" data-mds-dtp-year-list-box="true"></div>
-  <div data-name="mds-dtp-body"></div>
-</div>
-</div>
-</div>
+  private static modalHtmlTemplate =
+    `<div data-mds-dtp data-mds-dtp-guid="{{guid}}" class="modal fade mds-bs-persian-datetime-picker-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+	  <div class="modal-content">
+      <div class="modal-header" data-mds-dtp-title="true">
+        <h5 class="modal-title">Modal title</h5>
+      </div>
+      <div class="modal-body">
+        <div class="select-year-box w-0" data-mds-dtp-year-list-box="true"></div>
+        <div data-name="mds-dtp-body"></div>
+      </div>
+    </div>
+  </div>
 </div>`;
   private static popoverHtmlTemplate = `<div class="popover mds-bs-persian-datetime-picker-popover" role="tooltip" data-mds-dtp>
 <div class="popover-arrow"></div>
@@ -1749,16 +1750,18 @@ data-bs-toggle="dropdown" aria-expanded="false">
     const calendarHtml = this.getDateTimePickerBodyHtml(setting);
     const dtpInlineHeader = calendarHtml.match(/<th mds-dtp-inline-header\b[^>]*>(.*?)<\/th>/img)![0];
     this.tempTitleString = dtpInlineHeader;
-    if (!setting.inLine && updatePopoverContent) {
+    if (!setting.inLine && updatePopoverContent && !setting.modalMode) {
       const popover = this.getBsPopoverInstance();
       if (!popover) {
         console.error("mds.bs.datetimepicker: `BsPopoverInstance` is null!");
         return;
       }
-      popover.setContent({
-        '.popover-header': dtpInlineHeader,
-        '.popover-body': calendarHtml
-      });
+      setTimeout(() => {
+        popover.setContent({
+          '.popover-header': dtpInlineHeader,
+          '.popover-body': calendarHtml
+        });
+      }, 100);
       return;
     }
     let containerElement = element.closest('[data-name="mds-dtp-body"]');
@@ -1849,9 +1852,9 @@ data-bs-toggle="dropdown" aria-expanded="false">
       MdsPersianDateTimePickerData.set(instance.guid, instance);
       if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate != undefined) {
         setting.selectedRangeDate = [MdsPersianDateTimePicker.getClonedDate(setting.rangeSelectorStartDate), MdsPersianDateTimePicker.getClonedDate(setting.rangeSelectorEndDate)];
-        if (!setting.inLine) {
+        if (!setting.inLine)
           instance.hide();
-        } else
+        else
           this.updateCalendarBodyHtml(element, setting);
       }
       return;
