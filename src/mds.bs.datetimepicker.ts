@@ -511,8 +511,9 @@ data-bs-toggle="dropdown" aria-expanded="false">
         });
         this.enableMainEvents();
       }
+      MdsPersianDateTimePicker.setSelectedData(setting);
       this.tempTitleString = title;
-    }, setting.inLine ? 10 : 500);
+    }, setting.inLine ? 10 : 100);
   }
   private static newGuid(): string {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
