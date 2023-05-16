@@ -24,13 +24,19 @@
   </div>
 
   <script>
-    const inLineDtp2 = new mds.MdsPersianDateTimePicker(document.querySelector('#date-text'), {
+    // const dtp1 = new mds.MdsPersianDateTimePicker(document.querySelector('#date-text'), {
+    //   targetTextSelector: '#date-text',
+    //   targetDateSelector: '#date-value',
+    //   selectedDate: new Date('2023/05/01'),
+    //   selectedDateToShow: new Date('2023/05/01'),
+    // });
+    const dtp2 = new mds.MdsPersianDateTimePicker(document.querySelector('#date-text'), {
       targetTextSelector: '#date-text',
-      targetDateSelector: '#date-value',
-      selectedDate: new Date('2023/05/01'),
-      selectedDateToShow: new Date('2023/05/01'),
+      targetDateSelector: '#date-value'
     });
-  </script>
+    dtp2.setDatePersian(1400, 06, 31);
+
+</script>
 
 </body>
 

@@ -2215,7 +2215,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
   */
   setDatePersian(yearPersian: number, monthPersian: number, dayPersian: number): void {
     const gregorianDateJson = MdsPersianDateTimePicker.toGregorian(yearPersian, monthPersian, dayPersian);
-    const date = new Date(gregorianDateJson.gy, gregorianDateJson.gm, gregorianDateJson.gd);
+    console.log(gregorianDateJson);
+    const date = new Date(gregorianDateJson.gy, gregorianDateJson.gm - 1, gregorianDateJson.gd);
     this.updateOptions({
       selectedDate: date,
       selectedDateToShow: date
