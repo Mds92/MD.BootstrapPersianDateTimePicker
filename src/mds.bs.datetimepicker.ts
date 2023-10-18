@@ -1844,7 +1844,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
         setting.selectedDate = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
         setting.selectedDateToShow = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
       } else if (setting.rangeSelectorStartDate != undefined && setting.rangeSelectorEndDate == undefined) {
-        if (setting.rangeSelectorStartDate.getTime() >= selectedDateToShow.getTime())
+        if (setting.rangeSelectorStartDate.getTime() > selectedDateToShow.getTime())
           return;
         element.classList.add('selected-range-days-start-end');
         setting.rangeSelectorEndDate = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
