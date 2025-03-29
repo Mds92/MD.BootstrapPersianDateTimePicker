@@ -1,6 +1,6 @@
 {
   "name": "md.bs4-persian-date-time-picker",
-  "version": "3.13.0",
+  "version": "3.14.0",
   "description": "Persian Date Time Picker with jQuery 3+ & Bootstrap 4+",
   "license": "MIT",
   "moduleResolution": "node",

@@ -23,7 +23,7 @@ Then you can install latest version of the plugin via npm:
 Now add these files to you html:
 
 ```html
-<link href="/dist/jquery.md.bootstrap.datetimepicker.style.css" rel="stylesheet" />
+<link href="/dist/jquery.md.bootstrap.datetimepicker.css" rel="stylesheet" />
 <script src="/dist/jquery.md.bootstrap.datetimepicker.js"></script>
 ```
 
