@@ -5,7 +5,6 @@
   "license": "MIT",
   "moduleResolution": "node",
   "author": {
-    "email": "mds_soft@yahoo.com",
     "name": "Mohammad Dayyan",
     "social": "@mds1401",
     "url": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker/tree/master-bs3"
@@ -15,6 +14,5 @@
     "url": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker/tree/master-bs3"
   },
   "homepage": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker/tree/master-bs3",
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {}
 }
