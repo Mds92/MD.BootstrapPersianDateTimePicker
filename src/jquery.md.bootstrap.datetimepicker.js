@@ -12,6 +12,7 @@
 (function ($) {
 
   // #region jalali calendar
+
   function jalCal(jy) {
 
     // Jalali years starting the 33-year rule.
