@@ -5,9 +5,8 @@
  *
  *
  * Written By Mohammad Dayyan, from Dey 1393
- * mds.soft@gmail.com - @mdssoft
+ * Social Id - @mds1401
  *
- * My weblog: mds-soft.persianblog.ir
  */
 
 (function ($) {
