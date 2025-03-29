@@ -8,13 +8,13 @@
     "email": "mds_soft@yahoo.com",
     "name": "Mohammad Dayyan",
     "social": "@mdssoft",
-    "url": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker"
+    "url": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker/tree/master-bs3"
   },
   "repository": {
     "type": "public",
-    "url": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker"
+    "url": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker/tree/master-bs3"
   },
-  "homepage": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker",
+  "homepage": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker/tree/master-bs3",
   "dependencies": {},
   "devDependencies": {}
 }
