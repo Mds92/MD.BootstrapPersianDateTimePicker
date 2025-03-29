@@ -27,7 +27,7 @@ Now add these files to you html:
 ```html
 <link href="/Content/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.css" rel="stylesheet" />
 
-<script src="/Scripts/MdBootstrapPersianDateTimePicker/jalaali.js"></script>
+<script src="/Scripts/MdBootstrapPersianDateTimePicker/jalali.js"></script>
 <script src="/Scripts/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.js"></script>
 ```
 

@@ -142,7 +142,7 @@
 
   function getTodayCalendarInPersian() {
     var today = new Date(),
-      persianDate = toJalaali(today.getFullYear(), today.getMonth() + 1, today.getDate());
+      persianDate = toJalali(today.getFullYear(), today.getMonth() + 1, today.getDate());
     //return [persianDate.jy, persianDate.jm, persianDate.jd, getPersianWeekDayNameWithEnglishIndex(today.getDay())];
 
     return {
@@ -157,7 +157,7 @@
   }
 
   function getCalendarInPersian(year, month, day, hour, minute, second) {
-    var persianDate = toJalaali(year, month, day);
+    var persianDate = toJalali(year, month, day);
 
     return {
       Year: persianDate.jy,
@@ -172,7 +172,7 @@
 
 
   function isLeapYear(persianYear) {
-    return isLeapJalaaliYear(persianYear);
+    return isLeapJalaliYear(persianYear);
   }
 
   function zeroPad(nr, base) {
@@ -335,13 +335,13 @@
 
   function switchDatetime(dateObject, isGregorian) {
     if (isGregorian) {
-      return dateObject = getGregorianFromJalaali(dateObject.Year, dateObject.Month, dateObject.Day, dateObject.Hour, dateObject.Minute, dateObject.Second);
+      return dateObject = getGregorianFromJalali(dateObject.Year, dateObject.Month, dateObject.Day, dateObject.Hour, dateObject.Minute, dateObject.Second);
     } else {
       return dateObject = getCalendarInPersian(dateObject.Year, dateObject.Month + 1, dateObject.Day, dateObject.Hour, dateObject.Minute, dateObject.Second);
     }
   }
 
-  function getGregorianFromJalaali(year, month, day, hour, minute, second) {
+  function getGregorianFromJalali(year, month, day, hour, minute, second) {
 
     var gregorianDateObject = toGregorian(year, month, day);
     return {
@@ -1629,7 +1629,7 @@
         if (isGregorian)
           dateTimeInJsonFormat = createDateTimeJson(dateObject.getFullYear(), dateObject.getMonth(), dateObject.getDate(), dateObject.getHours(), dateObject.getMinutes(), dateObject.getSeconds());
         else {
-          var jalaliDate = toJalaali(dateObject.getFullYear(), dateObject.getMonth() + 1, dateObject.getDate());
+          var jalaliDate = toJalali(dateObject.getFullYear(), dateObject.getMonth() + 1, dateObject.getDate());
           dateTimeInJsonFormat = createDateTimeJson(jalaliDate.jy, jalaliDate.jm, jalaliDate.jd, dateObject.getHours(), dateObject.getMinutes(), dateObject.getSeconds());
         }
         $this.attr(mdSelectedDateTimeAttributeName, JSON.stringify(dateTimeInJsonFormat));
