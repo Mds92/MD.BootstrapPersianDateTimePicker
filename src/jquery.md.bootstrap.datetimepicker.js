@@ -1,47 +1,21 @@
 ﻿﻿/*
  * Bootstrap 4+ Persian Date Time Picker jQuery Plugin
- * version : 3.11.5
+ * version : 3.12.0
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
- * Written By Mohammad Dayyan, Mordad 1397
- * mds.soft@gmail.com - @mdssoft
+ * Written By Mohammad Dayyan
+ * Social Id: @mds1401
  *
- * My weblog: mds-soft.persianblog.ir
  */
 
 (function ($) {
 
   // #region jalali calendar
-
-  function toJalali(gy, gm, gd) {
-    return d2j(g2d(gy, gm, gd));
-  }
-
-  function toGregorian(jy, jm, jd) {
-    return d2g(j2d(jy, jm, jd));
-  }
-
-  function isValidJalaliDate(jy, jm, jd) {
-    return jy >= -61 && jy <= 3177 &&
-      jm >= 1 && jm <= 12 &&
-      jd >= 1 && jd <= jalaliMonthLength(jy, jm);
-  }
-
-  function isLeapJalaliYear(jy) {
-    return jalCal(jy).leap === 0;
-  }
-
-  function jalaliMonthLength(jy, jm) {
-    if (jm <= 6) return 31;
-    if (jm <= 11) return 30;
-    if (isLeapJalaliYear(jy)) return 30;
-    return 29;
-  }
-
   function jalCal(jy) {
+
     // Jalali years starting the 33-year rule.
-    var breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178],
+    let breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178],
       bl = breaks.length,
       gy = jy + 621,
       leapJ = -14,
@@ -73,10 +47,10 @@
       leapJ += 1;
 
     // And the same in the Gregorian calendar (until the year gy).
-    var leapG = div(gy, 4) - div((div(gy, 100) + 1) * 3, 4) - 150;
+    let leapG = div(gy, 4) - div((div(gy, 100) + 1) * 3, 4) - 150;
 
     // Determine the Gregorian date of Farvardin the 1st.
-    var march = 20 + leapJ - leapG;
+    let march = 20 + leapJ - leapG;
 
     // Find how many years have passed since the last leap year.
     if (jump - n < 6)
@@ -90,14 +64,12 @@
       march: march
     };
   }
-
   function j2d(jy, jm, jd) {
-    var r = jalCal(jy);
+    let r = jalCal(jy);
     return g2d(r.gy, 3, r.march) + (jm - 1) * 31 - div(jm, 7) * (jm - 7) + jd - 1;
   }
-
   function d2j(jdn) {
-    var gy = d2g(jdn).gy, // Calculate Gregorian year (gy).
+    let gy = d2g(jdn).gy, // Calculate Gregorian year (gy).
       jy = gy - 621,
       r = jalCal(jy),
       jdn1F = g2d(gy, 3, r.march),
@@ -136,36 +108,41 @@
       jd: jd
     };
   }
-
   function g2d(gy, gm, gd) {
-    var d = div((gy + div(gm - 8, 6) + 100100) * 1461, 4) +
+    let d = div((gy + div(gm - 8, 6) + 100100) * 1461, 4) +
       div(153 * mod(gm + 9, 12) + 2, 5) +
       gd - 34840408;
     d = d - div(div(gy + 100100 + div(gm - 8, 6), 100) * 3, 4) + 752;
     return d;
   }
-
   function d2g(jdn) {
-    var j;
+    let j;
     j = 4 * jdn + 139361631;
     j = j + div(div(4 * jdn + 183187720, 146097) * 3, 4) * 4 - 3908;
-    var i = div(mod(j, 1461), 4) * 5 + 308;
-    var gd = div(mod(i, 153), 5) + 1;
-    var gm = mod(div(i, 153), 12) + 1;
-    var gy = div(j, 1461) - 100100 + div(8 - gm, 6);
+    let i = div(mod(j, 1461), 4) * 5 + 308;
+    let gd = div(mod(i, 153), 5) + 1;
+    let gm = mod(div(i, 153), 12) + 1;
+    let gy = div(j, 1461) - 100100 + div(8 - gm, 6);
     return {
       gy: gy,
       gm: gm,
       gd: gd
     };
   }
-
   function div(a, b) {
     return ~~(a / b);
   }
-
   function mod(a, b) {
     return a - ~~(a / b) * b;
+  }
+  function toJalali(gy, gm, gd) {
+    return d2j(g2d(gy, gm, gd));
+  }
+  function toGregorian(jy, jm, jd) {
+    return d2g(j2d(jy, jm, jd));
+  }
+  function isLeapJalaliYear(jy) {
+    return jalCal(jy).leap === 0;
   }
 
   //#endregion jalali calendar
@@ -357,7 +334,7 @@
 </td>
     `;
 
-  triggerChangeCalling = false;
+  var triggerChangeCalling = false;
   var previousYearTextPersian = 'سال قبل',
     previousMonthTextPersian = 'ماه قبل',
     previousTextPersian = 'قبلی',
@@ -452,7 +429,7 @@
 
   // #region Functions
 
-  function newGuid(){
+  function newGuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
       var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
@@ -523,8 +500,8 @@
   function updateCalendarHtml1($element, setting) {
     var calendarHtml = getDateTimePickerHtml(setting),
       $container = setting.inLine ?
-      $element.parents(mdDatePickerFlagSelector + ':first') :
-      $element.parents('[data-name="mds-datetimepicker-body"]:first');
+        $element.parents(mdDatePickerFlagSelector + ':first') :
+        $element.parents('[data-name="mds-datetimepicker-body"]:first');
     setPopoverHeaderHtml($element, setting.inLine, $(calendarHtml).find('[data-selecteddatestring]').text().trim());
     $container.html(calendarHtml);
   }
@@ -712,10 +689,10 @@
       else
         amPm = 'ب.ظ';
     } else
-    if (isGregorian)
-      amPm = 'AM';
-    else
-      amPm = 'ق.ظ';
+      if (isGregorian)
+        amPm = 'AM';
+      else
+        amPm = 'ق.ظ';
     return amPm;
   }
 
@@ -973,7 +950,8 @@
   }
 
   function parsePersianDateTime(persianDateTimeInString, dateSeparatorPattern) {
-    if (!dateSeparatorPattern) dateSeparatorPattern = "\/|-";
+    if (!dateSeparatorPattern)
+      dateSeparatorPattern = "/|-";
     dateSeparatorPattern = new RegExp(dateSeparatorPattern, 'img');
     persianDateTimeInString = toEnglishNumber(persianDateTimeInString);
 
@@ -1005,7 +983,7 @@
     {
       persianDateTimeInString = persianDateTimeInString.replace(/-*:-*/img, ':');
       hour = (persianDateTimeInString.match(/-\d{1,2}(?=:)/img)[0]).replace(/\D+/, '');
-      var minuteAndSecondAndMillisecondMatch = persianDateTimeInString.match(/:\d{1,2}(?=:?)/img);
+      let minuteAndSecondAndMillisecondMatch = persianDateTimeInString.match(/:\d{1,2}(?=:?)/img);
       minute = minuteAndSecondAndMillisecondMatch[0].replace(/\D+/, '');
       if (minuteAndSecondAndMillisecondMatch[1] != undefined)
         second = minuteAndSecondAndMillisecondMatch[1].replace(/\D+/, '');
@@ -1014,7 +992,7 @@
     }
 
     if (containMonthSeparator) {
-      var monthDayMath = persianDateTimeInString.match(/-\d{1,2}(?=-\d{1,2}[^:]|-)/img);
+      let monthDayMath = persianDateTimeInString.match(/-\d{1,2}(?=-\d{1,2}[^:]|-)/img);
 
       // بدست آوردن ماه
       month = monthDayMath[0].replace(/\D+/, '');
@@ -1058,14 +1036,14 @@
     var numericSecond = Number(second);
     var numericMillisecond = Number(millisecond);
 
-    if (numericYear <= 0)
-      numericYear = persianDateTime[0];
+    // if (numericYear <= 0)
+    //   numericYear = persianDateTime[0];
 
-    if (numericMonth <= 0)
-      numericMonth = persianDateTime[1];
+    // if (numericMonth <= 0)
+    //   numericMonth = persianDateTime[1];
 
-    if (numericDay <= 0)
-      numericDay = persianDateTime[2];
+    // if (numericDay <= 0)
+    //   numericDay = persianDateTime[2];
 
     switch (amPmEnum) {
       case amPm.PM:
@@ -1323,6 +1301,7 @@
     var i = 0,
       j = 0,
       firstWeekDayNumber,
+      isTrAppended = false,
       cellNumber = 0,
       tdNumber = 0,
       selectedYear = 0,
@@ -1332,6 +1311,7 @@
       todayDateTimeJson = {}, // year, month, day, hour, minute, second
       dateTimeToShowJson = {}, // year, month, day, hour, minute, second
       numberOfDaysInCurrentMonth,
+      numberOfDaysInPreviousMonth,
       $tr = $('<tr />'),
       $td = $('<td />'),
       daysHtml = '',
@@ -1733,16 +1713,16 @@
     return html;
   }
 
-  function unbindEvents() {
-    $(document).off('click', mdDatePickerContainerSelector + ' [data-day]');
-    $(document).off('mouseenter', mdDatePickerContainerSelector + ' [data-day]');
-    $(document).off('click', mdDatePickerContainerSelector + ' [data-changedatebutton]');
-    $(document).off('blur', mdDatePickerContainerSelector + ' input[data-clock]');
-    $(document).off('blur', mdDatePickerContainerSelector + ' input[data-clock]');
-    $(document).off('click', mdDatePickerContainerSelector + ' [select-year-button]');
-    $(document).off('click', '[data-yearrangebuttonchange]');
-    $(document).off('click', mdDatePickerContainerSelector + ' [data-go-today]');
-    $(document).off('click', 'html');
+  function unbindEvents($element) {
+    $element.off('click', mdDatePickerContainerSelector + ' [data-day]');
+    $element.off('mouseenter', mdDatePickerContainerSelector + ' [data-day]');
+    $element.off('click', mdDatePickerContainerSelector + ' [data-changedatebutton]');
+    $element.off('blur', mdDatePickerContainerSelector + ' input[data-clock]');
+    $element.off('blur', mdDatePickerContainerSelector + ' input[data-clock]');
+    $element.off('click', mdDatePickerContainerSelector + ' [select-year-button]');
+    $element.off('click', '[data-yearrangebuttonchange]');
+    $element.off('click', mdDatePickerContainerSelector + ' [data-go-today]');
+    $element.off('click', 'html');
   }
 
   //#endregion
@@ -2025,8 +2005,8 @@
             rangeSelectorStartDate: undefined,
             rangeSelectorEndDate: undefined,
             modalMode: false,
-            calendarViewOnChange: () => {},
-            onDayClick: () => {}
+            calendarViewOnChange: () => { },
+            onDayClick: () => { }
           }, options);
         $this.attr(mdDatePickerFlag, '');
         if (setting.targetDateSelector) {
@@ -2137,6 +2117,7 @@
             }
           } catch (e) {
             setSelectedData(setting);
+            console.error(e);
           }
         });
       });
@@ -2266,20 +2247,20 @@
           setting = getSetting2($this);
         setting.disabled = isDisable;
         setSetting1($this, setting);
-        if (isDisable) $this.attr('disabled', '');
-        else $this.removeAttr('disabled');
+        if (isDisable)
+          $this.attr('disabled', '');
+        else
+          $this.removeAttr('disabled');
       });
     },
     destroy: function () {
       return this.each(function () {
         var $this = $(this),
           setting = getSetting2($this);
-        if (setting.disable) {
+        if (setting.disable)
           $this.removeAttr('disabled');
-        }
-        if (setting.inLine) {
+        if (setting.inLine)
           $this.find(mdDatePickerContainerSelector).remove();
-        }
         $this.removeAttr(mdDatePickerFlag)
           .removeAttr('data-toDate')
           .removeAttr('data-fromDate');
@@ -2289,6 +2270,7 @@
         // unbindEvents();
         //}
         $this.removeData(mdPluginName);
+        unbindEvents($this);
       });
     },
     changeType: function (isGregorian, englishNumber) {

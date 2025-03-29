@@ -1,13 +1,17 @@
 {
   "name": "md.bootstrappersiandatetimepicker",
-  "version": "3.11.5",
+  "version": "3.12.0",
   "description": "Persian Date Time Picker with jQuery 3+ & Bootstrap 4+",
   "license": "MIT",
   "moduleResolution": "node",
+  "scripts": {
+    "compile": "tsc",
+    "webpack": "webpack",
+    "webpackserver": "webpack serve"
+  },
   "author": {
     "name": "Mohammad Dayyan",
-    "email": "mds_soft@yahoo.com",
-    "social": "@mdssoft",
+    "social": "@mds1401",
     "url": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker"
   },
   "repository": {
@@ -16,28 +20,25 @@
   },
   "homepage": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker",
   "dependencies": {
-    "@popperjs/core": "^2.9.2",
+    "@popperjs/core": "^2.11.8",
     "bootstrap": "^4.6.0",
-    "jquery": "^3.6.0"
+    "jquery": "^3.7.1"
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.5",
-    "css-loader": "^5.2.6",
-    "css-minimizer-webpack-plugin": "^3.0.1",
-    "extract-text-webpack-plugin": "^3.0.2",
-    "jshint": "^2.13.0",
-    "jshint-loader": "^0.8.4",
-    "mini-css-extract-plugin": "^1.6.0",
-    "style-loader": "^2.0.0",
-    "webpack": "^5.38.1",
-    "webpack-cli": "^4.7.0",
-    "webpack-dev-server": "^3.11.2",
-    "webpack-fix-style-only-entries": "^0.6.1",
-    "webpack-merge": "^5.7.3"
-  },
-  "scripts": {
-    "compile": "tsc",
-    "webpack": "webpack",
-    "webpackserver": "webpack-dev-server"
+    "@eslint/js": "^9.23.0",
+    "@types/jquery": "^3.5.32",
+    "css-loader": "^7.1.2",
+    "css-minimizer-webpack-plugin": "^7.0.2",
+    "eslint": "^9.23.0",
+    "eslint-webpack-plugin": "^5.0.0",
+    "globals": "^16.0.0",
+    "mini-css-extract-plugin": "^2.9.2",
+    "npm-check-updates": "^17.1.16",
+    "sass-loader": "^16.0.5",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.1",
+    "webpack-merge": "^6.0.1"
   }
 }

@@ -1,8 +1,8 @@
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const TerserPlugin = require('terser-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -10,14 +10,15 @@ module.exports = {
     'jquery.md.bootstrap.datetimepicker.style': './src/jquery.md.bootstrap.datetimepicker.style.css'
   },
   devtool: 'source-map',
-  mode: 'production',
+  mode: 'production', // development   production
   output: {
     filename: '[name].js'
   },
   watch: true,
   devServer: {
-    lazy: false,
-    watchContentBase: true
+    static: {
+      watch: true,
+    },
   },
   optimization: {
     minimizer: [
@@ -28,31 +29,31 @@ module.exports = {
     ],
   },
   module: {
-    rules: [{
-        test: /.js$/,
-        enforce: 'pre',
-        exclude: /node_modules/,
-        use: [{
-          loader: `jshint-loader`,
-          options: {
-            emitErrors: true,
-            failOnHint: true
-          }
-        }]
-      },
+    rules: [
       {
         test: /.s?css$/,
-        use: [{
-            loader: MiniCssExtractPlugin.loader,
-            options: {}
-          },
-          'css-loader'
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+        ],
+      },
+      {
+        test: /\.scss$/i,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader',
         ],
       }
     ]
   },
   plugins: [
-    new FixStyleOnlyEntriesPlugin(),
+    new ESLintPlugin({
+      extensions: ['js', 'jsx'],
+      // overrideConfigFile: path.resolve(__dirname, '.eslintrc.json'),
+      fix: true,
+      emitWarning: true
+    }),
     new MiniCssExtractPlugin({
       filename: "[name].css",
       chunkFilename: "[id].css"
@@ -61,9 +62,9 @@ module.exports = {
       banner: `
 Bootstrap 4+ Persian Date Time Picker jQuery Plugin
 https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
-version : 3.11.5
-Written By Mohammad Dayyan, Mordad 1397 - 1400
-mds.soft@gmail.com - @mdssoft
+version : 3.12.0
+Written By Mohammad Dayyan
+Social Id: @mds1401
 
       `
     })
