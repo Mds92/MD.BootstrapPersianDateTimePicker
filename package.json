@@ -1,13 +1,13 @@
 {
-  "name": "md.bootstrappersiandatetimepicker",
-  "version": "2.3.1",
+  "name": "md.bs3-persian-date-time-picker",
+  "version": "2.4.0",
   "description": "Persian Date Time Picker with jQuery & Bootstrap 3.3.*",
   "license": "MIT",
   "moduleResolution": "node",
   "author": {
     "email": "mds_soft@yahoo.com",
     "name": "Mohammad Dayyan",
-    "social": "@mdssoft",
+    "social": "@mds1401",
     "url": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker/tree/master-bs3"
   },
   "repository": {

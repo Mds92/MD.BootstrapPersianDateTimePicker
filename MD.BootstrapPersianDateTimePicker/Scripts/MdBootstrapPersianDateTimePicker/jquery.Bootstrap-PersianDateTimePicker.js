@@ -1,6 +1,6 @@
 ﻿/*
  * bootstrap persian date time picker jQuery Plugin
- * version : 2.3.1.0
+ * version : 2.4.0
  * https://github.com/Mds92/MD.BootstrapPersianDateTimePicker
  *
  *
@@ -102,7 +102,7 @@
   }
 
   function getFirstDayOfPersianWeek(persianYear, persianMonth) {
-    var gregorianDate = toGregorian(persianYear, persianMonth, 01),
+    var gregorianDate = toGregorian(persianYear, persianMonth, 1),
       date = new Date(gregorianDate.gy, gregorianDate.gm - 1, gregorianDate.gd),
       dayOfWeek = 0;
     switch (date.getDay()) {
@@ -373,10 +373,10 @@
       else
         amPm = 'ب.ظ';
     } else
-    if (isGregorian)
-      amPm = 'AM';
-    else
-      amPm = 'ق.ظ';
+      if (isGregorian)
+        amPm = 'AM';
+      else
+        amPm = 'ق.ظ';
     return amPm;
   }
 
@@ -1024,7 +1024,7 @@
       if (fromDateToDateJson != undefined) {
         var selectedDateNumber = convertToNumber(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day); // تاریخ انتخاب شده فعلی
         if (!((isToDate && fromDateToDateJson.FromDateNumber != undefined && selectedDateNumber < fromDateToDateJson.FromDateNumber) ||
-            (isFromDate && fromDateToDateJson.ToDateNumber != undefined && selectedDateNumber > fromDateToDateJson.ToDateNumber))) {
+          (isFromDate && fromDateToDateJson.ToDateNumber != undefined && selectedDateNumber > fromDateToDateJson.ToDateNumber))) {
           setTargetValue($popoverDescriber, dateTimeInJsonFormat);
         }
       } else {
@@ -1069,7 +1069,7 @@
       if (selectedDateTimeValue != undefined && selectedDateTimeValue.trim() != '') {
         try {
           dateTimeInJsonFormat = JSON.parse(selectedDateTimeValue);
-        } catch (e) {}
+        } catch (e) { }
       } else {
         gregorianDateTime = parseGregorianDateTime(getTargetValue($popoverDescriber));
         dateTimeInJsonFormat = createDateTimeJson(gregorianDateTime.getFullYear(), gregorianDateTime.getMonth(),
@@ -1319,7 +1319,7 @@
       if (fromDateToDateJson != undefined) {
         var selectedDateNumber = convertToNumber(dateTimeInJsonFormat.Year, dateTimeInJsonFormat.Month, dateTimeInJsonFormat.Day); // تاریخ انتخاب شده فعلی
         if (!((isToDate && fromDateToDateJson.FromDateNumber != undefined && selectedDateNumber < fromDateToDateJson.FromDateNumber) ||
-            (isFromDate && fromDateToDateJson.ToDateNumber != undefined && selectedDateNumber > fromDateToDateJson.ToDateNumber))) {
+          (isFromDate && fromDateToDateJson.ToDateNumber != undefined && selectedDateNumber > fromDateToDateJson.ToDateNumber))) {
           setTargetValue($popoverDescriber, dateTimeInJsonFormat, true);
         }
       } else {
@@ -1370,8 +1370,8 @@
       $wrapper = $senderObject.parents(mdDateTimePickerWrapperSelector),
       $popoverDescriber = $wrapper.length > 0 ? $('[aria-describedby*="' + $wrapper.parents('.popover').attr('id') + '"]') : undefined,
       newDateTimeInJsonFormat = !inLine && $popoverDescriber != undefined && $popoverDescriber.length > 0 && $popoverDescriber.attr(mdSelectedDateTimeAttributeName) != undefined && $popoverDescriber.attr(mdSelectedDateTimeAttributeName) != '' ?
-      JSON.parse($popoverDescriber.attr(mdSelectedDateTimeAttributeName)) :
-      undefined,
+        JSON.parse($popoverDescriber.attr(mdSelectedDateTimeAttributeName)) :
+        undefined,
       writeDateString = true;
 
     if (inLine) {
@@ -1387,22 +1387,22 @@
         increaseOneMonth(newDateTimeInJsonFormat, isGregorianState);
         break;
 
-        // ماه قبلی
+      // ماه قبلی
       case changeDateTimeEnum.DecreaseMonth:
         decreaseOneMonth(newDateTimeInJsonFormat, isGregorianState);
         break;
 
-        // سال بعدی
+      // سال بعدی
       case changeDateTimeEnum.IncreaseYear:
         increaseOneYear(newDateTimeInJsonFormat, isGregorianState);
         break;
 
-        // سال قبلی
+      // سال قبلی
       case changeDateTimeEnum.DecreaseYear:
         decreaseOneYear(newDateTimeInJsonFormat, isGregorianState);
         break;
 
-        // برو به امروز
+      // برو به امروز
       case changeDateTimeEnum.GoToday:
         var todayDateTime = isGregorianState ? new Date() : parsePersianDateTime('');
         newDateTimeInJsonFormat.Year = isGregorianState ? todayDateTime.getFullYear() : todayDateTime.Year;
@@ -1410,7 +1410,7 @@
         newDateTimeInJsonFormat.Day = isGregorianState ? todayDateTime.getDate() : todayDateTime.Day;
         break;
 
-        // تغییر در ساعت
+      // تغییر در ساعت
       case changeDateTimeEnum.ClockChanged:
         newDateTimeInJsonFormat.Hour = $wrapper.find('input[data-name="clock-hour"]').val();
         newDateTimeInJsonFormat.Minute = $wrapper.find('input[data-name="clock-minute"]').val();
@@ -1424,15 +1424,15 @@
         setTargetValue($popoverDescriber, newDateTimeInJsonFormat, isGregorianState);
         return;
 
-        // تغییر روز
+      // تغییر روز
       case changeDateTimeEnum.DayChanged:
         newDateTimeInJsonFormat.Day = Number(toEnglishNumber($senderObject.text().trim()));
         hidePopover($popoverDescriber);
         break;
 
-        // هنگامی که رویداد 
-        // trigger
-        // رخ می دهد
+      // هنگامی که رویداد 
+      // trigger
+      // رخ می دهد
       case changeDateTimeEnum.TriggerFired:
         writeDateString = false;
         $popoverDescriber = $senderObject;
@@ -1449,7 +1449,7 @@
         $wrapper = $popover.find(mdDateTimePickerWrapperSelector);
         break;
 
-        // تغییر ماه و سال و روز
+      // تغییر ماه و سال و روز
       case changeDateTimeEnum.OnEvent:
         if (newMonthNumber != undefined)
           newDateTimeInJsonFormat.Month = newMonthNumber;
@@ -1458,7 +1458,7 @@
         if (newDayNumber != undefined)
           newDateTimeInJsonFormat.Day = newDayNumber;
         break;
-        //تغییر تقویم
+      //تغییر تقویم
       case changeDateTimeEnum.Switch:
         isGregorianState = !isGregorianState;
         $popoverDescriber.attr('data-isgregorian', isGregorianState);
