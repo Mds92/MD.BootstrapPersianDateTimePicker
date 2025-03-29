@@ -1,24 +1,23 @@
 {
-  "name": "md.bootstrappersiandatetimepicker",
-  "version": "3.12.0",
+  "name": "md.bs4-persian-date-time-picker",
+  "version": "3.13.0",
   "description": "Persian Date Time Picker with jQuery 3+ & Bootstrap 4+",
   "license": "MIT",
   "moduleResolution": "node",
   "scripts": {
-    "compile": "tsc",
-    "webpack": "webpack",
-    "webpackserver": "webpack serve"
+    "compile": "rimraf dist && webpack",
+    "webpackserver": "rimraf dist && webpack serve"
   },
   "author": {
     "name": "Mohammad Dayyan",
     "social": "@mds1401",
-    "url": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker"
+    "url": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker/tree/master-bs4"
   },
   "repository": {
     "type": "public",
-    "url": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker"
+    "url": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker/tree/master-bs4"
   },
-  "homepage": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker",
+  "homepage": "https://github.com/Mds92/MD.BootstrapPersianDateTimePicker/tree/master-bs4",
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^4.6.0",
@@ -34,6 +33,7 @@
     "globals": "^16.0.0",
     "mini-css-extract-plugin": "^2.9.2",
     "npm-check-updates": "^17.1.16",
+    "rimraf": "^6.0.1",
     "sass-loader": "^16.0.5",
     "style-loader": "^4.0.0",
     "webpack": "^5.98.0",

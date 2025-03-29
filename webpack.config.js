@@ -6,8 +6,10 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = {
   entry: {
-    'jquery.md.bootstrap.datetimepicker': './src/jquery.md.bootstrap.datetimepicker.js',
-    'jquery.md.bootstrap.datetimepicker.style': './src/jquery.md.bootstrap.datetimepicker.style.css'
+    'jquery.md.bootstrap.datetimepicker': [
+      './src/jquery.md.bootstrap.datetimepicker.js',
+      './src/jquery.md.bootstrap.datetimepicker.style.css'
+    ]
   },
   devtool: 'source-map',
   mode: 'production', // development   production
@@ -50,7 +52,6 @@ module.exports = {
   plugins: [
     new ESLintPlugin({
       extensions: ['js', 'jsx'],
-      // overrideConfigFile: path.resolve(__dirname, '.eslintrc.json'),
       fix: true,
       emitWarning: true
     }),
