@@ -18,9 +18,6 @@ export class MdsPersianDateTimePicker {
       if (setting.enableTimePicker)
         setting.dateFormat += ' HH:mm';
     }
-    if (setting.yearOffset > 15)
-      setting.yearOffset = 15;
-
     this.setting = setting;
     this.setting.selectedDate = setting.selectedDate ? MdsPersianDateTimePicker.getClonedDate(setting.selectedDate) : null;
     this.setting.selectedDateToShow = MdsPersianDateTimePicker.getClonedDate(setting.selectedDateToShow) ?? new Date();
@@ -447,6 +444,8 @@ data-bs-toggle="dropdown" aria-expanded="false">
       throw new Error(`MdsPersianDateTimePicker => You can not set true 'toDate' and 'fromDate' together`);
     if (!setting.groupId && (setting.toDate || setting.fromDate))
       throw new Error(`MdsPersianDateTimePicker => When you set 'toDate' or 'fromDate' true, you have to set 'groupId'`);
+    if (setting.yearOffset > 15)
+      setting.yearOffset = 15;
 
     // ---------------------
 
@@ -795,7 +794,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   }
   private static getAmPm(hour: number, isGregorian: boolean): string {
     let amPm;
-    if (hour > 12) {
+    if (hour >= 12) {
       if (isGregorian)
         amPm = 'PM';
       else
@@ -918,14 +917,14 @@ data-bs-toggle="dropdown" aria-expanded="false">
     format = format.replace(/HH/mg, MdsPersianDateTimePicker.zeroPad(dateTimeJson.hour));
     format = format.replace(/H/mg, dateTimeJson.hour.toString());
     format = format.replace(/hh/mg, MdsPersianDateTimePicker.zeroPad(this.getShortHour(dateTimeJson.hour).toString()));
-    format = format.replace(/h/mg, MdsPersianDateTimePicker.zeroPad(dateTimeJson.hour));
+    format = format.replace(/h/mg, MdsPersianDateTimePicker.getShortHour(dateTimeJson.hour).toString());
     format = format.replace(/mm/mg, MdsPersianDateTimePicker.zeroPad(dateTimeJson.minute));
     format = format.replace(/m/mg, dateTimeJson.minute.toString());
     format = format.replace(/ss/mg, MdsPersianDateTimePicker.zeroPad(dateTimeJson.second));
     format = format.replace(/s/mg, dateTimeJson.second.toString());
     format = format.replace(/fff/mg, MdsPersianDateTimePicker.zeroPad(dateTimeJson.millisecond, '000'));
-    format = format.replace(/ff/mg, MdsPersianDateTimePicker.zeroPad(dateTimeJson.millisecond / 10));
-    format = format.replace(/f/mg, (dateTimeJson.millisecond / 100).toString());
+    format = format.replace(/ff/mg, MdsPersianDateTimePicker.zeroPad(Math.floor(dateTimeJson.millisecond / 10)));
+    format = format.replace(/f/mg, Math.floor(dateTimeJson.millisecond / 100).toString());
     format = format.replace(/tt/mg, this.getAmPm(dateTimeJson.hour, isGregorian));
     format = format.replace(/t/mg, this.getAmPm(dateTimeJson.hour, isGregorian)[0]);
 
@@ -1188,7 +1187,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
       rangeSelectorStartDateNumber = 0,
       rangeSelectorEndDateNumber = 0,
       dayNumberInString = '0',
-      dayOfWeek = '', // نام روز هفته
       monthsDateNumberAndAttr: any = {
         month1DateNumber: 0,
         month2DateNumber: 0,
@@ -1361,16 +1359,11 @@ data-bs-toggle="dropdown" aria-expanded="false">
       if (currentDateNumber == todayDateNumber) {
         td.setAttribute('data-today', '');
         td.setAttribute('title', setting.isGregorian ? MdsPersianDateTimePicker.todayText : MdsPersianDateTimePicker.todayTextPersian);
-        // اگر نام روز هفته انتخاب شده در تکس باکس قبل از تاریخ امروز باشد
-        // نباید دیگر نام روز هفته تغییر کند
-        if (!dayOfWeek)
-          dayOfWeek = MdsPersianDateTimePicker.getWeekDayName(tdNumber - 1 < 0 ? 0 : tdNumber - 1, setting.isGregorian);
       }
 
       // روز از قبل انتخاب شده
       if (!setting.rangeSelector && selectedDateNumber == currentDateNumber) {
         td.setAttribute('data-mds-dtp-selected-day', '');
-        dayOfWeek = MdsPersianDateTimePicker.getWeekDayName(tdNumber - 1 < 0 ? 0 : tdNumber - 1, setting.isGregorian);
       }
 
       // روزهای تعطیل
@@ -1714,10 +1707,10 @@ data-bs-toggle="dropdown" aria-expanded="false">
       todayDateString = MdsPersianDateTimePicker.toPersianNumber(todayDateString);
     }
 
-    if (disableAfterDateTimeJson != undefined && disableAfterDateTimeJson.year <= selectedDateTimeToShowJson.year && disableAfterDateTimeJson.month < selectedDateTimeToShowJson.month)
+    if (disableAfterDateTimeJson != undefined && (disableAfterDateTimeJson.year * 12 + disableAfterDateTimeJson.month) < (selectedDateTimeToShowJson.year * 12 + selectedDateTimeToShowJson.month))
       selectedDateToShow = setting.isGregorian ? new Date(disableAfterDateTimeJson.year, disableAfterDateTimeJson.month - 1, 1) : MdsPersianDateTimePicker.getDateTime1(disableAfterDateTimeJson.year, disableAfterDateTimeJson.month, disableAfterDateTimeJson.day);
 
-    if (disableBeforeDateTimeJson != undefined && disableBeforeDateTimeJson.year >= selectedDateTimeToShowJson.year && disableBeforeDateTimeJson.month > selectedDateTimeToShowJson.month)
+    if (disableBeforeDateTimeJson != undefined && (disableBeforeDateTimeJson.year * 12 + disableBeforeDateTimeJson.month) > (selectedDateTimeToShowJson.year * 12 + selectedDateTimeToShowJson.month))
       selectedDateToShow = setting.isGregorian ? new Date(disableBeforeDateTimeJson.year, disableBeforeDateTimeJson.month - 1, 1) : MdsPersianDateTimePicker.getDateTime1(disableBeforeDateTimeJson.year, disableBeforeDateTimeJson.month, disableBeforeDateTimeJson.day);
 
     let monthsTdHtml = '';
@@ -1735,7 +1728,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       setting.selectedDateToShow = MdsPersianDateTimePicker.addMonthToDateTime(MdsPersianDateTimePicker.getClonedDate(selectedDateToShow), i2, setting.isGregorian);
       monthsTdHtml += this.getDateTimePickerMonthHtml(setting, true, false);
     }
-    // setting.selectedDateToShow = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
+    setting.selectedDateToShow = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
 
     let totalMonthNumberToShow = Math.abs(numberOfPrevMonths) + 1 + numberOfNextMonths;
     let monthTdStyle = totalMonthNumberToShow > 1 ? 'width: ' + (100 / totalMonthNumberToShow).toString() + '%;' : '';
@@ -2098,7 +2091,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
   private hidePopoverEvent = (e: Event): void => {
     const element = <Element>e.target;
     if (element.tagName == 'HTML') {
-      MdsPersianDateTimePickerData.getAll().forEach(i => !i.setting.modalMode ? i.hide() : () => { });
+      MdsPersianDateTimePickerData.getAll().forEach(i => { if (!i.setting.modalMode) i.hide(); });
       return;
     }
     const isWithinDatePicker = element.closest('[data-mds-dtp]') != null || element.getAttribute('data-mds-dtp-guid') != null || element.getAttribute('data-mds-dtp-go-today') != null;
@@ -2494,17 +2487,13 @@ export interface MdsPersianDateTimePickerConvertedDateModel {
   day: number,
 }
 
-const MdsPersianDateTimePickerElementMap = new Map();
+const MdsPersianDateTimePickerElementMap = new Map<string, MdsPersianDateTimePicker>();
 var MdsPersianDateTimePickerData = {
   set(key: string, instance: MdsPersianDateTimePicker): void {
-    if (!MdsPersianDateTimePickerElementMap.has(key)) {
-      MdsPersianDateTimePickerElementMap.set(key, instance);
-      return;
-    }
     MdsPersianDateTimePickerElementMap.set(key, instance);
   },
-  get(key: string): MdsPersianDateTimePicker {
-    return MdsPersianDateTimePickerElementMap.get(key) || null;
+  get(key: string): MdsPersianDateTimePicker | null {
+    return MdsPersianDateTimePickerElementMap.get(key) ?? null;
   },
   getAll(): MdsPersianDateTimePicker[] {
     return Array.from(MdsPersianDateTimePickerElementMap, ([_name, value]) => value);

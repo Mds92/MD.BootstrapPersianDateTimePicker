@@ -28,7 +28,11 @@ module.exports = {
           exposes: ['mds'],
         },
       }, {
-        loader: 'ts-loader'
+        loader: 'esbuild-loader',
+        options: {
+          loader: 'ts',
+          target: 'es2017',
+        },
       }],
       exclude: /node_modules/,
     }, {

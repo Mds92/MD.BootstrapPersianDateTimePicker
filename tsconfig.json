@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
+    "rootDir": "./src",
     "outDir": "./dist",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -12,9 +12,8 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

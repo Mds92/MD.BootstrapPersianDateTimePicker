@@ -5,7 +5,7 @@
   "license": "MIT",
   "moduleResolution": "node",
   "scripts": {
-    "compile": "tsc",
+    "compile": "tsc --noEmit",
     "webpack": "rimraf dist && webpack",
     "webpackserver": "webpack serve --mode development --env development",
     "dev": "start npm run webpack && start npm run webpackserver",
@@ -26,22 +26,26 @@
     "bootstrap": "^5.3.8"
   },
   "devDependencies": {
-    "@types/bootstrap": "^5.2.10",
-    "@types/jquery": "^3.5.33",
-    "css-loader": "^7.1.2",
-    "css-minimizer-webpack-plugin": "^7.0.2",
+    "@types/bootstrap": "^5.2.11",
+    "@types/jquery": "^4.0.1",
+    "css-loader": "^7.1.5",
+    "css-minimizer-webpack-plugin": "^8.0.0",
+    "esbuild-loader": "^4.5.0",
     "expose-loader": "^5.0.1",
     "jshint": "^2.13.6",
     "jshint-loader": "^0.8.4",
-    "mini-css-extract-plugin": "^2.9.4",
-    "rimraf": "^6.0.1",
+    "mini-css-extract-plugin": "^2.10.2",
+    "rimraf": "^6.1.3",
     "style-loader": "^4.0.0",
-    "ts-loader": "^9.5.4",
-    "typescript": "^5.9.2",
-    "webpack": "^5.101.3",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.2",
+    "terser-webpack-plugin": "^5.6.1",
+    "typescript": "^7.0.2",
+    "webpack": "^5.110.1",
+    "webpack-cli": "^7.2.3",
+    "webpack-dev-server": "^6.0.0",
     "webpack-merge": "^6.0.1",
     "webpack-remove-empty-scripts": "^1.1.1"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
   }
 }
