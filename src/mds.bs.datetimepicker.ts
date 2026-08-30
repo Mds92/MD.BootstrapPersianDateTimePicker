@@ -1865,7 +1865,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     }
     setting.selectedDateToShow = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
     if (selectedDateJson != undefined) {
-      // با تغییر روز، ساعت/دقیقه‌ی قبلاً انتخاب‌شده (selectedDateJson) دست‌نخورده باقی می‌ماند؛
+      // با تغییر روز، ساعت/دقیقه‌ی قبلاً انتخاب‌شده (selectedDateJson) دست‌ نخورده باقی می‌ماند؛
       // فقط وقتی تایم پیکر غیرفعال است صفر می‌شود
       if (!setting.enableTimePicker) {
         selectedDateJson.hour = 0;
