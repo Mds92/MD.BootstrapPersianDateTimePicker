@@ -215,14 +215,24 @@
   background: #ccc;
 }
 
-.mds-bs-dtp-container input[data-mds-dtp-time][type="time"] {
+.mds-bs-dtp-container input[data-mds-dtp-time] {
+  direction: ltr;
   text-align: center;
+  width: 70px;
   border: none;
+  border-bottom: solid 1px #ccc;
+  background-color: transparent;
   font-size: 18px;
+  letter-spacing: 1px;
 }
 
-.mds-bs-dtp-container input[data-mds-dtp-time][type="time"]:focus {
+.mds-bs-dtp-container input[data-mds-dtp-time]:focus {
   outline: none;
+  border-bottom-color: #666;
+}
+
+.mds-bs-dtp-container input[data-mds-dtp-time]::placeholder {
+  color: #ccc;
 }
 
 .mds-bs-dtp-container .btn {

@@ -240,7 +240,7 @@ export class MdsPersianDateTimePicker {
 <tfoot>
 <tr {{timePickerAttribute}}>
 <td colspan="100" class="text-center border-0">
-<input type="time" value="{{time}}" maxlength="2" data-mds-dtp-time />
+<input type="text" inputmode="numeric" autocomplete="off" dir="ltr" value="{{time}}" maxlength="5" placeholder="--:--" data-mds-dtp-time />
 </td>
 </tr>
 <tr>
@@ -456,9 +456,14 @@ data-bs-toggle="dropdown" aria-expanded="false">
     } else {
       this.element.removeAttribute("disabled");
     }
+    if (setting.groupId) {
+      // groupId هم برای اتصال toDate/fromDate و هم برای اتصال یک MdsPersianTimePicker خارجی استفاده می‌شود
+      this.element.setAttribute("data-mds-dtp-group", setting.groupId);
+    } else {
+      this.element.removeAttribute("data-mds-dtp-group");
+    }
     if (setting.toDate || setting.fromDate) {
       setting.rangeSelector = false;
-      this.element.setAttribute("data-mds-dtp-group", setting.groupId);
       if (setting.toDate)
         this.element.setAttribute("data-to-date", 'true');
       else if (setting.fromDate)
@@ -519,7 +524,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
       this.tempTitleString = title;
     }, setting.inLine ? 10 : 100);
   }
-  private static newGuid(): string {
+  static newGuid(): string {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
       let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
@@ -837,7 +842,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     str1 = str1.replace(/9/img, '۹');
     return str1;
   }
-  private static toEnglishNumber(inputNumber1: number | string): string {
+  static toEnglishNumber(inputNumber1: number | string): string {
     /* ۰ ۱ ۲ ۳ ۴ ۵ ۶ ۷ ۸ ۹ */
     if (!inputNumber1) return '';
     let str1 = inputNumber1.toString().trim();
@@ -854,7 +859,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     str1 = str1.replace(/۹/img, '9');
     return str1;
   }
-  private static zeroPad(nr: any, base?: string): string {
+  static zeroPad(nr: any, base?: string): string {
     if (nr == undefined || nr == '') return '00';
     if (base == undefined || base == '') base = '00';
     let len = (String(base).length - String(nr).length) + 1;
@@ -1683,7 +1688,7 @@ data-bs-toggle="dropdown" aria-expanded="false">
     html = html.replace(/\{\{rtlCssClass\}\}/img, setting.isGregorian ? '' : 'rtl');
     html = html.replace(/\{\{selectedDateStringAttribute\}\}/img, setting.inLine ? '' : 'hidden');
     html = html.replace(/\{\{goTodayText\}\}/img, setting.isGregorian ? MdsPersianDateTimePicker.goTodayText : MdsPersianDateTimePicker.goTodayTextPersian);
-    html = html.replace(/\{\{timePickerAttribute\}\}/img, setting.enableTimePicker ? '' : 'hidden');
+    html = html.replace(/\{\{timePickerAttribute\}\}/img, (setting.enableTimePicker && setting.showTimePickerInPopover) ? '' : 'hidden');
 
     const disabledDays = MdsPersianDateTimePicker.getDisabledDateObject(setting);
     let title = '';
@@ -1978,26 +1983,47 @@ data-bs-toggle="dropdown" aria-expanded="false">
     MdsPersianDateTimePickerData.set(instance.guid, instance);
     this.updateCalendarBodyHtml(element, setting);
   }
-  private timeChanged = (e: Event): void => {
-    // عوض کردن ساعت
-    const element = <Element>e.target;
+  static isValidHourMinute(value: string): boolean {
+    if (!/^\d{2}:\d{2}$/.test(value)) return false;
+    const hour = Number(value.substr(0, 2));
+    const minute = Number(value.substr(3, 2));
+    return hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59;
+  }
+  private commitTimeValue(element: Element, value: string): void {
+    // ثبت ساعت انتخاب شده در تنظیمات
     const instance = MdsPersianDateTimePicker.getInstance(element);
     if (!instance) return;
-    const setting = instance.setting;
-    const value: string = (<any>element).value;
-    if (!setting.enableTimePicker) return;
+    if (!instance.setting.enableTimePicker) return;
+    if (!MdsPersianDateTimePicker.isValidHourMinute(value)) return;
+    const hour = Number(value.substr(0, 2));
+    const minute = Number(value.substr(3, 2));
+    instance.setTime(hour, minute);
+  }
+  /**
+   * تنظیم دستی ساعت و دقیقه‌ی تاریخ انتخاب شده.
+   * علاوه بر استفاده‌ی داخلی، برای اتصال یک MdsPersianTimePicker خارجی (خارج از پاپ‌آور) نیز استفاده می‌شود.
+   */
+  setTime(hour: number, minute: number): void {
+    const setting = this.setting;
     if (setting.selectedDateToShow == undefined)
       setting.selectedDateToShow = new Date();
-    let hour = Number(value.substr(0, 2));
-    let minute = Number(value.substr(3, 2));
     setting.selectedDateToShow = new Date(setting.selectedDateToShow.setHours(hour));
     setting.selectedDateToShow = new Date(setting.selectedDateToShow.setMinutes(minute));
     if (setting.selectedDate == undefined)
       setting.selectedDate = new Date();
     setting.selectedDate = new Date(setting.selectedDate.setHours(hour));
     setting.selectedDate = new Date(setting.selectedDate.setMinutes(minute));
-    MdsPersianDateTimePickerData.set(instance.guid, instance);
+    MdsPersianDateTimePickerData.set(this.guid, this);
     MdsPersianDateTimePicker.setSelectedData(setting);
+    MdsPersianDateTimePicker.syncLinkedTimePicker(setting, hour, minute);
+  }
+  private static syncLinkedTimePicker(setting: MdsPersianDateTimePickerSetting, hour: number, minute: number): void {
+    // اگر یک MdsPersianTimePicker خارجی با همین groupId به این تقویم متصل شده باشد،
+    // مقدار نمایشی آن هم با ساعت جدید هماهنگ می‌شود
+    if (!setting.groupId) return;
+    const timePickerElement = document.querySelector(`[data-mds-dtp-group="${setting.groupId}"][data-mds-time-picker]`);
+    if (!timePickerElement) return;
+    MdsPersianTimePicker.getInstance(timePickerElement)?.setValueFromLinkedDatePicker(hour, minute);
   }
   private enableMainEvents(): void {
     if (this.setting.inLine) return;
@@ -2028,13 +2054,24 @@ data-bs-toggle="dropdown" aria-expanded="false">
   }
   private popoverOrModalHiddenEvent = (): void => {
     this.disableEvents();
+    // بعد از بسته شدن پاپ‌آور، محتوای ذخیره شده‌ی آن (که هنگام باز شدن مجدد نمایش داده می‌شود)
+    // با آخرین مقادیر تنظیمات (مثلا ساعتی که کاربر تایپ کرده) به‌روزرسانی می‌شود
+    if (!this.setting.inLine && !this.setting.modalMode)
+      this.updateCalendarBodyHtml(this.element, this.setting, true);
+  }
+  private attachTimeInputEvents(input: Element): void {
+    mdsAttachTimeMask(<HTMLInputElement>input, (value) => this.commitTimeValue(input, value));
+  }
+  private detachTimeInputEvents(input: Element): void {
+    mdsDetachTimeMask(<HTMLInputElement>input);
   }
   private enableInLineEvents(): void {
     if (!this.setting.inLine) return;
     setTimeout(() => {
       const dtp = document.querySelector(`[data-mds-dtp-guid="${this.guid}"]`);
       if (dtp != null) {
-        dtp.querySelector('[data-mds-dtp-time]')?.addEventListener('change', this.timeChanged, false);
+        const timeInput = dtp.querySelector('[data-mds-dtp-time]');
+        if (timeInput != null) this.attachTimeInputEvents(timeInput);
         dtp.addEventListener('click', this.selectCorrectClickEvent);
         dtp.querySelectorAll('[data-day]').forEach(e => e.addEventListener('mouseenter', this.hoverOnDays, true));
       }
@@ -2045,14 +2082,14 @@ data-bs-toggle="dropdown" aria-expanded="false">
     setTimeout(() => {
       document.addEventListener('click', this.selectCorrectClickEvent, false);
       document.querySelector('html')!.addEventListener('click', this.hidePopoverEvent, true);
-      document.querySelectorAll('[data-mds-dtp-time]').forEach(e => e.addEventListener('change', this.timeChanged, false));
+      document.querySelectorAll('[data-mds-dtp-time]').forEach(e => this.attachTimeInputEvents(e));
       document.querySelectorAll('[data-mds-dtp] [data-day]').forEach(e => e.addEventListener('mouseenter', this.hoverOnDays, true));
     }, 500);
   }
   private disableEvents(): void {
     document.removeEventListener('click', this.selectCorrectClickEvent);
     document.querySelector('html')!.removeEventListener('click', this.hidePopoverEvent);
-    document.querySelectorAll('[data-mds-dtp-time]')?.forEach(e => e.removeEventListener('change', this.timeChanged));
+    document.querySelectorAll('[data-mds-dtp-time]')?.forEach(e => this.detachTimeInputEvents(e));
     document.querySelectorAll('[data-mds-dtp] [data-day]').forEach(e => e.removeEventListener('mouseenter', this.hoverOnDays));
     const dtp = document.querySelector(`[data-mds-dtp-guid="${this.guid}"]`);
     if (dtp != null) {
@@ -2354,6 +2391,13 @@ export class MdsPersianDateTimePickerSetting {
    */
   enableTimePicker = false;
   /**
+   * نمایش تکس‌باکس ساعت داخل خود پاپ‌آور/تقویم.
+   * اگر false باشد و enableTimePicker فعال باشد، ساعت همچنان در selectedDate نگه داشته می‌شود
+   * ولی تکس‌باکس داخلی نمایش داده نمی‌شود؛ برای زمانی کاربرد دارد که بخواهید
+   * از یک MdsPersianTimePicker جدا (خارج از پاپ‌آور) با همان groupId استفاده کنید
+   */
+  showTimePickerInPopover = true;
+  /**
    * سلکتور نمایش روز انتخاب شده
    */
   targetTextSelector = '';
@@ -2505,3 +2549,312 @@ var MdsPersianDateTimePickerData = {
     MdsPersianDateTimePickerElementMap.delete(key);
   }
 };
+
+// #region Time Mask (اشتراکی بین MdsPersianDateTimePicker و MdsPersianTimePicker)
+
+interface MdsTimeMaskHandlers {
+  focus: EventListener;
+  keydown: EventListener;
+  input: EventListener;
+  blur: EventListener;
+}
+
+const mdsTimeMaskHandlersMap = new WeakMap<HTMLInputElement, MdsTimeMaskHandlers>();
+
+/**
+ * فعال کردن ماسک تایپ ساعت (فرمت HH:mm، جابجایی ساعت/دقیقه با کلید بالا/پایین، انتخاب کل متن هنگام فوکوس)
+ * روی یک اینپوت متنی؛ به محض معتبر شدن یا خالی شدن مقدار، onCommit فراخوانی می شود
+ */
+function mdsAttachTimeMask(input: HTMLInputElement, onCommit: (value: string) => void): void {
+  if (mdsTimeMaskHandlersMap.has(input)) return;
+
+  const focus = (): void => {
+    setTimeout(() => input.select(), 0);
+  };
+
+  const keydown = (e: Event): void => {
+    const ke = <KeyboardEvent>e;
+
+    if (ke.code === 'ArrowUp' || ke.code === 'ArrowDown') {
+      if (ke.ctrlKey || ke.metaKey || ke.altKey) return;
+      ke.preventDefault();
+      const current = MdsPersianDateTimePicker.toEnglishNumber((input.value ?? '').trim());
+      const isCurrentValid = MdsPersianDateTimePicker.isValidHourMinute(current);
+      const hh = isCurrentValid ? Number(current.substr(0, 2)) : 0;
+      const mm = isCurrentValid ? Number(current.substr(3, 2)) : 0;
+      const isHourSegment = (input.selectionStart ?? 0) <= 2;
+      const delta = ke.code === 'ArrowUp' ? 1 : -1;
+      const newHh = isHourSegment ? ((hh + delta) % 24 + 24) % 24 : hh;
+      const newMm = isHourSegment ? mm : ((mm + delta) % 60 + 60) % 60;
+      const newValue = `${MdsPersianDateTimePicker.zeroPad(newHh)}:${MdsPersianDateTimePicker.zeroPad(newMm)}`;
+      input.value = newValue;
+      onCommit(newValue);
+      const selStart = isHourSegment ? 0 : 3;
+      const selEnd = isHourSegment ? 2 : 5;
+      setTimeout(() => input.setSelectionRange(selStart, selEnd), 0);
+      return;
+    }
+
+    if (ke.code === 'Backspace' && (input.selectionStart ?? 0) === 3) {
+      ke.preventDefault();
+      return;
+    }
+    if (ke.code === 'Delete' && (input.selectionStart ?? 0) === 2) {
+      ke.preventDefault();
+      return;
+    }
+
+    if (['Delete', 'Backspace', 'Tab', 'Escape', 'Enter'].indexOf(ke.code) !== -1 ||
+      (ke.code === 'KeyA' && (ke.ctrlKey || ke.metaKey)) ||
+      (ke.code === 'KeyC' && (ke.ctrlKey || ke.metaKey)) ||
+      (ke.code === 'KeyV' && (ke.ctrlKey || ke.metaKey)) ||
+      (ke.code === 'KeyX' && (ke.ctrlKey || ke.metaKey)) ||
+      (ke.code === 'Home' || ke.code === 'End' || ke.code === 'ArrowLeft' || ke.code === 'ArrowRight')) {
+      return;
+    }
+
+    if (!/^[0-9۰-۹]$/.test(ke.key)) {
+      ke.preventDefault();
+      return;
+    }
+
+    // خودمان مقدار را می‌سازیم (به‌جای تکیه بر درج پیش‌فرض مرورگر) تا وابسته به
+    // فاصله زمانی بین کلید ها نباشیم و مشکل تایمینگ در تایپ سریع پیش نیاید
+    ke.preventDefault();
+    const keyDigit = MdsPersianDateTimePicker.toEnglishNumber(ke.key);
+    const currentDigits = MdsPersianDateTimePicker.toEnglishNumber(input.value).replace(/\D/g, '');
+    // چون کاراکتر ":" در ایندکس 2 اضافه می شود، موقعیت مکان‌نما را به تعداد رقم قبل از آن تبدیل می کنیم
+    const toDigitIndex = (pos: number): number => Math.min(pos > 2 ? pos - 1 : pos, currentDigits.length);
+    const digitStart = toDigitIndex(input.selectionStart ?? currentDigits.length);
+    const digitEnd = Math.max(digitStart, toDigitIndex(input.selectionEnd ?? digitStart));
+    const newDigits = currentDigits.substring(0, digitStart) + keyDigit + currentDigits.substring(digitEnd);
+
+    if (newDigits.length > 4) return;
+    if (newDigits.length === 1) {
+      const n = Number(newDigits);
+      if (isNaN(n) || n > 2) return;
+    } else {
+      const hour = Number(newDigits.substring(0, 2));
+      if (isNaN(hour) || hour > 23) return;
+      if (newDigits.length >= 3) {
+        const minuteStr = newDigits.substring(2);
+        const minute = Number(minuteStr);
+        if (isNaN(minute) || minute > (minuteStr.length === 1 ? 5 : 59)) return;
+      }
+    }
+
+    input.value = newDigits.length <= 2 ? newDigits : `${newDigits.substring(0, 2)}:${newDigits.substring(2)}`;
+    const newCursor = newDigits.length <= 2 ? newDigits.length : newDigits.length + 1;
+    input.setSelectionRange(newCursor, newCursor);
+    // چون مقدار را با اسکریپت (نه درج پیش‌فرض مرورگر) ست کردیم، رویداد input شلیک نمی‌شود
+    // پس در صورت تکمیل شدن ساعت، مقدار را همینجا ثبت می‌کنیم
+    if (newDigits.length === 4)
+      onCommit(input.value);
+  };
+
+  const inputEvt = (): void => {
+    const value = MdsPersianDateTimePicker.toEnglishNumber((input.value ?? '').trim());
+    if (value !== input.value)
+      input.value = value;
+    if (value === '' || (value.length === 5 && MdsPersianDateTimePicker.isValidHourMinute(value)))
+      onCommit(value);
+  };
+
+  const blur = (): void => {
+    let value = MdsPersianDateTimePicker.toEnglishNumber((input.value ?? '').trim());
+    if (/\D/.test(value.replace(':', ''))) {
+      value = '';
+    } else if (value.length === 4) {
+      const candidate = `${value.substr(0, 2)}:${value.substr(2, 2)}`;
+      value = MdsPersianDateTimePicker.isValidHourMinute(candidate) ? candidate : '';
+    } else if (value.length === 5) {
+      value = MdsPersianDateTimePicker.isValidHourMinute(value) ? value : '';
+    } else {
+      value = '';
+    }
+    input.value = value;
+    onCommit(value);
+  };
+
+  input.addEventListener('focus', focus, false);
+  input.addEventListener('keydown', keydown, false);
+  input.addEventListener('input', inputEvt, false);
+  input.addEventListener('blur', blur, false);
+  mdsTimeMaskHandlersMap.set(input, { focus, keydown, input: inputEvt, blur });
+}
+
+function mdsDetachTimeMask(input: HTMLInputElement): void {
+  const handlers = mdsTimeMaskHandlersMap.get(input);
+  if (!handlers) return;
+  input.removeEventListener('focus', handlers.focus, false);
+  input.removeEventListener('keydown', handlers.keydown, false);
+  input.removeEventListener('input', handlers.input, false);
+  input.removeEventListener('blur', handlers.blur, false);
+  mdsTimeMaskHandlersMap.delete(input);
+}
+
+// #endregion
+
+// #region MdsPersianTimePicker (تایم پیکر مستقل، خارج از پاپ‌آور)
+
+export class MdsPersianTimePickerSetting {
+  /**
+   * مقدار اولیه‌ی ساعت؛ رشته با فرمت HH:mm یا عدد مثل 1430 (یعنی ساعت 14 و 30 دقیقه)
+   */
+  value: string | number | null = null;
+  /**
+   * غیر فعال بودن تایم پیکر
+   */
+  disabled = false;
+  /**
+   * شناسه گروه، برای اتصال این تایم پیکر به یک MdsPersianDateTimePicker.
+   * باید با groupId همان دیت پیکر یکسان باشد
+   */
+  groupId = '';
+  /**
+   * رویداد تغییر معتبر ساعت؛ عدد HHmm یا null (در صورت خالی شدن تکس‌باکس)
+   * @param _ عدد ساعت به فرمت HHmm یا null
+   */
+  onChange = (_: number | null) => { };
+}
+
+const MdsPersianTimePickerElementMap = new Map<string, MdsPersianTimePicker>();
+var MdsPersianTimePickerData = {
+  set(key: string, instance: MdsPersianTimePicker): void {
+    MdsPersianTimePickerElementMap.set(key, instance);
+  },
+  get(key: string): MdsPersianTimePicker | null {
+    return MdsPersianTimePickerElementMap.get(key) ?? null;
+  },
+  remove(key: string): void {
+    MdsPersianTimePickerElementMap.delete(key);
+  }
+};
+
+/**
+ * تایم پیکر مستقل که روی هر تکس‌باکسی (خارج از پاپ‌آور دیت پیکر) سوار می‌شود.
+ * با استفاده از groupId می‌توان آن را به یک MdsPersianDateTimePicker متصل کرد
+ * تا هر دو یک selectedDate واحد را نمایندگی کنند
+ */
+export class MdsPersianTimePicker {
+  readonly guid: string;
+  readonly setting: MdsPersianTimePickerSetting;
+  private readonly element: HTMLInputElement;
+
+  constructor(element: Element, setting?: MdsPersianTimePickerSetting) {
+    if (!element) throw new Error(`MdsPersianTimePicker => element is null!`);
+    if (element.tagName.toLowerCase() !== 'input') throw new Error(`MdsPersianTimePicker => element must be an <input> element!`);
+    this.element = <HTMLInputElement>element;
+    this.setting = Object.assign(new MdsPersianTimePickerSetting(), setting);
+    this.guid = MdsPersianDateTimePicker.newGuid();
+    this.element.setAttribute('data-mds-time-picker', '');
+    this.element.setAttribute('data-mds-time-picker-guid', this.guid);
+    this.element.setAttribute('placeholder', this.element.getAttribute('placeholder') ?? '--:--');
+    this.element.setAttribute('autocomplete', 'off');
+    this.element.setAttribute('dir', 'ltr');
+    MdsPersianTimePickerData.set(this.guid, this);
+    this.applySetting();
+  }
+
+  private static formatValue(value: string | number | null | undefined): string {
+    if (value == undefined || value === '') return '';
+    if (typeof value === 'number') {
+      const hh = Math.floor(value / 100);
+      const mm = value % 100;
+      return `${MdsPersianDateTimePicker.zeroPad(hh)}:${MdsPersianDateTimePicker.zeroPad(mm)}`;
+    }
+    return value;
+  }
+  private static getLinkedDatePickerInstance(groupId: string): MdsPersianDateTimePicker | null {
+    if (!groupId) return null;
+    const element = document.querySelector(`[data-mds-dtp-group="${groupId}"][data-mds-dtp-guid]`);
+    return element ? MdsPersianDateTimePicker.getInstance(element) : null;
+  }
+  private applySetting(): void {
+    if (this.setting.groupId)
+      this.element.setAttribute('data-mds-dtp-group', this.setting.groupId);
+    else
+      this.element.removeAttribute('data-mds-dtp-group');
+
+    if (this.setting.disabled)
+      this.element.setAttribute('disabled', '');
+    else
+      this.element.removeAttribute('disabled');
+
+    let initialValue = this.setting.value;
+    if ((initialValue == undefined || initialValue === '') && this.setting.groupId) {
+      const linkedDatePicker = MdsPersianTimePicker.getLinkedDatePickerInstance(this.setting.groupId);
+      const linkedDate = linkedDatePicker?.setting.selectedDate;
+      if (linkedDate)
+        initialValue = `${MdsPersianDateTimePicker.zeroPad(linkedDate.getHours())}:${MdsPersianDateTimePicker.zeroPad(linkedDate.getMinutes())}`;
+    }
+    this.element.value = MdsPersianTimePicker.formatValue(initialValue);
+
+    mdsDetachTimeMask(this.element);
+    mdsAttachTimeMask(this.element, (value) => this.commitTimeValue(value));
+  }
+  private commitTimeValue(value: string): void {
+    if (this.setting.disabled) return;
+    if (value === '') {
+      this.setting.value = null;
+      this.setting.onChange(null);
+      return;
+    }
+    if (!MdsPersianDateTimePicker.isValidHourMinute(value)) return;
+    this.setting.value = value;
+    const hour = Number(value.substr(0, 2));
+    const minute = Number(value.substr(3, 2));
+    this.setting.onChange(hour * 100 + minute);
+    if (this.setting.groupId)
+      MdsPersianTimePicker.getLinkedDatePickerInstance(this.setting.groupId)?.setTime(hour, minute);
+  }
+  /**
+   * برای استفاده‌ی داخلی: به‌روزرسانی نمایش تایم پیکر از سمت دیت پیکر متصل، بدون فراخوانی دوباره‌ی onChange/دیت پیکر
+   */
+  setValueFromLinkedDatePicker(hour: number, minute: number): void {
+    if (document.activeElement === this.element) return; // کاربر در حال تایپ است؛ دست‌کاری نمی‌شود
+    const formatted = `${MdsPersianDateTimePicker.zeroPad(hour)}:${MdsPersianDateTimePicker.zeroPad(minute)}`;
+    if (this.element.value === formatted) return;
+    this.element.value = formatted;
+    this.setting.value = formatted;
+  }
+  /**
+   * دریافت مقدار عددی ساعت انتخاب شده (فرمت HHmm)؛ در صورت خالی/نامعتبر بودن null برمی‌گرداند
+   */
+  getValue(): number | null {
+    const value = this.element.value;
+    if (!MdsPersianDateTimePicker.isValidHourMinute(value)) return null;
+    return Number(value.substr(0, 2)) * 100 + Number(value.substr(3, 2));
+  }
+  /**
+   * تنظیم دستی مقدار ساعت؛ رشته HH:mm یا عدد HHmm یا null برای خالی کردن
+   */
+  setValue(value: string | number | null): void {
+    this.element.value = MdsPersianTimePicker.formatValue(value);
+    this.setting.value = value;
+  }
+  /**
+   * فعال/غیرفعال کردن تایم پیکر
+   */
+  setDisabledState(isDisabled: boolean): void {
+    this.setting.disabled = isDisabled;
+    this.applySetting();
+  }
+  /**
+   * دریافت اینستنس تایم پیکر از روی المانی که تایم پیکر روی آن فعال شده است
+   */
+  static getInstance(element: Element): MdsPersianTimePicker | null {
+    const guid = element.closest('[data-mds-time-picker-guid]')?.getAttribute('data-mds-time-picker-guid');
+    if (!guid) return null;
+    return MdsPersianTimePickerData.get(guid);
+  }
+  /**
+   * از بین بردن تایم پیکر
+   */
+  dispose(): void {
+    mdsDetachTimeMask(this.element);
+    MdsPersianTimePickerData.remove(this.guid);
+  }
+}
+
+// #endregion

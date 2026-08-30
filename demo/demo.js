@@ -7,6 +7,7 @@ var vueApp = new Vue({
     inLine: '0',
     modalMode: '0',
     enableTimePicker: '0',
+    showExternalTimePicker: '0',
     toDateFromDate: '0',
     groupId: 'group1',
     rangeSelector: '0',
@@ -61,6 +62,13 @@ var vueApp = new Vue({
     optionChange: function (optionName, value) {
       console.log(`${optionName} => ${value}`);
       switch (optionName) {
+        case 'showExternalTimePicker':
+          dtp1.updateOptions({
+            enableTimePicker: value ? true : this.enableTimePicker === '1',
+            showTimePickerInPopover: !value,
+            groupId: this.groupId,
+          });
+          return;
         case 'inLine':
           this.modalMode = '0';
           dtp1.updateOptions({
@@ -115,7 +123,9 @@ var vueApp = new Vue({
           return;
       }
       dtp1.updateOption(optionName, value);
+      dtp2.updateOption(optionName, value);
       inLineDtp1.updateOption(optionName, value);
+      inLineDtp2.updateOption(optionName, value);
     },
     dateChange: function (optionName) {
       switch (optionName) {
@@ -207,4 +217,14 @@ const inLineDtp2 = new mds.MdsPersianDateTimePicker(document.querySelector('[dat
   inLine: true,
   targetTextSelector: '[data-name="in-line-dtp2-text"]',
   targetDateSelector: '[data-name="in-line-dtp2-date"]',
+});
+
+// External Time Picker demo: reuses dtp1 (the "From Date" picker above) as the date picker,
+// switching it to enableTimePicker/showTimePickerInPopover: false so its own time textbox is hidden,
+// and links a fully independent MdsPersianTimePicker to it via a matching groupId
+const externalTimePicker = new mds.MdsPersianTimePicker(document.querySelector('[data-name="external-time-picker"]'), {
+  groupId: vueApp.groupId,
+  onChange: function (value) {
+    console.log('externalTimePicker changed =>', value);
+  },
 });

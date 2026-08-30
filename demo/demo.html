@@ -196,6 +196,43 @@
                   </div>
                 </div>
                 <hr />
+                <!-- showExternalTimePicker -->
+                <div class="row">
+                  <label class="col-5 col-form-label">External Time Picker</label>
+                  <div class="col-7 pt-2">
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="showExternalTimePickerRadioOptions"
+                        id="showExternalTimePickerRadioOptionsId1"
+                        value="1"
+                        v-model="showExternalTimePicker"
+                        v-on:change="optionChange('showExternalTimePicker', true)" />
+                      <label class="form-check-label" for="showExternalTimePickerRadioOptionsId1">true</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="showExternalTimePickerRadioOptions"
+                        id="showExternalTimePickerRadioOptionsId2"
+                        value="0"
+                        v-model="showExternalTimePicker"
+                        v-on:change="optionChange('showExternalTimePicker', false)" />
+                      <label class="form-check-label" for="showExternalTimePickerRadioOptionsId2">false</label>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <small class="text-muted">
+                      Switches the "From Date" date picker above to <code>enableTimePicker: true</code> and
+                      <code>showTimePickerInPopover: false</code>, so it keeps track of the time but does not render its own
+                      time textbox. A fully independent <code>MdsPersianTimePicker</code> below is linked to it via a
+                      matching <code>groupId</code>.
+                    </small>
+                  </div>
+                </div>
+                <hr />
                 <!-- toDate, fromDate -->
                 <div class="row">
                   <label class="col-5 col-form-label">toDate, fromDate</label>
@@ -464,6 +501,14 @@
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+              <!-- External Time Picker (MdsPersianTimePicker), linked to the "From Date" picker above via groupId -->
+              <div class="col-12" style="margin-top: 30px" :hidden="showExternalTimePicker == '0'">
+                <h3>External Time Picker (MdsPersianTimePicker)</h3>
+                <div class="input-group mb-3" style="max-width: 200px">
+                  <span class="input-group-text">Time</span>
+                  <input type="text" class="form-control" style="max-width: 90px" placeholder="--:--" data-name="external-time-picker" />
                 </div>
               </div>
             </div>

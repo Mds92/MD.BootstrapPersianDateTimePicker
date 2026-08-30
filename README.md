@@ -89,6 +89,7 @@ Default values are into `[ ]`
 | **persianNumber**              | [false], true                      | Convert numbers to persian characters                                                                                                       |
 | **calendarViewOnChange(date)** | function                           | Event fires on date picker's view change                                                                                                    |
 | **onDayClick(setting)**        | function                           | Event fires on day cell click, receives current `MdsPersianDateTimePickerSetting` object                                                    |
+| **showTimePickerInPopover**    | [true], false                      | _(since v5.0.0)_ Show/hide the built-in time textbox inside the popover. Set to `false` when you use a standalone [`MdsPersianTimePicker`](#standalone-time-picker-mdspersiantimepicker) instead. `enableTimePicker` must still be `true` for the time to be tracked |
 
 <hr>
 
@@ -140,6 +141,7 @@ Default values are into `[ ]`
 | **setDate**                | void                       | Set selected datetime with Date object argument                | dtp1Instance.setDate(new Date('2021/09/22'));                                                                                 |
 | **setDatePersian**         | void                       | Set selected datetime with Date object argument                | dtp1Instance.setDatePersian(1400, 06, 31);                                                                                    |
 | **setDateRange**           | void                       | Set selected datetime range with Date object argument          | dtp1Instance.setDateRange(new Date('2021/09/04'), new Date('2021/09/22'));                                                    |
+| **setTime**                | void                       | _(since v5.0.0)_ Set hour/minute of the currently selected date | dtp1Instance.setTime(14, 30);                                                                                                 |
 | **clearDate**              | void                       | clear selected date                                            | dtp1Instance.clearDate();                                                                                                     |
 | **convertDateToString**    | string                     | utility & static method, convert date object to string         | const dateStr = mds.MdsPersianDateTimePicker.convertDateToString(date: new Date(), isGregorian: false, format: 'yyyy/MM/dd'); |
 | **convertDateToJalali**    | json                       | utility & static method, convert date object to Jalali         | const jalaliObj = mds.MdsPersianDateTimePicker.convertDateToJalali(new Date());                                               |
@@ -152,6 +154,77 @@ Default values are into `[ ]`
 
 https://getbootstrap.com/docs/5.1/components/popovers/#events
 https://getbootstrap.com/docs/5.1/components/modal/#events
+
+<hr>
+
+### Standalone Time Picker (`MdsPersianTimePicker`):
+
+_Added in version `5.0.0`._
+
+Before this version, the only way to pick a time was the time textbox rendered inside the date picker's own
+popover. `MdsPersianTimePicker` is a separate, self-contained class that you can attach to **any `<input>`
+element**, anywhere on the page (no popover involved), and optionally link it to a `MdsPersianDateTimePicker`
+so both control the same selected date/time.
+
+Typing into the input is auto-masked to `HH:mm` (arrow up/down step the hour or minute depending on cursor
+position, focus selects the whole text, and an invalid value is cleared on blur) — this is the exact same
+input behavior used by the time textbox inside the popover.
+
+#### Standalone usage:
+
+```javascript
+const timePickerInstance = new mds.MdsPersianTimePicker(document.getElementById("time1"), {
+  onChange: (value) => console.log("new time:", value), // e.g. 1430 for 14:30, or null when cleared
+});
+```
+
+#### Linking it to a `MdsPersianDateTimePicker`:
+
+To keep a date picker and an external time textbox in sync, give both the same `groupId`. On the date picker,
+set `enableTimePicker: true` (so the time is tracked) and `showTimePickerInPopover: false` (so its own internal
+time textbox is hidden, since you already have a dedicated one).
+
+```javascript
+// The date picker: tracks time internally but does not render its own time textbox
+const datePicker = new mds.MdsPersianDateTimePicker(document.querySelector("#myDate"), {
+  enableTimePicker: true,
+  showTimePickerInPopover: false,
+  groupId: "order-date-time",
+  targetTextSelector: '[data-name="myDate-text"]',
+  targetDateSelector: '[data-name="myDate-date"]',
+});
+
+// A separate textbox for the time, linked via the same groupId
+const timePicker = new mds.MdsPersianTimePicker(document.querySelector("#myTime"), {
+  groupId: "order-date-time",
+  onChange: (value) => console.log("time changed:", value),
+});
+```
+
+Once linked, any valid time change in the time textbox is applied to the connected date picker's
+`selectedDate`/`selectedDateToShow`, and the reverse also works (e.g. changing the time on the date picker via
+`setTime`).
+
+##### Options (`MdsPersianTimePickerSetting`):
+
+Default values are into `[ ]`
+
+| Name         | Values                        | Description                                                                                          | Sample             |
+| ------------ | ------------------------------ | ----------------------------------------------------------------------------------------------------- | ------------------ |
+| **value**    | [null], String, Number         | Initial time, either as `'HH:mm'` string or `HHmm` number                                              | '14:30' or 1430    |
+| **disabled** | [false], true                  | Disable the time picker                                                                                |
+| **groupId**  | String                         | Group id to link this time picker to a `MdsPersianDateTimePicker` with the same `groupId`              | 'order-date-time'  |
+| **onChange** | function(value: number\|null)  | Event fires on a valid time change; receives `HHmm` as a number, or `null` when the textbox is cleared |
+
+##### Functions:
+
+| Name                | Return Value                       | Description                                                     | Sample                                                                     |
+| ------------------- | ----------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| **getValue**        | number \| null                      | Get selected time as `HHmm` number, or `null` if empty/invalid   | const value = timePickerInstance.getValue();                                |
+| **setValue**        | void                                 | Set time; accepts `'HH:mm'` string, `HHmm` number, or `null`     | timePickerInstance.setValue(1430);                                          |
+| **setDisabledState** | void                                | Enable/disable the time picker                                   | timePickerInstance.setDisabledState(true);                                  |
+| **getInstance**     | MdsPersianTimePicker \| null        | static method, get instance by the element it was attached to    | const instance = mds.MdsPersianTimePicker.getInstance(document.getElementById('time1')); |
+| **dispose**         | void                                 | dispose the time picker                                          | timePickerInstance.dispose();                                               |
 
 <hr>
 
