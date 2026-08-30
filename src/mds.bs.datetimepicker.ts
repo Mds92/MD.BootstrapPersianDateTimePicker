@@ -1816,7 +1816,6 @@ data-bs-toggle="dropdown" aria-expanded="false">
     }
     let selectedDateJson = !setting.selectedDate ? null : MdsPersianDateTimePicker.getDateTimeJson1(setting.selectedDate);
     let selectedDateToShow = !setting.selectedDateToShow ? new Date() : MdsPersianDateTimePicker.getClonedDate(setting.selectedDateToShow);
-    let selectedDateToShowJson = MdsPersianDateTimePicker.getDateTimeJson1(selectedDateToShow);
     if (disabled) {
       if (setting.onDayClick != undefined) setting.onDayClick(setting);
       return;
@@ -1866,11 +1865,9 @@ data-bs-toggle="dropdown" aria-expanded="false">
     }
     setting.selectedDateToShow = MdsPersianDateTimePicker.getClonedDate(selectedDateToShow);
     if (selectedDateJson != undefined) {
-      if (setting.enableTimePicker) {
-        selectedDateJson.hour = selectedDateToShowJson.hour;
-        selectedDateJson.minute = selectedDateToShowJson.minute;
-        selectedDateJson.second = selectedDateToShowJson.second;
-      } else {
+      // با تغییر روز، ساعت/دقیقه‌ی قبلاً انتخاب‌شده (selectedDateJson) دست‌نخورده باقی می‌ماند؛
+      // فقط وقتی تایم پیکر غیرفعال است صفر می‌شود
+      if (!setting.enableTimePicker) {
         selectedDateJson.hour = 0;
         selectedDateJson.minute = 0;
         selectedDateJson.second = 0;
@@ -1878,9 +1875,16 @@ data-bs-toggle="dropdown" aria-expanded="false">
       setting.selectedDate.setHours(selectedDateJson.hour);
       setting.selectedDate.setMinutes(selectedDateJson.minute);
       setting.selectedDate.setSeconds(selectedDateJson.second);
+    } else if (setting.enableTimePicker) {
+      // اولین باری که روزی انتخاب می‌شود؛ به‌جای ساعت لحظه‌ی جاری سیستم، ساعت پیش‌فرض 00:00 در نظر گرفته می‌شود
+      setting.selectedDate.setHours(0);
+      setting.selectedDate.setMinutes(0);
+      setting.selectedDate.setSeconds(0);
     }
     MdsPersianDateTimePickerData.set(instance.guid, instance);
     MdsPersianDateTimePicker.setSelectedData(setting);
+    if (setting.enableTimePicker)
+      MdsPersianDateTimePicker.syncLinkedTimePicker(setting, setting.selectedDate.getHours(), setting.selectedDate.getMinutes());
     element.setAttribute('data-mds-dtp-selected-day', '');
     if (setting.toDate || setting.fromDate) {
       // وقتی روی روز یکی از تقویم ها کلیک می شود
